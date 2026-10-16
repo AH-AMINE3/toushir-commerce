@@ -1,0 +1,9 @@
+{
+  "excludedPhotoCount": 2,
+  "excludedPhotos": {
+    "6130265110016": "exact_photo_duplicate_of_6130265210013",
+    "6713637000186": "exact_photo_duplicate_of_6133337002936"
+  },
+  "selectedCount": 2500,
+  "completedAt": "2026-10-16T17:31:58.465397+00:00"
+}

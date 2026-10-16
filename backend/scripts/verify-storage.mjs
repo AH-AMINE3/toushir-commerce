@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import { spawn } from 'node:child_process';
+import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+const backend=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+const dotnet=process.env.DOTNET_BIN||'/Users/amine/Library/Developer/Toushir/toolchains/dotnet/dotnet';
+const binary=resolve(backend,'bin/Release/net10.0/Toushir.Wholesale.dll');
+const temporary=await mkdtemp(resolve(tmpdir(),'toushir-storage-check-'));
+const port=process.env.STORAGE_TEST_PORT||'5872',url='http://127.0.0.1:'+port;
+const checks=[];let running;
+function start(overrides){const env={...process.env,DOTNET_SYSTEM_GLOBALIZATION_INVARIANT:'true',ASPNETCORE_ENVIRONMENT:'Production',ASPNETCORE_URLS:url,Demo__Enabled:'false',Catalog__Path:resolve(backend,'../catalog/products.json'),...overrides};if(overrides.DataPath===null)delete env.DataPath;const child=spawn(dotnet,[binary],{cwd:backend,env,stdio:['ignore','pipe','pipe']});let log='';child.stdout.on('data',x=>log=(log+x).slice(-8000));child.stderr.on('data',x=>log=(log+x).slice(-8000));return {child,log:()=>log};}
+async function reject(overrides,message){const p=start(overrides);const code=await new Promise((done,fail)=>{p.child.once('exit',done);setTimeout(()=>{p.child.kill('SIGKILL');fail(Error('Invalid storage configuration was not rejected.'));},10000).unref();});assert.notEqual(code,0);assert(p.log().includes(message));}
+try{await reject({DataPath:null},'explicit DataPath');checks.push({name:'Production rejects implicit database location',pass:true});await reject({DataPath:temporary},'Temporary SQLite storage is allowed only');checks.push({name:'Real business mode refuses temporary SQLite storage',pass:true});running=start({DataPath:temporary,Demo__Enabled:'true',ForwardedHeaders__TrustPlatformProxy:'true'});let health;for(let i=0;i<120;i++){if(running.child.exitCode!==null)throw Error(running.log());try{const r=await fetch(url+'/api/health');if(r.ok){health=await r.json();break;}}catch{}await new Promise(r=>setTimeout(r,100));}assert.equal(health?.status,'ok');assert.equal(health?.demoEnabled,true);assert.equal(health?.database,'connected');checks.push({name:'Explicit public demo starts with temporary SQLite as intended for free hosting',pass:true});}catch(e){checks.push({name:'Storage verification',pass:false,error:e.message});console.error(e.message);}finally{if(running&&running.child.exitCode===null)await new Promise(done=>{running.child.once('exit',done);running.child.kill('SIGINT');setTimeout(()=>{running.child.kill('SIGKILL');done();},5000).unref();});await rm(temporary,{recursive:true,force:true});const report={at:new Date().toISOString(),passed:checks.filter(x=>x.pass).length,failed:checks.filter(x=>!x.pass).length,checks};await writeFile(resolve(backend,'storage-verification.json'),JSON.stringify(report,null,2));for(const c of checks)console.log((c.pass?'PASS ':'FAIL ')+c.name);if(report.failed)process.exitCode=1;}

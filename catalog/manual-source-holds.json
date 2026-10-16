@@ -1,0 +1,11 @@
+{
+  "90338243": "Source brand is 'maroc', a country name; hold until actual brand metadata is verified. Do not silently replace it.",
+  "6132485500011": "Selected front visibly reads FAMICO while source brand is El asfour. Brand ownership/sub-brand relationship was not independently verified; hold instead of guessing a replacement.",
+  "6132503310059": "Selected front is a dark nutrition/composition panel, not a usable product front. Do not invent missing brand artwork.",
+  "3036813802972": "Selected front shows the rear ingredients/barcode panel. Hold for a true source/manufacturer front photo.",
+  "6130646004514": "Selected front shows an unlabelled/upside-down pudding pot; insufficient front-brand identification.",
+  "6133860004353": "Selected front shows side/back nutrition panel and barcode rather than the front product label.",
+  "1000000000007": "Placeholder-like barcode and an unbranded household jar photograph; not a sufficiently verified packaged retail reference.",
+  "6130576000020": "Source identity Essalsabil/Voda versus visible Boughez label relationship not verified; hold instead of guessing.",
+  "6132500711033": "Selected source front clearly prints700g while source quantity is350g. Hold until GTIN/package weight is reconciled; do not edit the printed quantity with AI."
+}

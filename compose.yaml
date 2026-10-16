@@ -1,0 +1,16 @@
+services:
+  wholesale:
+    build: .
+    ports:
+      - "5860:8080"
+    environment:
+      Demo__Enabled: "false"
+      DataPath: /data
+      Bootstrap__Email: ${TOUSHIR_ADMIN_EMAIL:?Set TOUSHIR_ADMIN_EMAIL}
+      Bootstrap__Password: ${TOUSHIR_ADMIN_PASSWORD:?Set TOUSHIR_ADMIN_PASSWORD}
+      Wholesale__Name: ${TOUSHIR_COMPANY_NAME:-Toushir Distribution}
+    volumes:
+      - wholesale-data:/data
+    restart: unless-stopped
+volumes:
+  wholesale-data:

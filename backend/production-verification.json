@@ -1,0 +1,36 @@
+{
+  "at": "2026-10-16T17:07:00.346Z",
+  "passed": 7,
+  "failed": 0,
+  "requests": 26,
+  "checks": [
+    {
+      "name": "Production mode disables public demo and provisions only explicit owner",
+      "pass": true
+    },
+    {
+      "name": "Registration requires real password and merchant approval",
+      "pass": true
+    },
+    {
+      "name": "HTTPS browser writes work behind trusted platform proxy and foreign origins fail",
+      "pass": true
+    },
+    {
+      "name": "Database, legacy address snapshots, hashed sessions and orders survive server restart",
+      "pass": true
+    },
+    {
+      "name": "Retired catalog references disappear while existing order snapshots survive",
+      "pass": true
+    },
+    {
+      "name": "Password changes verify old secret and revoke all sessions",
+      "pass": true
+    },
+    {
+      "name": "Online SQLite backup is consistent and contains persisted test order",
+      "pass": true
+    }
+  ]
+}

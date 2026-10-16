@@ -1,0 +1,52 @@
+{
+  "status": "IMPORT_IN_PROGRESS",
+  "catalog": "Toushir Wholesale — Oran",
+  "catalogKind": "SOURCE_IDENTITY_REFERENCE_NOT_WHOLESALE_OFFERS",
+  "source": "Open Food Facts contributors",
+  "sourceHome": "https://world.openfoodfacts.org/",
+  "sourceApi": "https://world.openfoodfacts.org/api/v2/search?countries_tags=en%3Aalgeria",
+  "liveAlgeriaSourceCount": 7423,
+  "liveCountObservedAt": "2026-10-16T16:46:00Z",
+  "bulkDataset": "https://huggingface.co/datasets/openfoodfacts/product-database",
+  "bulkCommit": "2fa5c6b88b9132d565b627576620a697f7ead869",
+  "bulkFileBytes": 7950707784,
+  "dataLicense": {
+    "name": "ODbL 1.0",
+    "url": "https://opendatacommons.org/licenses/odbl/1-0/"
+  },
+  "contentsLicense": {
+    "name": "DbCL 1.0",
+    "url": "https://opendatacommons.org/licenses/dbcl/1-0/"
+  },
+  "imageLicense": {
+    "name": "CC BY-SA 3.0",
+    "url": "https://creativecommons.org/licenses/by-sa/3.0/"
+  },
+  "imageAttribution": "Open Food Facts contributors",
+  "sourceGuidance": [
+    "https://openfoodfacts.github.io/documentation/docs/Product-Opener/api/",
+    "https://openfoodfacts.github.io/openfoodfacts-server/api/how-to-download-images/",
+    "https://openfoodfacts.github.io/openfoodfacts-server/api/aws-images-dataset/"
+  ],
+  "facts": {
+    "countryScope": "Only source records tagged en:algeria. Does not prove manufacturing origin or present Oran inventory.",
+    "wholesalePrices": null,
+    "stock": null,
+    "caseSize": null,
+    "minimumOrder": null,
+    "vatRate": null,
+    "commercialApproval": false
+  },
+  "priceResearch": {
+    "references": 16,
+    "directRetailPagesChecked": 16,
+    "validGtinLikeRetailerSkus": 12,
+    "confirmedWholesaleOffers": 0,
+    "scope": "Third-party public retail references only. Not imported into offers, pricing or stock."
+  },
+  "identityQuality": "Automatic format/image checks and representative visual review; no claim of manufacturer certification or exhaustive human verification.",
+  "updatedAt": "2026-10-16T17:14:22.912363+00:00",
+  "bulkFileSha256": "c74c716ae028a2dcc1520101cc5dddefa79652261052499b1c396427544f463c",
+  "bulkAlgeriaSourceCount": 7411,
+  "bulkSubsetExtractedAt": "2026-10-16T17:07:57Z"
+}

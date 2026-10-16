@@ -1,0 +1,31 @@
+namespace Toushir.Wholesale;
+public record LoginInput(string Email,string Password);
+public record RegisterInput(string Name,string ShopName,string Email,string Phone,string Password,AddressInput Address);
+public record DemoInput(string? Role,string? WorkspaceToken);
+public record ProfileInput(string Name,string ShopName,string Phone);
+public record PasswordInput(string CurrentPassword,string NewPassword);
+public record AddressInput(string Label,string Wilaya,string Commune,string Street,bool IsDefault=false);
+public record LineInput(string ProductId,int Quantity);
+public record CartInput(List<LineInput> Items);
+public record CreateOrderInput(string IdempotencyKey,string AddressId,List<LineInput> Items,string? Note,string? Mode);
+public record AcceptQuoteInput(int Version);
+public record ReasonInput(string? Reason);
+public record QuoteLineInput(string ProductId,int Quantity,decimal UnitPrice,int? CaseSize,int? AvailableStock);
+public record QuoteInput(List<QuoteLineInput> Items,decimal DeliveryFee,DateTimeOffset ValidUntil,string? Note);
+public record TransitionInput(string Status,string? Reason);
+public record DeliveryLineInput(string ProductId,int AcceptedQuantity,int RefusedQuantity);
+public record DeliveryInput(List<DeliveryLineInput> Items,string? Note);
+public record PaymentInput(decimal Amount,string Method,string? Reference,string IdempotencyKey);
+public record RefundInput(decimal Amount,string Reference,string Reason,string IdempotencyKey);
+public record InspectReturnInput(string ProductId,int Quantity,string Disposition,string Reason);
+public record OfferInput(decimal? Price,int? Stock,int CaseSize,int MinimumQuantity,bool OfferApproved,bool IsActive=true);
+public record InventoryInput(string ProductId,int Delta,string Reason);
+public record MerchantInput(string ApprovalStatus);
+public record CsvInput(string Csv);
+public record CreateClaimInput(string ProductId,int Quantity,string Reason);
+public record ResolveClaimInput(string Status,string Note);
+public record ReceiveClaimInput(int Quantity,string Note);
+public record InspectClaimInput(int Quantity,string Disposition,string Reason);
+public record CreditClaimInput(decimal Amount,string Reason,string IdempotencyKey);
+public sealed class ApiFailure(int status,string code,string message,object? details=null):Exception(message){public int Status{get;}=status;public string Code{get;}=code;public object? Details{get;}=details;}
+public static class Check {public static void That([System.Diagnostics.CodeAnalysis.DoesNotReturnIf(false)] bool condition,string message,string code="VALIDATION",int status=400){if(!condition)throw new ApiFailure(status,code,message);}public static string Text(string? value,int max,string field,bool required=true){var s=(value??"").Trim();That(!required||s.Length>0,$"{field} est obligatoire.");That(s.Length<=max,$"{field} dépasse {max} caractères.");return s;}public static decimal Money(decimal x,string field){That(x>=0&&x<=100000000&&decimal.Round(x,2)==x,$"{field} doit être un montant positif avec deux décimales maximum.");return x;}}
