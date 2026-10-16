@@ -3,7 +3,7 @@ node_modules/
 dist/
 bin/
 obj/
-data/
+/data/
 *.db
 *.db-shm
 *.db-wal
