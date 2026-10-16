@@ -32,3 +32,5 @@ catalog/*
 !catalog/featured-barcodes.json
 !catalog/images/
 !catalog/images/**
+
+.local

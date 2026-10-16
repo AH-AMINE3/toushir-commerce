@@ -16,17 +16,18 @@ Directory.CreateDirectory(webRoot);
 builder.Environment.WebRootPath=webRoot;
 builder.Environment.WebRootFileProvider=new PhysicalFileProvider(webRoot);
 var demo=builder.Configuration.GetValue<bool>("Demo:Enabled");
+var hasPostgres=!string.IsNullOrWhiteSpace(builder.Configuration["DATABASE_URL"]);
 var dataPath=builder.Configuration["DataPath"]??Path.Combine(builder.Environment.ContentRootPath,"App_Data");
 if(builder.Environment.IsProduction()&&string.IsNullOrWhiteSpace(builder.Configuration["DataPath"]))throw new InvalidOperationException("Production hosting requires an explicit DataPath. Real business data must use a persistent volume; public demo mode must be explicitly enabled.");
 var resolvedDataPath=Path.GetFullPath(dataPath);
 bool Within(string directory){var path=Path.GetFullPath(directory).TrimEnd(Path.DirectorySeparatorChar);return resolvedDataPath==path||resolvedDataPath.StartsWith(path+Path.DirectorySeparatorChar,StringComparison.Ordinal);}
-if(builder.Environment.IsProduction()&&!demo&&(Within("/tmp")||Within("/private/tmp")||Within(Path.GetTempPath())))throw new InvalidOperationException("Temporary SQLite storage is allowed only for an explicitly enabled demonstration. Production business data requires durable DataPath storage.");
+if(builder.Environment.IsProduction()&&!demo&&!hasPostgres&&(Within("/tmp")||Within("/private/tmp")||Within(Path.GetTempPath())))throw new InvalidOperationException("Temporary SQLite storage is allowed only for an explicitly enabled demonstration. Production business data requires durable DataPath storage.");
 Directory.CreateDirectory(dataPath);
 if(!OperatingSystem.IsWindows())File.SetUnixFileMode(dataPath,UnixFileMode.UserRead|UnixFileMode.UserWrite|UnixFileMode.UserExecute);
 var databasePath=Path.Combine(dataPath,"toushir-wholesale.db");
-builder.Services.AddDbContext<WholesaleDb>(o=>o.UseSqlite($"Data Source={databasePath};Default Timeout=15;Foreign Keys=True"));
+builder.Services.AddDbContext<WholesaleDb>(o=>DatabaseConfiguration.Configure(o,builder.Configuration["DATABASE_URL"],databasePath));
 builder.Services.Configure<PasswordHasherOptions>(o=>o.IterationCount=210000);builder.Services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(dataPath,"keys"))).SetApplicationName("Toushir.Wholesale");
-builder.Services.AddScoped<PasswordHasher<Account>>();builder.Services.AddScoped<AuthService>();builder.Services.AddScoped<CatalogService>();builder.Services.AddScoped<OrderService>();builder.Services.AddScoped<AdminService>();builder.Services.AddScoped<OrderDocument>();builder.Services.AddScoped<ClaimsService>();builder.Services.AddScoped<AnalyticsService>();builder.Services.AddScoped<DemoScenarioService>();builder.Services.AddSingleton<MutationGate>();
+builder.Services.AddScoped<PasswordHasher<Account>>();builder.Services.AddScoped<AuthService>();builder.Services.AddScoped<CatalogService>();builder.Services.AddScoped<OrderService>();builder.Services.AddScoped<AdminService>();builder.Services.AddScoped<OrderDocument>();builder.Services.AddScoped<ClaimsService>();builder.Services.AddScoped<AnalyticsService>();builder.Services.AddScoped<DemoScenarioService>();builder.Services.AddScoped<DemoInvitationService>();builder.Services.AddSingleton<MutationGate>();
 builder.Services.AddAuthentication("session").AddScheme<AuthenticationSchemeOptions,SessionHandler>("session",_=>{});builder.Services.AddAuthorization();
 var origins=(builder.Configuration["Cors:Origins"]??"http://localhost:8084;http://localhost:8085;http://localhost:8081;http://127.0.0.1:8084;http://127.0.0.1:8085").Split(';',StringSplitOptions.RemoveEmptyEntries|StringSplitOptions.TrimEntries);
 var trustPlatformProxy=builder.Configuration.GetValue<bool>("ForwardedHeaders:TrustPlatformProxy");
@@ -46,8 +47,10 @@ app.MapGet("/catalog/products.json",async(WholesaleDb db)=>Results.Json(new{sour
 app.MapGet("/catalog/README.md",()=>{var path=Path.Combine(catalogDir,"README.md");return File.Exists(path)?Results.File(path,"text/plain; charset=utf-8"):Results.Text("Catalog: Open Food Facts contributors, ODbL 1.0. Package images: CC-BY-SA 3.0. Source links accompany every product. Brand marks belong to their respective owners.","text/plain; charset=utf-8");});
 using(var scope=app.Services.CreateScope()){var db=scope.ServiceProvider.GetRequiredService<WholesaleDb>();await Seed.Initialize(db,builder.Configuration,app.Logger);}
 var api=app.MapGroup("/api").AddEndpointFilter<MutationFilter>();
-api.MapGet("/health",async(WholesaleDb db)=>Results.Ok(new{status="ok",version="1.0.0",framework=".NET 10",database=await db.Database.CanConnectAsync()?"connected":"unavailable",products=await db.Products.CountAsync(x=>x.IsCatalogActive),catalogCount=await db.Products.CountAsync(x=>x.IsCatalogActive),demoEnabled=demo,pricingMode="ON_REQUEST",catalogDisclaimer="Identités réelles issues de sources ouvertes. Prix, stocks et disponibilité à confirmer par le grossiste.",storage=demo?"Demo SQLite: persistence depends on the hosting volume.":"SQLite: explicit durable DataPath required."}));
+api.MapGet("/health",async(WholesaleDb db)=>Results.Ok(new{status="ok",version="1.0.0",framework=".NET 10",database=await db.Database.CanConnectAsync()?"connected":"unavailable",products=await db.Products.CountAsync(x=>x.IsCatalogActive),catalogCount=await db.Products.CountAsync(x=>x.IsCatalogActive),demoEnabled=demo,pricingMode="ON_REQUEST",catalogDisclaimer="Identités réelles issues de sources ouvertes. Prix, stocks et disponibilité à confirmer par le grossiste.",storage=hasPostgres?"PostgreSQL: hosted persistent database.":demo?"Demo SQLite: persistence depends on the hosting volume.":"SQLite: explicit durable DataPath required."}));
 api.MapPost("/demo/session",async(DemoInput x,AuthService s,HttpContext c)=>Results.Ok(await s.Demo(x,c))).RequireRateLimiting("demo");
+api.MapGet("/demo/invitations/{token}",async(string token,DemoInvitationService s)=>Results.Ok(await s.Describe(token))).RequireRateLimiting("auth");
+api.MapPost("/demo/join",async(JoinDemoInput x,DemoInvitationService s,HttpContext c)=>Results.Ok(await s.Join(x,c))).RequireRateLimiting("auth");
 api.MapPost("/auth/login",async(LoginInput x,AuthService s,HttpContext c)=>Results.Ok(await s.Login(x,c))).RequireRateLimiting("auth");
 api.MapPost("/auth/register",async(RegisterInput x,AuthService s,HttpContext c)=>Results.Ok(await s.Register(x,c))).RequireRateLimiting("auth");
 var secure=api.MapGroup("").RequireAuthorization();
@@ -74,6 +77,9 @@ secure.MapGet("/orders/{id}",async(string id,OrderService s,HttpContext c)=>Resu
 secure.MapPost("/orders/{id}/claims",async(string id,CreateClaimInput x,ClaimsService s,HttpContext c)=>Results.Ok(await s.Create(Actor.From(c),id,x)));
 secure.MapPost("/orders/{id}/accept-quote",async(string id,AcceptQuoteInput x,OrderService s,HttpContext c)=>Results.Ok(await s.Accept(Actor.From(c),id,x)));secure.MapPost("/orders/{id}/decline",async(string id,ReasonInput x,OrderService s,HttpContext c)=>Results.Ok(await s.Decline(Actor.From(c),id,x)));secure.MapPost("/orders/{id}/cancel",async(string id,ReasonInput x,OrderService s,HttpContext c)=>Results.Ok(await s.Cancel(Actor.From(c),id,x)));secure.MapPost("/orders/{id}/reorder",async(string id,OrderService s,HttpContext c)=>Results.Ok(await s.Reorder(Actor.From(c),id)));
 var admin=secure.MapGroup("/admin").AddEndpointFilter(async(ctx,next)=>{Actor.From(ctx.HttpContext).Admin();return await next(ctx);});
+admin.MapGet("/demo/invitations",async(DemoInvitationService s,HttpContext c)=>Results.Ok(await s.List(Actor.From(c))));
+admin.MapPost("/demo/invitations",async(InvitationInput x,DemoInvitationService s,HttpContext c)=>Results.Ok(await s.Create(Actor.From(c),x)));
+admin.MapPost("/demo/invitations/{id}/revoke",async(string id,DemoInvitationService s,HttpContext c)=>Results.Ok(await s.Revoke(Actor.From(c),id)));
 admin.MapPost("/demo/scenario",async(DemoScenarioService s,HttpContext c)=>Results.Ok(await s.Seed(Actor.From(c))));
 admin.MapGet("/analytics",async(AnalyticsService s,HttpContext c)=>Results.Ok(await s.Report(Actor.From(c),c.Request.Query)));
 admin.MapGet("/dashboard",async(AdminService s,HttpContext c)=>Results.Ok(await s.Dashboard(Actor.From(c),CatalogService.Page(c.Request.Query["days"],30))));

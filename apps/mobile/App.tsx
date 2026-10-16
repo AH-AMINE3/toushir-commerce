@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StatusBar, Text, View } from 'react-native';
+import { ActivityIndicator, KeyboardAvoidingView, Linking, Platform, Pressable, ScrollView, StatusBar, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import * as SecureStore from 'expo-secure-store';
 import { useFonts } from 'expo-font';
@@ -8,6 +8,7 @@ import { C, S } from './src/theme';
 import { Button, Field, Icon, Logo, Notice } from './src/components';
 import Merchant from './src/Merchant';
 import Admin from './src/Admin';
+import Join, {invitationToken} from './src/Join';
 
 async function readSaved(key: string) { return Platform.OS === 'web' ? window.sessionStorage.getItem(key) : SecureStore.getItemAsync(key); }
 async function save(key: string, value: string) { if (Platform.OS === 'web') window.sessionStorage.setItem(key, value); else await SecureStore.setItemAsync(key, value); }
@@ -18,6 +19,7 @@ function Application() {
   const [fontsLoaded, fontError] = useFonts({ Inter: require('./assets/Inter.ttf') });
   const [session, setSession] = useState<Session | null>(null);
   const [booting, setBooting] = useState(true);
+  const [joinToken,setJoinToken]=useState<string|null>(null);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -45,11 +47,12 @@ function Application() {
   async function bootstrap() {
     setBooting(true); setError('');
     try {
+      if (Platform.OS === 'web' && window.location.pathname.startsWith('/admin')) { const savedAccess=window.location.hash.match(/^#workspace=([a-f0-9]{64})$/i)?.[1]; if(savedAccess){await save('toushir-demo-workspace',savedAccess);await startDemo('ADMIN');return;} }
       if (Platform.OS !== 'web') setBearer(await readSaved('toushir-token') || '');
       const current = await api<Session>('/auth/me');
       const desiredRole = Platform.OS === 'web' && window.location.pathname.startsWith('/admin') ? 'ADMIN' : 'MERCHANT';
-      if (current.workspace.isDemo && current.user.role !== desiredRole) await startDemo(desiredRole);
-      else { setSession(current); setDemoAvailable(!!current.workspace.isDemo); }
+      if (current.workspace.isDemo && current.workspace.canSwitchRole && current.user.role !== desiredRole) await startDemo(desiredRole);
+      else { setSession({...current,...(current.workspace.canSwitchRole?{workspaceToken:await readSaved('toushir-demo-workspace')||undefined}:{})}); setDemoAvailable(!!current.workspace.isDemo); }
     } catch {
       try {
         const saved = await readSaved('toushir-demo-workspace');
@@ -62,7 +65,10 @@ function Application() {
       }
     } finally { setBooting(false); }
   }
-  useEffect(() => { bootstrap(); }, []);
+  useEffect(() => {
+    async function init(){const initial=Platform.OS==='web'?window.location.href:await Linking.getInitialURL();const token=initial?invitationToken(initial):null;if(token){setJoinToken(token);setBooting(false);}else await bootstrap();}
+    init();const subscription=Linking.addEventListener('url',({url})=>{const token=invitationToken(url);if(token){setJoinToken(token);setError('');}});return()=>subscription.remove();
+  }, []);
   useEffect(() => {
     if (session?.user.role !== 'MERCHANT' || session.user.approvalStatus !== 'PENDING') return;
     let active = true;
@@ -81,12 +87,13 @@ function Application() {
   if ((!fontsLoaded && !fontError) || booting) return <SafeAreaView style={{ flex: 1, backgroundColor: C.white, alignItems: 'center', justifyContent: 'center', gap: 28 }}><StatusBar barStyle="dark-content" /><Logo /><ActivityIndicator color={C.green} /><Text style={S.muted}>Ouverture de votre espace…</Text></SafeAreaView>;
   return <SafeAreaView style={{ flex: 1, backgroundColor: C.bg }}>
     <StatusBar barStyle="dark-content" />
-    {session ? <UiBoundary key={session.user.id}>{session.user.role === 'ADMIN' ? <Admin session={session} onSwitch={() => startDemo('MERCHANT')} onLogout={logout} onNotice={notify} /> : <Merchant session={session} onSwitch={() => startDemo('ADMIN')} onLogout={logout} onNotice={notify} />}</UiBoundary> : <KeyboardAvoidingView style={{flex:1,backgroundColor:C.white}} behavior={Platform.OS === 'ios' ? 'padding' : undefined}><ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{flexGrow:1,justifyContent:'center',padding:24,paddingVertical:48}}>
+    {joinToken!==null?<Join key={joinToken} initialToken={joinToken} onCancel={()=>{setJoinToken(null);if(Platform.OS==='web')window.history.replaceState(null,'','/');if(!session)bootstrap();}} onJoined={async next=>{await acceptSession(next);setJoinToken(null);if(Platform.OS==='web')window.history.replaceState(null,'','/');}}/>:session ? <UiBoundary key={session.user.id}>{session.user.role === 'ADMIN' ? <Admin session={session} onSwitch={() => startDemo('MERCHANT')} onLogout={logout} onNotice={notify} /> : <Merchant session={session} onJoin={()=>setJoinToken('')} onSwitch={() => startDemo('ADMIN')} onLogout={logout} onNotice={notify} />}</UiBoundary> : <KeyboardAvoidingView style={{flex:1,backgroundColor:C.white}} behavior={Platform.OS === 'ios' ? 'padding' : undefined}><ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{flexGrow:1,justifyContent:'center',padding:24,paddingVertical:48}}>
       <View style={{ maxWidth: 400, width: '100%', alignSelf: 'center', gap: 20 }}><Logo /><Text style={[S.heading, { marginTop: 20 }]}>{authMode === 'login' ? 'Bienvenue sur Toushir.' : 'Inscrire mon commerce'}</Text><Text style={S.muted}>{authMode === 'login' ? 'Retrouvez vos produits et suivez vos commandes.' : 'Le grossiste vérifiera votre commerce avant votre première demande.'}</Text>
         {error ? <Notice error>{error}</Notice> : null}
         {authMode === 'register' && <><Field label="Votre nom" value={form.name} onChangeText={update('name')} autoComplete="name" /><Field label="Nom du commerce" value={form.shopName} onChangeText={update('shopName')} /><Field label="Téléphone professionnel" value={form.phone} onChangeText={update('phone')} keyboardType="phone-pad" autoComplete="tel" /><Field label="Commune" value={form.commune} onChangeText={update('commune')} /><Field label="Adresse" value={form.street} onChangeText={update('street')} /></>}
         <Field label="Adresse e-mail" value={form.email} onChangeText={update('email')} keyboardType="email-address" autoCapitalize="none" autoComplete="email" /><Field label="Mot de passe" value={form.password} onChangeText={update('password')} secureTextEntry autoComplete={authMode === 'login' ? 'current-password' : 'new-password'} onSubmitEditing={authenticate} />
         <Button onPress={authenticate} loading={busy} icon="arrow-forward">{authMode === 'login' ? 'Se connecter' : 'Créer mon compte'}</Button><Button variant="ghost" onPress={() => { setAuthMode(authMode === 'login' ? 'register' : 'login'); setError(''); }}>{authMode === 'login' ? 'Inscrire mon commerce' : 'J’ai déjà un compte'}</Button>
+        <Button variant="secondary" icon="storefront-outline" onPress={()=>setJoinToken('')}>Rejoindre mon grossiste</Button>
         {demoAvailable && <Button variant="secondary" onPress={() => startDemo('MERCHANT', false)} loading={busy}>Explorer la démonstration</Button>}
         {error && !demoAvailable && <Button variant="secondary" icon="refresh-outline" onPress={bootstrap}>Réessayer la connexion</Button>}
       </View></ScrollView></KeyboardAvoidingView>}

@@ -2,6 +2,8 @@ namespace Toushir.Wholesale;
 public record LoginInput(string Email,string Password);
 public record RegisterInput(string Name,string ShopName,string Email,string Phone,string Password,AddressInput Address);
 public record DemoInput(string? Role,string? WorkspaceToken);
+public record InvitationInput(string Label,int Hours=168,int MaxUses=50);
+public record JoinDemoInput(string InviteToken,string JoinKey,string Name,string ShopName,string? Phone,string? Commune,string? Street);
 public record ProfileInput(string Name,string ShopName,string Phone);
 public record PasswordInput(string CurrentPassword,string NewPassword);
 public record AddressInput(string Label,string Wilaya,string Commune,string Street,bool IsDefault=false);
