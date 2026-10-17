@@ -6,6 +6,9 @@ on:
     branches: [commerce-ecosystem]
 permissions:
   contents: read
+concurrency:
+  group: verify-commerce-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   applications:
     runs-on: ubuntu-latest

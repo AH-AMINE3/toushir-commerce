@@ -18,12 +18,12 @@ def call(path, token=None, body=None, expected=200, raw=False):
         with urllib.request.urlopen(req, timeout=45) as response:
             status=response.status
             data=response.read() if raw else json.load(response)
-            headers=dict(response.headers)
+            headers={name.lower():value for name,value in response.headers.items()}
     except urllib.error.HTTPError as error:
         status=error.code
         try: data=json.load(error)
         except Exception: data={}
-        headers=dict(error.headers)
+        headers={name.lower():value for name,value in error.headers.items()}
     assert status == expected, (path, status, expected, data if not raw else 'binary response')
     return (data,headers) if raw else data
 def ok(name, condition=True):
@@ -62,7 +62,7 @@ try:
     call(path+'/documents',A,{**first_body,'reference':'OTHER'},expected=409)
     ok('reused document key cannot replace content or reference')
     data,headers=call(path+'/documents/'+doc['id']+'/content',W,raw=True)
-    ok('authorized download returns exact PDF bytes as a private attachment', data==PDF and headers.get('Cache-Control')=='no-store' and 'attachment' in headers.get('Content-Disposition',''))
+    ok('authorized download returns exact PDF bytes as a private attachment', data==PDF and headers.get('cache-control')=='no-store' and 'attachment' in headers.get('content-disposition',''))
     call(path+'/documents/'+doc['id']+'/content',X,expected=404)
     call(path+'/documents/'+doc['id']+'/content',M,expected=403)
     ok('PDF content has the same workspace and role boundaries as its dossier')
