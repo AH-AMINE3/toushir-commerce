@@ -51,6 +51,9 @@ export function Conversations({
   initialContext?: Context;
   settingsOpen?: boolean;
 }) {
+  const canSend =
+    session.user.role !== "MERCHANT" || session.user.shop?.canOrder !== false;
+  const canManage = session.user.shop?.canManage !== false;
   const [threads, setThreads] = useState<Conversation[]>([]),
     [thread, setThread] = useState<Conversation | null>(null),
     [messages, setMessages] = useState<Message[]>([]),
@@ -115,6 +118,19 @@ export function Conversations({
     }
   }
   async function create(context?: Context) {
+    if (!canSend) {
+      const existing = threads.find(
+        (t) =>
+          t.contextType === (context?.type || "GENERAL") &&
+          (!context?.id || t.contextId === context.id),
+      );
+      if (existing) await open(existing);
+      else
+        setError(
+          "Aucune conversation ouverte pour ce dossier. Votre accès est en lecture seule.",
+        );
+      return;
+    }
     setBusy(true);
     setError("");
     try {
@@ -132,7 +148,7 @@ export function Conversations({
     }
   }
   async function send() {
-    if (!thread || !text.trim()) return;
+    if (!canSend || !thread || !text.trim()) return;
     setBusy(true);
     setError("");
     try {
@@ -194,7 +210,7 @@ export function Conversations({
               Cette conversation n’a pas encore de message.
             </Text>
           ) : null}
-          {thread.status === "OPEN" ? (
+          {thread.status === "OPEN" && canSend ? (
             <>
               <Field
                 label="Votre message"
@@ -214,7 +230,9 @@ export function Conversations({
             </>
           ) : (
             <Notice>
-              Cette conversation est clôturée. Votre équipe peut la rouvrir.
+              {canSend
+                ? "Cette conversation est clôturée. Votre équipe peut la rouvrir."
+                : "Vous consultez cette conversation en lecture seule."}
             </Notice>
           )}
         </>
@@ -236,7 +254,9 @@ export function Conversations({
                 </FilterPill>
               ))}
             </View>
-            {session.user.role === "MERCHANT" && settingsOpen === undefined ? (
+            {session.user.role === "MERCHANT" &&
+            canManage &&
+            settingsOpen === undefined ? (
               <Button
                 variant="ghost"
                 icon="settings-outline"
@@ -263,6 +283,7 @@ export function Conversations({
                 <Switch
                   accessibilityLabel="Recevoir les offres commerciales"
                   value={marketing}
+                  disabled={!canManage}
                   onValueChange={async (value) => {
                     try {
                       await put("/preferences/marketing", { optIn: value });
@@ -322,12 +343,14 @@ export function Conversations({
               message={
                 session.user.role === "DRIVER"
                   ? "Ouvrez un arrêt pour contacter le commerçant à propos de sa livraison."
-                  : "Votre conseiller répond à vos questions de réassort."
+                  : !canSend
+                    ? "Accès en lecture seule. Le propriétaire, un responsable ou un acheteur peut écrire au conseiller. Vous pourrez consulter ici les échanges du magasin."
+                    : "Votre conseiller répond à vos questions de réassort."
               }
               icon="chatbubble-outline"
             />
           ) : null}
-          {session.user.role === "MERCHANT" ? (
+          {session.user.role === "MERCHANT" && canSend ? (
             <View style={E.panel}>
               <Icon name="chatbubble-outline" size={28} />
               <Text style={E.title}>Une question sur votre réassort ?</Text>
@@ -451,7 +474,8 @@ export function Campaigns({
                 <Text style={S.muted}>
                   Unités acceptées et réglées, après retours pris en compte.
                 </Text>
-                {progress?.grant?.status === "GRANTED" ? (
+                {progress?.grant?.status === "GRANTED" &&
+                session.user.shop?.canManage !== false ? (
                   <Button
                     loading={busy}
                     onPress={async () => {
@@ -674,6 +698,7 @@ export function Loyalty({
         <Button
           variant="secondary"
           icon="refresh-outline"
+          disabled={session.user.shop?.canOrder === false}
           loading={busy}
           onPress={async () => {
             setBusy(true);
@@ -712,6 +737,7 @@ export function Loyalty({
           <Button
             loading={busy}
             disabled={
+              session.user.shop?.canManage === false ||
               !wallet ||
               wallet.available < r.pointsCost ||
               wallet.correctionDue > 0 ||

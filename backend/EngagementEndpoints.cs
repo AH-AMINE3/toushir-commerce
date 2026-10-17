@@ -61,7 +61,7 @@ public static class EngagementEndpoints
 }
 
 /// <summary>Durable at-least-once invalidation notices. Notification failure never rolls back a committed business action.</summary>
-public sealed class EngagementOutboxPublisher(IServiceScopeFactory scopes, IHubContext<CommerceHub> hub, ILogger<EngagementOutboxPublisher> logger) : BackgroundService
+public sealed class EngagementOutboxPublisher(IServiceScopeFactory scopes, IHubContext<CommerceHub> hub, MutationGate gate, ILogger<EngagementOutboxPublisher> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -76,15 +76,18 @@ public sealed class EngagementOutboxPublisher(IServiceScopeFactory scopes, IHubC
                     var notices = await db.EngagementNotices.Where(x => x.PublishedAt == null && x.Attempts < 20).Take(100).ToListAsync(stoppingToken);
                     foreach (var notice in notices)
                     {
+                        var local = !db.Database.IsNpgsql();
+                        if (local) await gate.Lock.WaitAsync(stoppingToken);
                         notice.Attempts++;
                         try
                         {
                             var payload = new { eventId = notice.Id, kind = notice.Kind, aggregateId = notice.AggregateId, at = notice.CreatedAt };
-                            await hub.Clients.Group(CommerceHub.Operations(notice.WorkspaceId)).SendAsync("engagement.updated", payload, stoppingToken);
-                            if (notice.MerchantId.Length > 0) await hub.Clients.Group(CommerceHub.Account(notice.WorkspaceId, notice.MerchantId)).SendAsync("engagement.updated", payload, stoppingToken);
+                            await LiveAudience.Send(db, hub, notice.WorkspaceId, a => a.IsStaff, "engagement.updated", payload, stoppingToken);
+                            if (notice.MerchantId.Length > 0) await LiveAudience.Send(db, hub, notice.WorkspaceId, a => a.Role == "MERCHANT" && a.ResourceOwnerId == notice.MerchantId, "engagement.updated", payload, stoppingToken);
                             notice.PublishedAt = DateTimeOffset.UtcNow;
                         }
                         catch (Exception error) when (!stoppingToken.IsCancellationRequested) { logger.LogWarning(error, "Engagement notice {EventId} will retry", notice.Id); }
+                        finally { if (local) gate.Lock.Release(); }
                     }
                     if (notices.Count > 0) await db.SaveChangesAsync(stoppingToken);
                 }

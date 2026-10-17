@@ -88,7 +88,7 @@ public sealed partial class PricingService
     public void Capture(Actor actor, PurchaseOrder order, QuotePricingPlan plan)
     {
         actor.RequireRoles("ADMIN", "MERCHANT");
-        Check.That(order.WorkspaceId == actor.WorkspaceId && (actor.Role != "MERCHANT" || order.AccountId == actor.Id), "Commande introuvable.", "NOT_FOUND", 404);
+        Check.That(order.WorkspaceId == actor.WorkspaceId && (actor.Role != "MERCHANT" || order.AccountId == actor.ResourceOwnerId), "Commande introuvable.", "NOT_FOUND", 404);
         foreach (var item in order.Items)
         {
             Check.That(plan.Lines.TryGetValue(item.ProductId, out var line), "La provenance tarifaire d’une ligne manque.", "PRICING_CONFLICT", 409);
@@ -117,7 +117,7 @@ public sealed partial class PricingService
     {
         actor.RequireRoles("ADMIN", "FINANCE", "MERCHANT", "WAREHOUSE", "DISPATCHER", "DRIVER");
         Check.That(await db.Orders.AsNoTracking().AnyAsync(x => x.Id == order.Id && x.WorkspaceId == actor.WorkspaceId
-            && (actor.Role != "MERCHANT" || x.AccountId == actor.Id)), "Commande introuvable.", "NOT_FOUND", 404);
+            && (actor.Role != "MERCHANT" || x.AccountId == actor.ResourceOwnerId)), "Commande introuvable.", "NOT_FOUND", 404);
         if (actor.Role == "DRIVER") Check.That(await db.DeliveryAssignments.AsNoTracking().AnyAsync(x =>
             x.WorkspaceId == actor.WorkspaceId && x.OrderId == order.Id && x.DriverId == actor.Id), "Commande introuvable.", "NOT_FOUND", 404);
         var items = await db.OrderPricingSnapshots.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId
@@ -132,7 +132,7 @@ public sealed partial class PricingService
     {
         actor.RequireRoles("ADMIN", "FINANCE", "MERCHANT");
         var order = await db.Orders.AsNoTracking().FirstOrDefaultAsync(x => x.Id == orderId && x.WorkspaceId == actor.WorkspaceId);
-        Check.That(order != null && (actor.Role != "MERCHANT" || order.AccountId == actor.Id), "Commande introuvable.", "NOT_FOUND", 404);
+        Check.That(order != null && (actor.Role != "MERCHANT" || order.AccountId == actor.ResourceOwnerId), "Commande introuvable.", "NOT_FOUND", 404);
         var query = db.OrderPricingSnapshots.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId && x.OrderId == orderId);
         var size = Math.Clamp(pageSize, 1, 100); var current = Math.Clamp(page, 1, 100000);
         var count = await query.CountAsync();

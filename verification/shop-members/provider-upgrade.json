@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-17T12:00:02.174967+00:00",
+  "passed": 4,
+  "checks": [
+    "Actual SQLite backup startup upgrade preserved all 59 pre-existing business table counts",
+    "SQLite integrity and three additive membership tables plus three legacy attribution columns verified",
+    "PostgreSQL idempotent upgrade SQL targets the configured alternate schema without destructive table or column operations",
+    "PostgreSQL alternate-schema model has no pending changes"
+  ],
+  "scope": "SQLite executed on a backup of the current local pricing release. PostgreSQL SQL and model generation verified; hosted execution remains pending deployment."
+}

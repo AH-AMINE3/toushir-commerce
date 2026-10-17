@@ -12,10 +12,11 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
     private void Notice(Actor actor, string merchantId, string kind, string aggregateId) => db.EngagementNotices.Add(new() { WorkspaceId = actor.WorkspaceId, MerchantId = merchantId, Kind = kind, AggregateId = aggregateId });
     private async Task<string> Merchant(Actor actor, string? requested = null)
     {
-        var id = actor.Role == "MERCHANT" ? actor.Id : Check.Text(requested, 100, "Magasin");
+        var id = actor.Role == "MERCHANT" ? actor.ResourceOwnerId : Check.Text(requested, 100, "Magasin");
+        if (actor.Role == "MERCHANT") Check.That(string.IsNullOrWhiteSpace(requested) || requested == id, "Magasin introuvable.", "NOT_FOUND", 404);
         if (actor.Role != "MERCHANT")
             actor.RequireRoles("ADMIN", "FINANCE", "DISPATCHER", "WAREHOUSE");
-        Check.That(await db.Accounts.AnyAsync(x => x.Id == id && x.WorkspaceId == actor.WorkspaceId && x.Role == "MERCHANT"), "Magasin introuvable.", "NOT_FOUND", 404);
+        Check.That(await db.Accounts.AnyAsync(x => x.Id == id && x.WorkspaceId == actor.WorkspaceId && x.Role == "MERCHANT" && !db.ShopMemberships.Any(m => m.AccountId == x.Id)), "Magasin introuvable.", "NOT_FOUND", 404);
         return id;
     }
     private async Task<Conversation> Thread(Actor actor, string id)
@@ -23,7 +24,7 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
         var thread = await db.Conversations.FirstOrDefaultAsync(x => x.Id == id && x.WorkspaceId == actor.WorkspaceId);
         Check.That(thread != null, "Conversation introuvable.", "NOT_FOUND", 404);
         if (actor.Role == "MERCHANT")
-            Check.That(thread.MerchantId == actor.Id, "Conversation introuvable.", "NOT_FOUND", 404);
+            Check.That(thread.MerchantId == actor.ResourceOwnerId, "Conversation introuvable.", "NOT_FOUND", 404);
         else if (actor.Role == "DRIVER")
             Check.That(thread.ContextType == "DELIVERY" && await db.DeliveryAssignments.AnyAsync(x => x.WorkspaceId == actor.WorkspaceId && x.OrderId == thread.ContextId && x.DriverId == actor.Id), "Conversation introuvable.", "NOT_FOUND", 404);
         else
@@ -34,7 +35,7 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
     {
         var q = db.Conversations.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId);
         if (actor.Role == "MERCHANT")
-            q = q.Where(x => x.MerchantId == actor.Id);
+            q = q.Where(x => x.MerchantId == actor.ResourceOwnerId);
         else if (actor.Role == "DRIVER")
             q = q.Where(x => x.ContextType == "DELIVERY" && db.DeliveryAssignments.Any(a => a.WorkspaceId == actor.WorkspaceId && a.OrderId == x.ContextId && a.DriverId == actor.Id));
         else
@@ -66,6 +67,7 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
     }
     public async Task<object> CreateConversation(Actor actor, CreateConversationInput input)
     {
+        if (actor.Role == "MERCHANT") actor.ShopWrite();
         var type = Check.Text(input.ContextType, 20, "Contexte").ToUpperInvariant();
         Check.That(type is "GENERAL" or "ORDER" or "DELIVERY" or "GIFT", "Contexte inconnu.");
         string merchant;
@@ -76,7 +78,7 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
             Check.That(order != null, "Dossier introuvable.", "NOT_FOUND", 404);
             merchant = order.AccountId;
             if (actor.Role == "MERCHANT")
-                Check.That(merchant == actor.Id, "Dossier introuvable.", "NOT_FOUND", 404);
+                Check.That(merchant == actor.ResourceOwnerId, "Dossier introuvable.", "NOT_FOUND", 404);
             else if (actor.Role == "DRIVER")
                 Check.That(type == "DELIVERY" && await db.DeliveryAssignments.AnyAsync(x => x.WorkspaceId == actor.WorkspaceId && x.OrderId == context && x.DriverId == actor.Id), "Dossier introuvable.", "NOT_FOUND", 404);
             else
@@ -111,6 +113,7 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
     }
     public async Task<object> Send(Actor actor, string id, SendMessageInput input)
     {
+        if (actor.Role == "MERCHANT") actor.ShopWrite();
         var thread = await Thread(actor, id);
         var key = Key(input.IdempotencyKey);
         var text = Check.Text(input.Text, 5000, "Message");
@@ -158,7 +161,7 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
     public async Task<object> Preference(Actor actor)
     {
         actor.RequireRoles("MERCHANT");
-        var p = await db.CommunicationPreferences.AsNoTracking().FirstOrDefaultAsync(x => x.WorkspaceId == actor.WorkspaceId && x.MerchantId == actor.Id);
+        var p = await db.CommunicationPreferences.AsNoTracking().FirstOrDefaultAsync(x => x.WorkspaceId == actor.WorkspaceId && x.MerchantId == actor.ResourceOwnerId);
         return new
         {
             optIn = p?.MarketingOptIn ?? false,
@@ -168,14 +171,15 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
     }
     public async Task<object> SetPreference(Actor actor, MarketingPreferenceInput input)
     {
+        actor.ManageShop();
         actor.RequireRoles("MERCHANT");
-        var p = await db.CommunicationPreferences.FirstOrDefaultAsync(x => x.WorkspaceId == actor.WorkspaceId && x.MerchantId == actor.Id);
+        var p = await db.CommunicationPreferences.FirstOrDefaultAsync(x => x.WorkspaceId == actor.WorkspaceId && x.MerchantId == actor.ResourceOwnerId);
         if (p == null)
         {
             p = new()
             {
                 WorkspaceId = actor.WorkspaceId,
-                MerchantId = actor.Id
+                MerchantId = actor.ResourceOwnerId
             };
             db.CommunicationPreferences.Add(p);
         }
@@ -216,7 +220,7 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
             Check.That(old.RequestHash == hash, "Clé déjà utilisée.", "IDEMPOTENCY_CONFLICT", 409);
             return old;
         }
-        Check.That(await db.Accounts.CountAsync(x => x.WorkspaceId == actor.WorkspaceId && x.Role == "MERCHANT" && targets.Contains(x.Id)) == targets.Count, "Magasin introuvable.");
+        Check.That(await db.Accounts.CountAsync(x => x.WorkspaceId == actor.WorkspaceId && x.Role == "MERCHANT" && !db.ShopMemberships.Any(m => m.AccountId == x.Id) && targets.Contains(x.Id)) == targets.Count, "Magasin introuvable.");
         var item = new Broadcast { WorkspaceId = actor.WorkspaceId, Purpose = purpose, Title = title, Body = body, MerchantIdsJson = JsonSerializer.Serialize(targets), Targeted = targets.Count, CreatedBy = actor.Id, IdempotencyKey = key, RequestHash = hash };
         db.Broadcasts.Add(item);
         orders.Audit(actor, "BROADCAST_DRAFT_CREATED", item.Id, purpose);
@@ -235,7 +239,7 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
                 recipients = await db.BroadcastRecipients.AsNoTracking().Where(x => x.BroadcastId == id).ToListAsync()
             };
         var targets = JsonSerializer.Deserialize<List<string>>(b.MerchantIdsJson)!;
-        var accounts = await db.Accounts.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId && targets.Contains(x.Id) && x.Role == "MERCHANT").ToDictionaryAsync(x => x.Id);
+        var accounts = await db.Accounts.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId && targets.Contains(x.Id) && x.Role == "MERCHANT" && !db.ShopMemberships.Any(m => m.AccountId == x.Id)).ToDictionaryAsync(x => x.Id);
         var opted = await db.CommunicationPreferences.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId && x.MarketingOptIn).Select(x => x.MerchantId).ToListAsync();
         foreach (var merchantId in targets)
         {
@@ -334,7 +338,7 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
         var c = await VisibleCampaign(actor, id);
         Check.That(x.Quantity is >= 0 and <= 1000000, "Quantité invalide.");
         var offer = await db.Offers.AsNoTracking().FirstOrDefaultAsync(o => o.WorkspaceId == actor.WorkspaceId && o.ProductId == c.ProductId);
-        var book = await pricing.LoadBook(actor.WorkspaceId, actor.Role == "MERCHANT" ? actor.Id : null);
+        var book = await pricing.LoadBook(actor.WorkspaceId, actor.Role == "MERCHANT" ? actor.ResourceOwnerId : null);
         var decision = book.Resolve(c.ProductId, Math.Max(1, x.Quantity), offer);
         var active = c.Status == "PUBLISHED" && c.StartsAt <= book.At && book.At <= c.EndsAt;
         var tariffCompatible = c.Kind == "CHALLENGE" || decision.RuleId.Length == 0 || decision.AllowCampaigns;
@@ -444,7 +448,7 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
     {
         var merchant = await Merchant(actor, input.MerchantId);
         if (actor.Role == "MERCHANT")
-            actor.Approved();
+        { actor.ShopWrite(); actor.Approved(); }
         else
             actor.RequireRoles("ADMIN", "FINANCE");
         return await ReconcileLoyalty(actor, merchant);
@@ -543,7 +547,7 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
     {
         var q = db.GiftRequests.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId);
         if (actor.Role == "MERCHANT")
-            q = q.Where(x => x.MerchantId == actor.Id);
+            q = q.Where(x => x.MerchantId == actor.ResourceOwnerId);
         else
         {
             actor.RequireRoles("ADMIN", "FINANCE", "WAREHOUSE");
@@ -557,6 +561,7 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
     }
     public async Task<object> ReserveGift(Actor actor, string rewardId, ReserveGiftInput input)
     {
+        actor.ManageShop();
         actor.RequireRoles("MERCHANT");
         actor.Approved();
         var key = Key(input.IdempotencyKey);
@@ -566,44 +571,44 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
             rewardId,
             grantId
         });
-        var old = await db.GiftRequests.AsNoTracking().FirstOrDefaultAsync(x => x.WorkspaceId == actor.WorkspaceId && x.MerchantId == actor.Id && x.IdempotencyKey == key);
+        var old = await db.GiftRequests.AsNoTracking().FirstOrDefaultAsync(x => x.WorkspaceId == actor.WorkspaceId && x.MerchantId == actor.ResourceOwnerId && x.IdempotencyKey == key);
         if (old != null)
         {
             Check.That(old.RequestHash == hash, "Clé déjà utilisée pour un autre cadeau.", "IDEMPOTENCY_CONFLICT", 409);
             return old;
         }
         // Reconcile immediately before spending, so a recent refund/credit cannot leave spendable stale points.
-        await ReconcileLoyalty(actor, actor.Id);
+        await ReconcileLoyalty(actor, actor.ResourceOwnerId);
         var reward = await db.RewardItems.AsNoTracking().FirstOrDefaultAsync(x => x.Id == rewardId && x.WorkspaceId == actor.WorkspaceId && x.IsActive);
         Check.That(reward != null, "Récompense introuvable.", "NOT_FOUND", 404);
         var cost = reward.PointsCost;
         CampaignGrant? grant = null;
         if (grantId.Length > 0)
         {
-            grant = await db.CampaignGrants.FirstOrDefaultAsync(x => x.Id == grantId && x.WorkspaceId == actor.WorkspaceId && x.MerchantId == actor.Id && x.RewardId == rewardId);
+            grant = await db.CampaignGrants.FirstOrDefaultAsync(x => x.Id == grantId && x.WorkspaceId == actor.WorkspaceId && x.MerchantId == actor.ResourceOwnerId && x.RewardId == rewardId);
             Check.That(grant?.Status == "GRANTED", "Attribution indisponible.", "INVALID_GRANT", 409);
             var c = await db.Campaigns.AsNoTracking().FirstAsync(x => x.Id == grant.CampaignId);
-            Check.That(c.ClaimUntil >= DateTimeOffset.UtcNow && await EligibleCampaignUnits(c, actor.Id) >= c.GoalQuantity, "L'attribution doit être réexaminée ou a expiré.", "GRANT_REVIEW_REQUIRED", 409);
+            Check.That(c.ClaimUntil >= DateTimeOffset.UtcNow && await EligibleCampaignUnits(c, actor.ResourceOwnerId) >= c.GoalQuantity, "L'attribution doit être réexaminée ou a expiré.", "GRANT_REVIEW_REQUIRED", 409);
             cost = 0;
-            var claimed = await db.Database.ExecuteSqlInterpolatedAsync($"UPDATE \"CampaignGrants\" SET \"Status\"={"CLAIMED"} WHERE \"Id\"={grant.Id} AND \"WorkspaceId\"={actor.WorkspaceId} AND \"MerchantId\"={actor.Id} AND \"Status\"={"GRANTED"}");
+            var claimed = await db.Database.ExecuteSqlInterpolatedAsync($"UPDATE \"CampaignGrants\" SET \"Status\"={"CLAIMED"} WHERE \"Id\"={grant.Id} AND \"WorkspaceId\"={actor.WorkspaceId} AND \"MerchantId\"={actor.ResourceOwnerId} AND \"Status\"={"GRANTED"}");
             Check.That(claimed == 1, "Cette attribution a déjà été réclamée.", "GRANT_ALREADY_CLAIMED", 409);
             db.Entry(grant).State = EntityState.Detached;
         }
-        var wallet = await Wallet(actor, actor.Id);
+        var wallet = await Wallet(actor, actor.ResourceOwnerId);
         db.Entry(wallet).State = EntityState.Detached;
         if (cost > 0)
         {
-            var changed = await db.Database.ExecuteSqlInterpolatedAsync($"UPDATE \"LoyaltyWallets\" SET \"Available\"=\"Available\"-{cost}, \"Reserved\"=\"Reserved\"+{cost}, \"Version\"=\"Version\"+1 WHERE \"WorkspaceId\"={actor.WorkspaceId} AND \"MerchantId\"={actor.Id} AND \"Available\">={cost} AND \"Reserved\"<={int.MaxValue - cost} AND \"CorrectionDue\"=0");
+            var changed = await db.Database.ExecuteSqlInterpolatedAsync($"UPDATE \"LoyaltyWallets\" SET \"Available\"=\"Available\"-{cost}, \"Reserved\"=\"Reserved\"+{cost}, \"Version\"=\"Version\"+1 WHERE \"WorkspaceId\"={actor.WorkspaceId} AND \"MerchantId\"={actor.ResourceOwnerId} AND \"Available\">={cost} AND \"Reserved\"<={int.MaxValue - cost} AND \"CorrectionDue\"=0");
             Check.That(changed == 1, "Points insuffisants ou régularisation en attente.", "INSUFFICIENT_POINTS", 409);
         }
         var stock = await db.Database.ExecuteSqlInterpolatedAsync($"UPDATE \"RewardItems\" SET \"AvailableStock\"=\"AvailableStock\"-1, \"Version\"=\"Version\"+1 WHERE \"Id\"={rewardId} AND \"WorkspaceId\"={actor.WorkspaceId} AND \"IsActive\"={true} AND \"AvailableStock\">0");
         Check.That(stock == 1, "Ce cadeau n'est plus disponible.", "REWARD_OUT_OF_STOCK", 409);
-        var gift = new GiftRequest { WorkspaceId = actor.WorkspaceId, MerchantId = actor.Id, RewardId = rewardId, RewardName = reward.Name, GrantId = grantId, PointsCost = cost, IdempotencyKey = key, RequestHash = hash };
+        var gift = new GiftRequest { WorkspaceId = actor.WorkspaceId, MerchantId = actor.ResourceOwnerId, RewardId = rewardId, RewardName = reward.Name, GrantId = grantId, PointsCost = cost, IdempotencyKey = key, RequestHash = hash };
         db.GiftRequests.Add(gift);
         if (cost > 0)
-            PointEntry(actor, actor.Id, "GIFT_RESERVED", gift.Id, available: -cost, reserved: cost);
+            PointEntry(actor, actor.ResourceOwnerId, "GIFT_RESERVED", gift.Id, available: -cost, reserved: cost);
         orders.Audit(actor, "GIFT_RESERVED", gift.Id);
-        Notice(actor, actor.Id, "GIFT_RESERVED", gift.Id);
+        Notice(actor, actor.ResourceOwnerId, "GIFT_RESERVED", gift.Id);
         await db.SaveChangesAsync();
         return gift;
     }

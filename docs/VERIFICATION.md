@@ -14,6 +14,7 @@ python3 scripts/test-warehouse.py http://127.0.0.1:5860
 python3 scripts/test-supplier-documents.py http://127.0.0.1:5860
 # Pricing suite requires a separately started test API with Wholesale__DeliveryFee=0.
 python3 scripts/test-pricing.py http://127.0.0.1:5860
+python3 scripts/test-shop-members.py http://127.0.0.1:5860
 ```
 
 `VERIFICATION_REPORT` redirects each Node report; `TOUSHIR_TEST_RESULTS` redirects the Python report. Reports omit credentials/capabilities and record actual assertions, URL and time.
@@ -27,6 +28,7 @@ python3 scripts/test-pricing.py http://127.0.0.1:5860
 | Engagement | Supplier receipts/inspection, messages/consent, promotions and points/reward concurrency |
 | Warehouse | Explicit counted lots, FEFO, scan waves, concurrent last-unit reservation, quarantine and identified physical returns |
 | Pricing | Independent customer tariffs, protected reviewed-basket consent, actual direct checkout, frozen quote history, campaign compatibility and centime rounding |
+| Shop membership | Actual-person/shop separation, personal carts/favorites, bounded single-use invitations, role hierarchy, shared commerce, primary invitation inheritance and session/receipt/live revocation |
 | Production | Explicit owner, real restart and backup restoration, isolated PostgreSQL migration SQL, static routing, distribution and rate limits |
 
 Browser evidence checks navigation, real forms, secure sign-in, errors, responsive and dark layouts. Native evidence records variant, API origin, build, device/simulator and executed interactions. Hosted tests must run on the final HTTPS origin and persistent database. Compilation is not native execution; local passes are not hosted passes.
@@ -38,3 +40,5 @@ Figma acceptance is separate: the screen matrix and derived 122 checks retain un
 The added merchant summary is tested for unauthenticated/role denial, owner/workspace isolation, actual collections minus refunds, and separate partial delivery counts. Browser checks exercise the points card, activity-to-orders navigation, account address form and communication consent after the Figma finish. The catalogue audit decodes all2,500 local photographs and verifies source hashes and provenance; it does not certify community label correctness or local wholesale availability.
 
 Supplier document/confirmation evidence and browser captures are under `verification/supplier/`. The suite checks retained private PDFs, independently reviewed terms, late evidence, exact receipt documents, invoice reference/amount comparison and explicit cancellation/short close. The upgrade report distinguishes actual SQLite migration on a backup from PostgreSQL generated SQL; each report retains its own execution scope. Native simulators are deliberately stopped on the 8 GB development machine; current UI acceptance uses browser previews.
+
+Shop team evidence is under `verification/shop-members/`. The separate actual WebSocket/OIDC verifier requires the private fixture produced by the API suite and checks revoked opaque/signed/refresh sessions, password sign-in, live recipients and receipt issuer validity. See [the test contract](SHOP-MEMBERS.md). Browser failures use real backend rejections and assert the message and retry action remain in the submitted viewport. Domain, upgrade, production restore and regression reports retain their individual scopes. Android 1.1.0 packages predate this UI addition.

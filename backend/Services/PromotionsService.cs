@@ -15,7 +15,7 @@ public sealed class PromotionsService(WholesaleDb db, WarehouseService warehouse
         var o = await db.Orders.AsNoTracking().Include(x => x.Items).FirstOrDefaultAsync(x => x.Id == id && x.WorkspaceId == actor.WorkspaceId);
         Check.That(o != null, "Commande introuvable.", "NOT_FOUND", 404);
         if (actor.Role == "MERCHANT")
-            Check.That(o.AccountId == actor.Id, "Commande introuvable.", "NOT_FOUND", 404);
+            Check.That(o.AccountId == actor.ResourceOwnerId, "Commande introuvable.", "NOT_FOUND", 404);
         else if (actor.Role == "DRIVER")
             Check.That(await db.DeliveryAssignments.AnyAsync(x => x.WorkspaceId == actor.WorkspaceId && x.OrderId == id && x.DriverId == actor.Id), "Commande introuvable.", "NOT_FOUND", 404);
         else

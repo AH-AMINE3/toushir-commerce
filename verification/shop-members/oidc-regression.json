@@ -1,0 +1,33 @@
+{
+  "base": "http://127.0.0.1:5863",
+  "at": "2026-10-17T11:57:04.035Z",
+  "passed": 6,
+  "failed": 0,
+  "requests": 31,
+  "checks": [
+    {
+      "name": "Standards discovery publishes authorization code, refresh, S256 and signed public keys",
+      "pass": true
+    },
+    {
+      "name": "Exact client redirects and mandatory PKCE reject malicious or downgraded authorization",
+      "pass": true
+    },
+    {
+      "name": "Server sign-in form validates antiforgery and authenticates an existing hashed-password account",
+      "pass": true
+    },
+    {
+      "name": "Code exchange enforces verifier, issues signed OIDC tokens and rejects authorization-code replay",
+      "pass": true
+    },
+    {
+      "name": "JWT adapter preserves server role/workspace boundaries and rejects forged or wrong-audience tokens",
+      "pass": true
+    },
+    {
+      "name": "Refresh tokens rotate; explicit revocation and account-session logout prevent further use",
+      "pass": true
+    }
+  ]
+}

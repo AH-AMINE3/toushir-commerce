@@ -122,6 +122,8 @@ export default function Merchant({
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const wide = width >= 900;
+  const canWrite = session.user.shop?.canOrder !== false;
+  const canManageShop = session.user.shop?.canManage !== false;
   const columns = width >= 1080 ? 4 : width >= 680 ? 3 : 2;
   const [screen, setScreen] = useState<Screen>(() => {
     const target = Platform.OS === "web" ? window.location.hash.slice(1) : "";
@@ -391,6 +393,12 @@ export default function Merchant({
   }
   async function checkout() {
     if (busy || cartSaving) return;
+    if (!canWrite) {
+      setError(
+        "Votre accès est en lecture seule. Une personne habilitée doit confirmer la commande.",
+      );
+      return;
+    }
     if (!addressId) {
       setError(
         "Ajoutez une adresse de livraison avant d’envoyer votre demande.",
@@ -499,7 +507,7 @@ export default function Merchant({
     }
   }
   async function saveAddress() {
-    if (!addressForm) return;
+    if (!addressForm || !canManageShop) return;
     setBusy(true);
     setError("");
     try {
@@ -759,7 +767,7 @@ export default function Merchant({
               style={{ width: 22, height: 22 }}
             />
           </Pressable>
-        ) : screen === "messages" ? (
+        ) : screen === "messages" && canManageShop ? (
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Préférences de communication"
@@ -954,6 +962,7 @@ export default function Merchant({
           icon="arrow-forward"
           loading={busy || cartSaving}
           disabled={
+            !canWrite ||
             !addressId ||
             cartSaveError ||
             cartSignature(toLines(quote)) !== cartSignature(cart) ||
@@ -961,7 +970,11 @@ export default function Merchant({
           }
           onPress={checkout}
         >
-          {quote.needsQuote ? "Demander mon devis" : "Confirmer la commande"}
+          {!canWrite
+            ? "Accès en lecture seule"
+            : quote.needsQuote
+              ? "Demander mon devis"
+              : "Confirmer la commande"}
         </Button>
         {cartSaveError ? (
           <Button variant="ghost" onPress={() => saveCart([...cart])}>
@@ -1740,6 +1753,7 @@ export default function Merchant({
                   </Text>
                   <Button
                     loading={busy}
+                    disabled={!canWrite}
                     onPress={() =>
                       orderAction(
                         "accept-quote",
@@ -1753,7 +1767,7 @@ export default function Merchant({
                   </Button>
                   <Button
                     variant="ghost"
-                    disabled={busy}
+                    disabled={busy || !canWrite}
                     onPress={() =>
                       orderAction(
                         "decline",
@@ -1780,6 +1794,7 @@ export default function Merchant({
                 "DELIVERY_REFUSED",
               ].includes(order.status) ? (
                 <MerchantDelivery
+                  canWrite={canWrite}
                   order={order}
                   onRefresh={() =>
                     api<Order>(`/orders/${order.id}`)
@@ -1907,6 +1922,7 @@ export default function Merchant({
                 ) : null}
               </View>
               <MerchantClaims
+                canWrite={canWrite}
                 order={order}
                 onUpdated={setOrder}
                 onNotice={onNotice}
@@ -1989,7 +2005,8 @@ export default function Merchant({
               >
                 Bon de commande
               </Button>
-              {["REQUESTED", "QUOTED", "SUBMITTED", "CONFIRMED"].includes(
+              {canWrite &&
+              ["REQUESTED", "QUOTED", "SUBMITTED", "CONFIRMED"].includes(
                 order.status,
               ) ? (
                 <Button
@@ -2059,6 +2076,7 @@ export default function Merchant({
             <Button
               variant="secondary"
               icon="add"
+              disabled={!canManageShop}
               onPress={() => {
                 setLocationOpen(false);
                 setAddressForm({

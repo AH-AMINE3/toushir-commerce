@@ -39,7 +39,7 @@ jobs:
           TOUSHIR_WAREHOUSE_RESULTS: warehouse-verification.json
         run: |
           # A fresh process per suite preserves public demo rate limits.
-          for suite in api operations routes oidc engagement warehouse supplier-documents pricing; do
+          for suite in api operations routes oidc engagement warehouse supplier-documents pricing shop-members; do
             if [ "$suite" = pricing ]; then export Wholesale__DeliveryFee=0; else unset Wholesale__DeliveryFee; fi
             export DataPath="$RUNNER_TEMP/toushir-$suite"
             dotnet run --project backend/Toushir.Wholesale.csproj --no-build --urls "$API_URL" > "$RUNNER_TEMP/api-$suite.log" 2>&1 &
@@ -54,6 +54,12 @@ jobs:
               python3 scripts/test-engagement.py "$API_URL"
             elif [ "$suite" = pricing ]; then
               python3 scripts/test-pricing.py "$API_URL"
+            elif [ "$suite" = shop-members ]; then
+              export MEMBERSHIP_FIXTURE="$RUNNER_TEMP/shop-members-private-fixture.json"
+              python3 scripts/test-shop-members.py "$API_URL"
+              node backend/scripts/verify-shop-members-live.mjs
+              rm -f "$MEMBERSHIP_FIXTURE"
+              unset MEMBERSHIP_FIXTURE
             elif [ "$suite" = supplier-documents ]; then
               python3 scripts/test-supplier-documents.py "$API_URL"
             elif [ "$suite" = warehouse ]; then
@@ -80,7 +86,7 @@ jobs:
           ASPNETCORE_ENVIRONMENT: Development
           WEB_URL: http://127.0.0.1:5860
         run: |
-          for suite in smoke identity business warehouse supplier mobile pricing; do
+          for suite in smoke identity business warehouse supplier mobile pricing members; do
             if [ "$suite" = pricing ]; then export Wholesale__DeliveryFee=0; else unset Wholesale__DeliveryFee; fi
             export DataPath="$RUNNER_TEMP/browser-$suite"
             dotnet run --project backend/Toushir.Wholesale.csproj --no-build --urls "$WEB_URL" > "$RUNNER_TEMP/browser-$suite.log" 2>&1 &
@@ -104,4 +110,5 @@ jobs:
             warehouse-verification.json
             supplier-documents-verification.json
             pricing-verification.json
+            shop-members-verification.json
             tests/browser/reports/

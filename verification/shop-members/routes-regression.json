@@ -1,0 +1,33 @@
+{
+  "base": "http://127.0.0.1:5863",
+  "at": "2026-10-17T11:56:59.403Z",
+  "passed": 6,
+  "failed": 0,
+  "requests": 73,
+  "checks": [
+    {
+      "name": "Route personas retain independent workspace and role access",
+      "pass": true
+    },
+    {
+      "name": "Three prepared orders reproduce the Figma route cash fixture",
+      "pass": true
+    },
+    {
+      "name": "Warehouse-to-driver custody binds the whole manifest and is consumed atomically once",
+      "pass": true
+    },
+    {
+      "name": "Merchant proofs, partial refusal and three cash receipts produce 64,000 DZD expected custody cash",
+      "pass": true
+    },
+    {
+      "name": "Driver declaration freezes route collection; finance separately counts an internal shortage",
+      "pass": true
+    },
+    {
+      "name": "Route reconciliation retains shortage liability without reopening merchant debt",
+      "pass": true
+    }
+  ]
+}

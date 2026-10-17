@@ -152,6 +152,15 @@ export type User = {
   shopName?: string;
   phone?: string;
   approvalStatus?: string;
+  shop?: {
+    id: string;
+    name: string;
+    role: "OWNER" | "MANAGER" | "BUYER" | "VIEWER";
+    membershipVersion: number;
+    isMember: boolean;
+    canOrder: boolean;
+    canManage: boolean;
+  };
 };
 export type Session = {
   token: string;

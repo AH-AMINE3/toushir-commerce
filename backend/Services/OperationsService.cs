@@ -13,7 +13,7 @@ public sealed class OperationsService(WholesaleDb db, OrderService orders, Realt
         var order = await db.Orders.Include(x => x.Items).FirstOrDefaultAsync(x => x.Id == id && x.WorkspaceId == actor.WorkspaceId);
         Check.That(order != null, "Commande introuvable.", "NOT_FOUND", 404);
         if (actor.Role == "MERCHANT")
-            Check.That(order.AccountId == actor.Id, "Commande introuvable.", "NOT_FOUND", 404);
+            Check.That(order.AccountId == actor.ResourceOwnerId, "Commande introuvable.", "NOT_FOUND", 404);
         else if (actor.Role == "DRIVER")
             Check.That(await db.DeliveryAssignments.AnyAsync(x => x.WorkspaceId == actor.WorkspaceId && x.OrderId == id && x.DriverId == actor.Id), "Commande introuvable.", "NOT_FOUND", 404);
         else
@@ -332,6 +332,7 @@ public sealed class OperationsService(WholesaleDb db, OrderService orders, Realt
     {
         actor.RequireRoles("MERCHANT");
         actor.Approved();
+        actor.ShopWrite();
         var order = await Find(actor, id);
         var assignment = await Assignment(order);
         MatchVersion(order, input.Version);
@@ -342,7 +343,7 @@ public sealed class OperationsService(WholesaleDb db, OrderService orders, Realt
             old.ExpiresAt = DateTimeOffset.UtcNow;
         var token = Tokens.New();
         var route = assignment.RouteId.Length == 0 ? null : await db.DeliveryRoutes.FirstAsync(x => x.Id == assignment.RouteId && x.WorkspaceId == actor.WorkspaceId);
-        var challenge = new ReceiptChallenge { RouteId = assignment.RouteId, RouteVersion = route?.Version ?? 0, WorkspaceId = actor.WorkspaceId, OrderId = id, MerchantId = actor.Id, DriverId = assignment.DriverId, Version = order.Version, TokenHash = Tokens.Hash(token), ItemsHash = ReceiptHash(input.Items), ExpiresAt = DateTimeOffset.UtcNow.AddMinutes(3) };
+        var challenge = new ReceiptChallenge { RouteId = assignment.RouteId, RouteVersion = route?.Version ?? 0, WorkspaceId = actor.WorkspaceId, OrderId = id, MerchantId = actor.ResourceOwnerId, IssuedBy = actor.Id, DriverId = assignment.DriverId, Version = order.Version, TokenHash = Tokens.Hash(token), ItemsHash = ReceiptHash(input.Items), ExpiresAt = DateTimeOffset.UtcNow.AddMinutes(3) };
         db.ReceiptChallenges.Add(challenge);
         orders.Audit(actor, "RECEIPT_CHALLENGE_CREATED", id);
         await db.SaveChangesAsync();
@@ -352,7 +353,8 @@ public sealed class OperationsService(WholesaleDb db, OrderService orders, Realt
             challenge.ExpiresAt,
             orderId = id,
             version = order.Version,
-            merchantId = actor.Id,
+            merchantId = actor.ResourceOwnerId,
+            issuedBy = actor.Id,
             driverId = assignment.DriverId,
             routeId = challenge.RouteId,
             routeVersion = challenge.RouteVersion,
@@ -367,6 +369,11 @@ public sealed class OperationsService(WholesaleDb db, OrderService orders, Realt
         var hash = Tokens.Hash(input.Challenge);
         var proof = await db.ReceiptChallenges.FirstOrDefaultAsync(x => x.TokenHash == hash && x.WorkspaceId == actor.WorkspaceId && x.OrderId == id && x.DriverId == actor.Id && x.MerchantId == order.AccountId);
         Check.That(proof != null && proof.ConsumedAt == null && proof.ExpiresAt > DateTimeOffset.UtcNow && proof.Version == order.Version, "Code expiré, déjà utilisé ou commande modifiée. Le commerçant doit générer un nouveau code.", "RECEIPT_INVALID", 409);
+        var issuerId = proof.IssuedBy.Length == 0 ? proof.MerchantId : proof.IssuedBy;
+        var issuerAccount = await db.Accounts.AsNoTracking().FirstOrDefaultAsync(x => x.Id == issuerId && x.WorkspaceId == actor.WorkspaceId);
+        var issuer = issuerAccount == null ? null : await ShopAccess.Resolve(db, issuerAccount);
+        Check.That(issuer != null && issuer.CanShopWrite && issuer.ApprovalStatus == "APPROVED" && issuer.ResourceOwnerId == order.AccountId,
+            "L'accès de la personne ayant confirmé la réception n'est plus actif. Demandez un nouveau code.", "RECEIPT_INVALID", 409);
         Check.That(proof.RouteId == assignment.RouteId, "Le manifeste de livraison a changé.", "RECEIPT_INVALID", 409);
         if (proof.RouteId.Length > 0)
         {

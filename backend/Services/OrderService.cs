@@ -27,6 +27,7 @@ public class OrderService(WholesaleDb db, CatalogService catalog, RealtimeChange
             WorkspaceId = a.WorkspaceId,
             OrderId = o.Id,
             Action = action,
+            ActorId = a.Id,
             Actor = a.Name,
             Details = details
         });
@@ -49,14 +50,14 @@ public class OrderService(WholesaleDb db, CatalogService catalog, RealtimeChange
     }
     public async Task<PurchaseOrder> Find(Actor a, string id)
     {
-        var o = await db.Orders.Include(x => x.Items).FirstOrDefaultAsync(x => x.Id == id && x.WorkspaceId == a.WorkspaceId && (a.IsAdmin || x.AccountId == a.Id));
+        var o = await db.Orders.Include(x => x.Items).FirstOrDefaultAsync(x => x.Id == id && x.WorkspaceId == a.WorkspaceId && (a.IsAdmin || x.AccountId == a.ResourceOwnerId));
         Check.That(o != null, "Commande introuvable.", "NOT_FOUND", 404);
         return o!;
     }
     public async Task<object> View(Actor a, PurchaseOrder o)
     {
         var merchant = await db.Accounts.AsNoTracking().FirstAsync(x => x.Id == o.AccountId);
-        var timeline = (await db.OrderEvents.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId && x.OrderId == o.Id).ToListAsync()).OrderBy(x => x.At).Select(x => new { x.Id, x.Action, x.At, x.Actor, x.Details });
+        var timeline = (await db.OrderEvents.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId && x.OrderId == o.Id).ToListAsync()).OrderBy(x => x.At).Select(x => new { x.Id, x.Action, x.At, x.Actor, x.ActorId, x.Details });
         var payments = (await db.Payments.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId && x.OrderId == o.Id).ToListAsync()).OrderBy(x => x.At).Select(x => new { x.Id, x.Amount, x.Method, x.Reference, x.IsRefund, x.Reconciled, x.At });
         var claims = (await db.Claims.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId && x.OrderId == o.Id).ToListAsync()).OrderByDescending(x => x.CreatedAt).Select(ClaimsService.View);
         var credits = (await db.Credits.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId && x.OrderId == o.Id).ToListAsync()).OrderBy(x => x.At).ToList();
@@ -65,6 +66,7 @@ public class OrderService(WholesaleDb db, CatalogService catalog, RealtimeChange
         {
             o.Id,
             o.Number,
+            o.CreatedBy,
             o.Status,
             o.PaymentStatus,
             o.Version,
@@ -124,7 +126,7 @@ public class OrderService(WholesaleDb db, CatalogService catalog, RealtimeChange
         var q = query["q"].ToString().Trim().ToLowerInvariant();
         var page = CatalogService.Page(query["page"], 1);
         var size = Math.Clamp(CatalogService.Page(query["pageSize"], 20), 1, 100);
-        var orders = await db.Orders.AsNoTracking().Include(x => x.Items).Where(x => x.WorkspaceId == a.WorkspaceId && (a.IsAdmin || x.AccountId == a.Id)).ToListAsync();
+        var orders = await db.Orders.AsNoTracking().Include(x => x.Items).Where(x => x.WorkspaceId == a.WorkspaceId && (a.IsAdmin || x.AccountId == a.ResourceOwnerId)).ToListAsync();
         var users = await db.Accounts.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId).ToDictionaryAsync(x => x.Id);
         var filtered = orders.Where(x => status.Length == 0 || x.Status == status).Where(x => q.Length == 0 || (x.Number + " " + users[x.AccountId].ShopName + " " + users[x.AccountId].Name).ToLowerInvariant().Contains(q)).OrderByDescending(x => x.CreatedAt).ToList();
         return new
@@ -140,6 +142,7 @@ public class OrderService(WholesaleDb db, CatalogService catalog, RealtimeChange
     {
         a.Approved();
         Check.That(a.Role == "MERCHANT", "Utilisez la persona commerçant pour passer une commande.", "MERCHANT_REQUIRED", 403);
+        a.ShopWrite();
         var key = Check.Text(input.IdempotencyKey, 100, "Clé d'idempotence");
         var lines = CatalogService.ValidateLines(input.Items);
         var mode = (input.Mode ?? "REQUEST_QUOTE").ToUpperInvariant();
@@ -151,27 +154,27 @@ public class OrderService(WholesaleDb db, CatalogService catalog, RealtimeChange
             note = (input.Note ?? "").Trim(),
             mode
         }));
-        var previous = await db.Orders.Include(x => x.Items).FirstOrDefaultAsync(x => x.WorkspaceId == a.WorkspaceId && x.AccountId == a.Id && x.IdempotencyKey == key);
+        var previous = await db.Orders.Include(x => x.Items).FirstOrDefaultAsync(x => x.WorkspaceId == a.WorkspaceId && x.AccountId == a.ResourceOwnerId && x.IdempotencyKey == key);
         if (previous != null)
         {
-            Check.That(previous.RequestHash == hash, "Cette clé a déjà servi pour une demande différente.", "IDEMPOTENCY_CONFLICT", 409);
+            Check.That(previous.RequestHash == hash && (previous.CreatedBy.Length == 0 || previous.CreatedBy == a.Id), "Cette clé a déjà servi pour une demande différente.", "IDEMPOTENCY_CONFLICT", 409);
             return await View(a, previous);
         }
-        var address = await db.Addresses.AsNoTracking().FirstOrDefaultAsync(x => x.Id == input.AddressId && x.WorkspaceId == a.WorkspaceId && x.AccountId == a.Id);
+        var address = await db.Addresses.AsNoTracking().FirstOrDefaultAsync(x => x.Id == input.AddressId && x.WorkspaceId == a.WorkspaceId && x.AccountId == a.ResourceOwnerId);
         Check.That(address != null, "Sélectionnez une adresse de votre boutique.", "ADDRESS_REQUIRED");
         CartPricingPlan? direct = null;
         if (mode == "PLACE_ORDER")
         {
             direct = await catalog.BuildQuote(a, lines);
             Check.That(direct.View.CanOrder, "Le prix, le stock, le conditionnement et les frais doivent être confirmés. Demandez un devis.", "QUOTE_REQUIRED", 409);
-            pricing.RequireConsent(a, a.Id, input.PricingToken, direct.Fingerprint);
+            pricing.RequireConsent(a, a.ResourceOwnerId, input.PricingToken, direct.Fingerprint);
         }
         var ids = lines.Select(x => x.ProductId).ToList();
         var ps = direct?.Products ?? await db.Products.AsNoTracking().Where(x => x.IsCatalogActive).Where(x => ids.Contains(x.Id)).ToDictionaryAsync(x => x.Id);
         Check.That(ps.Count == lines.Count, "Un produit de cette demande est introuvable.", "PRODUCT_NOT_FOUND", 404);
         var os = direct?.Offers ?? await db.Offers.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId && ids.Contains(x.ProductId)).ToDictionaryAsync(x => x.ProductId);
         Check.That(os.Values.All(x => x.IsActive), "Un produit est désactivé.");
-        var order = new PurchaseOrder { WorkspaceId = a.WorkspaceId, AccountId = a.Id, Number = $"TS-{DateTimeOffset.UtcNow:yyMMdd}-{Tokens.New()[..8].ToUpperInvariant()}", IdempotencyKey = key, RequestHash = hash, AddressJson = JsonSerializer.Serialize(new { id = address!.Id, label = address.Label, wilaya = address.Wilaya, commune = address.Commune, street = address.Street }), Note = Check.Text(input.Note, 1500, "Note", false) };
+        var order = new PurchaseOrder { WorkspaceId = a.WorkspaceId, AccountId = a.ResourceOwnerId, CreatedBy = a.Id, Number = $"TS-{DateTimeOffset.UtcNow:yyMMdd}-{Tokens.New()[..8].ToUpperInvariant()}", IdempotencyKey = key, RequestHash = hash, AddressJson = JsonSerializer.Serialize(new { id = address!.Id, label = address.Label, wilaya = address.Wilaya, commune = address.Commune, street = address.Street }), Note = Check.Text(input.Note, 1500, "Note", false) };
         foreach (var l in lines)
         {
             var p = ps[l.ProductId];
@@ -317,6 +320,7 @@ public class OrderService(WholesaleDb db, CatalogService catalog, RealtimeChange
     public async Task<object> Accept(Actor a, string id, AcceptQuoteInput input)
     {
         Check.That(a.Role == "MERCHANT", "L'acceptation appartient au commerçant.", "MERCHANT_REQUIRED", 403);
+        a.ShopWrite();
         a.Approved();
         var o = await Find(a, id);
         Check.That(input.Version == o.QuoteVersion, "Le devis a été révisé. Consultez la nouvelle version.", "QUOTE_VERSION_CONFLICT", 409);
@@ -333,6 +337,7 @@ public class OrderService(WholesaleDb db, CatalogService catalog, RealtimeChange
     public async Task<object> Decline(Actor a, string id, ReasonInput input)
     {
         Check.That(a.Role == "MERCHANT", "Action réservée au commerçant.", "MERCHANT_REQUIRED", 403);
+        a.ShopWrite();
         var o = await Find(a, id);
         Check.That(o.Status == "QUOTED", "Seul un devis en attente peut être refusé.", "INVALID_TRANSITION", 409);
         await promotions.Release(a, o);
@@ -353,6 +358,7 @@ public class OrderService(WholesaleDb db, CatalogService catalog, RealtimeChange
     }
     public async Task<object> Cancel(Actor a, string id, ReasonInput input)
     {
+        if (a.Role == "MERCHANT") a.ShopWrite();
         var o = await Find(a, id);
         Check.That(o.Status is "REQUESTED" or "QUOTED" or "SUBMITTED" or "CONFIRMED", "La préparation a commencé. Contactez le grossiste.", "INVALID_TRANSITION", 409);
         var reason = Check.Text(input.Reason, 800, "Motif d'annulation");

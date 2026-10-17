@@ -28,6 +28,7 @@ public class ClaimsService(WholesaleDb db, OrderService orders, PromotionsServic
     }
     public async Task<object> Create(Actor a, string orderId, CreateClaimInput input)
     {
+        a.ShopWrite();
         Check.That(a.Role == "MERCHANT", "Utilisez le compte commerçant pour signaler un problème.", "MERCHANT_REQUIRED", 403);
         var o = await orders.Find(a, orderId);
         Check.That(o.Status is "DELIVERED" or "PARTIALLY_DELIVERED", "Une réclamation concerne une commande reçue.", "INVALID_TRANSITION", 409);
@@ -36,7 +37,7 @@ public class ClaimsService(WholesaleDb db, OrderService orders, PromotionsServic
         var existing = await db.Claims.Where(x => x.WorkspaceId == a.WorkspaceId && x.OrderId == orderId && x.ProductId == input.ProductId && x.Status != "REJECTED").ToListAsync();
         Check.That(input.Quantity > 0 && input.Quantity <= l!.AcceptedQuantity - existing.Sum(x => x.Quantity), "La quantité dépasse les unités acceptées encore réclamables.", "CLAIM_QUANTITY", 409);
         var reason = Check.Text(input.Reason, 1500, "Motif de réclamation");
-        var claim = new OrderClaim { WorkspaceId = a.WorkspaceId, OrderId = orderId, AccountId = a.Id, ProductId = l.ProductId, ProductName = l.Name, Quantity = input.Quantity, Reason = reason };
+        var claim = new OrderClaim { WorkspaceId = a.WorkspaceId, OrderId = orderId, AccountId = a.ResourceOwnerId, ProductId = l.ProductId, ProductName = l.Name, Quantity = input.Quantity, Reason = reason };
         db.Claims.Add(claim);
         orders.Event(a, o, "CLAIM_OPENED", $"{input.Quantity} × {l.Name} : {reason}");
         await db.SaveChangesAsync();

@@ -83,7 +83,7 @@ public class CatalogService(WholesaleDb db, IConfiguration config, WarehouseServ
             filtered = filtered.Where(p => !offers.TryGetValue(p.Id, out var o) || o.IsActive);
         if (query["inStock"] == "true")
             filtered = filtered.Where(p => offers.TryGetValue(p.Id, out var o) && (eligible.TryGetValue(p.Id, out var available) ? available > 0 : o.OnHand - o.Reserved > 0));
-        var book = await pricing.LoadBook(a.WorkspaceId, a.Role == "MERCHANT" ? a.Id : null);
+        var book = await pricing.LoadBook(a.WorkspaceId, a.Role == "MERCHANT" ? a.ResourceOwnerId : null);
         var decisions = filtered.ToDictionary(p => p.Id, p => book.Resolve(p.Id, DisplayQuantity(offers.GetValueOrDefault(p.Id)), offers.GetValueOrDefault(p.Id)));
         var ranks = sort == "featured" ? FeaturedRanks() : new Dictionary<string, int>();
         filtered = sort switch
@@ -110,7 +110,7 @@ public class CatalogService(WholesaleDb db, IConfiguration config, WarehouseServ
         Check.That(p != null, "Produit introuvable.", "NOT_FOUND", 404);
         var o = await db.Offers.AsNoTracking().FirstOrDefaultAsync(x => x.WorkspaceId == a.WorkspaceId && x.ProductId == id);
         Check.That(a.IsAdmin || o?.IsActive != false, "Produit indisponible.", "NOT_FOUND", 404);
-        var book = await pricing.LoadBook(a.WorkspaceId, a.Role == "MERCHANT" ? a.Id : null);
+        var book = await pricing.LoadBook(a.WorkspaceId, a.Role == "MERCHANT" ? a.ResourceOwnerId : null);
         return ProductView(p!, o, a.IsAdmin, await warehouse.EligibleAvailable(a.WorkspaceId, id), book.Resolve(id, DisplayQuantity(o), o));
     }
     public async Task<object> Categories() => (await db.Products.AsNoTracking().Where(x => x.IsCatalogActive).Select(p => p.Category).ToListAsync()).GroupBy(x => x).OrderBy(x => x.Key).Select(x => new { id = x.Key, name = x.Key, count = x.Count() }).ToArray();
@@ -128,8 +128,8 @@ public class CatalogService(WholesaleDb db, IConfiguration config, WarehouseServ
     public async Task<object> SimulatePricing(Actor actor, SimulatePricingInput input)
     {
         actor.RequireRoles("ADMIN", "FINANCE", "MERCHANT");
-        var merchantId = actor.Role == "MERCHANT" ? actor.Id : Check.Text(input.MerchantId, 100, "Magasin");
-        if (actor.Role == "MERCHANT") Check.That(string.IsNullOrWhiteSpace(input.MerchantId) || input.MerchantId == actor.Id,
+        var merchantId = actor.Role == "MERCHANT" ? actor.ResourceOwnerId : Check.Text(input.MerchantId, 100, "Magasin");
+        if (actor.Role == "MERCHANT") Check.That(string.IsNullOrWhiteSpace(input.MerchantId) || input.MerchantId == actor.ResourceOwnerId,
             "Magasin introuvable.", "NOT_FOUND", 404);
         var lines = ValidateLines(input.Items);
         var at = input.At?.ToUniversalTime() ?? DateTimeOffset.UtcNow;
@@ -146,9 +146,9 @@ public class CatalogService(WholesaleDb db, IConfiguration config, WarehouseServ
     public async Task<CartPricingPlan> BuildQuote(Actor actor, List<LineInput>? requested,
         string? merchantId = null, DateTimeOffset? at = null, bool issueConsent = true)
     {
-        if (actor.Role == "MERCHANT") Check.That(merchantId == null || merchantId == actor.Id, "Magasin introuvable.", "NOT_FOUND", 404);
+        if (actor.Role == "MERCHANT") Check.That(merchantId == null || merchantId == actor.ResourceOwnerId, "Magasin introuvable.", "NOT_FOUND", 404);
         else if (merchantId != null) actor.RequireRoles("ADMIN", "FINANCE");
-        var shopId = actor.Role == "MERCHANT" ? actor.Id : merchantId;
+        var shopId = actor.Role == "MERCHANT" ? actor.ResourceOwnerId : merchantId;
         var lines = requested ?? [];
         if (lines.Count == 0)
         {
@@ -231,9 +231,9 @@ public class CatalogService(WholesaleDb db, IConfiguration config, WarehouseServ
             deliveryFee = demoFee;
         if (deliveryFee != null) Check.Money(deliveryFee.Value, "Tarif de livraison configuré");
         complete = complete && deliveryFee != null;
-        var canOrder = complete && actor.Role == "MERCHANT" && actor.ApprovalStatus == "APPROVED";
+        var canOrder = complete && actor.CanShopWrite && actor.ApprovalStatus == "APPROVED";
         var fingerprint = complete ? PricingService.Fingerprint(commercialTerms, PricingService.Minor(deliveryFee!.Value)) : "";
-        var token = canOrder && issueConsent ? pricing.CreateConsent(actor, actor.Id, fingerprint) : null;
+        var token = canOrder && issueConsent ? pricing.CreateConsent(actor, actor.ResourceOwnerId, fingerprint) : null;
         var hasUnknownPrice = items.Any(x => x.UnitPrice == null);
         var view = new CartPricingView(items, hasUnknownPrice ? null : subtotal, complete ? deliveryFee : null,
             complete ? subtotal + deliveryFee : null, !complete, canOrder, "DZD", token, book.At);
@@ -259,7 +259,7 @@ public class CatalogService(WholesaleDb db, IConfiguration config, WarehouseServ
         var ids = await db.Favorites.Where(x => x.AccountId == a.Id).Select(x => x.ProductId).ToListAsync();
         var ps = await db.Products.AsNoTracking().Where(x => x.IsCatalogActive).Where(x => ids.Contains(x.Id)).ToListAsync();
         var os = await db.Offers.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId && ids.Contains(x.ProductId)).ToDictionaryAsync(x => x.ProductId);
-        var book = await pricing.LoadBook(a.WorkspaceId, a.Role == "MERCHANT" ? a.Id : null);
+        var book = await pricing.LoadBook(a.WorkspaceId, a.Role == "MERCHANT" ? a.ResourceOwnerId : null);
         return ps.Select(p => ProductView(p, os.GetValueOrDefault(p.Id), false, eligible.TryGetValue(p.Id, out var stock) ? stock : null,
             book.Resolve(p.Id, DisplayQuantity(os.GetValueOrDefault(p.Id)), os.GetValueOrDefault(p.Id)))).ToArray();
     }

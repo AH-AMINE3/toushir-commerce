@@ -19,20 +19,19 @@ public sealed class RealtimeChanges
             foreach (var item in orders)
             {
                 var notice = new { orderId = item.Order, at = DateTimeOffset.UtcNow };
-                await hub.Clients.Group(CommerceHub.Operations(item.Workspace)).SendAsync("operations.updated", notice);
-                await hub.Clients.Group(CommerceHub.Account(item.Workspace, item.Merchant)).SendAsync("order.updated", notice);
-                await hub.Clients.Group(CommerceHub.Order(item.Workspace, item.Order)).SendAsync("order.updated", notice);
+                await LiveAudience.Send(db, hub, item.Workspace, a => a.IsStaff, "operations.updated", notice);
+                await LiveAudience.Send(db, hub, item.Workspace, a => a.Role == "MERCHANT" && a.ResourceOwnerId == item.Merchant, "order.updated", notice);
                 var driver = await db.DeliveryAssignments.AsNoTracking().Where(x => x.WorkspaceId == item.Workspace && x.OrderId == item.Order).Select(x => x.DriverId).FirstOrDefaultAsync();
-                if (driver != null) await hub.Clients.Group(CommerceHub.Account(item.Workspace, driver)).SendAsync("order.updated", notice);
+                if (driver != null) await LiveAudience.Send(db, hub, item.Workspace, a => a.Role == "DRIVER" && a.Id == driver, "order.updated", notice);
             }
             foreach (var item in drivers)
             {
                 var assignments = await db.DeliveryAssignments.AsNoTracking().Where(x => x.WorkspaceId == item.Workspace && x.DriverId == item.Driver).ToListAsync();
-                await hub.Clients.Group(CommerceHub.Operations(item.Workspace)).SendAsync("tracking.updated", new { driverId = item.Driver, at = DateTimeOffset.UtcNow });
+                await LiveAudience.Send(db, hub, item.Workspace, a => a.IsStaff, "tracking.updated", new { driverId = item.Driver, at = DateTimeOffset.UtcNow });
                 foreach (var assignment in assignments)
                 {
                     var merchant = await db.Orders.AsNoTracking().Where(x => x.Id == assignment.OrderId && x.WorkspaceId == item.Workspace).Select(x => x.AccountId).FirstOrDefaultAsync();
-                    if (merchant != null) await hub.Clients.Group(CommerceHub.Account(item.Workspace, merchant)).SendAsync("tracking.updated", new { orderId = assignment.OrderId, at = DateTimeOffset.UtcNow });
+                    if (merchant != null) await LiveAudience.Send(db, hub, item.Workspace, a => a.Role == "MERCHANT" && a.ResourceOwnerId == merchant, "tracking.updated", new { orderId = assignment.OrderId, at = DateTimeOffset.UtcNow });
                 }
             }
         }
@@ -44,40 +43,27 @@ public sealed class RealtimeChanges
 [Authorize]
 public sealed class CommerceHub(WholesaleDb db) : Hub
 {
-    internal static string Operations(string workspace) => $"workspace:{workspace}:operations";
-    internal static string Account(string workspace, string account) => $"workspace:{workspace}:account:{account}";
-    internal static string Order(string workspace, string order) => $"workspace:{workspace}:order:{order}";
-
     private async Task<Actor> ActiveActor()
-    {
-        var sessionId = Context.User?.FindFirstValue("sid");
-        var session = await db.Sessions.AsNoTracking().FirstOrDefaultAsync(x => x.Id == sessionId);
-        var account = session == null ? null : await db.Accounts.AsNoTracking().FirstOrDefaultAsync(x => x.Id == session.AccountId);
-        if (session == null || session.ExpiresAt <= DateTimeOffset.UtcNow || account == null || account.ApprovalStatus == "SUSPENDED") throw new HubException("Session expirée.");
-        var workspace = await db.Workspaces.AsNoTracking().FirstOrDefaultAsync(x => x.Id == account.WorkspaceId);
-        if (workspace == null || workspace.IsDemo && workspace.CreatedAt.AddDays(7) <= DateTimeOffset.UtcNow) throw new HubException("Espace expiré.");
-        var guest = await db.DemoGuests.AsNoTracking().FirstOrDefaultAsync(x => x.AccountId == account.Id);
-        if (guest != null && !await db.DemoInvitations.AnyAsync(x => x.Id == guest.InvitationId && x.RevokedAt == null && x.ExpiresAt > DateTimeOffset.UtcNow)) throw new HubException("Invitation expirée.");
-        return new(account.Id, account.WorkspaceId, account.Name, account.Role, account.ApprovalStatus);
-    }
+        => await ShopAccess.SessionActor(db, Context.User?.FindFirstValue("sid"))
+            ?? throw new HubException("Session ou accès au magasin expiré.");
     public override async Task OnConnectedAsync()
     {
         var actor = await ActiveActor();
-        await Groups.AddToGroupAsync(Context.ConnectionId, Account(actor.WorkspaceId, actor.Id));
-        if (actor.IsStaff) await Groups.AddToGroupAsync(Context.ConnectionId, Operations(actor.WorkspaceId));
+        await Groups.AddToGroupAsync(Context.ConnectionId, LiveAudience.Group(Context.User!.FindFirstValue("sid")!, actor));
         await base.OnConnectedAsync();
     }
     public async Task SubscribeOrder(string orderId)
     {
         var actor = await ActiveActor();
         var order = await db.Orders.AsNoTracking().FirstOrDefaultAsync(x => x.Id == orderId && x.WorkspaceId == actor.WorkspaceId);
-        var allowed = order != null && (actor.IsStaff || actor.Role == "MERCHANT" && order.AccountId == actor.Id || actor.Role == "DRIVER" && await db.DeliveryAssignments.AnyAsync(x => x.WorkspaceId == actor.WorkspaceId && x.OrderId == orderId && x.DriverId == actor.Id));
+        var allowed = order != null && (actor.IsStaff || actor.Role == "MERCHANT" && order.AccountId == actor.ResourceOwnerId || actor.Role == "DRIVER" && await db.DeliveryAssignments.AnyAsync(x => x.WorkspaceId == actor.WorkspaceId && x.OrderId == orderId && x.DriverId == actor.Id));
         if (!allowed) throw new HubException("Commande introuvable.");
-        await Groups.AddToGroupAsync(Context.ConnectionId, Order(actor.WorkspaceId, orderId));
+        // Account/session notices already cover authorized orders. No durable
+        // order group may outlive revocation or reassignment.
     }
     public async Task UnsubscribeOrder(string orderId)
     {
         var actor = await ActiveActor();
-        await Groups.RemoveFromGroupAsync(Context.ConnectionId, Order(actor.WorkspaceId, orderId));
+        _ = orderId;
     }
 }

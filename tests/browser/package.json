@@ -9,6 +9,7 @@
     "warehouse": "node warehouse-ui.mjs",
     "supplier": "node supplier-documents.mjs",
     "pricing": "node pricing.mjs",
+    "members": "node shop-members.mjs",
     "map": "node map-check.mjs",
     "mobile": "node mobile-preview.mjs"
   },

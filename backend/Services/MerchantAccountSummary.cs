@@ -7,7 +7,7 @@ public static class MerchantAccountSummary
     public static async Task<object> Read(WholesaleDb db, Actor actor)
     {
         actor.RequireRoles("MERCHANT");
-        var orders = db.Orders.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId && x.AccountId == actor.Id);
+        var orders = db.Orders.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId && x.AccountId == actor.ResourceOwnerId);
         var zone = TimeZoneInfo.FindSystemTimeZoneById("Africa/Algiers");
         var local = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, zone);
         var monthStart = new DateTimeOffset(local.Year, local.Month, 1, 0, 0, 0, local.Offset);

@@ -35,6 +35,8 @@ builder.Services.Configure<PasswordHasherOptions>(o => o.IterationCount = 210000
 builder.Services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(dataPath, "keys"))).SetApplicationName("Toushir.Wholesale");
 builder.Services.AddScoped<PasswordHasher<Account>>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<ShopMemberService>();
+builder.Services.AddScoped<ShopProfileService>();
 builder.Services.AddScoped<CatalogService>();
 builder.Services.AddScoped<PricingService>();
 builder.Services.AddScoped<OrderService>();
@@ -99,13 +101,13 @@ var secure = api.MapGroup("").RequireAuthorization();
 secure.MapGet("/auth/me", async (AuthService s, HttpContext c) => Results.Ok(await s.Me(Actor.From(c))));
 secure.MapPost("/auth/change-password", async (PasswordInput x, AuthService s, HttpContext c) => { await s.ChangePassword(Actor.From(c), x, c); return Results.Ok(new { ok = true, message = "Mot de passe modifié. Reconnectez-vous." }); });
 secure.MapPost("/auth/logout", async (AuthService s, HttpContext c) => { await s.Logout(c); return Results.Ok(new { ok = true }); });
-secure.MapGet("/profile", async (WholesaleDb db, HttpContext c) => { var a = await db.Accounts.FindAsync(Actor.From(c).Id); return Results.Ok(AuthService.User(a!)); });
+secure.MapGet("/profile", async (ShopProfileService service, HttpContext c) => Results.Ok(await service.Read(Actor.From(c))));
 secure.MapGet("/profile/summary", async (WholesaleDb db, HttpContext c) => Results.Ok(await MerchantAccountSummary.Read(db, Actor.From(c))));
-secure.MapPatch("/profile", async (ProfileInput x, WholesaleDb db, OrderService audit, HttpContext c) => { var a = Actor.From(c); var u = await db.Accounts.FindAsync(a.Id); u!.Name = Check.Text(x.Name, 100, "Nom"); u.ShopName = Check.Text(x.ShopName, 150, "Boutique"); u.Phone = Check.Text(x.Phone, 30, "Téléphone"); audit.Audit(a, "PROFILE_UPDATED", a.Id); await db.SaveChangesAsync(); return Results.Ok(AuthService.User(u)); });
-secure.MapGet("/addresses", async (WholesaleDb db, HttpContext c) => Results.Ok(await db.Addresses.AsNoTracking().Where(x => x.AccountId == Actor.From(c).Id).ToListAsync()));
-secure.MapPost("/addresses", async (AddressInput x, WholesaleDb db, HttpContext c) => { var a = Actor.From(c); Check.That(await db.Addresses.CountAsync(x => x.AccountId == a.Id) < 20, "Maximum 20 adresses par boutique."); var u = await db.Accounts.FindAsync(a.Id); if (x.IsDefault) await db.Addresses.Where(y => y.AccountId == a.Id).ExecuteUpdateAsync(set => set.SetProperty(y => y.IsDefault, false)); var address = AuthService.MakeAddress(u!, x); db.Addresses.Add(address); await db.SaveChangesAsync(); return Results.Ok(address); });
-secure.MapPut("/addresses/{id}", async (string id, AddressInput x, WholesaleDb db, HttpContext c) => { var a = Actor.From(c); var address = await db.Addresses.FirstOrDefaultAsync(y => y.Id == id && y.AccountId == a.Id && y.WorkspaceId == a.WorkspaceId); Check.That(address != null, "Adresse introuvable.", "NOT_FOUND", 404); var valid = AuthService.MakeAddress(new() { Id = a.Id, WorkspaceId = a.WorkspaceId }, x); if (x.IsDefault) await db.Addresses.Where(y => y.AccountId == a.Id && y.Id != id).ExecuteUpdateAsync(set => set.SetProperty(y => y.IsDefault, false)); address!.Label = valid.Label; address.Wilaya = valid.Wilaya; address.Commune = valid.Commune; address.Street = valid.Street; address.IsDefault = valid.IsDefault; await db.SaveChangesAsync(); return Results.Ok(address); });
-secure.MapDelete("/addresses/{id}", async (string id, WholesaleDb db, HttpContext c) => { var count = await db.Addresses.Where(x => x.Id == id && x.AccountId == Actor.From(c).Id).ExecuteDeleteAsync(); Check.That(count > 0, "Adresse introuvable.", "NOT_FOUND", 404); return Results.Ok(new { ok = true }); });
+secure.MapPatch("/profile", async (ProfileInput input, ShopProfileService service, HttpContext c) => Results.Ok(await service.Update(Actor.From(c), input)));
+secure.MapGet("/addresses", async (ShopProfileService service, HttpContext c) => Results.Ok(await service.Addresses(Actor.From(c))));
+secure.MapPost("/addresses", async (AddressInput input, ShopProfileService service, HttpContext c) => Results.Ok(await service.SaveAddress(Actor.From(c), null, input)));
+secure.MapPut("/addresses/{id}", async (string id, AddressInput input, ShopProfileService service, HttpContext c) => Results.Ok(await service.SaveAddress(Actor.From(c), id, input)));
+secure.MapDelete("/addresses/{id}", async (string id, ShopProfileService service, HttpContext c) => { await service.DeleteAddress(Actor.From(c), id); return Results.Ok(new { ok = true }); });
 secure.MapGet("/products", async (CatalogService s, HttpContext c) => Results.Ok(await s.Products(Actor.From(c), c.Request.Query)));
 secure.MapGet("/products/{id}", async (string id, CatalogService s, HttpContext c) => Results.Ok(await s.Product(Actor.From(c), id)));
 secure.MapGet("/catalog/provenance", () => Results.Ok(new { source = "Open Food Facts", sourceUrl = "https://world.openfoodfacts.org/", dataLicense = "ODbL-1.0", dataLicenseUrl = "https://opendatacommons.org/licenses/odbl/1-0/", imageLicense = "CC-BY-SA-3.0", imageLicenseUrl = "https://creativecommons.org/licenses/by-sa/3.0/", exportUrl = "/api/catalog/export", notice = "Les identités produits et photos proviennent de contributeurs Open Food Facts. Les marques restent à leurs propriétaires. Une présence dans le catalogue ne garantit pas la disponibilité à Oran; seuls les devis du grossiste font foi." }));
@@ -161,6 +163,7 @@ app.MapCommerceOperations(secure);
 app.MapRouteOperations(secure);
 app.MapEngagementEndpoints(secure);
 secure.MapPricingEndpoints();
+api.MapShopMembers(secure);
 app.MapWarehouseEndpoints(secure);
 app.MapHub<CommerceHub>("/hubs/commerce", o => o.CloseOnAuthenticationExpiration = true);
 app.MapFallback("/mobile/{*path:nonfile}", async c => { var mobileIndex = Path.Combine(app.Environment.WebRootPath, "mobile", "index.html"); if (File.Exists(mobileIndex)) { c.Response.ContentType = "text/html"; await c.Response.SendFileAsync(mobileIndex); } else { c.Response.StatusCode = 404; await c.Response.WriteAsync("Mobile export not installed."); } });
@@ -189,6 +192,17 @@ public sealed class MutationFilter(MutationGate gate) : IEndpointFilter
                 var workspace = context.HttpContext.User.FindFirst("workspace")?.Value;
                 foreach (var key in MutationLocks.Keys(schema, workspace, context.HttpContext.Request.Path))
                     await db.Database.ExecuteSqlInterpolatedAsync($"SELECT pg_advisory_xact_lock({key})", context.HttpContext.RequestAborted);
+            }
+            if (context.HttpContext.User.Identity?.IsAuthenticated == true)
+            {
+                var current = Actor.From(context.HttpContext);
+                var live = await ShopAccess.SessionActor(db, context.HttpContext.User.FindFirst("sid")?.Value);
+                Check.That(live != null && live.Id == current.Id && live.WorkspaceId == current.WorkspaceId,
+                    "Cet accès a été révoqué. Reconnectez-vous.", "UNAUTHENTICATED", 401);
+                Check.That(live.Role == current.Role && live.ApprovalStatus == current.ApprovalStatus
+                    && live.ResourceOwnerId == current.ResourceOwnerId && live.ShopRole == current.ShopRole
+                    && live.MembershipVersion == current.MembershipVersion,
+                    "Vos droits ont changé. Rechargez votre session.", "ACCESS_CHANGED", 409);
             }
             var result = await next(context);
             await transaction.CommitAsync(context.HttpContext.RequestAborted);

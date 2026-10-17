@@ -68,10 +68,9 @@ public static class OidcEndpoints
         var subject = principal.GetClaim(Claims.Subject); var sid = principal.GetClaim("sid");
         var account = await db.Accounts.AsNoTracking().FirstOrDefaultAsync(x => x.Id == subject);
         var session = await db.Sessions.AsNoTracking().FirstOrDefaultAsync(x => x.Id == sid && x.AccountId == subject);
-        var workspace = account == null ? null : await db.Workspaces.AsNoTracking().FirstOrDefaultAsync(x => x.Id == account.WorkspaceId);
-        if (account == null || account.ApprovalStatus == "SUSPENDED" || session == null || session.ExpiresAt <= DateTimeOffset.UtcNow || workspace == null || workspace.IsDemo && workspace.CreatedAt.AddDays(7) <= DateTimeOffset.UtcNow) return ProtocolError(Errors.InvalidGrant, "The account or sign-in session has expired.");
-        var guest = await db.DemoGuests.AsNoTracking().FirstOrDefaultAsync(x => x.AccountId == subject);
-        if (guest != null && !await db.DemoInvitations.AnyAsync(x => x.Id == guest.InvitationId && x.RevokedAt == null && x.ExpiresAt > DateTimeOffset.UtcNow)) return ProtocolError(Errors.InvalidGrant, "The invitation has expired.");
+        var actor = account == null ? null : await ShopAccess.Resolve(db, account);
+        if (account == null || actor == null || session == null || session.ExpiresAt <= DateTimeOffset.UtcNow)
+            return ProtocolError(Errors.InvalidGrant, "The account, shop access or sign-in session has expired.");
         principal.SetClaim(Claims.Name, account.Name).SetClaim(Claims.Email, account.Email).SetClaim(Claims.Role, account.Role).SetClaim("workspace", account.WorkspaceId).SetClaim("approval", account.ApprovalStatus);
         DestinationsFor(principal);
         return Results.SignIn(principal, authenticationScheme: Server);

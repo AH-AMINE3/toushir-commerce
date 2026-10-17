@@ -31,6 +31,7 @@ public sealed class DriverLocation
 
 public sealed class ReceiptChallenge
 {
+    public string IssuedBy { get; set; } = "";
     public string RouteId { get; set; } = "";
     public int RouteVersion { get; set; }
     public string Id { get; set; } = IdGen.New();

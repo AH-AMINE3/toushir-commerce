@@ -37,7 +37,7 @@ public sealed partial class PricingService(WholesaleDb db, IDataProtectionProvid
 
     private async Task<Account> Merchant(string workspaceId, string id)
     {
-        var merchant = await db.Accounts.AsNoTracking().FirstOrDefaultAsync(x => x.WorkspaceId == workspaceId && x.Id == id && x.Role == "MERCHANT");
+        var merchant = await db.Accounts.AsNoTracking().FirstOrDefaultAsync(x => x.WorkspaceId == workspaceId && x.Id == id && x.Role == "MERCHANT" && !db.ShopMemberships.Any(m => m.AccountId == x.Id));
         Check.That(merchant != null, "Magasin introuvable.", "NOT_FOUND", 404);
         return merchant;
     }
@@ -76,7 +76,7 @@ public sealed partial class PricingService(WholesaleDb db, IDataProtectionProvid
             rules = rules.OrderByDescending(x => x.CreatedAt).Select(x => View(x, products.GetValueOrDefault(x.ProductId))),
             segments = await db.PriceSegments.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId).OrderBy(x => x.Name).ToListAsync(),
             assignments = await db.MerchantPriceSegments.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId).ToListAsync(),
-            merchants = await db.Accounts.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId && x.Role == "MERCHANT")
+            merchants = await db.Accounts.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId && x.Role == "MERCHANT" && !db.ShopMemberships.Any(m => m.AccountId == x.Id))
                 .OrderBy(x => x.ShopName).Select(x => new { x.Id, x.Name, x.ShopName, x.ApprovalStatus }).ToListAsync(),
             events = await db.PricingEvents.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId)
                 .OrderByDescending(x => x.UtcTicks).ThenBy(x => x.Id).Take(200).ToListAsync(),

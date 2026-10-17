@@ -25,6 +25,8 @@ SQLite serializes writes in its single application process. PostgreSQL mutations
 
 GPS permission is separate from login. Freshness, coordinate bounds and assigned-driver ownership are validated. Finance views do not expose GPS.
 
+Shop membership separates the actual person (`Actor.Id`/OIDC subject) from the validated shop (`ResourceOwnerId`). Personal baskets/favorites remain individual; shared shop orders retain actual creator/event/receipt attribution. Owner, Manager, Buyer and Viewer authority is live-validated across HTTP, token exchange, receipt completion and SignalR publication. Session/authority groups are rechecked at publication and serialize with revocation; stale account/order groups do not retain access. The current service is single-instance, without a distributed hub backplane. See [shop identity and revocation](SHOP-MEMBERS.md).
+
 ## Commercial state
 
 Quotes capture explicit quantities, base/applied prices, fees, expiry and versions. Only acceptance of the current valid version reserves stock atomically. Oversized/concurrent claims fail without partial stock changes. Preparation persists actual line quantities. Departure consumes physical stock and releases reservations without inventing payment.

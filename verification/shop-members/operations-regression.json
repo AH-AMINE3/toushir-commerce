@@ -1,0 +1,45 @@
+{
+  "base": "http://127.0.0.1:5863",
+  "at": "2026-10-17T11:56:55.464Z",
+  "passed": 9,
+  "failed": 0,
+  "requests": 70,
+  "checks": [
+    {
+      "name": "ABP startup, six scoped roles and owner capability switching",
+      "pass": true
+    },
+    {
+      "name": "Authenticated SignalR rejects anonymous, cross-workspace subscription and client publishing",
+      "pass": true
+    },
+    {
+      "name": "RFQ and versioned quote retain original transactional inventory workflow",
+      "pass": true
+    },
+    {
+      "name": "Per-line preparation validates quantities, roles and stale versions; commit emits live notice",
+      "pass": true
+    },
+    {
+      "name": "Dispatcher assignment isolates driver manifests and pickup requires complete preparation",
+      "pass": true
+    },
+    {
+      "name": "GPS requires active assignment and consent; stale, future and reordered fixes are rejected",
+      "pass": true
+    },
+    {
+      "name": "Receipt challenge binds merchant, assigned driver, order version, quantities and one-time use",
+      "pass": true
+    },
+    {
+      "name": "Cash tender and change are explicit, bounded and idempotent; finance reconciles separately",
+      "pass": true
+    },
+    {
+      "name": "Refused units enter quarantine and warehouse inspection is explicitly separate",
+      "pass": true
+    }
+  ]
+}

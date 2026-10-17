@@ -10,14 +10,22 @@ using OpenIddict.Abstractions;
 
 namespace Toushir.Wholesale;
 
-public record Actor(string Id, string WorkspaceId, string Name, string Role, string ApprovalStatus, bool CanSwitchRole = false)
+public record Actor(string Id, string WorkspaceId, string Name, string Role, string ApprovalStatus, bool CanSwitchRole = false,
+    string? ShopId = null, string ShopRole = "OWNER", int MembershipVersion = 0)
 {
+    public string ResourceOwnerId => Role == "MERCHANT" ? ShopId ?? Id : Id;
+    public bool IsShopMember => Role == "MERCHANT" && ShopId != null;
+    public bool CanShopWrite => Role == "MERCHANT" && ShopRole is "OWNER" or "MANAGER" or "BUYER";
+    public bool CanManageShop => Role == "MERCHANT" && ShopRole is "OWNER" or "MANAGER";
+    public void ShopWrite() => Check.That(CanShopWrite, "Votre accès au magasin est en lecture seule.", "SHOP_READ_ONLY", 403);
+    public void ManageShop() => Check.That(CanManageShop, "Le propriétaire ou un responsable du magasin doit effectuer cette action.", "SHOP_MANAGER_REQUIRED", 403);
     public bool IsAdmin => Role == "ADMIN";
     public bool IsStaff => Role is "ADMIN" or "WAREHOUSE" or "DISPATCHER" or "FINANCE";
     public void RequireRoles(params string[] roles) => Check.That(roles.Contains(Role), "Vous ne disposez pas du rôle requis.", "FORBIDDEN", 403);
     public void Admin() => Check.That(IsAdmin, "Cette action est réservée au grossiste.", "FORBIDDEN", 403);
     public void Approved() => Check.That(IsAdmin || ApprovalStatus == "APPROVED", "Votre boutique doit être approuvée par le grossiste.", "MERCHANT_NOT_APPROVED", 403);
-    public static Actor From(HttpContext c) => new(c.User.FindFirstValue(ClaimTypes.NameIdentifier)!, c.User.FindFirstValue("workspace")!, c.User.FindFirstValue(ClaimTypes.Name)!, c.User.FindFirstValue(ClaimTypes.Role)!, c.User.FindFirstValue("approval")!, c.User.FindFirstValue("owner_capability") == "true");
+    public static Actor From(HttpContext c) => new(c.User.FindFirstValue(ClaimTypes.NameIdentifier)!, c.User.FindFirstValue("workspace")!, c.User.FindFirstValue(ClaimTypes.Name)!, c.User.FindFirstValue(ClaimTypes.Role)!, c.User.FindFirstValue("approval")!, c.User.FindFirstValue("owner_capability") == "true",
+        c.User.FindFirstValue("shop_id"), c.User.FindFirstValue("shop_role") ?? "OWNER", int.TryParse(c.User.FindFirstValue("membership_version"), out var version) ? version : 0);
 }
 public static class Tokens
 {
@@ -54,19 +62,11 @@ public class SessionHandler(IOptionsMonitor<AuthenticationSchemeOptions> options
         if (session is null || session.ExpiresAt <= DateTimeOffset.UtcNow)
             return AuthenticateResult.Fail("Session expirée.");
         var a = await db.Accounts.AsNoTracking().FirstOrDefaultAsync(x => x.Id == session.AccountId);
-        if (a is null || a.ApprovalStatus == "SUSPENDED")
+        var actor = a == null ? null : await ShopAccess.Resolve(db, a, session.OwnerCapability);
+        if (actor == null)
             return AuthenticateResult.Fail("Compte indisponible.");
-        var space = await db.Workspaces.AsNoTracking().FirstOrDefaultAsync(w => w.Id == a.WorkspaceId);
-        if (space == null || (space.IsDemo && space.CreatedAt.AddDays(7) <= DateTimeOffset.UtcNow))
-            return AuthenticateResult.Fail("Espace expiré.");
-        var guest = await db.DemoGuests.AsNoTracking().FirstOrDefaultAsync(g => g.AccountId == a.Id);
-        if (guest != null)
-        {
-            var invite = await db.DemoInvitations.AsNoTracking().FirstOrDefaultAsync(i => i.Id == guest.InvitationId);
-            if (invite == null || invite.RevokedAt != null || invite.ExpiresAt <= DateTimeOffset.UtcNow)
-                return AuthenticateResult.Fail("Invitation expirée.");
-        }
-        var claims = new[] { new Claim(ClaimTypes.NameIdentifier, a.Id), new Claim("workspace", a.WorkspaceId), new Claim(ClaimTypes.Name, a.Name), new Claim(ClaimTypes.Role, a.Role), new Claim("approval", a.ApprovalStatus), new Claim("sid", session.Id), new Claim("owner_capability", session.OwnerCapability ? "true" : "false") };
+        var claims = new List<Claim> { new(ClaimTypes.NameIdentifier, actor.Id), new("workspace", actor.WorkspaceId), new(ClaimTypes.Name, actor.Name), new(ClaimTypes.Role, actor.Role), new("approval", actor.ApprovalStatus), new("sid", session.Id), new("owner_capability", actor.CanSwitchRole ? "true" : "false"), new("shop_role", actor.ShopRole), new("membership_version", actor.MembershipVersion.ToString()) };
+        if (actor.ShopId != null) claims.Add(new("shop_id", actor.ShopId));
         return AuthenticateResult.Success(new AuthenticationTicket(new ClaimsPrincipal(new ClaimsIdentity(claims, Scheme.Name)), new AuthenticationProperties { ExpiresUtc = tokenExpiry is { } expires && expires < session.ExpiresAt ? expires : session.ExpiresAt }, Scheme.Name));
     }
     protected override Task HandleChallengeAsync(AuthenticationProperties p)
@@ -100,6 +100,8 @@ public class AuthService(WholesaleDb db, PasswordHasher<Account> hasher, IConfig
     public static object Space(Workspace w, bool canSwitchRole = false) => new { w.Id, w.Name, w.IsDemo, canSwitchRole, pricingMode = "ON_REQUEST", wilaya = "Oran", currency = "DZD" };
     public async Task<object> Issue(Account a, HttpContext c, string? workspaceToken = null)
     {
+        var actor = await ShopAccess.Resolve(db, a, workspaceToken != null);
+        Check.That(actor != null, "Ce compte ou cet accès au magasin n'est plus disponible.", "INVALID_CREDENTIALS", 401);
         var expired = await db.Sessions.AsNoTracking().ToListAsync();
         db.Sessions.RemoveRange(expired.Where(x => x.ExpiresAt < DateTimeOffset.UtcNow));
         var accountSessions = await db.Sessions.Where(x => x.AccountId == a.Id).ToListAsync();
@@ -127,7 +129,7 @@ public class AuthService(WholesaleDb db, PasswordHasher<Account> hasher, IConfig
         {
             token,
             workspaceToken,
-            user = User(a),
+            user = await UserContext(a, actor!),
             workspace = Space(w!, w!.IsDemo && workspaceToken != null)
         };
     }
@@ -193,7 +195,7 @@ public class AuthService(WholesaleDb db, PasswordHasher<Account> hasher, IConfig
             await db.SaveChangesAsync();
         }
         await EnsureTeamPersonas(w!);
-        var a = await db.Accounts.FirstAsync(x => x.WorkspaceId == w!.Id && x.Role == role && !db.DemoGuests.Any(g => g.AccountId == x.Id));
+        var a = await db.Accounts.FirstAsync(x => x.WorkspaceId == w!.Id && x.Role == role && !db.DemoGuests.Any(g => g.AccountId == x.Id) && !db.ShopMemberships.Any(m => m.AccountId == x.Id));
         return await Issue(a, c, key);
     }
     public async Task EnsureTeamPersonas(Workspace w)
@@ -214,9 +216,18 @@ public class AuthService(WholesaleDb db, PasswordHasher<Account> hasher, IConfig
         var w = await db.Workspaces.FindAsync(actor.WorkspaceId);
         return new
         {
-            user = User(a!),
+            user = await UserContext(a!, actor),
             workspace = Space(w!, w!.IsDemo && actor.CanSwitchRole)
         };
+    }
+    public async Task<object> UserContext(Account account, Actor actor)
+    {
+        var shop = actor.Role == "MERCHANT" ? await db.Accounts.AsNoTracking().FirstAsync(x => x.Id == actor.ResourceOwnerId) : account;
+        return new { account.Id, account.Name, shopName = shop.ShopName, account.Email, account.Phone, account.Role,
+            approvalStatus = actor.ApprovalStatus, account.CreatedAt,
+            shop = actor.Role == "MERCHANT" ? new { id = shop.Id, name = shop.ShopName, role = actor.ShopRole,
+                membershipVersion = actor.MembershipVersion, isMember = actor.IsShopMember,
+                canOrder = actor.CanShopWrite, canManage = actor.CanManageShop } : null };
     }
     public async Task ChangePassword(Actor actor, PasswordInput input, HttpContext c)
     {

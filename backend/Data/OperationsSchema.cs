@@ -33,6 +33,9 @@ public static class OperationsSchema
             command = Regex.Replace(command, @"^(CREATE\s+(?:UNIQUE\s+)?(?:TABLE|INDEX))\s+", "$1 IF NOT EXISTS ");
             await db.Database.ExecuteSqlRawAsync(command);
         }
+        await AddColumn(db, "Orders", "CreatedBy", "TEXT NOT NULL DEFAULT ''", "text NOT NULL DEFAULT ''");
+        await AddColumn(db, "OrderEvents", "ActorId", "TEXT NOT NULL DEFAULT ''", "text NOT NULL DEFAULT ''");
+        await AddColumn(db, "ReceiptChallenges", "IssuedBy", "TEXT NOT NULL DEFAULT ''", "text NOT NULL DEFAULT ''");
         await db.Database.ExecuteSqlRawAsync("CREATE TABLE IF NOT EXISTS \"CommerceSchemaHistory\" (\"Version\" TEXT NOT NULL PRIMARY KEY, \"AppliedAt\" TEXT NOT NULL)");
         var at = DateTimeOffset.UtcNow.ToString("O");
         await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO \"CommerceSchemaHistory\" (\"Version\",\"AppliedAt\") VALUES ({"20261017-operations-v1"},{at}) ON CONFLICT (\"Version\") DO NOTHING");

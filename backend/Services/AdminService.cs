@@ -16,7 +16,7 @@ public class AdminService(WholesaleDb db, OrderService orders, WarehouseService 
         var start = end.AddDays(1 - days);
         var list = await db.Orders.AsNoTracking().Include(x => x.Items).Where(x => x.WorkspaceId == a.WorkspaceId).ToListAsync();
         var payments = await db.Payments.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId).ToListAsync();
-        var users = await db.Accounts.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId && x.Role == "MERCHANT").ToListAsync();
+        var users = await db.Accounts.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId && x.Role == "MERCHANT" && !db.ShopMemberships.Any(m => m.AccountId == x.Id)).ToListAsync();
         var offers = await db.Offers.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId).ToListAsync();
         var period = list.Where(x => Day(x.CreatedAt) >= start).ToList();
         bool Delivered(PurchaseOrder o) => o.Status is "DELIVERED" or "PARTIALLY_DELIVERED";
@@ -154,7 +154,7 @@ public class AdminService(WholesaleDb db, OrderService orders, WarehouseService 
         a.Admin();
         var q = query["q"].ToString().ToLowerInvariant();
         var status = query["status"].ToString();
-        var users = await db.Accounts.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId && x.Role == "MERCHANT").ToListAsync();
+        var users = await db.Accounts.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId && x.Role == "MERCHANT" && !db.ShopMemberships.Any(m => m.AccountId == x.Id)).ToListAsync();
         var list = await db.Orders.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId).ToListAsync();
         var rows = users.Where(x => status.Length == 0 || x.ApprovalStatus == status).Where(x => q.Length == 0 || (x.Name + " " + x.ShopName + " " + x.Email + " " + x.Phone).ToLowerInvariant().Contains(q)).OrderByDescending(x => x.CreatedAt).Select(x => (object)new { x.Id, x.Name, x.ShopName, x.Email, x.Phone, x.ApprovalStatus, x.CreatedAt, orderCount = list.Count(o => o.AccountId == x.Id), totalSpent = list.Where(o => o.AccountId == x.Id && o.Status is "DELIVERED" or "PARTIALLY_DELIVERED").Sum(o => o.Total ?? 0) }).ToList();
         return Paged(rows, query);
@@ -164,7 +164,7 @@ public class AdminService(WholesaleDb db, OrderService orders, WarehouseService 
         a.Admin();
         var status = input.ApprovalStatus.ToUpperInvariant();
         Check.That(status is "APPROVED" or "PENDING" or "SUSPENDED", "Statut de boutique invalide.");
-        var user = await db.Accounts.FirstOrDefaultAsync(x => x.Id == id && x.WorkspaceId == a.WorkspaceId && x.Role == "MERCHANT");
+        var user = await db.Accounts.FirstOrDefaultAsync(x => x.Id == id && x.WorkspaceId == a.WorkspaceId && x.Role == "MERCHANT" && !db.ShopMemberships.Any(m => m.AccountId == x.Id));
         Check.That(user != null, "Boutique introuvable.", "NOT_FOUND", 404);
         user!.ApprovalStatus = status;
         orders.Audit(a, "MERCHANT_" + status, id);

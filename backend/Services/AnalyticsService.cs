@@ -22,7 +22,7 @@ public class AnalyticsService(WholesaleDb db) {
   bool In(DateTimeOffset date,DateOnly first,DateOnly last){var day=Day(date);return day>=first&&day<=last;}
   var orders=await db.Orders.AsNoTracking().Include(x=>x.Items).Where(x=>x.WorkspaceId==actor.WorkspaceId).ToListAsync();
   var payments=await db.Payments.AsNoTracking().Where(x=>x.WorkspaceId==actor.WorkspaceId).ToListAsync();
-  var users=await db.Accounts.AsNoTracking().Where(x=>x.WorkspaceId==actor.WorkspaceId&&x.Role=="MERCHANT").ToListAsync();
+  var users=await db.Accounts.AsNoTracking().Where(x=>x.WorkspaceId==actor.WorkspaceId&&x.Role=="MERCHANT"&&!db.ShopMemberships.Any(m=>m.AccountId==x.Id)).ToListAsync();
   var offers=await db.Offers.AsNoTracking().Where(x=>x.WorkspaceId==actor.WorkspaceId).ToListAsync();
   var products=await db.Products.AsNoTracking().ToListAsync();
   var claims=await db.Claims.AsNoTracking().Where(x=>x.WorkspaceId==actor.WorkspaceId).ToListAsync();
