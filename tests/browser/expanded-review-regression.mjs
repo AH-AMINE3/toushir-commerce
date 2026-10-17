@@ -110,12 +110,16 @@ try {
   assert(response.ok());
   const order = await response.json();
   assert.equal(order.status, "SUBMITTED");
+  await p.getByText("Votre commande est reçue.", { exact: true }).waitFor();
+  await p.getByText("Total transmis", { exact: true }).waitFor();
+  assert.equal(await p.getByText("Total confirmé", { exact: true }).count(), 0);
   await p.getByText("Reçue", { exact: true }).first().waitFor();
   await p
     .getByText(
       "Votre grossiste a reçu la commande. Sa confirmation est attendue avant la préparation.",
       { exact: true },
     )
+    .first()
     .waitFor();
   await shot("merchant-order-success");
   checks.push(

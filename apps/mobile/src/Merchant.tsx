@@ -1929,13 +1929,17 @@ export default function Merchant({
                       <Text style={[S.subheading, { flex: 1 }]}>
                         {order.status === "REQUESTED"
                           ? "Votre demande est reçue."
-                          : "C’est commandé !"}
+                          : order.status === "SUBMITTED"
+                            ? "Votre commande est reçue."
+                            : "Commande enregistrée."}
                       </Text>
                     </View>
                     <Text style={S.text}>
                       {order.status === "REQUESTED"
                         ? "Votre grossiste vous proposera les prix à valider ici."
-                        : "Votre grossiste a reçu la commande. La préparation, le départ et la réception se suivent ici."}
+                        : order.status === "SUBMITTED"
+                          ? "Votre grossiste a reçu la commande. Sa confirmation est attendue avant la préparation."
+                          : "Retrouvez ici l’état de votre commande, sa préparation, son départ et sa réception."}
                     </Text>
                     <Button
                       small
@@ -2109,9 +2113,13 @@ export default function Merchant({
                   ]}
                 >
                   <Text style={M.sectionTitle}>
-                    {order.total == null
+                    {order.total == null || order.status === "REQUESTED"
                       ? "Total à confirmer"
-                      : "Total confirmé"}
+                      : order.status === "SUBMITTED"
+                        ? "Total transmis"
+                        : ["QUOTED", "OFFER_DECLINED"].includes(order.status)
+                          ? "Total proposé"
+                          : "Total de la commande"}
                   </Text>
                   <Text style={M.sectionTitle}>{money(order.total)}</Text>
                 </View>

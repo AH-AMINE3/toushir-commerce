@@ -302,9 +302,14 @@ try {
       created = await posted(m, "/orders", () =>
         btn(m, "Confirmer la commande").click(),
       );
-      await m.getByText("C’est commandé !", { exact: true }).waitFor();
+      await m.getByText("Votre commande est reçue.", { exact: true }).waitFor();
       assert(created.total > 0);
       await shot(m, "merchant-order-success");
+      await m.getByText("Total transmis", { exact: true }).waitFor();
+      assert.equal(
+        await m.getByText("Total confirmé", { exact: true }).count(),
+        0,
+      );
     },
   );
   await step(

@@ -27,3 +27,7 @@ Final-build confirmation additionally inspected `browser-final/desktop-1280.png`
 This approves the inspected six-surface design revision, with acceptable differences for live data, explicit demo context and functional controls. It does not claim pixel identity, acceptance of all 265 Figma states, complete 41-state prototype wiring, native runtime acceptance, external-provider success, or domain/security acceptance. Product photographs remain the current sourced catalogue images rather than the clean sample packshots from Figma.
 
 Questions skipped: this was an assigned final assessment with a defined scope and no unresolved design preference requiring user input.
+
+## Submission wording follow-up
+
+The separate41-state source coverage review found a contradiction between an awaiting-confirmation order and its “Total confirmé” label. This is resolved with “Total transmis” and explicit pending-confirmation copy for SUBMITTED. The focused browser rerun (`submission-final/expanded-browser.json`) passed four existing journey groups with zero failures or JavaScript errors, including priced checkout and visibility of the same order in wholesaler operations. See `STATE-COVERAGE.md` for the per-state mapping and consolidated-screen limits.

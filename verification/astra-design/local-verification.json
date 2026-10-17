@@ -62,6 +62,14 @@
     "Incorrect local API-origin build setting corrected before final tests",
     "Screenshot repaint timing corrected before visual scoring",
     "Tablet legend restored and chart axis scaling fixed",
-    "Product add hit target44px and320px promotion layout fixed"
-  ]
+    "Product add hit target44px and320px promotion layout fixed",
+    "Submitted-order banner and Total transmis now distinguish receipt from wholesaler confirmation"
+  ],
+  "followupVerification": {
+    "evidence": "submission-final/expanded-browser.json",
+    "checkCount": 4,
+    "failures": 0,
+    "errors": 0,
+    "purpose": "Recheck checkout and cross-application order after correcting SUBMITTED wording; overlaps baseline journeys."
+  }
 }

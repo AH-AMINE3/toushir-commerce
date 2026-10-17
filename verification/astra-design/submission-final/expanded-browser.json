@@ -1,0 +1,44 @@
+{
+  "at": "2026-10-17T16:11:40.812Z",
+  "base": "http://127.0.0.1:5860",
+  "checks": [
+    "Actual wholesale dashboard loads seeded records",
+    "Merchant catalogue shares the wholesale workspace and positive demo prices",
+    "Direct checkout submits priced order and shows confirmation in merchant app",
+    "The exact mobile order is visible in wholesaler operations"
+  ],
+  "failures": [],
+  "errors": [],
+  "captures": [
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/submission-final/desktop-overview.png",
+      "width": 1600,
+      "height": 1080
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/submission-final/desktop-overview-chart.png",
+      "width": 1600,
+      "height": 1080
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/submission-final/merchant-catalog.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/submission-final/merchant-checkout.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/submission-final/merchant-order-success.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/submission-final/desktop-mobile-order.png",
+      "width": 1600,
+      "height": 2890
+    }
+  ]
+}
