@@ -8,6 +8,8 @@ import { useEngagementLive } from "./realtime";
 import { C, S } from "./theme";
 import ShopTeam, { shopRoleNames } from "./ShopTeam";
 import AssistedRequests from "./AssistedRequests";
+import MerchantActivity from "./MerchantActivity";
+import { StateArrival } from "./Motion";
 
 export type AccountPanel =
   | "rewards"
@@ -44,6 +46,7 @@ type Props = {
   addresses: Address[];
   onAddAddress: () => void;
   onOrders: () => void;
+  onOrder: (id: string) => void;
   onJoin: () => void;
   onSwitch: () => void;
   onLogout: () => void;
@@ -103,6 +106,7 @@ export default function MerchantAccount({
   addresses,
   onAddAddress,
   onOrders,
+  onOrder,
   onJoin,
   onSwitch,
   onLogout,
@@ -246,43 +250,12 @@ export default function MerchantAccount({
     );
   if (panel === "activity" || panel === "payments")
     return (
-      <View style={A.detail}>
-        {problem}
-        <Text style={A.title}>
-          {panel === "activity" ? "Vos achats" : "Vos règlements"}
-        </Text>
-        {summary ? (
-          <>
-            <View style={A.address}>
-              <Text style={A.stat}>{summary.deliveredOrders}</Text>
-              <Text style={S.muted}>
-                Commandes entièrement livrées ·{" "}
-                {summary.partiallyDeliveredOrders} livraisons partielles
-              </Text>
-            </View>
-            <View style={A.address}>
-              <Text style={A.stat}>{money(summary.netPaidThisMonth)}</Text>
-              <Text style={S.muted}>
-                Réglé ce mois-ci, remboursements déduits
-              </Text>
-              <Text style={S.small}>
-                {money(summary.collectedThisMonth)} encaissés ·{" "}
-                {money(summary.refundedThisMonth)} remboursés
-              </Text>
-            </View>
-          </>
-        ) : null}
-        <Text style={S.muted}>
-          Retrouvez les produits, les montants encaissés et les bons dans chaque
-          commande.
-        </Text>
-        {panel === "payments" ? (
-          <Text style={S.small}>
-            Les bons de commande ne sont pas des factures fiscales.
-          </Text>
-        ) : null}
-        <Button onPress={onOrders}>Voir mes commandes</Button>
-      </View>
+      <MerchantActivity
+        key={panel}
+        payments={panel === "payments"}
+        onOrders={onOrders}
+        onOrder={onOrder}
+      />
     );
   return (
     <View style={A.content}>
@@ -295,42 +268,50 @@ export default function MerchantAccount({
         </Text>
       ) : null}
       {problem}
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={`Ma carte Toushir, ${wallet?.available ?? "chargement des"} points disponibles. Voir mes points et cadeaux`}
-        onPress={() => onPanel("rewards")}
-        style={({ pressed }) => [A.card, { opacity: pressed ? 0.9 : 1 }]}
-      >
-        <View style={[S.row, { gap: 12 }]}>
-          <Image
-            source={assets.logo}
-            style={{ width: 96, height: 25 }}
-            contentFit="contain"
-            accessibilityLabel="Toushir"
-          />
-          <Text style={A.cardLabel}>Carte commerçant</Text>
-        </View>
-        <View style={[S.row, { gap: 10 }]}>
-          <Text
-            style={A.points}
-            numberOfLines={1}
-            adjustsFontSizeToFit
-            minimumFontScale={0.6}
-          >
-            {wallet ? wallet.available.toLocaleString("fr-DZ") : "—"}
-          </Text>
-          <View style={{ gap: 2, flex: 2 }}>
-            <Text style={A.pointsLabel}>points</Text>
-            <Text style={A.onDark}>disponibles</Text>
+      <StateArrival changeKey={wallet?.available ?? "loading"}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`Ma carte Toushir, ${wallet?.available ?? "chargement des"} points disponibles. Voir mes points et cadeaux`}
+          onPress={() => onPanel("rewards")}
+          style={({ pressed }) => [A.card, { opacity: pressed ? 0.9 : 1 }]}
+        >
+          <View style={[S.row, { gap: 12 }]}>
+            <Image
+              source={assets.logo}
+              style={{ width: 96, height: 25 }}
+              contentFit="contain"
+              accessibilityLabel="Toushir"
+            />
+            <Text style={A.cardLabel}>Carte commerçant</Text>
           </View>
-        </View>
-        <View style={S.between}>
-          <Text numberOfLines={1} style={[A.cardLabel, { flex: 1 }]}>
-            {session.user.shopName || session.user.name}
-          </Text>
-          <Graphic source={assets.arrow} />
-        </View>
-      </Pressable>
+          <View style={[S.row, { gap: 10 }]}>
+            <Text
+              style={A.points}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.6}
+            >
+              {wallet ? wallet.available.toLocaleString("fr-DZ") : "—"}
+            </Text>
+            <View style={{ gap: 2, flex: 2 }}>
+              <Text style={A.pointsLabel}>points</Text>
+              <Text style={A.onDark}>disponibles</Text>
+            </View>
+          </View>
+          <View style={S.between}>
+            <Text numberOfLines={1} style={[A.cardLabel, { flex: 1 }]}>
+              {session.user.shopName || session.user.name}
+            </Text>
+            <Graphic source={assets.arrow} />
+          </View>
+          <View style={A.cardFooter}>
+            <Text style={A.onDark}>Votre fidélité, à chaque commande</Text>
+            <Text style={[A.onDark, { color: C.action }]}>
+              Voir mes cadeaux
+            </Text>
+          </View>
+        </Pressable>
+      </StateArrival>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel="Voir mes points réservés"
@@ -432,7 +413,15 @@ const A = StyleSheet.create({
     lineHeight: 19,
     color: C.muted,
   },
-  card: { backgroundColor: C.ink, borderRadius: 20, padding: 24, gap: 18 },
+  card: { backgroundColor: C.ink, borderRadius: 16, padding: 24, gap: 18 },
+  cardFooter: {
+    ...S.between,
+    flexWrap: "wrap",
+    gap: 5,
+    borderTopWidth: 1,
+    borderColor: "#405346",
+    paddingTop: 14,
+  },
   cardLabel: {
     fontFamily: "Inter",
     fontSize: 10,

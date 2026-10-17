@@ -10,8 +10,12 @@ public class CatalogService(WholesaleDb db, IConfiguration config, WarehouseServ
         if (ids.Count == 0)
             return new();
         var lots = await db.WarehouseLots.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId && ids.Contains(x.ProductId) && x.OnHand > x.Reserved).ToListAsync();
+        var held = (await db.RecallCases.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId && x.ContainmentActive)
+            .Select(x => x.IdentityKey).ToListAsync()).ToHashSet();
         var now = DateTimeOffset.UtcNow;
-        return ids.ToDictionary(id => id, id => checked((int)lots.Where(x => x.ProductId == id && (x.ExpiresAt == null || x.ExpiresAt > now)).Sum(x => (long)x.OnHand - x.Reserved)));
+        return ids.ToDictionary(id => id, id => checked((int)lots.Where(x => x.ProductId == id
+            && !held.Contains(RecallGuard.Identity(x.ProductId, x.LotNumber, x.ExpiresAt))
+            && (x.ExpiresAt == null || x.ExpiresAt > now)).Sum(x => (long)x.OnHand - x.Reserved)));
     }
     private static int DisplayQuantity(Offer? offer)
     {
@@ -178,7 +182,7 @@ public class CatalogService(WholesaleDb db, IConfiguration config, WarehouseServ
                 decision.Source, campaignsAllowed, "", System.Text.Json.JsonSerializer.Serialize(new { decision, terms = book.Terms(decision.RuleId) }));
             if (decision.UnitPrice is decimal price) known.Add(new(line.ProductId, line.Quantity, price, offer?.CaseSize ?? 1, null));
         }
-        var preview = (await promotions.Preview(actor.WorkspaceId, known, blocked, book.At)).ToDictionary(x => x.ProductId);
+        var preview = (await promotions.Preview(actor.WorkspaceId, known, blocked, book.At, actor.Role == "MERCHANT" ? actor.ResourceOwnerId : null)).ToDictionary(x => x.ProductId);
         var giftIds = preview.Values.Where(x => x.Kind == "FREE_GOODS" && x.GiftQuantity > 0).Select(x => x.GiftProductId).Distinct().ToList();
         var activeGifts = await db.Products.AsNoTracking().Where(x => giftIds.Contains(x.Id) && x.IsCatalogActive).ToDictionaryAsync(x => x.Id, x => x.Name);
         preview = preview.ToDictionary(x => x.Key, x => x.Value with { GiftProductName = activeGifts.GetValueOrDefault(x.Value.GiftProductId) ?? "" });

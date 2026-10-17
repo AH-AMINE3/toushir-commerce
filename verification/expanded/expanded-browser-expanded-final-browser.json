@@ -1,0 +1,176 @@
+{
+  "at": "2026-10-17T13:54:06.671Z",
+  "base": "http://127.0.0.1:5865",
+  "checks": [
+    "Actual wholesale dashboard loads seeded records",
+    "Merchant catalogue shares the wholesale workspace and positive demo prices",
+    "Full category grid, semantic icons and category selection work",
+    "Brand directory opens, searches and filters actual products",
+    "Product filters and exact barcode lookup work",
+    "Direct checkout submits priced order and shows confirmation in merchant app",
+    "The exact mobile order is visible in wholesaler operations",
+    "Merchant account card, actual 7/30/90 day activity, measures and bar drilldown work",
+    "All campaign mechanisms and actual gift catalogue render",
+    "Merchant orders and real preparation tracking remain connected",
+    "Analytics has real periods, metric switching, keyboard graph and custom dates",
+    "Shops filter by actual region, name or phone and export the filtered list",
+    "Campaign editor exposes explicit regional audience targeting",
+    "Delivery loads attributed 3D truck model and explicit illustrative replay controls",
+    "Wholesaler responsive overview renders at 390px without page overflow",
+    "Live work screen runs merchant and wholesale in two actual shared-workspace frames"
+  ],
+  "failures": [],
+  "errors": [],
+  "captures": [
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/desktop-overview.png",
+      "width": 1600,
+      "height": 2559
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/desktop-overview-chart.png",
+      "width": 1600,
+      "height": 2559
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/merchant-catalog.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/merchant-categories.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/merchant-category-products.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/merchant-brands.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/merchant-filters.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/merchant-barcode.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/merchant-barcode-result.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/merchant-checkout.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/merchant-order-success.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/desktop-mobile-order.png",
+      "width": 1600,
+      "height": 3100
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/merchant-account.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/merchant-activity.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/merchant-activity-chart.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/merchant-offers.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/merchant-offers-remises.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/merchant-offers-cadeaux.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/merchant-offers-challenges.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/merchant-gifts.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/merchant-orders.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/merchant-tracking.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/desktop-analytics.png",
+      "width": 1600,
+      "height": 2624
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/desktop-dark.png",
+      "width": 1600,
+      "height": 2624
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/desktop-stores.png",
+      "width": 1600,
+      "height": 1092
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/desktop-campaign-audience.png",
+      "width": 1600,
+      "height": 2359
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/desktop-delivery-3d.png",
+      "width": 1600,
+      "height": 2474
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/desktop-delivery-gps.png",
+      "width": 1600,
+      "height": 2466
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/wholesale-mobile.png",
+      "width": 390,
+      "height": 4101
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/expanded-final-browser/live-work-hub.png",
+      "width": 1600,
+      "height": 1040
+    }
+  ]
+}

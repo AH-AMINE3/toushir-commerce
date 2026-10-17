@@ -2,7 +2,7 @@
 
 ## Data
 
-Product identities and selected front photographs are sourced from Open Food Facts. The catalogue is a public reference catalogue, not a local supplier inventory feed. Wholesale prices and stock are never invented. Unknown offers remain quote-only. Original photos remain canonical; AI studio experiments are visual studies and are not silently substituted for source packaging where small print or artwork differs.
+Product identities and selected front photographs are sourced from Open Food Facts. The catalogue is a public reference catalogue, not a local supplier inventory feed. Real business prices and stock require operator entry; unknown business offers remain quote-only. The owner-controlled demo deliberately seeds labelled fictional DZD prices and inventory through a separate `/api/demo/showcase` action so visitors can test direct ordering. It preserves existing entered prices, inactive offers, lot-managed stock and historical orders. The same action creates three fictional campaign mechanics and three stock-backed demonstration gifts through the normal services; no real gift or financial transfer is implied. Original photos remain canonical; AI studio experiments are visual studies and are not silently substituted for source packaging where small print or artwork differs.
 
 ## Architecture
 
@@ -29,3 +29,9 @@ Native iOS simulator and Android builds are separate deliverables. Store signing
 Advisory sources: https://github.com/advisories/GHSA-vfj7-8cjw-p6xm ; https://github.com/advisories/GHSA-86w9-cpqp-85rv ; https://github.com/advisories/GHSA-w5hq-g745-h8pq . Build tooling is not exposed publicly.
 
 The SQLite native dependency was upgraded to SQLitePCLRaw 2.1.14; the loaded engine is 3.54.0. The verified NuGet dependency tree reports no known vulnerable packages at this release check. The provider probe and invitation verification reports record their actual checks.
+
+## Expanded connected preview
+
+The merchant app now exposes positive fictional demo prices, direct checkout confirmation, six order/payment milestones, preparation quantities, contextual support, actual courier/GPS observations, and interactive account activity. The wholesaler overview and analytics use persisted data, period controls, drilldowns and named queues. Store filters and campaign audiences use actual shop regions. Order amendments require explicit merchant review of frozen before/after terms. Lot recall containment remains active after case closure.
+
+The side-by-side `/live-work.html` preview uses the same test workspace across the actual wholesaler and React Native web app. Native simulators stay off. Existing downloadable Android pricing1.1 packages predate these expanded screens; browser verification is the current UI evidence, and compilation does not assert device execution. Exact visual/interaction acceptance of all 265 Figma states is still not claimed. External SMS/WhatsApp, banking, fiscal issuance and physical GPS-device acceptance require their actual providers or devices.

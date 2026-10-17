@@ -7,6 +7,7 @@ One .NET 10 / ABP backend connects the wholesaler workspace, merchant app and co
 | Application | Local URL | Source |
 | --- | --- | --- |
 | Wholesaler, warehouse, dispatch and finance | http://localhost:5860/ | `apps/web` — React, TypeScript |
+| Connected side-by-side preview | http://localhost:5860/live-work.html | Wholesaler and merchant in one shared test workspace |
 | Merchant browser preview | http://localhost:5860/mobile/merchant | `apps/mobile` — React Native, Expo |
 | Courier browser preview | http://localhost:5860/mobile/driver | `apps/mobile` — separate native identity |
 | API health | http://localhost:5860/api/health | `backend` — .NET 10, ABP 10.6.1 |
@@ -16,7 +17,7 @@ Native apps have separate package IDs, icons and callback schemes. Browser previ
 
 Signature-verified Android test packages: [Merchant APK](https://toushir-commerce-staging.onrender.com/downloads/toushir-merchant.apk) and [Courier APK](https://toushir-commerce-staging.onrender.com/downloads/toushir-driver.apk). These standalone signed ARM64 previews use the public API and need no development server. The latest design is verified in the browser previews; earlier native runtime reports retain their actual execution dates. Android requires installation consent. The supplied iOS archives are local-API Simulator builds, with their separate execution limits recorded in the mobile verification notes.
 
-Public test service: [Wholesaler](https://toushir-commerce-staging.onrender.com/), [Merchant](https://toushir-commerce-staging.onrender.com/mobile/merchant), [Courier](https://toushir-commerce-staging.onrender.com/mobile/driver). The free service may need time to wake. Test records use persistent PostgreSQL; the free database expires on **15 November 2026 at 17:52 UTC**. See [release boundaries](docs/RELEASE.md).
+Public test service: [Connected preview](https://toushir-commerce-staging.onrender.com/live-work.html), [Wholesaler](https://toushir-commerce-staging.onrender.com/), [Merchant](https://toushir-commerce-staging.onrender.com/mobile/merchant), [Courier](https://toushir-commerce-staging.onrender.com/mobile/driver). The free service may need time to wake. Test records use persistent PostgreSQL; the free database expires on **15 November 2026 at 17:52 UTC**. See [release boundaries](docs/RELEASE.md).
 
 Open the wholesaler first, then its merchant/courier links in the same browser to explore one shared demo. The first history is prepared through the business workflow; the free host creates 20 labelled example orders. To invite another person on a separate device, use **Magasins → Créer un lien commerçant** and send that invitation. Each invited shop has its own orders inside your workspace. Keep the owner access capability private.
 
@@ -51,13 +52,19 @@ Business mode disables anonymous demos and creates the configured owner. Sign in
 - Individual shop members, bounded private invitations, role-aware shared orders and immediate access revocation.
 - Named commercial portfolios, versioned contact/visit tasks and merchant-authorized one-use assisted RFQs.
 - Independently approved shop/segment/standard tariffs, quantity/date bands, real customer simulation, explicit basket price consent and frozen quote provenance.
-- Quote requests, explicit promotion selection, versioned prices/expiry, merchant acceptance, atomic reservation, per-line preparation and assignment.
+- Direct priced checkout with explicit reviewed-basket consent, and quote requests where actual terms are still unknown.
+- Versioned product/quantity changes with immutable before/after terms, explicit merchant acceptance or refusal, expiry and atomic stock rollback.
+- Per-line preparation, named team handoffs, courier assignment, live order milestones and contextual support.
 - Ordered manifests, commercial-unit vehicle capacity, custody QR, permitted GPS, customer quantity proof, partial refusal and depot returns.
 - Actual cash, tendered amount/change, route float, driver declaration, independent finance count/reconciliation. Shortages never recreate customer debt.
 - Claims, quarantine, inspection, commercial credits and separately recorded refunds.
 - Supplier approval by another account, privately stored PDF revisions, independently reviewed supplier terms, partial receipts, lot/expiry capture, quality control, invoice evidence and explicit remainder closure.
 - Contextual in-app conversations, private notes, consent-filtered in-app broadcasts, approved campaigns/challenges, immutable loyalty entries and stock-backed gifts.
+- Lot recalls with exact batch/expiry containment, affected depot/orders/shops, merchant notices, bounded physical quarantine, safe preparation cancellation and explicit residual exceptions.
+- Region/name/phone shop filters, safe CSV export, targeted campaign audiences, interactive period analytics and merchant activity drilldown.
 - Interactive Three.js depot and a separate MapLibre view of actual GPS observations. The depot is illustrative, not a camera feed.
+
+The current expanded workflow and verification scope are described in [connected commerce](docs/CONNECTED-COMMERCE.md).
 
 The API enforces ADMIN, MERCHANT, DRIVER, WAREHOUSE, DISPATCHER, FINANCE and restricted SALES permissions. SignalR invalidations and polling refresh persisted state across interfaces.
 

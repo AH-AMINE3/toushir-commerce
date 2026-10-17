@@ -37,14 +37,18 @@ public sealed class PromotionsService(WholesaleDb db, WarehouseService warehouse
             currency = "DZD"
         };
     }
-    private async Task<List<Campaign>> ActiveCampaigns(string workspaceId, DateTimeOffset at)
-        => (await db.Campaigns.AsNoTracking().Where(x => x.WorkspaceId == workspaceId && x.Status == "PUBLISHED" && x.Kind != "CHALLENGE").ToListAsync())
-            .Where(x => x.StartsAt <= at && at <= x.EndsAt).ToList();
+    private async Task<List<Campaign>> ActiveCampaigns(string workspaceId, DateTimeOffset at, string? merchantId)
+    {
+        var query = db.Campaigns.AsNoTracking().Where(x => x.WorkspaceId == workspaceId && x.Status == "PUBLISHED" && x.Kind != "CHALLENGE");
+        query = merchantId == null ? query.Where(c => !db.CampaignAudiences.Any(a => a.WorkspaceId == workspaceId && a.CampaignId == c.Id))
+            : CampaignAudienceScope.ForShop(db, query, merchantId);
+        return (await query.ToListAsync()).Where(x => x.StartsAt <= at && at <= x.EndsAt).ToList();
+    }
 
     public async Task<List<CampaignPricePreview>> Preview(string workspaceId, List<QuoteLineInput> lines,
-        IReadOnlySet<string> blockedProductIds, DateTimeOffset at)
+        IReadOnlySet<string> blockedProductIds, DateTimeOffset at, string? merchantId = null)
     {
-        var campaigns = (await ActiveCampaigns(workspaceId, at)).Where(x => !blockedProductIds.Contains(x.ProductId)).ToList();
+        var campaigns = (await ActiveCampaigns(workspaceId, at, merchantId)).Where(x => !blockedProductIds.Contains(x.ProductId)).ToList();
         return lines.Select(line => {
             var campaign = CampaignPricing.Select(campaigns, line.ProductId, line.Quantity);
             var applied = line.UnitPrice; var issue = "";
@@ -68,7 +72,7 @@ public sealed class PromotionsService(WholesaleDb db, WarehouseService warehouse
             p.Version++;
             Event(actor, p, "QUOTE_SUPERSEDED", "superseded:" + version);
         }
-        var campaigns = await ActiveCampaigns(actor.WorkspaceId, at ?? DateTimeOffset.UtcNow);
+        var campaigns = await ActiveCampaigns(actor.WorkspaceId, at ?? DateTimeOffset.UtcNow, o.AccountId);
         if (campaignIds != null)
         {
             Check.That(campaignIds.Count <= 100 && campaignIds.Distinct().Count() == campaignIds.Count, "Choix de campagnes invalide.");

@@ -5,7 +5,7 @@ public record SendMessageInput(string Text, bool Internal, string IdempotencyKey
 public record UpdateConversationInput(int Version, string Status, string? AssignedTo);
 public record MarketingPreferenceInput(bool OptIn);
 public record CreateBroadcastInput(string Purpose, string Title, string Body, List<string> MerchantIds, string IdempotencyKey);
-public record CreateCampaignInput(string Title, string Description, string Kind, string ProductId, int MinimumQuantity, decimal DiscountPercent, string? GiftProductId, int GiftQuantity, int GoalQuantity, int UnitFactor, string? RewardId, int AwardLimit, DateTimeOffset StartsAt, DateTimeOffset EndsAt, DateTimeOffset? ClaimUntil);
+public record CreateCampaignInput(string Title, string Description, string Kind, string ProductId, int MinimumQuantity, decimal DiscountPercent, string? GiftProductId, int GiftQuantity, int GoalQuantity, int UnitFactor, string? RewardId, int AwardLimit, DateTimeOffset StartsAt, DateTimeOffset EndsAt, DateTimeOffset? ClaimUntil, List<string>? TargetMerchantIds = null);
 public record CampaignPreviewInput(int Quantity);
 public record AwardCampaignInput(string MerchantId);
 public record SyncLoyaltyInput(string? MerchantId);

@@ -1,0 +1,70 @@
+{
+  "base": "http://127.0.0.1:5864",
+  "startedAt": "2026-10-17T13:39:47.993439+00:00",
+  "finishedAt": "2026-10-17T13:44:48.140847+00:00",
+  "success": true,
+  "passed": 267,
+  "httpRequests": 711,
+  "suites": [
+    {
+      "suite": "recall-independent",
+      "exitCode": 0,
+      "success": true,
+      "passed": 14,
+      "failed": 0,
+      "httpRequests": 48,
+      "report": "verification/journey/recall-independent.json"
+    },
+    {
+      "suite": "recalls",
+      "exitCode": 0,
+      "success": true,
+      "passed": 22,
+      "failed": 0,
+      "httpRequests": 192,
+      "report": "verification/journey/recalls-regression.json"
+    },
+    {
+      "suite": "journey",
+      "exitCode": 0,
+      "success": true,
+      "passed": 132,
+      "failed": 0,
+      "httpRequests": 179,
+      "report": "verification/journey/api-matrix.json"
+    },
+    {
+      "suite": "enhancements",
+      "exitCode": 0,
+      "success": true,
+      "passed": 33,
+      "failed": 0,
+      "httpRequests": 58,
+      "report": "verification/journey/activity-audience.json"
+    },
+    {
+      "suite": "amendment-audit",
+      "exitCode": 0,
+      "success": true,
+      "passed": 37,
+      "failed": 0,
+      "httpRequests": 124,
+      "report": "verification/journey/amendment-audit.json"
+    },
+    {
+      "suite": "warehouse",
+      "exitCode": 0,
+      "success": true,
+      "passed": 29,
+      "failed": 0,
+      "httpRequests": 110,
+      "report": "verification/journey/warehouse-latest-guards.json"
+    }
+  ],
+  "sourceHashes": {
+    "backend/Services/CatalogService.cs": "6898a30e2c466816fb510ab24e1d5282df0eb75883780ac6920eb7be38564967",
+    "backend/Services/WarehouseInventoryService.cs": "172a9c3f441799c37eec07e9a58679c72ff0df454c7778d4f8b77eedeb643a71",
+    "backend/Services/RecallService.cs": "86ddcf43214c134ec59790ad50f0f7ba4bb035718fd702a65bd942b161b0c0b8"
+  },
+  "scope": "Actual API regression against the latest root-rebuilt local assembly, isolated fictional workspaces. No browser/Figma parity, native hardware, real payments, external messages or physical GPS-device acceptance."
+}

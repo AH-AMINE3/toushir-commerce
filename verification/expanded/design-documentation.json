@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-17T13:53:39.212642+00:00",
+  "status": "documented; reviewer disposition ship for TSH-F01, TSH-F02 and TSH-F03 only, all three findings resolved; .impeccable/review/expanded/reviewer-verdict.md does not certify the whole surface, physical-native execution, all 265 Figma states, backend/domain correctness or external-provider success",
+  "authorization": "Explicit user-approved system documentation: original Toushir/Figma identity and DM Sans, white/ink/action green, removal of beige/yellow, purposeful accessible operational motion and commerce hierarchy.",
+  "files": [
+    "DESIGN.md",
+    ".impeccable/design.json"
+  ],
+  "systemChanges": [
+    "Updated cool pending palette and shared mobile muted colour; retained merchant metadata-specific colour.",
+    "Recorded actual DM Sans behind historical Inter mobile alias.",
+    "Reconciled expanded operating layout, compact category geometry and fixed brand field.",
+    "Documented chart controls, measured financial bases, state motion, native/web reduced motion and illustrative truck replay.",
+    "Preserved SUBMITTED received/awaiting-confirmation meaning and separate commercial/observed-data states.",
+    "Reconciled category selection as mint with green border/text and current shared muted labels."
+  ],
+  "evidence": ".impeccable/review/expanded/packet.json",
+  "evidenceBoundary": [
+    "Browser captures and 18 passed groups are not final design signoff.",
+    "No exact 265-state Figma acceptance, native runtime execution, external-provider success or domain/security acceptance inferred."
+  ],
+  "notCanonizedOrRepaired": [
+    "Source product-photo quality and original community-image fields remain a content limitation pending approved owner photography.",
+    "Historical Inter, amber and --yellow identifiers remain implementation aliases; documented actual font/colours without renaming code."
+  ],
+  "productFactsPreserved": true,
+  "appBackendTestsEdited": false,
+  "detectorOrContextRerun": false,
+  "surfaceBrief": "No established separate surface-brief file found; existing expanded contract preserved.",
+  "validation": {
+    "jsonParsed": true,
+    "canonicalSectionOrder": true,
+    "frontmatterColorMetadataParity": true,
+    "narrativeVerbatimParity": true,
+    "sourceCategorySelectionReconciled": true,
+    "frontmatterReferencesResolved": true,
+    "typographyMetadataParity": true,
+    "tonalRampsEightSteps": true,
+    "yamlParser": "unavailable; schema keys and references validated with direct parsing"
+  }
+}

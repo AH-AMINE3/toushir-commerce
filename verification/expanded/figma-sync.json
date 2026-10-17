@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-17T13:44:20.735585+00:00",
+  "fileKey": "4IffhmSg2gHg82narIGfMF",
+  "frames": [
+    {
+      "id": "100:4892",
+      "descendants": 64,
+      "counts": {
+        "FRAME": 20,
+        "TEXT": 17,
+        "INSTANCE": 5,
+        "VECTOR": 21,
+        "RECTANGLE": 1
+      },
+      "font": "DM Sans",
+      "completeUiRaster": false,
+      "changes": [
+        "priced direct-order confirmation wording",
+        "accepted total label",
+        "follow-order action",
+        "explicit fictional demo label"
+      ]
+    },
+    {
+      "id": "179:56",
+      "descendants": 347,
+      "counts": {
+        "INSTANCE": 23,
+        "FRAME": 95,
+        "VECTOR": 96,
+        "TEXT": 117,
+        "ELLIPSE": 16
+      },
+      "font": "DM Sans",
+      "completeUiRaster": false,
+      "changes": [
+        "received-sales definition",
+        "interactive period wording",
+        "actual monetary basis"
+      ]
+    }
+  ],
+  "semanticVariables": [
+    "VariableID:90:71",
+    "VariableID:90:73",
+    "VariableID:179:16",
+    "VariableID:179:17"
+  ],
+  "palette": "merchant neutral pending; platform aqua pending in light/dark; no beige/yellow",
+  "visualValidation": "Both composition screenshots inspected; editable text legible with retained hierarchy.",
+  "scope": "Bounded updates of existing semantic tokens and two source screens; not full app-to-Figma visual synchronization."
+}

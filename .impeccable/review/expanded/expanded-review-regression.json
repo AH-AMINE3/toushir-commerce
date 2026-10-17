@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-17T13:52:12.448Z",
+  "base": "http://127.0.0.1:5865",
+  "checks": [
+    "At402x874 with an active received order, first product price and44px add action appear above bottom navigation",
+    "Brand filter input is48px high and the non-growing rail does not overlap it",
+    "An actual SUBMITTED checkout reads Reçue and explicitly awaits wholesaler confirmation",
+    "Actual90-day net-payments chart is visible in its scrolled app viewport"
+  ],
+  "errors": []
+}

@@ -1,0 +1,75 @@
+{
+  "at": "2026-10-17T13:39:58.272926+00:00",
+  "scope": "Focused source audit and independently executed132-scenario API journey; exact Figma and native screen acceptance remain separate.",
+  "baselineEvidence": "verification/journey/api-matrix.json",
+  "findings": [
+    {
+      "id": "B01",
+      "finding": "Store directory lacked geographic projection and region filtering.",
+      "owner": "root",
+      "status": "Source fix independently verified by actual API scenarios",
+      "runtimeEvidence": "verification/journey/activity-audience.json"
+    },
+    {
+      "id": "B02",
+      "finding": "Published campaigns applied workspace-wide without a persisted selected-shop audience.",
+      "owner": "root",
+      "status": "Source fix independently verified by actual API scenarios",
+      "runtimeEvidence": "verification/journey/activity-audience.json"
+    },
+    {
+      "id": "B03",
+      "finding": "Merchant account summary lacked a date-based activity series and financial/category breakdown.",
+      "owner": "root",
+      "status": "Source fix independently verified by actual API scenarios",
+      "runtimeEvidence": "verification/journey/activity-audience.json"
+    },
+    {
+      "id": "B04",
+      "finding": "Priced submitted orders had no explicit merchant-consented product/quantity amendment path.",
+      "owner": "merchant_experience",
+      "status": "Source fix independently verified by actual API scenarios",
+      "runtimeEvidence": "verification/journey/amendment-audit.json"
+    },
+    {
+      "id": "B05",
+      "finding": "Initial amendment BeforeJson stored an ADMIN order projection containing private pricing provenance and exposed it to the merchant.",
+      "owner": "merchant_experience",
+      "status": "Source fix independently verified by actual API scenarios",
+      "runtimeEvidence": "verification/journey/amendment-audit.json"
+    },
+    {
+      "id": "B06",
+      "finding": "Support assignment accepted SALES advisers although SALES cannot open support threads.",
+      "owner": "root",
+      "status": "Source fix independently verified by actual API scenarios",
+      "runtimeEvidence": "verification/journey/activity-audience.json"
+    },
+    {
+      "id": "B07",
+      "finding": "Active recalled batches remained in catalogue/favorite availability, the inStock filter and orderable cart consent while details correctly excluded them. Reservation guards still rejected unsafe allocation.",
+      "owner": "business_qa",
+      "status": "Source correction independently verified by actual API on the rebuilt assembly",
+      "beforeEvidence": "verification/journey/recall-independent-before-fix.json",
+      "sourceFix": "backend/Services/CatalogService.cs:EligibleStocks",
+      "regressionScript": "scripts/test-recall-independent.py",
+      "runtimeEvidence": "verification/journey/recall-independent.json"
+    },
+    {
+      "id": "B08",
+      "finding": "A managed returned recalled batch accepted the same expiry day with a changed hour, producing a different full recall identity; the proper refused-return RESTOCK then succeeded.",
+      "owner": "business_qa",
+      "status": "Source correction independently verified by actual API on the rebuilt assembly",
+      "beforeEvidence": "verification/journey/recall-identity-before-fix.json",
+      "sourceFix": "backend/Services/WarehouseInventoryService.cs:IdentifyReturn",
+      "regressionScript": "scripts/test-recall-independent.py",
+      "runtimeEvidence": "verification/journey/recall-independent.json"
+    }
+  ],
+  "limits": [
+    "The132-scenario matrix is API business acceptance, not visual parity for every Figma screen.",
+    "Location cases submit test coordinates and verify consent/freshness; no physical GPS device acceptance is inferred.",
+    "Receipt cases exercise issued QR payload/challenge exchange at API level; no camera hardware acceptance is inferred.",
+    "Actual recorded in-app messages and payments are verified; external transport delivery and financial settlement are not inferred."
+  ]
+}

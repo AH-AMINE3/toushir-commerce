@@ -63,8 +63,15 @@ import MerchantAccount, {
   accountTitles,
 } from "./MerchantAccount";
 import OrderGifts from "./OrderGifts";
+import OrderAmendments from "./OrderAmendments";
 import MerchantDelivery from "./MerchantDelivery";
+import Recalls from "./Recalls";
+import MerchantDiscovery, {
+  categoryArtwork,
+  type DiscoveryPanel,
+} from "./MerchantDiscovery";
 import { merchantTab } from "./runtime";
+import { MeasuredProgress, StateArrival } from "./Motion";
 
 type Props = {
   session: Session;
@@ -140,6 +147,12 @@ export default function Merchant({
       : "catalog";
   });
   const [communicationSettings, setCommunicationSettings] = useState(false);
+  const [messageContext, setMessageContext] = useState<
+    { type: "ORDER"; id: string; subject: string } | undefined
+  >();
+  const [submittedOrder, setSubmittedOrder] = useState<string | null>(null);
+  const [orderSynced, setOrderSynced] = useState<string | null>(null);
+  const [orderConnected, setOrderConnected] = useState(true);
   const [accountPanel, setAccountPanel] = useState<AccountPanel>(null);
   const contentRef = useRef<React.ElementRef<typeof ScrollView>>(null);
   useEffect(() => {
@@ -155,6 +168,9 @@ export default function Merchant({
   const [search, setSearch] = useState("");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
+  const [brand, setBrand] = useState(""),
+    [inStock, setInStock] = useState(false),
+    [discovery, setDiscovery] = useState<DiscoveryPanel | null>(null);
   const [sort, setSort] = useState("featured");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -228,7 +244,13 @@ export default function Merchant({
           if (active)
             setIncomingOrder(
               r.items.find((o) =>
-                ["PREPARING", "READY", "OUT_FOR_DELIVERY"].includes(o.status),
+                [
+                  "SUBMITTED",
+                  "CONFIRMED",
+                  "PREPARING",
+                  "READY",
+                  "OUT_FOR_DELIVERY",
+                ].includes(o.status),
               ) || null,
             );
         })
@@ -246,7 +268,7 @@ export default function Merchant({
     setLoading(true);
     setError("");
     api<Page<Product>>(
-      `/products?page=${page}&pageSize=30&q=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}&sort=${sort}`,
+      `/products?page=${page}&pageSize=30&q=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}&brand=${encodeURIComponent(brand)}&inStock=${inStock}&sort=${sort}`,
     )
       .then((result) => {
         if (active) {
@@ -260,7 +282,7 @@ export default function Merchant({
     return () => {
       active = false;
     };
-  }, [screen, query, category, page, sort, refresh]);
+  }, [screen, query, category, brand, inStock, page, sort, refresh]);
   useEffect(() => {
     if (screen !== "orders") return;
     let active = true;
@@ -291,14 +313,22 @@ export default function Merchant({
   }, [screen, orderPage, orderFilter, refresh]);
   useEffect(() => {
     if (!order) return;
+    setOrderSynced(null);
+    setOrderConnected(true);
     let active = true;
     const timer = setInterval(
       () =>
         api<Order>(`/orders/${order.id}`)
           .then((value) => {
-            if (active) setOrder(value);
+            if (active) {
+              setOrder(value);
+              setOrderSynced(new Date().toISOString());
+              setOrderConnected(true);
+            }
           })
-          .catch(() => {}),
+          .catch(() => {
+            if (active) setOrderConnected(false);
+          }),
       15000,
     );
     return () => {
@@ -308,6 +338,10 @@ export default function Merchant({
   }, [order?.id]);
   useEffect(() => {
     const listener = BackHandler.addEventListener("hardwareBackPress", () => {
+      if (discovery) {
+        setDiscovery(null);
+        return true;
+      }
       if (selectedProduct) {
         setSelectedProduct(null);
         return true;
@@ -327,13 +361,14 @@ export default function Merchant({
       return false;
     });
     return () => listener.remove();
-  }, [screen, selectedProduct, order, accountPanel]);
+  }, [screen, selectedProduct, order, accountPanel, discovery]);
   const navigate = (target: Screen) => {
     setAccountPanel(null);
     setScreen(target);
     setError("");
     setOrder(null);
     setSelectedProduct(null);
+    if (target !== "messages") setMessageContext(undefined);
     merchantTab(target);
   };
   const favoriteIds = new Set(favoriteProducts.map((p) => p.id));
@@ -450,9 +485,18 @@ export default function Merchant({
       setNote("");
       checkoutKey.current = operationKey();
       navigate("orders");
+      setSubmittedOrder(result.id);
+      setOrderConnected(true);
+      setOrderSynced(new Date().toISOString());
       setOrder(result);
       setRefresh((n) => n + 1);
-      onNotice("Votre demande a bien été transmise au grossiste.");
+      onNotice(
+        displayed.needsQuote
+          ? "Votre demande de prix a bien été transmise."
+          : result.status === "SUBMITTED"
+            ? "Commande reçue. La confirmation de votre grossiste est attendue."
+            : "Commande confirmée. Suivez sa préparation dans l’application.",
+      );
     } catch (e: any) {
       if (
         [
@@ -571,7 +615,7 @@ export default function Merchant({
             uri={product.imageUrl}
             name={product.name}
             style={{
-              height: appWidth < 370 ? 126 : 145,
+              height: appWidth < 370 ? 112 : 120,
               aspectRatio: undefined,
             }}
           />
@@ -650,17 +694,14 @@ export default function Merchant({
   );
   const categoryStrip = (
     <>
-      <View style={[S.between, { marginTop: 20, marginBottom: 16 }]}>
+      <View style={[S.between, { marginTop: 12, marginBottom: 8 }]}>
         <Text style={[M.sectionTitle, { fontSize: 22, lineHeight: 30 }]}>
           Vos rayons
         </Text>
         <Button
           variant="ghost"
           small
-          onPress={() => {
-            setCategory("");
-            setPage(1);
-          }}
+          onPress={() => setDiscovery("categories")}
         >
           Tout voir
         </Button>
@@ -872,10 +913,7 @@ export default function Merchant({
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Rechercher un produit par code-barres"
-            onPress={() => {
-              setSearch("");
-              onNotice("Saisissez le code-barres dans le champ de recherche.");
-            }}
+            onPress={() => setDiscovery("scanner")}
             style={[M.headerAction, { backgroundColor: C.ink }]}
           >
             <FigmaImage
@@ -907,7 +945,7 @@ export default function Merchant({
     <View style={M.demoStrip}>
       <View style={S.row}>
         <Icon name="flask-outline" size={12} color={C.muted} />
-        <Text style={M.demoText}>Mode démo</Text>
+        <Text style={M.demoText}>Démo · prix et stocks fictifs</Text>
       </View>
       {session.workspace.canSwitchRole ? (
         <Pressable
@@ -937,7 +975,7 @@ export default function Merchant({
     <View
       style={[
         S.between,
-        { marginTop: 20, marginBottom: 16, alignItems: "flex-start" },
+        { marginTop: 12, marginBottom: 8, alignItems: "flex-start" },
       ]}
     >
       <View style={{ flex: 1, gap: 5 }}>
@@ -982,11 +1020,38 @@ export default function Merchant({
           </Button>
         ) : null}
         <Text style={[S.small, { textAlign: "center", marginTop: 8 }]}>
-          Vous validez l’offre avant toute préparation.
+          {quote.needsQuote
+            ? "Le grossiste vous proposera un prix à valider."
+            : "Prix vérifié · préparation et livraison suivies dans l’application."}
         </Text>
       </View>
     ) : null;
 
+  if (discovery)
+    return (
+      <View style={M.app}>
+        <MerchantDiscovery
+          panel={discovery}
+          categories={categories}
+          query={query}
+          filters={{ category, brand, sort, inStock }}
+          onClose={() => setDiscovery(null)}
+          onApply={(filters) => {
+            setCategory(filters.category);
+            setBrand(filters.brand);
+            setSort(filters.sort);
+            setInStock(filters.inStock);
+            setPage(1);
+            setDiscovery(null);
+            navigate("catalog");
+          }}
+          onProduct={(product) => {
+            setDiscovery(null);
+            setSelectedProduct(product);
+          }}
+        />
+      </View>
+    );
   return (
     <View style={M.app}>
       {header}
@@ -1026,6 +1091,7 @@ export default function Merchant({
           }
           ListHeaderComponent={
             <>
+              <Recalls revision={refresh} canAcknowledge={canWrite} />
               {!query && !category && page === 1 && incomingOrder ? (
                 <Pressable
                   accessibilityRole="button"
@@ -1037,7 +1103,7 @@ export default function Merchant({
                   }
                   style={[
                     M.valueStrip,
-                    { backgroundColor: C.pale, padding: 14 },
+                    { backgroundColor: C.pale, padding: 10 },
                   ]}
                 >
                   <FigmaImage
@@ -1050,7 +1116,11 @@ export default function Merchant({
                         ? "Votre commande arrive"
                         : incomingOrder.status === "READY"
                           ? "Votre commande est prête"
-                          : "Votre commande se prépare"}
+                          : incomingOrder.status === "PREPARING"
+                            ? "Votre commande se prépare"
+                            : incomingOrder.status === "SUBMITTED"
+                              ? "Votre commande est reçue"
+                              : "Votre commande est confirmée"}
                     </Text>
                     <Text style={[M.valueText, { color: C.green }]}>
                       {incomingOrder.number} · consulter le suivi
@@ -1059,7 +1129,7 @@ export default function Merchant({
                 </Pressable>
               ) : null}
               {categoryStrip}
-              <View style={[S.between, { paddingBottom: 15, paddingTop: 4 }]}>
+              <View style={[S.between, { paddingBottom: 8, paddingTop: 4 }]}>
                 <View style={{ flex: 1, paddingRight: 10 }}>
                   <Text style={M.sectionTitle}>
                     {query
@@ -1067,13 +1137,21 @@ export default function Merchant({
                       : category
                         ? categories.find((c) => c.id === category)?.name ||
                           category
-                        : "Pour votre réassort"}
+                        : brand || "Pour votre réassort"}
                   </Text>
                   <Text style={[S.small, { marginTop: 4 }]}>
                     {total.toLocaleString("fr-DZ")} produits
                     {category ? "" : " au catalogue"}
                   </Text>
                 </View>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Filtrer les produits"
+                  onPress={() => setDiscovery("filters")}
+                  style={M.sort}
+                >
+                  <Icon name="options-outline" size={18} color={C.ink} />
+                </Pressable>
                 <Pressable
                   accessibilityRole="button"
                   accessibilityLabel="Trier les produits"
@@ -1083,6 +1161,33 @@ export default function Merchant({
                   <Icon name="swap-vertical-outline" size={17} color={C.ink} />
                   <Text style={S.label}>Trier</Text>
                 </Pressable>
+              </View>
+              <View
+                style={[S.row, { flexWrap: "wrap", gap: 8, marginBottom: 6 }]}
+              >
+                <Button
+                  small
+                  variant="ghost"
+                  icon="storefront-outline"
+                  onPress={() => setDiscovery("brands")}
+                >
+                  Toutes les marques
+                </Button>
+                {category || brand || inStock ? (
+                  <Button
+                    small
+                    variant="secondary"
+                    icon="close"
+                    onPress={() => {
+                      setCategory("");
+                      setBrand("");
+                      setInStock(false);
+                      setPage(1);
+                    }}
+                  >
+                    Effacer les filtres
+                  </Button>
+                ) : null}
               </View>
               {loading ? <Loading count={2} /> : null}
             </>
@@ -1099,6 +1204,8 @@ export default function Merchant({
                     onPress={() => {
                       setSearch("");
                       setCategory("");
+                      setBrand("");
+                      setInStock(false);
                     }}
                   >
                     Tout le catalogue
@@ -1154,10 +1261,14 @@ export default function Merchant({
             />
           ) : null}
           {screen === "messages" ? (
-            <Conversations
-              session={session}
-              settingsOpen={communicationSettings}
-            />
+            <>
+              <Recalls revision={refresh} canAcknowledge={canWrite} />
+              <Conversations
+                session={session}
+                initialContext={messageContext}
+                settingsOpen={communicationSettings}
+              />
+            </>
           ) : null}
           {screen === "favorites" ? (
             <>
@@ -1362,8 +1473,13 @@ export default function Merchant({
                   ["", "Toutes"],
                   ["REQUESTED", "Demandes"],
                   ["QUOTED", "Offres à valider"],
+                  ["CONFIRMED", "Confirmées"],
+                  ["PREPARING", "En préparation"],
+                  ["READY", "Prêtes"],
                   ["OUT_FOR_DELIVERY", "En livraison"],
                   ["DELIVERED", "Livrées"],
+                  ["PARTIALLY_DELIVERED", "Livraisons partielles"],
+                  ["CANCELLED", "Annulées"],
                 ].map(([value, label]) => (
                   <CategoryPill
                     key={value}
@@ -1445,11 +1561,11 @@ export default function Merchant({
               ) : (
                 <Empty
                   title="Vos commandes, au même endroit"
-                  message="Après votre première demande, vous pourrez suivre chaque étape ici."
+                  message="Après votre première commande, retrouvez ici la confirmation, la préparation, la livraison et le règlement."
                   icon="receipt-outline"
                   action={
                     <Button onPress={() => navigate("catalog")}>
-                      Commencer une demande
+                      Commencer une commande
                     </Button>
                   }
                 />
@@ -1491,6 +1607,11 @@ export default function Merchant({
                 })
               }
               onOrders={() => navigate("orders")}
+              onOrder={(id) =>
+                api<Order>(`/orders/${id}`)
+                  .then(setOrder)
+                  .catch((e) => setError(e.message))
+              }
               onJoin={onJoin}
               onSwitch={handleSwitch}
               onLogout={handleLogout}
@@ -1730,6 +1851,32 @@ export default function Merchant({
               }}
             >
               {error ? <Notice error>{error}</Notice> : null}
+              {submittedOrder === order.id ? (
+                <StateArrival changeKey={order.id}>
+                  <View style={M.confirmedOrder}>
+                    <View style={S.row}>
+                      <Icon name="checkmark-circle" color={C.green} size={30} />
+                      <Text style={[S.subheading, { flex: 1 }]}>
+                        {order.status === "REQUESTED"
+                          ? "Votre demande est reçue."
+                          : "C’est commandé !"}
+                      </Text>
+                    </View>
+                    <Text style={S.text}>
+                      {order.status === "REQUESTED"
+                        ? "Votre grossiste vous proposera les prix à valider ici."
+                        : "Votre grossiste a reçu la commande. La préparation, le départ et la réception se suivent ici."}
+                    </Text>
+                    <Button
+                      small
+                      variant="ghost"
+                      onPress={() => setSubmittedOrder(null)}
+                    >
+                      J’ai compris
+                    </Button>
+                  </View>
+                </StateArrival>
+              ) : null}
               <View style={M.group}>
                 <View style={S.between}>
                   <Text style={S.label}>{order.number}</Text>
@@ -1738,8 +1885,24 @@ export default function Merchant({
                 <Text style={[S.small, { marginTop: 7 }]}>
                   {date(order.createdAt, true)}
                 </Text>
-                <OrderProgress status={order.status} />
+                <OrderProgress order={order} />
+                <Text style={[S.small, { marginTop: 15 }]}>
+                  {orderConnected
+                    ? "Suivi connecté · actualisation toutes les 15 s"
+                    : "Connexion interrompue · dernière information conservée"}
+                </Text>
+                <Text style={S.small}>
+                  Dernière mise à jour :{" "}
+                  {date(orderSynced || order.updatedAt, true)}
+                </Text>
               </View>
+              <OrderAmendments
+                orderId={order.id}
+                updatedAt={order.updatedAt}
+                canWrite={canWrite}
+                onUpdated={setOrder}
+                onNotice={onNotice}
+              />
               {order.status === "QUOTED" ? (
                 <View style={M.group}>
                   <Text style={M.sectionTitle}>Votre offre est prête</Text>
@@ -1785,6 +1948,21 @@ export default function Merchant({
                   dès qu’il sera prêt.
                 </Notice>
               ) : null}
+              <Button
+                variant="secondary"
+                icon="chatbubble-ellipses-outline"
+                onPress={() => {
+                  const context = {
+                    type: "ORDER" as const,
+                    id: order.id,
+                    subject: `Commande ${order.number}`,
+                  };
+                  navigate("messages");
+                  setMessageContext(context);
+                }}
+              >
+                Contacter mon grossiste pour cette commande
+              </Button>
               {[
                 "PREPARING",
                 "READY",
@@ -1893,9 +2071,52 @@ export default function Merchant({
                   </View>
                 ) : null}
                 <Text style={[S.small, { marginTop: 14 }]}>
-                  Une livraison confirmée ne signifie pas que le paiement est
-                  enregistré.
+                  Paiement à la livraison · l’encaissement est enregistré par le
+                  livreur ou le grossiste, avec son mode et sa référence.
                 </Text>
+                {order.payments.map((payment, index) => (
+                  <View
+                    key={payment.id || index}
+                    style={{
+                      gap: 4,
+                      paddingTop: 14,
+                      marginTop: 14,
+                      borderTopWidth: 1,
+                      borderColor: C.border,
+                    }}
+                  >
+                    <View style={S.between}>
+                      <Text style={S.label}>
+                        {payment.isRefund
+                          ? "Remboursement"
+                          : "Règlement enregistré"}
+                      </Text>
+                      <Text style={S.label}>{money(payment.amount)}</Text>
+                    </View>
+                    <Text style={S.small}>
+                      {(
+                        {
+                          CASH: "Espèces",
+                          TRANSFER: "Virement",
+                          CHEQUE: "Chèque",
+                          CARD: "Carte",
+                        } as Record<string, string>
+                      )[payment.method] || payment.method}{" "}
+                      · {date(payment.at, true)}
+                    </Text>
+                    {payment.reference ? (
+                      <Text style={S.small}>
+                        Référence : {payment.reference}
+                      </Text>
+                    ) : null}
+                  </View>
+                ))}
+                {order.balance.remaining === 0 &&
+                order.balance.collected > 0 ? (
+                  <View style={{ marginTop: 14 }}>
+                    <Notice>Votre règlement est enregistré. Merci !</Notice>
+                  </View>
+                ) : null}
               </View>
               <View style={M.group}>
                 <Text style={[M.sectionTitle, { marginBottom: 12 }]}>
@@ -2232,26 +2453,20 @@ function CategoryShortcut({
           M.categoryIcon,
           {
             backgroundColor: active
-              ? C.green
+              ? C.mint
               : /boisson|eau|jus/i.test(label)
                 ? C.mint
                 : /lait|fromage|laitier|frais/i.test(label)
                   ? "#CCFFFF"
                   : C.bg,
+            borderWidth: active ? 1 : 0,
+            borderColor: C.green,
           },
         ]}
       >
         <FigmaImage
-          source={
-            /water/.test(icon)
-              ? require("../assets/figma/mobile-merchant-home-55d78.svg")
-              : /ice-cream/.test(icon)
-                ? require("../assets/figma/mobile-merchant-home-91e4a.svg")
-                : /cafe/.test(icon)
-                  ? require("../assets/figma/mobile-merchant-home-8b747.svg")
-                  : require("../assets/figma/mobile-merchant-home-4dda0.svg")
-          }
-          style={{ width: 28, height: 28 }}
+          source={categoryArtwork(label)}
+          style={{ width: 30, height: 30 }}
         />
       </View>
       <Text
@@ -2355,68 +2570,113 @@ function Info({ label, value }: { label: string; value: string }) {
     </View>
   );
 }
-function OrderProgress({ status }: { status: string }) {
-  const active =
-    status === "REQUESTED"
-      ? 0
-      : status === "QUOTED"
-        ? 1
-        : ["SUBMITTED", "CONFIRMED", "PREPARING", "READY"].includes(status)
-          ? 2
-          : [
-                "OUT_FOR_DELIVERY",
-                "DELIVERED",
-                "PARTIALLY_DELIVERED",
-                "DELIVERY_REFUSED",
-              ].includes(status)
-            ? 3
-            : -1;
+function OrderProgress({ order }: { order: Order }) {
+  const steps = [
+    {
+      label: order.status === "SUBMITTED" ? "Reçue" : "Confirmée",
+      icon: "checkmark-circle-outline",
+      statuses: ["SUBMITTED", "CONFIRMED"],
+    },
+    { label: "Préparation", icon: "cube-outline", statuses: ["PREPARING"] },
+    { label: "Prête à partir", icon: "bag-check-outline", statuses: ["READY"] },
+    {
+      label: "En livraison",
+      icon: "car-outline",
+      statuses: ["OUT_FOR_DELIVERY"],
+    },
+    {
+      label: "Réception",
+      icon: "storefront-outline",
+      statuses: ["DELIVERED", "PARTIALLY_DELIVERED", "DELIVERY_REFUSED"],
+    },
+    { label: "Règlement", icon: "wallet-outline", statuses: [] },
+  ];
+  let active = steps.findIndex((step) => step.statuses.includes(order.status));
   if (active < 0) return null;
+  const refused = order.status === "DELIVERY_REFUSED";
+  const paid = order.balance.remaining === 0 && order.balance.collected > 0;
+  if (paid && active >= 4) active = 5;
   return (
-    <View
-      accessibilityLabel={`Suivi : ${statuses[status]}`}
-      style={{ flexDirection: "row", marginTop: 24 }}
+    <StateArrival
+      changeKey={`${order.status}-${order.paymentStatus}`}
+      style={{ marginTop: 22, gap: 16 }}
     >
-      {["Demande", "Offre", "Préparation", "Livraison"].map((label, i) => (
-        <View key={label} style={{ flex: 1, gap: 8 }}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <View
-              style={{
-                width: 9,
-                height: 9,
-                borderRadius: 5,
-                backgroundColor: i <= active ? C.green : C.border,
-              }}
-            />
-            {i < 3 ? (
-              <View
-                style={{
-                  height: 2,
-                  flex: 1,
-                  backgroundColor: i < active ? C.green : C.border,
-                }}
-              />
-            ) : null}
-          </View>
-          <Text
-            style={[
-              S.small,
-              {
-                color: i <= active ? C.ink : C.muted,
-                fontSize: 10,
-                fontWeight: i === active ? "700" : "500",
-              },
-            ]}
+      <View style={S.between}>
+        <Text style={S.subheading}>
+          {refused ? "Réception refusée" : steps[active].label}
+        </Text>
+        <Text style={S.small}>{Math.min(active + 1, 6)} / 6 étapes</Text>
+      </View>
+      <MeasuredProgress
+        value={(active + 1) / 6}
+        label={`Suivi : ${statuses[order.status]}, ${statuses[order.paymentStatus]}`}
+      />
+      <View style={{ flexDirection: "row", flexWrap: "wrap", rowGap: 17 }}>
+        {steps.map((step, index) => (
+          <View
+            key={step.label}
+            style={{ width: "33.333%", paddingRight: 6, gap: 5 }}
           >
-            {label}
-          </Text>
-        </View>
-      ))}
-    </View>
+            <Icon
+              name={
+                index < active || (index === 5 && paid)
+                  ? "checkmark-circle"
+                  : step.icon
+              }
+              size={22}
+              color={
+                index <= active
+                  ? refused && index === 4
+                    ? C.red
+                    : C.green
+                  : C.muted
+              }
+            />
+            <Text
+              style={[
+                S.small,
+                {
+                  fontWeight: index === active ? "700" : "400",
+                  color: index <= active ? C.ink : C.muted,
+                  fontSize: 11,
+                },
+              ]}
+            >
+              {index === 4 && order.status === "PARTIALLY_DELIVERED"
+                ? "Réception partielle"
+                : index === 4 && refused
+                  ? "Réception refusée"
+                  : step.label}
+            </Text>
+          </View>
+        ))}
+      </View>
+      <Text style={S.muted}>
+        {active === 0
+          ? order.status === "SUBMITTED"
+            ? "Votre grossiste a reçu la commande. Sa confirmation est attendue avant la préparation."
+            : "Votre grossiste a confirmé la commande. Le passage en entrepôt est en préparation."
+          : active === 1
+            ? "L’entrepôt rassemble vos produits. Les quantités préparées apparaissent dans le suivi."
+            : active === 2
+              ? "Les produits sont prêts. Le départ sera affiché dès la prise en charge par le livreur."
+              : active === 3
+                ? "Suivez le livreur et vérifiez les produits à son arrivée."
+                : active === 4
+                  ? "Les quantités réellement reçues sont enregistrées. Consultez le solde de votre commande."
+                  : "La réception et le règlement sont enregistrés."}
+      </Text>
+    </StateArrival>
   );
 }
 
 const M = StyleSheet.create({
+  confirmedOrder: {
+    backgroundColor: C.mint,
+    borderRadius: 16,
+    padding: 20,
+    gap: 12,
+  },
   app: {
     flex: 1,
     width: "100%",
@@ -2523,7 +2783,7 @@ const M = StyleSheet.create({
     color: "#151917",
   },
   valueStrip: {
-    marginTop: 15,
+    marginTop: 10,
     borderRadius: 10,
     backgroundColor: "#FFFFFF",
     paddingVertical: 12,
@@ -2545,11 +2805,11 @@ const M = StyleSheet.create({
     fontSize: 11,
     lineHeight: 16,
   },
-  categoryRail: { paddingTop: 0, paddingBottom: 16, gap: 12 },
+  categoryRail: { paddingTop: 0, paddingBottom: 8, gap: 12 },
   category: { width: 81, alignItems: "center", gap: 8 },
   categoryIcon: {
     width: 76,
-    height: 60,
+    height: 52,
     borderRadius: 16,
     alignItems: "center",
     justifyContent: "center",

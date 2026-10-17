@@ -24,6 +24,15 @@ public sealed class MutationLocksTests
     }
 
     [Fact]
+    public void PricedShowcaseUsesItsOwnWorkspaceCommerceLock()
+    {
+        Assert.Equal(MutationLocks.Keys("commerce", "first", "/api/cart"),
+            MutationLocks.Keys("commerce", "first", "/api/demo/showcase"));
+        Assert.NotEqual(MutationLocks.Keys("commerce", "first", "/api/demo/showcase")[0],
+            MutationLocks.Keys("commerce", "second", "/api/demo/showcase")[0]);
+    }
+
+    [Fact]
     public void CatalogueImportsShareFirstLockAndRetainOwnWorkspaceLock()
     {
         var first = MutationLocks.Keys("commerce", "first", "/api/admin/catalog/import");

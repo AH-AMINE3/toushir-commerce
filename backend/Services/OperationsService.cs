@@ -337,6 +337,7 @@ public sealed class OperationsService(WholesaleDb db, OrderService orders, Realt
         var assignment = await Assignment(order);
         MatchVersion(order, input.Version);
         ValidateReceipt(order, input.Items);
+        await RecallGuard.AssertDistribution(db, order, input.Items.Where(x => x.AcceptedQuantity > 0).Select(x => x.ProductId).ToList());
         Check.That(order.Status == "OUT_FOR_DELIVERY" && assignment?.Status == "ARRIVED", "Le livreur doit avoir confirmé son arrivée.", "INVALID_TRANSITION", 409);
         var pending = await db.ReceiptChallenges.Where(x => x.WorkspaceId == actor.WorkspaceId && x.OrderId == id && x.ConsumedAt == null).ToListAsync();
         foreach (var old in pending)
@@ -381,6 +382,7 @@ public sealed class OperationsService(WholesaleDb db, OrderService orders, Realt
             Check.That(route.Version == proof.RouteVersion && route.Status == "ACTIVE", "La tournée a changé. Générez une nouvelle preuve.", "RECEIPT_INVALID", 409);
         }
         ValidateReceipt(order, input.Items);
+        await RecallGuard.AssertDistribution(db, order, input.Items.Where(x => x.AcceptedQuantity > 0).Select(x => x.ProductId).ToList());
         Check.That(proof.ItemsHash == ReceiptHash(input.Items), "Les quantités diffèrent de celles confirmées par le commerçant.", "RECEIPT_MISMATCH", 409);
         Check.That(assignment.Status == "ARRIVED", "Confirmez votre arrivée avant la réception.", "INVALID_TRANSITION", 409);
         await orders.Delivery(Delegate(actor), id, new(input.Items, input.Note));

@@ -1,0 +1,229 @@
+{
+  "success": true,
+  "at": "2026-10-17T13:39:48.709156+00:00",
+  "base": "http://127.0.0.1:5864/api",
+  "passed": 14,
+  "failed": 0,
+  "httpRequests": 48,
+  "observed": {
+    "detailStockWhileHold": 0,
+    "listStockWhileHold": 0,
+    "inStockContainsHeldProduct": false,
+    "favoriteStockWhileHold": 0
+  },
+  "scope": "Independent actual isolated API audit: held stock presentation, in-flight receipt safety, all-refused return, real quarantine reconciliation. No camera or native device acceptance.",
+  "checks": [
+    {
+      "name": "Recall establishes a hold without claiming that physical stock moved",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/admin/warehouse/lots?productId=off-6130093062792",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Merchant product details exclude recalled stock immediately",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/products/off-6130093062792",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Merchant catalogue excludes held units before physical isolation",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/products?q=6130093062792",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "In-stock catalogue filter excludes a product whose only batch is held",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/products?inStock=true&q=6130093062792",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Saved favorites exclude held batch stock using the same policy",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/favorites/off-6130093062792",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/favorites",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Checkout refuses recalled-only stock even before depot isolation",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/cart/quote",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "A receipt QR issued before recall cannot hand recalled goods to the merchant",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/courier/orders/82db913238564a6e9502cfb840c27582/complete",
+          "status": 409,
+          "errorCode": "LOT_RECALLED"
+        }
+      ]
+    },
+    {
+      "name": "A new accepted receipt cannot bypass the active recalled batch hold",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders/82db913238564a6e9502cfb840c27582/receipt-challenge",
+          "status": 409,
+          "errorCode": "LOT_RECALLED"
+        }
+      ]
+    },
+    {
+      "name": "Merchant acknowledgement records instruction receipt without stock recovery",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/recalls/inbox",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/recalls/notices/a4bef4402e9044d9b20f9c572f78af57/ack",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/admin/recalls/154964cf93fa46a1a808fad1ca66ef53",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/admin/warehouse/lots?productId=off-6130093062792",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "All-refused physical receipt remains possible so recalled driver custody can return",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders/82db913238564a6e9502cfb840c27582/receipt-challenge",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/courier/orders/82db913238564a6e9502cfb840c27582/complete",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Recalled refused goods enter quarantine rather than silently becoming available stock",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/admin/warehouse/lots?productId=off-6130093062792",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Managed recalled returns reject a changed timestamp on the same expiry date",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/warehouse/returns/identify",
+          "status": 422,
+          "errorCode": "LOT_MISMATCH"
+        },
+        {
+          "method": "GET",
+          "path": "/admin/warehouse/lots?productId=off-6130093062792",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Physical returned-batch identity can reconcile outbound exposure without duplicating stock",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/admin/recalls/154964cf93fa46a1a808fad1ca66ef53",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/admin/warehouse/lots?productId=off-6130093062792",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/recalls/154964cf93fa46a1a808fad1ca66ef53/recover",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/admin/warehouse/lots?productId=off-6130093062792",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Final depot isolation and closure preserve all seven physical units in quarantine",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/recalls/154964cf93fa46a1a808fad1ca66ef53/recover",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/recalls/154964cf93fa46a1a808fad1ca66ef53/close",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/admin/warehouse/lots?productId=off-6130093062792",
+          "status": 200
+        }
+      ]
+    }
+  ]
+}

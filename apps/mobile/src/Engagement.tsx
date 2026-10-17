@@ -21,6 +21,7 @@ import {
 } from "./components";
 import { C, S } from "./theme";
 import { useEngagementLive } from "./realtime";
+import { MeasuredProgress, StateArrival } from "./Motion";
 
 type Context = {
   type: "ORDER" | "DELIVERY" | "GIFT";
@@ -119,16 +120,23 @@ export function Conversations({
   }
   async function create(context?: Context) {
     if (!canSend) {
-      const existing = threads.find(
-        (t) =>
-          t.contextType === (context?.type || "GENERAL") &&
-          (!context?.id || t.contextId === context.id),
-      );
-      if (existing) await open(existing);
-      else
-        setError(
-          "Aucune conversation ouverte pour ce dossier. Votre accès est en lecture seule.",
+      try {
+        const available = await api<{ items: Conversation[] }>(
+          "/conversations",
         );
+        const existing = available.items.find(
+          (t) =>
+            t.contextType === (context?.type || "GENERAL") &&
+            (!context?.id || t.contextId === context.id),
+        );
+        if (existing) await open(existing);
+        else
+          setError(
+            "Aucune conversation ouverte pour ce dossier. Votre accès est en lecture seule.",
+          );
+      } catch (e: any) {
+        setError(e.message);
+      }
       return;
     }
     setBusy(true);
@@ -392,6 +400,9 @@ export function Campaigns({
   onNotice: (m: string) => void;
 }) {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]),
+    [campaignProducts, setCampaignProducts] = useState<Record<string, Product>>(
+      {},
+    ),
     [selected, setSelected] = useState<Campaign | null>(null),
     [quantity, setQuantity] = useState("1"),
     [kind, setKind] = useState(""),
@@ -404,6 +415,7 @@ export function Campaigns({
     try {
       const r = await api<{ items: Campaign[] }>("/campaigns");
       setCampaigns(r.items);
+      setError("");
       if (selected?.kind === "CHALLENGE")
         setProgress(await api(`/campaigns/${selected.id}/progress`));
     } catch (e: any) {
@@ -416,6 +428,27 @@ export function Campaigns({
     const timer = setInterval(refresh, 8000);
     return () => clearInterval(timer);
   }, [session.user.id, selected?.id]);
+  useEffect(() => {
+    let active = true;
+    const ids = [...new Set(campaigns.map((c) => c.productId))].slice(0, 24);
+    Promise.allSettled(ids.map((id) => api<Product>(`/products/${id}`))).then(
+      (results) => {
+        if (active)
+          setCampaignProducts(
+            Object.fromEntries(
+              results.flatMap((result, index) =>
+                result.status === "fulfilled"
+                  ? [[ids[index], result.value]]
+                  : [],
+              ),
+            ),
+          );
+      },
+    );
+    return () => {
+      active = false;
+    };
+  }, [campaigns.map((c) => c.productId).join("|")]);
   async function choose(c: Campaign) {
     setSelected(c);
     setQuantity(String(c.minimumQuantity || 1));
@@ -432,7 +465,18 @@ export function Campaigns({
   }
   return (
     <View style={E.wrap}>
-      <Text style={S.muted}>Des avantages pour votre réassort.</Text>
+      <View style={{ gap: 6 }}>
+        <Text style={S.subheading}>Chaque réassort compte.</Text>
+        <Text style={S.muted}>
+          Remises, produits offerts et objectifs de votre grossiste, avec leurs
+          conditions.
+        </Text>
+        <Text style={S.small}>
+          {live ? "Offres connectées" : "Actualisation toutes les 8 s"} ·{" "}
+          {campaigns.length} offre{campaigns.length === 1 ? "" : "s"} disponible
+          {campaigns.length === 1 ? "" : "s"}
+        </Text>
+      </View>
       <View style={[S.row, { gap: 8, flexWrap: "wrap" }]}>
         {[
           ["", "Tout"],
@@ -460,20 +504,89 @@ export function Campaigns({
             Toutes les offres
           </Button>
           <View style={E.panel}>
+            <View style={S.row}>
+              <Icon
+                name={
+                  selected.kind === "CHALLENGE"
+                    ? "trophy-outline"
+                    : selected.kind === "FREE_GOODS"
+                      ? "gift-outline"
+                      : "pricetag-outline"
+                }
+                color={C.green}
+                size={25}
+              />
+              <Text style={[S.label, { color: C.green }]}>
+                {selected.kind === "CHALLENGE"
+                  ? "Challenge"
+                  : selected.kind === "FREE_GOODS"
+                    ? "Produits offerts"
+                    : "Remise sur quantité"}
+              </Text>
+            </View>
             <Text style={E.title}>{selected.title}</Text>
             <Text style={S.text}>{selected.description}</Text>
             <Text style={S.small}>
               Du {date(selected.startsAt)} au {date(selected.endsAt)}
             </Text>
+            {campaignProducts[selected.productId] ? (
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => onProduct(selected.productId)}
+                style={[
+                  S.row,
+                  {
+                    paddingVertical: 12,
+                    borderTopWidth: 1,
+                    borderBottomWidth: 1,
+                    borderColor: C.border,
+                  },
+                ]}
+              >
+                <ProductImage
+                  uri={campaignProducts[selected.productId].imageUrl}
+                  name={campaignProducts[selected.productId].name}
+                  size={68}
+                />
+                <View style={{ flex: 1, gap: 4 }}>
+                  <Text style={S.label}>
+                    {campaignProducts[selected.productId].name}
+                  </Text>
+                  <Text style={S.small}>
+                    Produit concerné ·{" "}
+                    {money(campaignProducts[selected.productId].price)} / unité
+                  </Text>
+                </View>
+                <Icon name="chevron-forward" size={18} />
+              </Pressable>
+            ) : null}
             {selected.kind === "CHALLENGE" ? (
               <>
                 <Text style={E.title}>
                   {progress?.eligibleQuantity ?? "—"} /{" "}
                   {progress?.goal ?? selected.goalQuantity}
                 </Text>
+                <MeasuredProgress
+                  value={
+                    (progress?.eligibleQuantity || 0) /
+                    Math.max(1, progress?.goal ?? selected.goalQuantity)
+                  }
+                  label={`${progress?.eligibleQuantity || 0} unités éligibles sur ${progress?.goal ?? selected.goalQuantity}`}
+                />
                 <Text style={S.muted}>
                   Unités acceptées et réglées, après retours pris en compte.
                 </Text>
+                {progress && !progress.achieved ? (
+                  <Text style={S.label}>
+                    Encore{" "}
+                    {Math.max(
+                      0,
+                      (progress.goal ?? selected.goalQuantity) -
+                        (progress.eligibleQuantity || 0),
+                    )}{" "}
+                    unités éligibles pour atteindre l’objectif.
+                  </Text>
+                ) : null}
                 {progress?.grant?.status === "GRANTED" &&
                 session.user.shop?.canManage !== false ? (
                   <Button
@@ -520,7 +633,11 @@ export function Campaigns({
                 />
                 <Button
                   loading={busy}
-                  disabled={!quantity || Number(quantity) < 0}
+                  disabled={
+                    !Number.isInteger(Number(quantity)) ||
+                    Number(quantity) <= 0 ||
+                    Number(quantity) > 100000
+                  }
                   onPress={async () => {
                     setBusy(true);
                     try {
@@ -539,7 +656,10 @@ export function Campaigns({
                   Vérifier les conditions de l’offre
                 </Button>
                 {preview ? (
-                  <>
+                  <StateArrival
+                    changeKey={JSON.stringify(preview)}
+                    style={{ gap: 12 }}
+                  >
                     <Text style={S.label}>
                       {preview.tariffCompatible === false
                         ? "Non cumulable avec votre tarif"
@@ -562,7 +682,7 @@ export function Campaigns({
                       {preview.notice ||
                         "Cette simulation ne modifie pas votre commande. Le grossiste confirme les conditions dans son devis."}
                     </Notice>
-                  </>
+                  </StateArrival>
                 ) : null}
               </>
             )}
@@ -606,15 +726,49 @@ export function Campaigns({
                     −{c.discountPercent} %
                   </Text>
                 ) : null}
+                {c.kind === "FREE_GOODS" ? (
+                  <Text style={[E.title, { fontSize: 32, lineHeight: 42 }]}>
+                    + {c.giftQuantity} offert{c.giftQuantity === 1 ? "" : "s"}
+                  </Text>
+                ) : c.kind === "CHALLENGE" ? (
+                  <Text style={[S.label, { color: C.green }]}>
+                    Objectif · {c.goalQuantity} unités éligibles
+                  </Text>
+                ) : null}
                 <Text style={E.title}>{c.title}</Text>
                 <Text style={S.muted}>{c.description}</Text>
+                {campaignProducts[c.productId] ? (
+                  <View style={S.row}>
+                    <ProductImage
+                      uri={campaignProducts[c.productId].imageUrl}
+                      name={campaignProducts[c.productId].name}
+                      size={54}
+                    />
+                    <Text style={[S.small, { flex: 1 }]} numberOfLines={2}>
+                      {campaignProducts[c.productId].name}
+                    </Text>
+                  </View>
+                ) : null}
                 <Text style={S.small}>Jusqu’au {date(c.endsAt)}</Text>
+                <Text style={[S.label, { color: C.green }]}>
+                  {c.kind === "CHALLENGE"
+                    ? "Voir ma progression"
+                    : "Découvrir les conditions"}
+                </Text>
               </Pressable>
             ))}
-          {!campaigns.length ? (
+          {!campaigns.filter((c) => !kind || c.kind === kind).length ? (
             <Empty
-              title="Les prochaines offres arrivent ici"
-              message="Votre grossiste publiera ses offres approuvées et leurs conditions."
+              title={
+                campaigns.length
+                  ? "Pas encore d’offre dans cette sélection"
+                  : "Les prochaines offres arrivent ici"
+              }
+              message={
+                campaigns.length
+                  ? "Consultez les autres remises, cadeaux et challenges disponibles."
+                  : "Votre grossiste publiera ses offres approuvées et leurs conditions."
+              }
               icon="pricetag-outline"
             />
           ) : null}
@@ -647,6 +801,7 @@ export function Loyalty({
       setWallet(w);
       setRewards(r.items);
       setGifts(g.items);
+      setError("");
     } catch (e: any) {
       setError(e.message);
     }
@@ -677,44 +832,68 @@ export function Loyalty({
         <Icon name="gift-outline" color={C.green} size={26} />
       </View>
       {error ? <Notice error>{error}</Notice> : null}
-      <View style={[E.panel, { backgroundColor: C.pale }]}>
-        <Text style={S.muted}>Points disponibles</Text>
-        <Text style={[E.title, { fontSize: 32, lineHeight: 40 }]}>
-          {wallet?.available ?? "—"}
-        </Text>
+      <StateArrival changeKey={wallet?.available ?? "loading"}>
+        <View style={[E.panel, { backgroundColor: C.ink }]}>
+          <View style={S.between}>
+            <Text style={[S.label, { color: "#DCE9E1" }]}>
+              Vos points, vos prochains cadeaux
+            </Text>
+            <Icon name="gift-outline" color={C.action} size={26} />
+          </View>
+          <Text
+            style={[E.title, { fontSize: 42, lineHeight: 52, color: C.white }]}
+          >
+            {wallet?.available ?? "—"}
+          </Text>
+          <Text style={[S.small, { color: "#C2D2C8" }]}>
+            {wallet?.reserved ?? 0} réservés · {wallet?.spent ?? 0} utilisés
+          </Text>
+          <Text style={[S.small, { color: "#C2D2C8" }]}>
+            {wallet?.rule ||
+              "Vos points sont calculés sur les commandes éligibles."}
+          </Text>
+          {wallet?.correctionDue > 0 ? (
+            <Notice error>
+              {wallet.correctionDue} points à régulariser. Contactez votre
+              grossiste avant une nouvelle remise.
+            </Notice>
+          ) : null}
+          <Button
+            variant="secondary"
+            icon="refresh-outline"
+            disabled={session.user.shop?.canOrder === false}
+            loading={busy}
+            onPress={async () => {
+              setBusy(true);
+              try {
+                setWallet(await post("/loyalty/sync", {}));
+                onNotice(
+                  "Vos points ont été rapprochés des commandes réglées.",
+                );
+              } catch (e: any) {
+                setError(e.message);
+              } finally {
+                setBusy(false);
+              }
+            }}
+          >
+            Actualiser mes points
+          </Button>
+        </View>
+      </StateArrival>
+      <View style={S.between}>
+        <Text style={S.subheading}>Choisissez votre cadeau</Text>
         <Text style={S.small}>
-          {wallet?.reserved ?? 0} réservés · {wallet?.spent ?? 0} utilisés
+          {rewards.length} récompense{rewards.length === 1 ? "" : "s"}
         </Text>
-        <Text style={S.small}>
-          {wallet?.rule ||
-            "Vos points sont calculés sur les commandes éligibles."}
-        </Text>
-        {wallet?.correctionDue > 0 ? (
-          <Notice error>
-            {wallet.correctionDue} points à régulariser. Contactez votre
-            grossiste avant une nouvelle remise.
-          </Notice>
-        ) : null}
-        <Button
-          variant="secondary"
-          icon="refresh-outline"
-          disabled={session.user.shop?.canOrder === false}
-          loading={busy}
-          onPress={async () => {
-            setBusy(true);
-            try {
-              setWallet(await post("/loyalty/sync", {}));
-              onNotice("Vos points ont été rapprochés des commandes réglées.");
-            } catch (e: any) {
-              setError(e.message);
-            } finally {
-              setBusy(false);
-            }
-          }}
-        >
-          Actualiser mes points
-        </Button>
       </View>
+      {!rewards.length ? (
+        <Empty
+          title="Votre prochaine récompense arrive ici"
+          message="Votre grossiste publie les cadeaux, leurs stocks et le nombre de points nécessaire."
+          icon="gift-outline"
+        />
+      ) : null}
       {rewards.map((r) => (
         <View key={r.id} style={E.panel}>
           <View style={S.row}>
@@ -734,6 +913,26 @@ export function Loyalty({
               ? "Disponible à la réservation"
               : "Indisponible pour le moment"}
           </Text>
+          {wallet && r.pointsCost > 0 ? (
+            <View style={{ gap: 7 }}>
+              <MeasuredProgress
+                value={wallet.available / r.pointsCost}
+                label={`${wallet.available} points disponibles sur ${r.pointsCost} nécessaires pour ${r.name}`}
+              />
+              <Text
+                style={[
+                  S.small,
+                  {
+                    color: wallet.available >= r.pointsCost ? C.green : C.muted,
+                  },
+                ]}
+              >
+                {wallet.available >= r.pointsCost
+                  ? "Vous avez les points nécessaires."
+                  : `Encore ${r.pointsCost - wallet.available} points pour ce cadeau.`}
+              </Text>
+            </View>
+          ) : null}
           <Button
             loading={busy}
             disabled={

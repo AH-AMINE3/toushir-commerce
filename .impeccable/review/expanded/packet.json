@@ -1,0 +1,329 @@
+{
+  "at": "2026-10-17T13:48:08.410217+00:00",
+  "base": "http://127.0.0.1:5865",
+  "scope": "Actual browser behavior and valid captures for independent visual review; no final design signoff inferred. Native apps were not executed.",
+  "passedGroups": 18,
+  "failures": [],
+  "javascriptErrors": [],
+  "reports": [
+    "expanded-browser.json",
+    "expanded-browser-corrections.json",
+    "expanded-amendment.json",
+    "expanded-review-regression.json"
+  ],
+  "captures": [
+    {
+      "file": "desktop-amendment-form.png",
+      "width": 1600,
+      "height": 2960,
+      "sha256": "759b8852889e2012e2e1931c953e290f63f4fa3f147659d441527c8dc79ed78d",
+      "openedAndValidated": true
+    },
+    {
+      "file": "desktop-analytics.png",
+      "width": 1600,
+      "height": 2624,
+      "sha256": "23d99f331e707e5548b8619464481a93afae52c010906f1178041395c0e78c31",
+      "openedAndValidated": true
+    },
+    {
+      "file": "desktop-campaign-audience.png",
+      "width": 1600,
+      "height": 2359,
+      "sha256": "f20484875cd7a457fc8463cd73fbb83fd5221956ab20b16f6d5c499381f297eb",
+      "openedAndValidated": true
+    },
+    {
+      "file": "desktop-dark.png",
+      "width": 1600,
+      "height": 2624,
+      "sha256": "97cc443b944a29b44a4bdcdf8f444ffb2b23444200720f533fcc1a590012bbe0",
+      "openedAndValidated": true
+    },
+    {
+      "file": "desktop-delivery-3d.png",
+      "width": 1600,
+      "height": 2474,
+      "sha256": "42fea18afbe0d66fbe9e115b09f1f519611f0ffa46d2674a7f5a55f4df1ad266",
+      "openedAndValidated": true
+    },
+    {
+      "file": "desktop-delivery-gps.png",
+      "width": 1600,
+      "height": 2466,
+      "sha256": "1a7348a56caa7090a2957da5741d203d2242d540af5fda82075ae2ce5a107152",
+      "openedAndValidated": true
+    },
+    {
+      "file": "desktop-mobile-order.png",
+      "width": 1600,
+      "height": 2890,
+      "sha256": "28f69b6419d70f2d84fea6ae58afe63e041836aaabc605046fbc7c32f5537e31",
+      "openedAndValidated": true
+    },
+    {
+      "file": "desktop-overview-chart.png",
+      "width": 1600,
+      "height": 2559,
+      "sha256": "09bf7f5381e3df7650ad1e525fb2478a30b1cb87ad9b6e76d950a1e7a56c3632",
+      "openedAndValidated": true
+    },
+    {
+      "file": "desktop-overview.png",
+      "width": 1600,
+      "height": 2559,
+      "sha256": "cf4c02242c0586e7993858f7dde0095ebc132a7ba6e5b0c0203298fe2ab0df97",
+      "openedAndValidated": true
+    },
+    {
+      "file": "desktop-stores.png",
+      "width": 1600,
+      "height": 1092,
+      "sha256": "58456bae2545164f1575afc160ace3eff06a72982f2eed6a21f29f03ddfa4af6",
+      "openedAndValidated": true
+    },
+    {
+      "file": "live-work-hub.png",
+      "width": 1600,
+      "height": 1040,
+      "sha256": "00e9091c2c5800bdc16ceca22a00d598db583e828936d48d4a774465e3738a93",
+      "openedAndValidated": true
+    },
+    {
+      "file": "merchant-account.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "4a556240f52d6b71c272037183f33d02d62c4fbce4479efbf690a64778a22629",
+      "openedAndValidated": true
+    },
+    {
+      "file": "merchant-activity.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "2773f73d4e9b45b08dde8396f93b28080d7b0f8e0d84e0af756db6daf3822326",
+      "openedAndValidated": true
+    },
+    {
+      "file": "merchant-amendment-accepted.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "8f0de4116edc23a1dc465424404eb9caf5a62a5113cdd2bc115d23ae7ae0c7ee",
+      "openedAndValidated": true
+    },
+    {
+      "file": "merchant-amendment-before-consent.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "bb844f43f36a0252487ce8d2fc0b6b6ca655486b5c5144d9cb093e7484fc9f00",
+      "openedAndValidated": true
+    },
+    {
+      "file": "merchant-amendment-consent.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "bb844f43f36a0252487ce8d2fc0b6b6ca655486b5c5144d9cb093e7484fc9f00",
+      "openedAndValidated": true
+    },
+    {
+      "file": "merchant-barcode-result.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "0d3ad3f63f528d268c89aaac1a016a0910ce27f8335c7c4be1c42627a41f1088",
+      "openedAndValidated": true
+    },
+    {
+      "file": "merchant-barcode.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "73d8346c8d223a3870f4042aef5f0c59381bf973282026f9a177ed52c33ac612",
+      "openedAndValidated": true
+    },
+    {
+      "file": "merchant-brands.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "8c2e18ef11babe258f539890e434eca26bf8221b5f095e950324c53bfb9f61f8",
+      "openedAndValidated": true
+    },
+    {
+      "file": "merchant-catalog.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "883e60345d9e23777b8f769c473ed5eee9e7aef83b4478d24e78846369f38191",
+      "openedAndValidated": true,
+      "captureMode": "Full page from top"
+    },
+    {
+      "file": "merchant-categories.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "3132fbf20feb73eb6c7fb5a95a1e2e6278d84e000556bb99c395b1037035dc37",
+      "openedAndValidated": true
+    },
+    {
+      "file": "merchant-category-products.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "ef24d0f9a0f84e40c997f888185ef724ad9e0fa56110b93f877677044200a39b",
+      "openedAndValidated": true
+    },
+    {
+      "file": "merchant-checkout.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "607a039c6e4eab8cab3367efdc7e4b07b80a0f75d90b59cf23540260162f50dd",
+      "openedAndValidated": true
+    },
+    {
+      "file": "merchant-filters.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "8756c7f52a9d5b7afdca7b09b0ec023e22a6c061100288d8f281aa2aaccef925",
+      "openedAndValidated": true,
+      "captureMode": "Full page from top"
+    },
+    {
+      "file": "merchant-gifts.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "f0a6f9b047851571860ea008ae0953422d324e8f020cff718678415dfa88e7ab",
+      "openedAndValidated": true
+    },
+    {
+      "file": "merchant-offers-cadeaux.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "991d920795ca72f3c87ab125ddfe56321a1eec0254b94a7d465cd59053e5ebed",
+      "openedAndValidated": true
+    },
+    {
+      "file": "merchant-offers-challenges.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "85695c294e1b14f22626ca1a74ccdb13c22735ddd431ed0ae611a066be1501cd",
+      "openedAndValidated": true
+    },
+    {
+      "file": "merchant-offers-remises.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "653fd51e97d4dd0edb4b0e966f0cf248898dafaec6c1d30fc8af5c07bc03a341",
+      "openedAndValidated": true
+    },
+    {
+      "file": "merchant-offers.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "3681ee914f4a68414f9e928f798b4a523b1215ecf9ee314c11a84dba1f95ea94",
+      "openedAndValidated": true
+    },
+    {
+      "file": "merchant-order-success.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "23c1acf8123ba3b5d234b1ff352a9e7c990d2c59967fdbe26b1d8a2dc6d2bd84",
+      "openedAndValidated": true,
+      "captureMode": "Full page from top"
+    },
+    {
+      "file": "merchant-orders.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "9f80cdf18b879a6e72b97fdc3ef9aa53c427ccc85f1a86d20bb6496aeb10e4f9",
+      "openedAndValidated": true
+    },
+    {
+      "file": "merchant-tracking.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "46ddcc5daf78d4d631e00a75b133844f6898a840ccc47c3099b5da5b06238b89",
+      "openedAndValidated": true
+    },
+    {
+      "file": "wholesale-mobile.png",
+      "width": 390,
+      "height": 4101,
+      "sha256": "853dda63047df7a49e09743563e6045c3a3bc525e4cf1cdc5fde2cbd48a15066",
+      "openedAndValidated": true
+    },
+    {
+      "file": "merchant-activity-chart.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "76db59272774ab5970b5732496add905d111b5a0dccaab8c35f86204190d8e10",
+      "openedAndValidated": true,
+      "captureMode": "Actual inner-scroll viewport"
+    },
+    {
+      "file": "merchant-activity-payments-chart.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "23dcdca822bdf737af38a718e1980813bd99b5e827f9182e4c63559f6d11e921",
+      "openedAndValidated": true,
+      "captureMode": "Actual centered inner-scroll chart"
+    },
+    {
+      "file": "desktop-delivery-3d-detail.png",
+      "width": 982,
+      "height": 622,
+      "sha256": "a99260f47ecb8ae383922b214a20eab58c23f136bae4ae37a1f8e68ef85ea17b",
+      "openedAndValidated": true,
+      "captureMode": "Actual map panel element detail"
+    },
+    {
+      "file": "desktop-amendment-controls.png",
+      "width": 1600,
+      "height": 1040,
+      "sha256": "fd90be32cf0ddc4385c977a0da237ec3b14fafba1a03e1980c6f7f8daca934e9",
+      "openedAndValidated": true,
+      "captureMode": "Actual inner-scroll viewport; proposal controls below original context fold"
+    },
+    {
+      "file": "merchant-amendment-terms.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "3df8ddedcf81b47098546ec610931c9cf0f7fa430848755ddf32221de9006619",
+      "openedAndValidated": true,
+      "captureMode": "Actual inner-scroll viewport; proposal controls below original context fold"
+    },
+    {
+      "file": "merchant-amendment-consent-controls.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "0e757a713636618d78d99f5948eade7e95d67f01382bbebce230260c11b53071",
+      "openedAndValidated": true,
+      "captureMode": "Actual inner-scroll viewport; proposal controls below original context fold"
+    },
+    {
+      "file": "merchant-home-active.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "883e60345d9e23777b8f769c473ed5eee9e7aef83b4478d24e78846369f38191",
+      "openedAndValidated": true,
+      "captureMode": "Full page from top"
+    },
+    {
+      "file": "merchant-checkout-received-toast.png",
+      "width": 402,
+      "height": 874,
+      "sha256": "77b350143b88cb7404b5b6d9f22493f55cd9d93c2d577a0e930c79e0e769e171",
+      "openedAndValidated": true,
+      "captureMode": "Actual received SUBMITTED toast visible after normal immediate Retour aux commandes; raw screenshot, no alert dismissal"
+    }
+  ],
+  "notes": [
+    "All mobile merchant captures402x874; desktop1600x1040 viewport, fullpage from top; wholesale-mobile390x844 viewport with no document overflow.",
+    "Narrow capture was refreshed after the coordinated backend restart; no temporary Failed to fetch banner remains.",
+    "Original failing selector runs retained outside this packet in expanded-diagnostics.",
+    "GPS capture truthfully shows no currently shared real device location; 3D positions remain explicitly illustrative.",
+    "Separate merchant chart closeups show actual inner ScrollView bar/drilldown content; 3D map panel detail preserves attribution text for legibility review.",
+    "Amendment controls closeups were captured from actual admin form draft and a persisted new fixture proposal, with exact before/after terms and merchant acknowledgement checked. Original from-top context captures remain alongside them.",
+    "Latest raw checkout toast capture verifies actual POST-created SUBMITTED order announces reception and awaits wholesaler confirmation."
+  ],
+  "reviewFixAssertions": [
+    "First product price and44px add button end above navigation at402x874 with active-order banner.",
+    "SUBMITTED actual order is Re\u00e7ue and explicitly awaits confirmation.",
+    "Filter brand input48px and non-overlapping next rail.",
+    "Centered90-day net-payments chart has full bars and date labels visible; actual fixture ledger has no negative days, so no negative bars fabricated."
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "base": "http://127.0.0.1:5863",
+  "at": "2026-10-17T13:35:24.804Z",
+  "passed": 16,
+  "failed": 0,
+  "requests": 122,
+  "checks": [
+    {
+      "name": "API health and real catalog with unknown own offers",
+      "pass": true
+    },
+    {
+      "name": "Authentication and role boundaries",
+      "pass": true
+    },
+    {
+      "name": "Catalog search, category, pagination and provenance",
+      "pass": true
+    },
+    {
+      "name": "Favorites and persisted merchant cart",
+      "pass": true
+    },
+    {
+      "name": "RFQ idempotency, no invented price and no reservation",
+      "pass": true
+    },
+    {
+      "name": "Cross-workspace order and document access denied",
+      "pass": true
+    },
+    {
+      "name": "Quote validation, versioning, unknown stock rejection",
+      "pass": true
+    },
+    {
+      "name": "Competing quote acceptances cannot oversell and cancellations release stock",
+      "pass": true
+    },
+    {
+      "name": "Approved own pricebook creates immutable priced orders",
+      "pass": true
+    },
+    {
+      "name": "Fulfillment guards, dispatch inventory, independent COD and partial returns",
+      "pass": true
+    },
+    {
+      "name": "Return inspection and refund ledger are explicit and bounded",
+      "pass": true
+    },
+    {
+      "name": "Merchant account summary uses actual net payments and isolates owners",
+      "pass": true
+    },
+    {
+      "name": "Admin analytics, audit, inventory and CSV import rollback",
+      "pass": true
+    },
+    {
+      "name": "Post-delivery claims, bounded physical returns, explicit credits and actual refunds",
+      "pass": true
+    },
+    {
+      "name": "Prepaid merchant and administrator cancellations void the contract and require actual refunds",
+      "pass": true
+    },
+    {
+      "name": "Merchant suspension revokes effective access, logout revokes token",
+      "pass": true
+    }
+  ]
+}

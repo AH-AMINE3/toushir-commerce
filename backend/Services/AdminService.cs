@@ -154,9 +154,17 @@ public class AdminService(WholesaleDb db, OrderService orders, WarehouseService 
         a.Admin();
         var q = query["q"].ToString().ToLowerInvariant();
         var status = query["status"].ToString();
+        var region = query["region"].ToString();
         var users = await db.Accounts.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId && x.Role == "MERCHANT" && !db.ShopMemberships.Any(m => m.AccountId == x.Id)).ToListAsync();
+        var addresses = (await db.Addresses.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId).ToListAsync())
+            .GroupBy(x => x.AccountId).ToDictionary(g => g.Key, g => g.OrderByDescending(x => x.IsDefault).ThenBy(x => x.Id).First());
         var list = await db.Orders.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId).ToListAsync();
-        var rows = users.Where(x => status.Length == 0 || x.ApprovalStatus == status).Where(x => q.Length == 0 || (x.Name + " " + x.ShopName + " " + x.Email + " " + x.Phone).ToLowerInvariant().Contains(q)).OrderByDescending(x => x.CreatedAt).Select(x => (object)new { x.Id, x.Name, x.ShopName, x.Email, x.Phone, x.ApprovalStatus, x.CreatedAt, orderCount = list.Count(o => o.AccountId == x.Id), totalSpent = list.Where(o => o.AccountId == x.Id && o.Status is "DELIVERED" or "PARTIALLY_DELIVERED").Sum(o => o.Total ?? 0) }).ToList();
+        var rows = users.Where(x => status.Length == 0 || x.ApprovalStatus == status)
+            .Where(x => region.Length == 0 || string.Equals(addresses.GetValueOrDefault(x.Id)?.Wilaya, region, StringComparison.OrdinalIgnoreCase))
+            .Where(x => q.Length == 0 || (x.Name + " " + x.ShopName + " " + x.Email + " " + x.Phone + " " + addresses.GetValueOrDefault(x.Id)?.Wilaya + " " + addresses.GetValueOrDefault(x.Id)?.Commune).ToLowerInvariant().Contains(q))
+            .OrderByDescending(x => x.CreatedAt).Select(x => (object)new { x.Id, x.Name, x.ShopName, x.Email, x.Phone, x.ApprovalStatus, x.CreatedAt,
+                region = addresses.GetValueOrDefault(x.Id)?.Wilaya ?? "", commune = addresses.GetValueOrDefault(x.Id)?.Commune ?? "",
+                orderCount = list.Count(o => o.AccountId == x.Id), totalSpent = list.Where(o => o.AccountId == x.Id && o.Status is "DELIVERED" or "PARTIALLY_DELIVERED").Sum(o => o.Total ?? 0) }).ToList();
         return Paged(rows, query);
     }
     public async Task<object> Approve(Actor a, string id, MerchantInput input)

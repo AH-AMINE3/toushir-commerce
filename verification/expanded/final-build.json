@@ -1,0 +1,36 @@
+{
+  "at": "2026-10-17T13:49:39.617640+00:00",
+  "backend": {
+    "configuration": "Release",
+    "buildSession": 71572,
+    "exitCode": 0,
+    "warnings": 0,
+    "dllSha256": "698b966c3019153c0961c27b92b0777764c80115f92ba62179506597ef28fb7d",
+    "changeSinceBusinessAudit": "Static GLB/GLTF content type mappings only; business source unchanged."
+  },
+  "web": {
+    "typecheck": true,
+    "productionBuild": true,
+    "buildSession": 35987,
+    "note": "Vite large lazy map/3D chunk advisory retained."
+  },
+  "mobile": {
+    "typecheck": true,
+    "productionWebExport": true,
+    "buildSession": 84135,
+    "nativeSimulator": false,
+    "finalTypecheckAndExportSession": 20873
+  },
+  "truck": {
+    "path": "/models/delivery-truck.glb",
+    "httpStatus": 200,
+    "contentType": "model/gltf-binary",
+    "bytes": 369980,
+    "browserLoaded": true
+  },
+  "visualReview": {
+    "disposition": "ship",
+    "scope": "Three material fix scores resolved, reviewed web surfaces only.",
+    "report": ".impeccable/review/expanded/reviewer-verdict.md"
+  }
+}

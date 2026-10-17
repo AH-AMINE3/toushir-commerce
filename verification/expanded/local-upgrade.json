@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-17T13:56:00.434898+00:00",
+  "base": "http://127.0.0.1:5860",
+  "health": {
+    "database": "connected",
+    "products": 2500
+  },
+  "originalTableCountsPreserved": true,
+  "originalTables": 66,
+  "orders": 1142,
+  "integrity": "ok",
+  "bind": "127.0.0.1",
+  "onlineBackupCreatedBeforeUpgrade": true
+}

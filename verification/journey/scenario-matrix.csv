@@ -1,0 +1,133 @@
+id,actor_side,business_case,result,actual_http_requests,acceptance_scope
+M01,MERCHANT,Browse every nonempty catalogue category,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M02,MERCHANT,Browse available brands,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W01,WHOLESALER,Publish a confirmed positive offer with physical stock,PASS,3,Isolated real HTTP API; no browser or native-device acceptance
+W02,WHOLESALER,Reject a zero price on a published sellable offer,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+W03,WHOLESALER,Reject inconsistent case size and minimum order quantity,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M03,MERCHANT,Read the same published price in product details,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M04,MERCHANT,Search a product by its actual barcode,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M05,MERCHANT,Filter products by a real category,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M06,MERCHANT,Filter products by a real brand,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M07,MERCHANT,Save a favorite with its effective price,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+M08,MERCHANT,Remove a favorite without touching the offer,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+M09,MERCHANT,Persist the intended basket quantities,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+M10,MERCHANT,Review a directly orderable exact total and price consent,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M11,MERCHANT,Reject direct checkout without consent to the displayed price,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M12,MERCHANT,Reject checkout when quantity differs from reviewed price consent,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W04,WHOLESALER,Create a stock-backed points reward catalogue item,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W05,WHOLESALER,Publish a challenge before the qualifying purchase,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+W06,WHOLESALER,Refuse a challenge award before the claim period opens,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M13,MERCHANT,Place a priced direct order without an RFQ detour,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M14,MERCHANT,Retry direct checkout without creating a duplicate order,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+M15,MERCHANT,Reject a changed payload reusing the successful order key,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M16,MERCHANT,Read the submitted order in own order history,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M17,MERCHANT,Read the immutable agreed price in the order details,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M18,MERCHANT,Keep another shop from reading an order,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M19,MERCHANT,Keep the merchant from publishing wholesaler offers,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W07,WHOLESALER,Receive the mobile order in the operational queue,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W08,WHOLESALER,Confirm a submitted priced order for warehouse preparation,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M20,MERCHANT,Follow actual confirmation from the wholesaler,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W09,WHOLESALER,Protect stock already reserved by an accepted order,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W10,WHOLESALER,Reject dispatcher preparation outside its team responsibility,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W11,WHOLESALER,Reject stale warehouse preparation versions,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W12,WHOLESALER,Reject preparing more units than the order contains,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W13,WHOLESALER,Record a real partial preparation by the warehouse team,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M21,MERCHANT,Observe the warehouse preparation progress from the app API,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+W14,WHOLESALER,Reject a driver assignment crossing workspace boundaries,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W15,WHOLESALER,Assign the delivery to an actual approved driver,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W16,WHOLESALER,Block pickup until every ordered unit is prepared,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W17,WHOLESALER,Finish preparation and send the order to the ready queue,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M22,MERCHANT,See actual readiness and full preparation,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+W18,WHOLESALER,Transfer physical custody and debit stock at departure,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+M23,MERCHANT,Follow the dispatched order and named assigned driver,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M24,MERCHANT,Block receipt confirmation before the driver arrives,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M25,MERCHANT,Block cancellation after physical departure,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W19,WHOLESALER,Reject stale location fixes instead of presenting them as live GPS,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W20,WHOLESALER,Share a fresh driver position during the assigned delivery,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M26,MERCHANT,See a timestamped real submitted driver fix,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W21,WHOLESALER,Reject repeated GPS timestamps that could overwrite newer state,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W22,WHOLESALER,Revoke driver location sharing explicitly,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M27,MERCHANT,Stop showing driver coordinates after consent is withdrawn,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W23,WHOLESALER,Move the assigned courier through en route and arrived states,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+M28,MERCHANT,Reject a receipt created from an outdated order version,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M29,MERCHANT,Issue a QR receipt bound to accepted and refused quantities,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W24,WHOLESALER,Reject driver alteration of merchant-confirmed receipt quantities,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W25,WHOLESALER,Complete the physical receipt using the merchant QR proof,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M30,MERCHANT,See accepted quantities and the corrected delivered amount,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W26,WHOLESALER,Reject replay of a consumed delivery receipt proof,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M31,MERCHANT,Keep physical receipt separate from money actually collected,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M32,MERCHANT,Earn no spendable points from unpaid delivered goods,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M33,MERCHANT,Prevent a merchant from fabricating a courier payment,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W27,WHOLESALER,Reject a cash collection whose tender and change do not reconcile,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W28,WHOLESALER,Record actual cash tender and change after receipt,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W29,WHOLESALER,Retry a cash collection without taking payment twice,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+W30,WHOLESALER,Reject collection beyond the actual remaining balance,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M34,MERCHANT,See the actual collection method and zero remaining balance,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W31,WHOLESALER,Keep warehouse staff from reconciling financial receipts,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W32,WHOLESALER,Reconcile the actual cash receipt through the finance role,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W33,WHOLESALER,Keep refused stock quarantined until a quality decision,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W34,WHOLESALER,Release physically inspected intact refused units,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+W35,WHOLESALER,Prevent duplicate return inspection from increasing stock twice,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M35,MERCHANT,Accrue points from accepted paid goods only,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M36,MERCHANT,Sync points repeatedly without double earning,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M37,MERCHANT,Discover the wholesaler-created stock-backed gift,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M38,MERCHANT,Reserve an affordable gift using earned points,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M39,MERCHANT,Retry a gift reservation without spending points twice,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M40,MERCHANT,Show points reserved separately from spendable points,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M41,MERCHANT,Prevent reward reservations from overdrawing the points wallet,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W36,WHOLESALER,Prepare a merchant reward for handover,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W37,WHOLESALER,Fulfill the physical gift with a beneficiary proof reference,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M42,MERCHANT,See gift handover consume the held points exactly once,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M43,MERCHANT,Keep loyalty balances confined to the signed-in shop,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+M44,MERCHANT,Open support directly against the actual order context,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M45,MERCHANT,Send an actual contextual support message,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M46,MERCHANT,Retry a message without duplicating it,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M47,MERCHANT,Reject changing message text under an already-used message key,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W38,WHOLESALER,Reply as customer service in the same order conversation,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M48,MERCHANT,Read the customer-service response in the order thread,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W39,WHOLESALER,Add an internal warehouse coordination note,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+M49,MERCHANT,Keep private team notes out of merchant messages,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W40,WHOLESALER,Hand the support dossier to a real warehouse team member,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+W41,WHOLESALER,Reject a stale customer-service handoff instead of overwriting it,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W42,WHOLESALER,Close a resolved contextual support dossier,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M50,MERCHANT,Respect a closed support dossier and preserve its message history,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+W43,WHOLESALER,Reopen a support dossier for a new customer-service follow-up,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W44,WHOLESALER,Create a quantity-threshold discount campaign,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W45,WHOLESALER,Require an independent reviewer for campaign publication,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W46,WHOLESALER,Publish the verified campaign through finance,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M51,MERCHANT,Discover an actual published promotion created by the wholesaler,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M52,MERCHANT,Calculate the promised discount at the qualifying threshold,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M53,MERCHANT,Apply no discount below the published campaign threshold,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M54,MERCHANT,Use the same campaign discount in the real checkout basket,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M55,MERCHANT,Commit the actual advertised discount as immutable order terms,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W47,WHOLESALER,Reject invalid campaign percentages before publication,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W48,WHOLESALER,Publish a distinct free-goods promotion with a named stocked gift,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+M56,MERCHANT,Preview the named free-goods quantity at the threshold,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M57,MERCHANT,Reserve real free-gift stock with the paid-goods checkout,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+M58,MERCHANT,Show challenge progress from actual accepted paid units,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W49,WHOLESALER,Award the completed challenge from the actual paid delivery,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W50,WHOLESALER,Retry a challenge award without granting the same shop twice,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M59,MERCHANT,Claim a completed challenge reward without spending wallet points,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+M60,MERCHANT,Reject a second independent claim of the consumed challenge grant,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M61,MERCHANT,Start with marketing disabled while service messaging remains available,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W51,WHOLESALER,Exclude a merchant who declined promotional messages,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+M62,MERCHANT,Explicitly opt into commercial messages,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W52,WHOLESALER,Deliver an opted-in promotional message in the shared inbox,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+M63,MERCHANT,Withdraw marketing consent without losing service communications,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W53,WHOLESALER,Deliver a service message independently of marketing preference,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+W54,WHOLESALER,Search actual merchants by shop name,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W55,WHOLESALER,Search actual merchants by telephone number,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W56,WHOLESALER,Filter the order queue by the actual order number,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W57,WHOLESALER,Calculate dashboard sales and collections from the completed journey,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W58,WHOLESALER,Keep actual actors and handoffs in the audit history,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M64,MERCHANT,Calculate own account totals from recorded payment facts,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M65,MERCHANT,Reorder a previous receipt into a fresh basket without duplicating its payment,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+W59,WHOLESALER,Change a catalogue offer without rewriting existing agreed order prices,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+M66,MERCHANT,Display the new current price while preserving the paid order history,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+W60,WHOLESALER,Reject a warehouse attempt to publish a campaign,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W61,WHOLESALER,Suspend a shop and revoke its effective access,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+W62,WHOLESALER,Restore a suspended shop without erasing its history,PASS,2,Isolated real HTTP API; no browser or native-device acceptance
+M67,MERCHANT,Protect contextual support against another shop opening the same order,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+M68,MERCHANT,Keep another workspace from following a delivery,PASS,1,Isolated real HTTP API; no browser or native-device acceptance
+W63,WHOLESALER,Prevent overselling when two shops commit the last unit concurrently,PASS,3,Isolated real HTTP API; no browser or native-device acceptance
+M69,MERCHANT,See a clear sold-out checkout after the last available unit is reserved,PASS,1,Isolated real HTTP API; no browser or native-device acceptance

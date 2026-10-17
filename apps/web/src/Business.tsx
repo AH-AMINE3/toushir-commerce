@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { api, post, patch, key, date, money } from "./api";
 import type { Session } from "./api";
 import { SupplierDossier } from "./SupplierDossier";
+import { allPages, ShopAudience } from "./OperationsDashboard";
 import { approve } from "./approvals";
 export { approve } from "./approvals";
 export type Run = (f: () => Promise<unknown>, m?: string) => Promise<void>;
@@ -54,13 +55,19 @@ export function Messages({
   team,
   session,
   orders,
+  onOrder,
 }: {
   revision: number;
   run: Run;
   team: any[];
   session: Session;
   orders: any[];
+  onOrder?: (id: string) => void;
 }) {
+  const [threadQuery, setThreadQuery] = useState(""),
+    [threadFilter, setThreadFilter] = useState("ALL"),
+    [conversationType, setConversationType] = useState("GENERAL"),
+    [broadcastShops, setBroadcastShops] = useState<string[]>([]);
   const [threads, setThreads] = useState<any[]>([]),
     [shops, setShops] = useState<any[]>([]),
     [active, setActive] = useState(""),
@@ -73,7 +80,7 @@ export function Messages({
     Promise.all([
       api("/conversations"),
       session.user.role === "ADMIN"
-        ? api("/admin/merchants?pageSize=100")
+        ? allPages("/admin/merchants").then((items) => ({ items }))
         : Promise.resolve({
             items: [
               ...new Map(
@@ -126,10 +133,12 @@ export function Messages({
             const d = new FormData(e.currentTarget);
             void run(async () => {
               const c = await post("/conversations", {
-                contextType: "GENERAL",
+                contextType: conversationType,
                 subject: d.get("subject"),
-                merchantId: d.get("merchant"),
-                contextId: null,
+                merchantId:
+                  conversationType === "GENERAL" ? d.get("merchant") : null,
+                contextId:
+                  conversationType === "GENERAL" ? null : d.get("order"),
               });
               setActive(c.id);
               setNewThread(false);
@@ -138,16 +147,41 @@ export function Messages({
         >
           <h3>Ouvrir une conversation</h3>
           <label>
-            Commerce
-            <select name="merchant" required>
-              <option value="">Choisir un commerce</option>
-              {shops.map((m) => (
-                <option value={m.id} key={m.id}>
-                  {m.shopName}
-                </option>
-              ))}
+            Contexte
+            <select
+              value={conversationType}
+              onChange={(e) => setConversationType(e.target.value)}
+            >
+              <option value="GENERAL">Relation avec le magasin</option>
+              <option value="ORDER">Commande</option>
+              <option value="DELIVERY">Livraison</option>
             </select>
           </label>
+          {conversationType === "GENERAL" ? (
+            <label>
+              Commerce
+              <select name="merchant" required>
+                <option value="">Choisir un commerce</option>
+                {shops.map((m) => (
+                  <option value={m.id} key={m.id}>
+                    {m.shopName}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : (
+            <label>
+              Commande concernée
+              <select name="order" required>
+                <option value="">Choisir un dossier</option>
+                {orders.map((order) => (
+                  <option key={order.id} value={order.id}>
+                    {order.number} · {order.merchant.shopName}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
           <label>
             Sujet
             <input name="subject" required maxLength={180} />
@@ -161,27 +195,66 @@ export function Messages({
         <section className="panel inbox-list">
           <h2>Conversations</h2>
           <p>{threads.filter((t) => t.status === "OPEN").length} ouvertes</p>
-          {threads.map((t) => (
-            <button
-              key={t.id}
-              className={active === t.id ? "selected" : ""}
-              onClick={() => setActive(t.id)}
-            >
-              <span className="avatar">
-                {(t.merchantName || t.subject || "TS")
-                  .slice(0, 2)
-                  .toUpperCase()}
-              </span>
-              <span>
-                <strong>{t.merchantName || t.subject}</strong>
-                <small>{t.subject}</small>
-                <small>
-                  {date(t.updatedAt, true)} ·{" "}
-                  {t.status === "OPEN" ? "Ouverte" : "Clôturée"}
-                </small>
-              </span>
-            </button>
-          ))}
+          <label className="field inbox-search">
+            <span>Rechercher un échange</span>
+            <input
+              value={threadQuery}
+              onChange={(e) => setThreadQuery(e.target.value)}
+              placeholder="Magasin, sujet…"
+            />
+          </label>
+          <select
+            aria-label="File de service client"
+            value={threadFilter}
+            onChange={(e) => setThreadFilter(e.target.value)}
+          >
+            <option value="ALL">Tous les échanges</option>
+            <option value="OPEN">Échanges ouverts</option>
+            <option value="MINE">Affectés à moi</option>
+            <option value="UNASSIGNED">Sans responsable</option>
+            <option value="CLOSED">Échanges clôturés</option>
+          </select>
+          {threads
+            .filter(
+              (t) =>
+                `${t.merchantName} ${t.subject}`
+                  .toLocaleLowerCase("fr")
+                  .includes(threadQuery.toLocaleLowerCase("fr")) &&
+                (threadFilter === "ALL" ||
+                  (threadFilter === "MINE" &&
+                    t.assignedTo === session.user.id) ||
+                  (threadFilter === "UNASSIGNED" &&
+                    !t.assignedTo &&
+                    t.status === "OPEN") ||
+                  t.status === threadFilter),
+            )
+            .map((t) => (
+              <button
+                key={t.id}
+                className={active === t.id ? "selected" : ""}
+                onClick={() => setActive(t.id)}
+              >
+                <span className="avatar">
+                  {(t.merchantName || t.subject || "TS")
+                    .slice(0, 2)
+                    .toUpperCase()}
+                </span>
+                <span>
+                  <strong>{t.merchantName || t.subject}</strong>
+                  <small>{t.subject}</small>
+                  <small>
+                    {team.find((person) => person.id === t.assignedTo)?.name ||
+                      (t.assignedTo === session.user.id
+                        ? session.user.name
+                        : "À affecter")}
+                  </small>
+                  <small>
+                    {date(t.updatedAt, true)} ·{" "}
+                    {t.status === "OPEN" ? "Ouverte" : "Clôturée"}
+                  </small>
+                </span>
+              </button>
+            ))}
           {!threads.length && (
             <div className="empty">
               <p>
@@ -314,6 +387,18 @@ export function Messages({
                   </dd>
                 </div>
               </dl>
+              {messages.conversation.contextId &&
+                ["ORDER", "DELIVERY"].includes(
+                  messages.conversation.contextType,
+                ) &&
+                onOrder && (
+                  <button
+                    className="button secondary module-section"
+                    onClick={() => onOrder(messages.conversation.contextId)}
+                  >
+                    Ouvrir la commande liée
+                  </button>
+                )}
               <label className="field">
                 Responsable
                 <select
@@ -333,7 +418,17 @@ export function Messages({
                   <option value="">Non affecté</option>
                   {team.map((t) => (
                     <option value={t.id} key={t.id}>
-                      {t.name}
+                      {t.name} ·{" "}
+                      {(
+                        {
+                          ADMIN: "Commerce",
+                          WAREHOUSE: "Entrepôt",
+                          DISPATCHER: "Expédition",
+                          FINANCE: "Finance",
+                          DRIVER: "Livraison",
+                          SALES: "Conseiller",
+                        } as Record<string, string>
+                      )[t.role] || t.role}
                     </option>
                   ))}
                 </select>
@@ -367,7 +462,7 @@ export function Messages({
                     purpose: d.get("purpose"),
                     title: d.get("title"),
                     body: d.get("body"),
-                    merchantIds: d.getAll("merchants"),
+                    merchantIds: broadcastShops,
                     idempotencyKey: key(),
                   }),
                 "Brouillon créé. Vérifiez-le avant de le diffuser.",
@@ -391,14 +486,12 @@ export function Messages({
               Message
               <textarea name="body" required maxLength={5000} />
             </label>
-            <div className="manifest-select">
-              {shops.map((m) => (
-                <label key={m.id}>
-                  <input type="checkbox" name="merchants" value={m.id} />
-                  <span>{m.shopName}</span>
-                </label>
-              ))}
-            </div>
+            <ShopAudience
+              shops={shops}
+              selected={broadcastShops}
+              onChange={setBroadcastShops}
+              title="Les destinataires du message"
+            />
             <button className="button" type="submit">
               Préparer la diffusion
             </button>

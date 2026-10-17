@@ -1,0 +1,1926 @@
+{
+  "success": true,
+  "base": "http://127.0.0.1:5864/api",
+  "startedAt": "2026-10-17T13:40:49.426187+00:00",
+  "finishedAt": "2026-10-17T13:42:04.917608+00:00",
+  "passed": 132,
+  "failed": 0,
+  "passedByRole": {
+    "WHOLESALER": 63,
+    "MERCHANT": 69
+  },
+  "httpRequests": 179,
+  "scope": "Fresh isolated fictional workspace; actual HTTP business effects and authorization. No browser, native runtime, market prices, physical GPS device or external messaging acceptance is claimed.",
+  "checks": [
+    {
+      "id": "M01",
+      "role": "MERCHANT",
+      "name": "Browse every nonempty catalogue category",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/categories",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M02",
+      "role": "MERCHANT",
+      "name": "Browse available brands",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/brands",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W01",
+      "role": "WHOLESALER",
+      "name": "Publish a confirmed positive offer with physical stock",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PATCH",
+          "path": "/admin/products/off-6130093062792",
+          "status": 200
+        },
+        {
+          "method": "PATCH",
+          "path": "/admin/products/off-5410081201039",
+          "status": 200
+        },
+        {
+          "method": "PATCH",
+          "path": "/admin/products/off-7622210995063",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W02",
+      "role": "WHOLESALER",
+      "name": "Reject a zero price on a published sellable offer",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PATCH",
+          "path": "/admin/products/off-6130093062792",
+          "status": 400,
+          "errorCode": "VALIDATION"
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-6130093062792",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W03",
+      "role": "WHOLESALER",
+      "name": "Reject inconsistent case size and minimum order quantity",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PATCH",
+          "path": "/admin/products/off-6130093062792",
+          "status": 400,
+          "errorCode": "VALIDATION"
+        }
+      ]
+    },
+    {
+      "id": "M03",
+      "role": "MERCHANT",
+      "name": "Read the same published price in product details",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/products/off-6130093062792",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M04",
+      "role": "MERCHANT",
+      "name": "Search a product by its actual barcode",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/products?q=6130093062792",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M05",
+      "role": "MERCHANT",
+      "name": "Filter products by a real category",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/products?category=Boissons%20%26%20jus",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M06",
+      "role": "MERCHANT",
+      "name": "Filter products by a real brand",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/products?brand=Ifri",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M07",
+      "role": "MERCHANT",
+      "name": "Save a favorite with its effective price",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/favorites/off-6130093062792",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/favorites",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M08",
+      "role": "MERCHANT",
+      "name": "Remove a favorite without touching the offer",
+      "pass": true,
+      "requests": [
+        {
+          "method": "DELETE",
+          "path": "/favorites/off-6130093062792",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/favorites",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M09",
+      "role": "MERCHANT",
+      "name": "Persist the intended basket quantities",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PUT",
+          "path": "/cart",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/cart",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M10",
+      "role": "MERCHANT",
+      "name": "Review a directly orderable exact total and price consent",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/cart/quote",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M11",
+      "role": "MERCHANT",
+      "name": "Reject direct checkout without consent to the displayed price",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders",
+          "status": 409,
+          "errorCode": "PRICE_CONFIRMATION_REQUIRED"
+        }
+      ]
+    },
+    {
+      "id": "M12",
+      "role": "MERCHANT",
+      "name": "Reject checkout when quantity differs from reviewed price consent",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders",
+          "status": 409,
+          "errorCode": "PRICE_CONFIRMATION_REQUIRED"
+        }
+      ]
+    },
+    {
+      "id": "W04",
+      "role": "WHOLESALER",
+      "name": "Create a stock-backed points reward catalogue item",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/rewards",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W05",
+      "role": "WHOLESALER",
+      "name": "Publish a challenge before the qualifying purchase",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/campaigns",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/campaigns/734db235531a443da84cc8f456a6dad9/publish",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W06",
+      "role": "WHOLESALER",
+      "name": "Refuse a challenge award before the claim period opens",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/campaigns/734db235531a443da84cc8f456a6dad9/award",
+          "status": 409,
+          "errorCode": "INVALID_TRANSITION"
+        }
+      ]
+    },
+    {
+      "id": "M13",
+      "role": "MERCHANT",
+      "name": "Place a priced direct order without an RFQ detour",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M14",
+      "role": "MERCHANT",
+      "name": "Retry direct checkout without creating a duplicate order",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/orders",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M15",
+      "role": "MERCHANT",
+      "name": "Reject a changed payload reusing the successful order key",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders",
+          "status": 409,
+          "errorCode": "IDEMPOTENCY_CONFLICT"
+        }
+      ]
+    },
+    {
+      "id": "M16",
+      "role": "MERCHANT",
+      "name": "Read the submitted order in own order history",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/orders?status=SUBMITTED",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M17",
+      "role": "MERCHANT",
+      "name": "Read the immutable agreed price in the order details",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M18",
+      "role": "MERCHANT",
+      "name": "Keep another shop from reading an order",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65",
+          "status": 404,
+          "errorCode": "NOT_FOUND"
+        }
+      ]
+    },
+    {
+      "id": "M19",
+      "role": "MERCHANT",
+      "name": "Keep the merchant from publishing wholesaler offers",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PATCH",
+          "path": "/admin/products/off-6130093062792",
+          "status": 403,
+          "errorCode": "FORBIDDEN"
+        }
+      ]
+    },
+    {
+      "id": "W07",
+      "role": "WHOLESALER",
+      "name": "Receive the mobile order in the operational queue",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/operations/orders",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W08",
+      "role": "WHOLESALER",
+      "name": "Confirm a submitted priced order for warehouse preparation",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/orders/177930deeb6b4e8c92fbcb712b68df65/transition",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M20",
+      "role": "MERCHANT",
+      "name": "Follow actual confirmation from the wholesaler",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65/tracking",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W09",
+      "role": "WHOLESALER",
+      "name": "Protect stock already reserved by an accepted order",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/inventory/adjust",
+          "status": 409,
+          "errorCode": "STOCK_CONFLICT"
+        }
+      ]
+    },
+    {
+      "id": "W10",
+      "role": "WHOLESALER",
+      "name": "Reject dispatcher preparation outside its team responsibility",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PATCH",
+          "path": "/operations/orders/177930deeb6b4e8c92fbcb712b68df65/preparation",
+          "status": 403,
+          "errorCode": "FORBIDDEN"
+        }
+      ]
+    },
+    {
+      "id": "W11",
+      "role": "WHOLESALER",
+      "name": "Reject stale warehouse preparation versions",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PATCH",
+          "path": "/operations/orders/177930deeb6b4e8c92fbcb712b68df65/preparation",
+          "status": 409,
+          "errorCode": "VERSION_CONFLICT"
+        }
+      ]
+    },
+    {
+      "id": "W12",
+      "role": "WHOLESALER",
+      "name": "Reject preparing more units than the order contains",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PATCH",
+          "path": "/operations/orders/177930deeb6b4e8c92fbcb712b68df65/preparation",
+          "status": 400,
+          "errorCode": "VALIDATION"
+        }
+      ]
+    },
+    {
+      "id": "W13",
+      "role": "WHOLESALER",
+      "name": "Record a real partial preparation by the warehouse team",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PATCH",
+          "path": "/operations/orders/177930deeb6b4e8c92fbcb712b68df65/preparation",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M21",
+      "role": "MERCHANT",
+      "name": "Observe the warehouse preparation progress from the app API",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65/tracking",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65/tracking",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W14",
+      "role": "WHOLESALER",
+      "name": "Reject a driver assignment crossing workspace boundaries",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/operations/orders/177930deeb6b4e8c92fbcb712b68df65/assign",
+          "status": 404,
+          "errorCode": "NOT_FOUND"
+        }
+      ]
+    },
+    {
+      "id": "W15",
+      "role": "WHOLESALER",
+      "name": "Assign the delivery to an actual approved driver",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/operations/orders/177930deeb6b4e8c92fbcb712b68df65/assign",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W16",
+      "role": "WHOLESALER",
+      "name": "Block pickup until every ordered unit is prepared",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/courier/orders/177930deeb6b4e8c92fbcb712b68df65/pickup",
+          "status": 409,
+          "errorCode": "PREPARATION_INCOMPLETE"
+        }
+      ]
+    },
+    {
+      "id": "W17",
+      "role": "WHOLESALER",
+      "name": "Finish preparation and send the order to the ready queue",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PATCH",
+          "path": "/operations/orders/177930deeb6b4e8c92fbcb712b68df65/preparation",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M22",
+      "role": "MERCHANT",
+      "name": "See actual readiness and full preparation",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65/tracking",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65/tracking",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W18",
+      "role": "WHOLESALER",
+      "name": "Transfer physical custody and debit stock at departure",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/courier/orders/177930deeb6b4e8c92fbcb712b68df65/pickup",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-6130093062792",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M23",
+      "role": "MERCHANT",
+      "name": "Follow the dispatched order and named assigned driver",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65/tracking",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M24",
+      "role": "MERCHANT",
+      "name": "Block receipt confirmation before the driver arrives",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65/receipt-challenge",
+          "status": 409,
+          "errorCode": "INVALID_TRANSITION"
+        }
+      ]
+    },
+    {
+      "id": "M25",
+      "role": "MERCHANT",
+      "name": "Block cancellation after physical departure",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65/cancel",
+          "status": 409,
+          "errorCode": "INVALID_TRANSITION"
+        }
+      ]
+    },
+    {
+      "id": "W19",
+      "role": "WHOLESALER",
+      "name": "Reject stale location fixes instead of presenting them as live GPS",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/courier/location",
+          "status": 409,
+          "errorCode": "LOCATION_STALE"
+        }
+      ]
+    },
+    {
+      "id": "W20",
+      "role": "WHOLESALER",
+      "name": "Share a fresh driver position during the assigned delivery",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/courier/location",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M26",
+      "role": "MERCHANT",
+      "name": "See a timestamped real submitted driver fix",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65/tracking",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W21",
+      "role": "WHOLESALER",
+      "name": "Reject repeated GPS timestamps that could overwrite newer state",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/courier/location",
+          "status": 409,
+          "errorCode": "LOCATION_OUT_OF_ORDER"
+        }
+      ]
+    },
+    {
+      "id": "W22",
+      "role": "WHOLESALER",
+      "name": "Revoke driver location sharing explicitly",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/courier/location",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M27",
+      "role": "MERCHANT",
+      "name": "Stop showing driver coordinates after consent is withdrawn",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65/tracking",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W23",
+      "role": "WHOLESALER",
+      "name": "Move the assigned courier through en route and arrived states",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/courier/orders/177930deeb6b4e8c92fbcb712b68df65/status",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/courier/orders/177930deeb6b4e8c92fbcb712b68df65/status",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M28",
+      "role": "MERCHANT",
+      "name": "Reject a receipt created from an outdated order version",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65/receipt-challenge",
+          "status": 409,
+          "errorCode": "VERSION_CONFLICT"
+        }
+      ]
+    },
+    {
+      "id": "M29",
+      "role": "MERCHANT",
+      "name": "Issue a QR receipt bound to accepted and refused quantities",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65/receipt-challenge",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W24",
+      "role": "WHOLESALER",
+      "name": "Reject driver alteration of merchant-confirmed receipt quantities",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/courier/orders/177930deeb6b4e8c92fbcb712b68df65/complete",
+          "status": 409,
+          "errorCode": "RECEIPT_MISMATCH"
+        }
+      ]
+    },
+    {
+      "id": "W25",
+      "role": "WHOLESALER",
+      "name": "Complete the physical receipt using the merchant QR proof",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/courier/orders/177930deeb6b4e8c92fbcb712b68df65/complete",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M30",
+      "role": "MERCHANT",
+      "name": "See accepted quantities and the corrected delivered amount",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W26",
+      "role": "WHOLESALER",
+      "name": "Reject replay of a consumed delivery receipt proof",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/courier/orders/177930deeb6b4e8c92fbcb712b68df65/complete",
+          "status": 409,
+          "errorCode": "RECEIPT_INVALID"
+        }
+      ]
+    },
+    {
+      "id": "M31",
+      "role": "MERCHANT",
+      "name": "Keep physical receipt separate from money actually collected",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M32",
+      "role": "MERCHANT",
+      "name": "Earn no spendable points from unpaid delivered goods",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/loyalty/sync",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M33",
+      "role": "MERCHANT",
+      "name": "Prevent a merchant from fabricating a courier payment",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/courier/orders/177930deeb6b4e8c92fbcb712b68df65/collect",
+          "status": 403,
+          "errorCode": "FORBIDDEN"
+        }
+      ]
+    },
+    {
+      "id": "W27",
+      "role": "WHOLESALER",
+      "name": "Reject a cash collection whose tender and change do not reconcile",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/courier/orders/177930deeb6b4e8c92fbcb712b68df65/collect",
+          "status": 409,
+          "errorCode": "CASH_MISMATCH"
+        }
+      ]
+    },
+    {
+      "id": "W28",
+      "role": "WHOLESALER",
+      "name": "Record actual cash tender and change after receipt",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/courier/orders/177930deeb6b4e8c92fbcb712b68df65/collect",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W29",
+      "role": "WHOLESALER",
+      "name": "Retry a cash collection without taking payment twice",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/courier/orders/177930deeb6b4e8c92fbcb712b68df65/collect",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W30",
+      "role": "WHOLESALER",
+      "name": "Reject collection beyond the actual remaining balance",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/courier/orders/177930deeb6b4e8c92fbcb712b68df65/collect",
+          "status": 409,
+          "errorCode": "PAYMENT_EXCEEDS_DUE"
+        }
+      ]
+    },
+    {
+      "id": "M34",
+      "role": "MERCHANT",
+      "name": "See the actual collection method and zero remaining balance",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W31",
+      "role": "WHOLESALER",
+      "name": "Keep warehouse staff from reconciling financial receipts",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/operations/payments/16207b44d855480d8ca4443b91ffba22/reconcile",
+          "status": 403,
+          "errorCode": "FORBIDDEN"
+        }
+      ]
+    },
+    {
+      "id": "W32",
+      "role": "WHOLESALER",
+      "name": "Reconcile the actual cash receipt through the finance role",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/operations/payments/16207b44d855480d8ca4443b91ffba22/reconcile",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W33",
+      "role": "WHOLESALER",
+      "name": "Keep refused stock quarantined until a quality decision",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/products/off-6130093062792",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W34",
+      "role": "WHOLESALER",
+      "name": "Release physically inspected intact refused units",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/operations/orders/177930deeb6b4e8c92fbcb712b68df65/returns/inspect",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-6130093062792",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W35",
+      "role": "WHOLESALER",
+      "name": "Prevent duplicate return inspection from increasing stock twice",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/operations/orders/177930deeb6b4e8c92fbcb712b68df65/returns/inspect",
+          "status": 400,
+          "errorCode": "VALIDATION"
+        }
+      ]
+    },
+    {
+      "id": "M35",
+      "role": "MERCHANT",
+      "name": "Accrue points from accepted paid goods only",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/loyalty/sync",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M36",
+      "role": "MERCHANT",
+      "name": "Sync points repeatedly without double earning",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/loyalty/sync",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M37",
+      "role": "MERCHANT",
+      "name": "Discover the wholesaler-created stock-backed gift",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/rewards",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M38",
+      "role": "MERCHANT",
+      "name": "Reserve an affordable gift using earned points",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/rewards/0d37f6818d974ebea8ac25ba55615123/reserve",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M39",
+      "role": "MERCHANT",
+      "name": "Retry a gift reservation without spending points twice",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/rewards/0d37f6818d974ebea8ac25ba55615123/reserve",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M40",
+      "role": "MERCHANT",
+      "name": "Show points reserved separately from spendable points",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/loyalty",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M41",
+      "role": "MERCHANT",
+      "name": "Prevent reward reservations from overdrawing the points wallet",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/rewards/0d37f6818d974ebea8ac25ba55615123/reserve",
+          "status": 409,
+          "errorCode": "INSUFFICIENT_POINTS"
+        }
+      ]
+    },
+    {
+      "id": "W36",
+      "role": "WHOLESALER",
+      "name": "Prepare a merchant reward for handover",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/gift-requests/65ee07030fe74e879a6e9fcebe436140/transition",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W37",
+      "role": "WHOLESALER",
+      "name": "Fulfill the physical gift with a beneficiary proof reference",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/gift-requests/65ee07030fe74e879a6e9fcebe436140/transition",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M42",
+      "role": "MERCHANT",
+      "name": "See gift handover consume the held points exactly once",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/loyalty",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M43",
+      "role": "MERCHANT",
+      "name": "Keep loyalty balances confined to the signed-in shop",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/loyalty?merchantId=d9997b2729aa4b6297cd3957d4e57c26",
+          "status": 404,
+          "errorCode": "NOT_FOUND"
+        },
+        {
+          "method": "GET",
+          "path": "/loyalty",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M44",
+      "role": "MERCHANT",
+      "name": "Open support directly against the actual order context",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/conversations",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M45",
+      "role": "MERCHANT",
+      "name": "Send an actual contextual support message",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/conversations/f2285c5788744bd191699093e0d673e9/messages",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M46",
+      "role": "MERCHANT",
+      "name": "Retry a message without duplicating it",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/conversations/f2285c5788744bd191699093e0d673e9/messages",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M47",
+      "role": "MERCHANT",
+      "name": "Reject changing message text under an already-used message key",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/conversations/f2285c5788744bd191699093e0d673e9/messages",
+          "status": 409,
+          "errorCode": "IDEMPOTENCY_CONFLICT"
+        }
+      ]
+    },
+    {
+      "id": "W38",
+      "role": "WHOLESALER",
+      "name": "Reply as customer service in the same order conversation",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/conversations/f2285c5788744bd191699093e0d673e9/messages",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M48",
+      "role": "MERCHANT",
+      "name": "Read the customer-service response in the order thread",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/conversations/f2285c5788744bd191699093e0d673e9/messages",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W39",
+      "role": "WHOLESALER",
+      "name": "Add an internal warehouse coordination note",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/conversations/f2285c5788744bd191699093e0d673e9/messages",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/conversations/f2285c5788744bd191699093e0d673e9/messages",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M49",
+      "role": "MERCHANT",
+      "name": "Keep private team notes out of merchant messages",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/conversations/f2285c5788744bd191699093e0d673e9/messages",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W40",
+      "role": "WHOLESALER",
+      "name": "Hand the support dossier to a real warehouse team member",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/conversations/f2285c5788744bd191699093e0d673e9/messages",
+          "status": 200
+        },
+        {
+          "method": "PATCH",
+          "path": "/conversations/f2285c5788744bd191699093e0d673e9",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W41",
+      "role": "WHOLESALER",
+      "name": "Reject a stale customer-service handoff instead of overwriting it",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PATCH",
+          "path": "/conversations/f2285c5788744bd191699093e0d673e9",
+          "status": 409,
+          "errorCode": "VERSION_CONFLICT"
+        }
+      ]
+    },
+    {
+      "id": "W42",
+      "role": "WHOLESALER",
+      "name": "Close a resolved contextual support dossier",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PATCH",
+          "path": "/conversations/f2285c5788744bd191699093e0d673e9",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M50",
+      "role": "MERCHANT",
+      "name": "Respect a closed support dossier and preserve its message history",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/conversations/f2285c5788744bd191699093e0d673e9/messages",
+          "status": 409,
+          "errorCode": "THREAD_CLOSED"
+        },
+        {
+          "method": "GET",
+          "path": "/conversations/f2285c5788744bd191699093e0d673e9/messages",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W43",
+      "role": "WHOLESALER",
+      "name": "Reopen a support dossier for a new customer-service follow-up",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PATCH",
+          "path": "/conversations/f2285c5788744bd191699093e0d673e9",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W44",
+      "role": "WHOLESALER",
+      "name": "Create a quantity-threshold discount campaign",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/campaigns",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W45",
+      "role": "WHOLESALER",
+      "name": "Require an independent reviewer for campaign publication",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/campaigns/30366cde5fab444f9d59ed94247d327a/publish",
+          "status": 409,
+          "errorCode": "INDEPENDENT_APPROVAL_REQUIRED"
+        }
+      ]
+    },
+    {
+      "id": "W46",
+      "role": "WHOLESALER",
+      "name": "Publish the verified campaign through finance",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/campaigns/30366cde5fab444f9d59ed94247d327a/publish",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M51",
+      "role": "MERCHANT",
+      "name": "Discover an actual published promotion created by the wholesaler",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/campaigns",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M52",
+      "role": "MERCHANT",
+      "name": "Calculate the promised discount at the qualifying threshold",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/campaigns/30366cde5fab444f9d59ed94247d327a/preview",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M53",
+      "role": "MERCHANT",
+      "name": "Apply no discount below the published campaign threshold",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/campaigns/30366cde5fab444f9d59ed94247d327a/preview",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M54",
+      "role": "MERCHANT",
+      "name": "Use the same campaign discount in the real checkout basket",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/cart/quote",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M55",
+      "role": "MERCHANT",
+      "name": "Commit the actual advertised discount as immutable order terms",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W47",
+      "role": "WHOLESALER",
+      "name": "Reject invalid campaign percentages before publication",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/campaigns",
+          "status": 400,
+          "errorCode": "VALIDATION"
+        }
+      ]
+    },
+    {
+      "id": "W48",
+      "role": "WHOLESALER",
+      "name": "Publish a distinct free-goods promotion with a named stocked gift",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/campaigns",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/campaigns/d0b8798f361d47918633c84e2c360a7b/publish",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M56",
+      "role": "MERCHANT",
+      "name": "Preview the named free-goods quantity at the threshold",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/campaigns/d0b8798f361d47918633c84e2c360a7b/preview",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M57",
+      "role": "MERCHANT",
+      "name": "Reserve real free-gift stock with the paid-goods checkout",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/cart/quote",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/orders",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M58",
+      "role": "MERCHANT",
+      "name": "Show challenge progress from actual accepted paid units",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/campaigns/734db235531a443da84cc8f456a6dad9/progress",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W49",
+      "role": "WHOLESALER",
+      "name": "Award the completed challenge from the actual paid delivery",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/campaigns/734db235531a443da84cc8f456a6dad9/award",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W50",
+      "role": "WHOLESALER",
+      "name": "Retry a challenge award without granting the same shop twice",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/campaigns/734db235531a443da84cc8f456a6dad9/award",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M59",
+      "role": "MERCHANT",
+      "name": "Claim a completed challenge reward without spending wallet points",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/rewards/0d37f6818d974ebea8ac25ba55615123/reserve",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/loyalty",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M60",
+      "role": "MERCHANT",
+      "name": "Reject a second independent claim of the consumed challenge grant",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/rewards/0d37f6818d974ebea8ac25ba55615123/reserve",
+          "status": 409,
+          "errorCode": "INVALID_GRANT"
+        }
+      ]
+    },
+    {
+      "id": "M61",
+      "role": "MERCHANT",
+      "name": "Start with marketing disabled while service messaging remains available",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/preferences/marketing",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W51",
+      "role": "WHOLESALER",
+      "name": "Exclude a merchant who declined promotional messages",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/broadcasts",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/broadcasts/f69b915683a94fabac91d91de540add7/dispatch",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M62",
+      "role": "MERCHANT",
+      "name": "Explicitly opt into commercial messages",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PUT",
+          "path": "/preferences/marketing",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W52",
+      "role": "WHOLESALER",
+      "name": "Deliver an opted-in promotional message in the shared inbox",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/broadcasts",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/broadcasts/432e5eaf739b4bb39e87ac4259c71323/dispatch",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M63",
+      "role": "MERCHANT",
+      "name": "Withdraw marketing consent without losing service communications",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PUT",
+          "path": "/preferences/marketing",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W53",
+      "role": "WHOLESALER",
+      "name": "Deliver a service message independently of marketing preference",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/broadcasts",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/broadcasts/0ec28a08d45643b3966885798f125b3d/dispatch",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W54",
+      "role": "WHOLESALER",
+      "name": "Search actual merchants by shop name",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/admin/merchants?q=EXEMPLE%20boutique%20r%C3%A9gion%20Est",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W55",
+      "role": "WHOLESALER",
+      "name": "Search actual merchants by telephone number",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/admin/merchants?q=0555123456",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W56",
+      "role": "WHOLESALER",
+      "name": "Filter the order queue by the actual order number",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/admin/orders?q=TS-261017-0D3BBF63",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W57",
+      "role": "WHOLESALER",
+      "name": "Calculate dashboard sales and collections from the completed journey",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/admin/dashboard?days=7",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W58",
+      "role": "WHOLESALER",
+      "name": "Keep actual actors and handoffs in the audit history",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/admin/audit?pageSize=100",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M64",
+      "role": "MERCHANT",
+      "name": "Calculate own account totals from recorded payment facts",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/profile/summary",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M65",
+      "role": "MERCHANT",
+      "name": "Reorder a previous receipt into a fresh basket without duplicating its payment",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65/reorder",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W59",
+      "role": "WHOLESALER",
+      "name": "Change a catalogue offer without rewriting existing agreed order prices",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PATCH",
+          "path": "/admin/products/off-6130093062792",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M66",
+      "role": "MERCHANT",
+      "name": "Display the new current price while preserving the paid order history",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/products/off-6130093062792",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "W60",
+      "role": "WHOLESALER",
+      "name": "Reject a warehouse attempt to publish a campaign",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/campaigns",
+          "status": 403,
+          "errorCode": "FORBIDDEN"
+        }
+      ]
+    },
+    {
+      "id": "W61",
+      "role": "WHOLESALER",
+      "name": "Suspend a shop and revoke its effective access",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PATCH",
+          "path": "/admin/merchants/6c8c4ef0db844f76b3ec1af70ece99f7",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/orders",
+          "status": 401,
+          "errorCode": "UNAUTHENTICATED"
+        }
+      ]
+    },
+    {
+      "id": "W62",
+      "role": "WHOLESALER",
+      "name": "Restore a suspended shop without erasing its history",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PATCH",
+          "path": "/admin/merchants/6c8c4ef0db844f76b3ec1af70ece99f7",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/orders",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M67",
+      "role": "MERCHANT",
+      "name": "Protect contextual support against another shop opening the same order",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/conversations",
+          "status": 404,
+          "errorCode": "NOT_FOUND"
+        }
+      ]
+    },
+    {
+      "id": "M68",
+      "role": "MERCHANT",
+      "name": "Keep another workspace from following a delivery",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/orders/177930deeb6b4e8c92fbcb712b68df65/tracking",
+          "status": 404,
+          "errorCode": "NOT_FOUND"
+        }
+      ]
+    },
+    {
+      "id": "W63",
+      "role": "WHOLESALER",
+      "name": "Prevent overselling when two shops commit the last unit concurrently",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/orders",
+          "status": 409,
+          "errorCode": "QUOTE_REQUIRED"
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-16256866",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "M69",
+      "role": "MERCHANT",
+      "name": "See a clear sold-out checkout after the last available unit is reserved",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/cart/quote",
+          "status": 200
+        }
+      ]
+    }
+  ]
+}

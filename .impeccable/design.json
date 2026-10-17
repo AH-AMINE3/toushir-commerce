@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-17T08:06:17.822548+00:00",
+  "generatedAt": "2026-10-17T13:52:41.653471+00:00",
   "title": "Design System: TOUSHIR Commerce",
   "extensions": {
     "colorMeta": {
@@ -9,14 +9,14 @@
         "displayName": "Ink",
         "canonical": "#151917",
         "tonalRamp": [
-          "oklch(15% 0.00724 164.20)",
+          "oklch(15.0% 0.00724 164.20)",
           "oklch(26.4% 0.00724 164.20)",
           "oklch(37.9% 0.00724 164.20)",
           "oklch(49.3% 0.00724 164.20)",
           "oklch(60.7% 0.00724 164.20)",
           "oklch(72.1% 0.00724 164.20)",
           "oklch(83.6% 0.00724 164.20)",
-          "oklch(95% 0.00724 164.20)"
+          "oklch(95.0% 0.00724 164.20)"
         ]
       },
       "brand": {
@@ -24,14 +24,14 @@
         "displayName": "Toushir forest",
         "canonical": "#0f2c2c",
         "tonalRamp": [
-          "oklch(15% 0.03460 195.31)",
+          "oklch(15.0% 0.03460 195.31)",
           "oklch(26.4% 0.03460 195.31)",
           "oklch(37.9% 0.03460 195.31)",
           "oklch(49.3% 0.03460 195.31)",
           "oklch(60.7% 0.03460 195.31)",
           "oklch(72.1% 0.03460 195.31)",
           "oklch(83.6% 0.03460 195.31)",
-          "oklch(95% 0.03460 195.31)"
+          "oklch(95.0% 0.03460 195.31)"
         ]
       },
       "green": {
@@ -39,14 +39,14 @@
         "displayName": "Operational green",
         "canonical": "#087f4f",
         "tonalRamp": [
-          "oklch(15% 0.12083 158.06)",
+          "oklch(15.0% 0.12083 158.06)",
           "oklch(26.4% 0.12083 158.06)",
           "oklch(37.9% 0.12083 158.06)",
           "oklch(49.3% 0.12083 158.06)",
           "oklch(60.7% 0.12083 158.06)",
           "oklch(72.1% 0.12083 158.06)",
           "oklch(83.6% 0.12083 158.06)",
-          "oklch(95% 0.12083 158.06)"
+          "oklch(95.0% 0.12083 158.06)"
         ]
       },
       "action": {
@@ -54,14 +54,14 @@
         "displayName": "Action green",
         "canonical": "#06dd81",
         "tonalRamp": [
-          "oklch(15% 0.19366 155.15)",
+          "oklch(15.0% 0.19366 155.15)",
           "oklch(26.4% 0.19366 155.15)",
           "oklch(37.9% 0.19366 155.15)",
           "oklch(49.3% 0.19366 155.15)",
           "oklch(60.7% 0.19366 155.15)",
           "oklch(72.1% 0.19366 155.15)",
           "oklch(83.6% 0.19366 155.15)",
-          "oklch(95% 0.19366 155.15)"
+          "oklch(95.0% 0.19366 155.15)"
         ]
       },
       "action-ink": {
@@ -69,14 +69,14 @@
         "displayName": "Action ink",
         "canonical": "#10281c",
         "tonalRamp": [
-          "oklch(15% 0.03817 160.15)",
+          "oklch(15.0% 0.03817 160.15)",
           "oklch(26.4% 0.03817 160.15)",
           "oklch(37.9% 0.03817 160.15)",
           "oklch(49.3% 0.03817 160.15)",
           "oklch(60.7% 0.03817 160.15)",
           "oklch(72.1% 0.03817 160.15)",
           "oklch(83.6% 0.03817 160.15)",
-          "oklch(95% 0.03817 160.15)"
+          "oklch(95.0% 0.03817 160.15)"
         ]
       },
       "action-hover": {
@@ -84,14 +84,14 @@
         "displayName": "Action hover",
         "canonical": "#00cb76",
         "tonalRamp": [
-          "oklch(15% 0.18212 155.22)",
+          "oklch(15.0% 0.18212 155.22)",
           "oklch(26.4% 0.18212 155.22)",
           "oklch(37.9% 0.18212 155.22)",
           "oklch(49.3% 0.18212 155.22)",
           "oklch(60.7% 0.18212 155.22)",
           "oklch(72.1% 0.18212 155.22)",
           "oklch(83.6% 0.18212 155.22)",
-          "oklch(95% 0.18212 155.22)"
+          "oklch(95.0% 0.18212 155.22)"
         ]
       },
       "mint": {
@@ -99,14 +99,14 @@
         "displayName": "Mint",
         "canonical": "#d9eddf",
         "tonalRamp": [
-          "oklch(15% 0.02825 155.28)",
+          "oklch(15.0% 0.02825 155.28)",
           "oklch(26.4% 0.02825 155.28)",
           "oklch(37.9% 0.02825 155.28)",
           "oklch(49.3% 0.02825 155.28)",
           "oklch(60.7% 0.02825 155.28)",
           "oklch(72.1% 0.02825 155.28)",
           "oklch(83.6% 0.02825 155.28)",
-          "oklch(95% 0.02825 155.28)"
+          "oklch(95.0% 0.02825 155.28)"
         ]
       },
       "aqua": {
@@ -114,14 +114,14 @@
         "displayName": "Fresh aqua",
         "canonical": "#ccffff",
         "tonalRamp": [
-          "oklch(15% 0.05158 196.33)",
+          "oklch(15.0% 0.05158 196.33)",
           "oklch(26.4% 0.05158 196.33)",
           "oklch(37.9% 0.05158 196.33)",
           "oklch(49.3% 0.05158 196.33)",
           "oklch(60.7% 0.05158 196.33)",
           "oklch(72.1% 0.05158 196.33)",
           "oklch(83.6% 0.05158 196.33)",
-          "oklch(95% 0.05158 196.33)"
+          "oklch(95.0% 0.05158 196.33)"
         ]
       },
       "aqua-ink": {
@@ -129,14 +129,14 @@
         "displayName": "Aqua ink",
         "canonical": "#145b5b",
         "tonalRamp": [
-          "oklch(15% 0.06651 194.96)",
+          "oklch(15.0% 0.06651 194.96)",
           "oklch(26.4% 0.06651 194.96)",
           "oklch(37.9% 0.06651 194.96)",
           "oklch(49.3% 0.06651 194.96)",
           "oklch(60.7% 0.06651 194.96)",
           "oklch(72.1% 0.06651 194.96)",
           "oklch(83.6% 0.06651 194.96)",
-          "oklch(95% 0.06651 194.96)"
+          "oklch(95.0% 0.06651 194.96)"
         ]
       },
       "surface": {
@@ -144,14 +144,14 @@
         "displayName": "White surface",
         "canonical": "#ffffff",
         "tonalRamp": [
-          "oklch(15% 0.00000 89.88)",
+          "oklch(15.0% 0.00000 89.88)",
           "oklch(26.4% 0.00000 89.88)",
           "oklch(37.9% 0.00000 89.88)",
           "oklch(49.3% 0.00000 89.88)",
           "oklch(60.7% 0.00000 89.88)",
           "oklch(72.1% 0.00000 89.88)",
           "oklch(83.6% 0.00000 89.88)",
-          "oklch(95% 0.00000 89.88)"
+          "oklch(95.0% 0.00000 89.88)"
         ]
       },
       "canvas-web": {
@@ -159,14 +159,14 @@
         "displayName": "Web canvas",
         "canonical": "#f5f7f6",
         "tonalRamp": [
-          "oklch(15% 0.00249 165.08)",
+          "oklch(15.0% 0.00249 165.08)",
           "oklch(26.4% 0.00249 165.08)",
           "oklch(37.9% 0.00249 165.08)",
           "oklch(49.3% 0.00249 165.08)",
           "oklch(60.7% 0.00249 165.08)",
           "oklch(72.1% 0.00249 165.08)",
           "oklch(83.6% 0.00249 165.08)",
-          "oklch(95% 0.00249 165.08)"
+          "oklch(95.0% 0.00249 165.08)"
         ]
       },
       "canvas-mobile": {
@@ -174,14 +174,14 @@
         "displayName": "Mobile canvas / web soft",
         "canonical": "#f4f6f4",
         "tonalRamp": [
-          "oklch(15% 0.00338 145.55)",
+          "oklch(15.0% 0.00338 145.55)",
           "oklch(26.4% 0.00338 145.55)",
           "oklch(37.9% 0.00338 145.55)",
           "oklch(49.3% 0.00338 145.55)",
           "oklch(60.7% 0.00338 145.55)",
           "oklch(72.1% 0.00338 145.55)",
           "oklch(83.6% 0.00338 145.55)",
-          "oklch(95% 0.00338 145.55)"
+          "oklch(95.0% 0.00338 145.55)"
         ]
       },
       "sidebar": {
@@ -189,14 +189,14 @@
         "displayName": "Sidebar",
         "canonical": "#fafbfa",
         "tonalRamp": [
-          "oklch(15% 0.00168 145.56)",
+          "oklch(15.0% 0.00168 145.56)",
           "oklch(26.4% 0.00168 145.56)",
           "oklch(37.9% 0.00168 145.56)",
           "oklch(49.3% 0.00168 145.56)",
           "oklch(60.7% 0.00168 145.56)",
           "oklch(72.1% 0.00168 145.56)",
           "oklch(83.6% 0.00168 145.56)",
-          "oklch(95% 0.00168 145.56)"
+          "oklch(95.0% 0.00168 145.56)"
         ]
       },
       "line": {
@@ -204,14 +204,14 @@
         "displayName": "Divider",
         "canonical": "#e7ebe7",
         "tonalRamp": [
-          "oklch(15% 0.00682 145.52)",
+          "oklch(15.0% 0.00682 145.52)",
           "oklch(26.4% 0.00682 145.52)",
           "oklch(37.9% 0.00682 145.52)",
           "oklch(49.3% 0.00682 145.52)",
           "oklch(60.7% 0.00682 145.52)",
           "oklch(72.1% 0.00682 145.52)",
           "oklch(83.6% 0.00682 145.52)",
-          "oklch(95% 0.00682 145.52)"
+          "oklch(95.0% 0.00682 145.52)"
         ]
       },
       "border-web": {
@@ -219,14 +219,14 @@
         "displayName": "Web field border",
         "canonical": "#e4e9e6",
         "tonalRamp": [
-          "oklch(15% 0.00667 160.07)",
+          "oklch(15.0% 0.00667 160.07)",
           "oklch(26.4% 0.00667 160.07)",
           "oklch(37.9% 0.00667 160.07)",
           "oklch(49.3% 0.00667 160.07)",
           "oklch(60.7% 0.00667 160.07)",
           "oklch(72.1% 0.00667 160.07)",
           "oklch(83.6% 0.00667 160.07)",
-          "oklch(95% 0.00667 160.07)"
+          "oklch(95.0% 0.00667 160.07)"
         ]
       },
       "muted-web": {
@@ -234,29 +234,29 @@
         "displayName": "Web muted",
         "canonical": "#66736b",
         "tonalRamp": [
-          "oklch(15% 0.01987 158.68)",
+          "oklch(15.0% 0.01987 158.68)",
           "oklch(26.4% 0.01987 158.68)",
           "oklch(37.9% 0.01987 158.68)",
           "oklch(49.3% 0.01987 158.68)",
           "oklch(60.7% 0.01987 158.68)",
           "oklch(72.1% 0.01987 158.68)",
           "oklch(83.6% 0.01987 158.68)",
-          "oklch(95% 0.01987 158.68)"
+          "oklch(95.0% 0.01987 158.68)"
         ]
       },
       "muted-mobile": {
         "role": "neutral",
         "displayName": "Mobile muted",
-        "canonical": "#6b736f",
+        "canonical": "#5f6a63",
         "tonalRamp": [
-          "oklch(15% 0.01144 164.58)",
-          "oklch(26.4% 0.01144 164.58)",
-          "oklch(37.9% 0.01144 164.58)",
-          "oklch(49.3% 0.01144 164.58)",
-          "oklch(60.7% 0.01144 164.58)",
-          "oklch(72.1% 0.01144 164.58)",
-          "oklch(83.6% 0.01144 164.58)",
-          "oklch(95% 0.01144 164.58)"
+          "oklch(15.0% 0.01729 157.84)",
+          "oklch(26.4% 0.01729 157.84)",
+          "oklch(37.9% 0.01729 157.84)",
+          "oklch(49.3% 0.01729 157.84)",
+          "oklch(60.7% 0.01729 157.84)",
+          "oklch(72.1% 0.01729 157.84)",
+          "oklch(83.6% 0.01729 157.84)",
+          "oklch(95.0% 0.01729 157.84)"
         ]
       },
       "danger-web": {
@@ -264,14 +264,14 @@
         "displayName": "Danger web",
         "canonical": "#a92d2d",
         "tonalRamp": [
-          "oklch(15% 0.16073 25.37)",
+          "oklch(15.0% 0.16073 25.37)",
           "oklch(26.4% 0.16073 25.37)",
           "oklch(37.9% 0.16073 25.37)",
           "oklch(49.3% 0.16073 25.37)",
           "oklch(60.7% 0.16073 25.37)",
           "oklch(72.1% 0.16073 25.37)",
           "oklch(83.6% 0.16073 25.37)",
-          "oklch(95% 0.16073 25.37)"
+          "oklch(95.0% 0.16073 25.37)"
         ]
       },
       "danger-mobile": {
@@ -279,14 +279,14 @@
         "displayName": "Danger mobile",
         "canonical": "#b42332",
         "tonalRamp": [
-          "oklch(15% 0.17935 21.80)",
+          "oklch(15.0% 0.17935 21.80)",
           "oklch(26.4% 0.17935 21.80)",
           "oklch(37.9% 0.17935 21.80)",
           "oklch(49.3% 0.17935 21.80)",
           "oklch(60.7% 0.17935 21.80)",
           "oklch(72.1% 0.17935 21.80)",
           "oklch(83.6% 0.17935 21.80)",
-          "oklch(95% 0.17935 21.80)"
+          "oklch(95.0% 0.17935 21.80)"
         ]
       },
       "danger-surface-web": {
@@ -294,14 +294,14 @@
         "displayName": "Danger surface web",
         "canonical": "#fff0ef",
         "tonalRamp": [
-          "oklch(15% 0.01632 22.08)",
+          "oklch(15.0% 0.01632 22.08)",
           "oklch(26.4% 0.01632 22.08)",
           "oklch(37.9% 0.01632 22.08)",
           "oklch(49.3% 0.01632 22.08)",
           "oklch(60.7% 0.01632 22.08)",
           "oklch(72.1% 0.01632 22.08)",
           "oklch(83.6% 0.01632 22.08)",
-          "oklch(95% 0.01632 22.08)"
+          "oklch(95.0% 0.01632 22.08)"
         ]
       },
       "danger-surface-mobile": {
@@ -309,74 +309,74 @@
         "displayName": "Danger surface mobile",
         "canonical": "#fff0f1",
         "tonalRamp": [
-          "oklch(15% 0.01627 12.78)",
+          "oklch(15.0% 0.01627 12.78)",
           "oklch(26.4% 0.01627 12.78)",
           "oklch(37.9% 0.01627 12.78)",
           "oklch(49.3% 0.01627 12.78)",
           "oklch(60.7% 0.01627 12.78)",
           "oklch(72.1% 0.01627 12.78)",
           "oklch(83.6% 0.01627 12.78)",
-          "oklch(95% 0.01627 12.78)"
+          "oklch(95.0% 0.01627 12.78)"
         ]
       },
       "warning-web": {
         "role": "tertiary",
-        "displayName": "Warning web",
-        "canonical": "#855413",
+        "displayName": "Pending web",
+        "canonical": "#145b5b",
         "tonalRamp": [
-          "oklch(15% 0.09940 67.76)",
-          "oklch(26.4% 0.09940 67.76)",
-          "oklch(37.9% 0.09940 67.76)",
-          "oklch(49.3% 0.09940 67.76)",
-          "oklch(60.7% 0.09940 67.76)",
-          "oklch(72.1% 0.09940 67.76)",
-          "oklch(83.6% 0.09940 67.76)",
-          "oklch(95% 0.09940 67.76)"
+          "oklch(15.0% 0.06651 194.96)",
+          "oklch(26.4% 0.06651 194.96)",
+          "oklch(37.9% 0.06651 194.96)",
+          "oklch(49.3% 0.06651 194.96)",
+          "oklch(60.7% 0.06651 194.96)",
+          "oklch(72.1% 0.06651 194.96)",
+          "oklch(83.6% 0.06651 194.96)",
+          "oklch(95.0% 0.06651 194.96)"
         ]
       },
       "warning-mobile": {
         "role": "tertiary",
-        "displayName": "Warning mobile",
-        "canonical": "#805413",
+        "displayName": "Pending mobile",
+        "canonical": "#40534a",
         "tonalRamp": [
-          "oklch(15% 0.09573 71.06)",
-          "oklch(26.4% 0.09573 71.06)",
-          "oklch(37.9% 0.09573 71.06)",
-          "oklch(49.3% 0.09573 71.06)",
-          "oklch(60.7% 0.09573 71.06)",
-          "oklch(72.1% 0.09573 71.06)",
-          "oklch(83.6% 0.09573 71.06)",
-          "oklch(95% 0.09573 71.06)"
+          "oklch(15.0% 0.02791 164.61)",
+          "oklch(26.4% 0.02791 164.61)",
+          "oklch(37.9% 0.02791 164.61)",
+          "oklch(49.3% 0.02791 164.61)",
+          "oklch(60.7% 0.02791 164.61)",
+          "oklch(72.1% 0.02791 164.61)",
+          "oklch(83.6% 0.02791 164.61)",
+          "oklch(95.0% 0.02791 164.61)"
         ]
       },
       "warning-surface-web": {
         "role": "tertiary",
-        "displayName": "Warning surface web",
-        "canonical": "#fff5db",
+        "displayName": "Pending surface web",
+        "canonical": "#d9f5f2",
         "tonalRamp": [
-          "oklch(15% 0.03564 89.44)",
-          "oklch(26.4% 0.03564 89.44)",
-          "oklch(37.9% 0.03564 89.44)",
-          "oklch(49.3% 0.03564 89.44)",
-          "oklch(60.7% 0.03564 89.44)",
-          "oklch(72.1% 0.03564 89.44)",
-          "oklch(83.6% 0.03564 89.44)",
-          "oklch(95% 0.03564 89.44)"
+          "oklch(15.0% 0.02947 188.85)",
+          "oklch(26.4% 0.02947 188.85)",
+          "oklch(37.9% 0.02947 188.85)",
+          "oklch(49.3% 0.02947 188.85)",
+          "oklch(60.7% 0.02947 188.85)",
+          "oklch(72.1% 0.02947 188.85)",
+          "oklch(83.6% 0.02947 188.85)",
+          "oklch(95.0% 0.02947 188.85)"
         ]
       },
       "warning-surface-mobile": {
         "role": "tertiary",
-        "displayName": "Warning surface mobile",
-        "canonical": "#fff5dc",
+        "displayName": "Pending surface mobile",
+        "canonical": "#edf2ef",
         "tonalRamp": [
-          "oklch(15% 0.03442 88.77)",
-          "oklch(26.4% 0.03442 88.77)",
-          "oklch(37.9% 0.03442 88.77)",
-          "oklch(49.3% 0.03442 88.77)",
-          "oklch(60.7% 0.03442 88.77)",
-          "oklch(72.1% 0.03442 88.77)",
-          "oklch(83.6% 0.03442 88.77)",
-          "oklch(95% 0.03442 88.77)"
+          "oklch(15.0% 0.00663 160.07)",
+          "oklch(26.4% 0.00663 160.07)",
+          "oklch(37.9% 0.00663 160.07)",
+          "oklch(49.3% 0.00663 160.07)",
+          "oklch(60.7% 0.00663 160.07)",
+          "oklch(72.1% 0.00663 160.07)",
+          "oklch(83.6% 0.00663 160.07)",
+          "oklch(95.0% 0.00663 160.07)"
         ]
       },
       "dark-canvas": {
@@ -384,14 +384,14 @@
         "displayName": "Dark canvas",
         "canonical": "#0e1713",
         "tonalRamp": [
-          "oklch(15% 0.01562 165.64)",
+          "oklch(15.0% 0.01562 165.64)",
           "oklch(26.4% 0.01562 165.64)",
           "oklch(37.9% 0.01562 165.64)",
           "oklch(49.3% 0.01562 165.64)",
           "oklch(60.7% 0.01562 165.64)",
           "oklch(72.1% 0.01562 165.64)",
           "oklch(83.6% 0.01562 165.64)",
-          "oklch(95% 0.01562 165.64)"
+          "oklch(95.0% 0.01562 165.64)"
         ]
       },
       "dark-surface": {
@@ -399,14 +399,14 @@
         "displayName": "Dark surface",
         "canonical": "#17231c",
         "tonalRamp": [
-          "oklch(15% 0.02150 158.71)",
+          "oklch(15.0% 0.02150 158.71)",
           "oklch(26.4% 0.02150 158.71)",
           "oklch(37.9% 0.02150 158.71)",
           "oklch(49.3% 0.02150 158.71)",
           "oklch(60.7% 0.02150 158.71)",
           "oklch(72.1% 0.02150 158.71)",
           "oklch(83.6% 0.02150 158.71)",
-          "oklch(95% 0.02150 158.71)"
+          "oklch(95.0% 0.02150 158.71)"
         ]
       },
       "dark-sidebar": {
@@ -414,14 +414,14 @@
         "displayName": "Dark sidebar",
         "canonical": "#111d17",
         "tonalRamp": [
-          "oklch(15% 0.02079 162.30)",
+          "oklch(15.0% 0.02079 162.30)",
           "oklch(26.4% 0.02079 162.30)",
           "oklch(37.9% 0.02079 162.30)",
           "oklch(49.3% 0.02079 162.30)",
           "oklch(60.7% 0.02079 162.30)",
           "oklch(72.1% 0.02079 162.30)",
           "oklch(83.6% 0.02079 162.30)",
-          "oklch(95% 0.02079 162.30)"
+          "oklch(95.0% 0.02079 162.30)"
         ]
       },
       "dark-soft": {
@@ -429,14 +429,14 @@
         "displayName": "Dark soft",
         "canonical": "#1d2d23",
         "tonalRamp": [
-          "oklch(15% 0.02829 156.62)",
+          "oklch(15.0% 0.02829 156.62)",
           "oklch(26.4% 0.02829 156.62)",
           "oklch(37.9% 0.02829 156.62)",
           "oklch(49.3% 0.02829 156.62)",
           "oklch(60.7% 0.02829 156.62)",
           "oklch(72.1% 0.02829 156.62)",
           "oklch(83.6% 0.02829 156.62)",
-          "oklch(95% 0.02829 156.62)"
+          "oklch(95.0% 0.02829 156.62)"
         ]
       },
       "dark-line": {
@@ -444,14 +444,14 @@
         "displayName": "Dark line",
         "canonical": "#2c3d32",
         "tonalRamp": [
-          "oklch(15% 0.02924 156.15)",
+          "oklch(15.0% 0.02924 156.15)",
           "oklch(26.4% 0.02924 156.15)",
           "oklch(37.9% 0.02924 156.15)",
           "oklch(49.3% 0.02924 156.15)",
           "oklch(60.7% 0.02924 156.15)",
           "oklch(72.1% 0.02924 156.15)",
           "oklch(83.6% 0.02924 156.15)",
-          "oklch(95% 0.02924 156.15)"
+          "oklch(95.0% 0.02924 156.15)"
         ]
       },
       "dark-border": {
@@ -459,14 +459,14 @@
         "displayName": "Dark border",
         "canonical": "#304338",
         "tonalRamp": [
-          "oklch(15% 0.03075 159.02)",
+          "oklch(15.0% 0.03075 159.02)",
           "oklch(26.4% 0.03075 159.02)",
           "oklch(37.9% 0.03075 159.02)",
           "oklch(49.3% 0.03075 159.02)",
           "oklch(60.7% 0.03075 159.02)",
           "oklch(72.1% 0.03075 159.02)",
           "oklch(83.6% 0.03075 159.02)",
-          "oklch(95% 0.03075 159.02)"
+          "oklch(95.0% 0.03075 159.02)"
         ]
       },
       "dark-muted": {
@@ -474,14 +474,14 @@
         "displayName": "Dark muted",
         "canonical": "#a5b8ab",
         "tonalRamp": [
-          "oklch(15% 0.02784 155.79)",
+          "oklch(15.0% 0.02784 155.79)",
           "oklch(26.4% 0.02784 155.79)",
           "oklch(37.9% 0.02784 155.79)",
           "oklch(49.3% 0.02784 155.79)",
           "oklch(60.7% 0.02784 155.79)",
           "oklch(72.1% 0.02784 155.79)",
           "oklch(83.6% 0.02784 155.79)",
-          "oklch(95% 0.02784 155.79)"
+          "oklch(95.0% 0.02784 155.79)"
         ]
       },
       "dark-ink": {
@@ -489,14 +489,14 @@
         "displayName": "Dark ink",
         "canonical": "#edf3ee",
         "tonalRamp": [
-          "oklch(15% 0.00917 150.69)",
+          "oklch(15.0% 0.00917 150.69)",
           "oklch(26.4% 0.00917 150.69)",
           "oklch(37.9% 0.00917 150.69)",
           "oklch(49.3% 0.00917 150.69)",
           "oklch(60.7% 0.00917 150.69)",
           "oklch(72.1% 0.00917 150.69)",
           "oklch(83.6% 0.00917 150.69)",
-          "oklch(95% 0.00917 150.69)"
+          "oklch(95.0% 0.00917 150.69)"
         ]
       },
       "dark-brand": {
@@ -504,14 +504,14 @@
         "displayName": "Dark brand",
         "canonical": "#e4f2e8",
         "tonalRamp": [
-          "oklch(15% 0.01988 154.90)",
+          "oklch(15.0% 0.01988 154.90)",
           "oklch(26.4% 0.01988 154.90)",
           "oklch(37.9% 0.01988 154.90)",
           "oklch(49.3% 0.01988 154.90)",
           "oklch(60.7% 0.01988 154.90)",
           "oklch(72.1% 0.01988 154.90)",
           "oklch(83.6% 0.01988 154.90)",
-          "oklch(95% 0.01988 154.90)"
+          "oklch(95.0% 0.01988 154.90)"
         ]
       },
       "dark-green": {
@@ -519,14 +519,14 @@
         "displayName": "Dark green",
         "canonical": "#75e7a8",
         "tonalRamp": [
-          "oklch(15% 0.13829 157.38)",
+          "oklch(15.0% 0.13829 157.38)",
           "oklch(26.4% 0.13829 157.38)",
           "oklch(37.9% 0.13829 157.38)",
           "oklch(49.3% 0.13829 157.38)",
           "oklch(60.7% 0.13829 157.38)",
           "oklch(72.1% 0.13829 157.38)",
           "oklch(83.6% 0.13829 157.38)",
-          "oklch(95% 0.13829 157.38)"
+          "oklch(95.0% 0.13829 157.38)"
         ]
       },
       "dark-mint": {
@@ -534,14 +534,14 @@
         "displayName": "Dark mint",
         "canonical": "#224c34",
         "tonalRamp": [
-          "oklch(15% 0.06307 156.53)",
+          "oklch(15.0% 0.06307 156.53)",
           "oklch(26.4% 0.06307 156.53)",
           "oklch(37.9% 0.06307 156.53)",
           "oklch(49.3% 0.06307 156.53)",
           "oklch(60.7% 0.06307 156.53)",
           "oklch(72.1% 0.06307 156.53)",
           "oklch(83.6% 0.06307 156.53)",
-          "oklch(95% 0.06307 156.53)"
+          "oklch(95.0% 0.06307 156.53)"
         ]
       },
       "dark-aqua": {
@@ -549,14 +549,14 @@
         "displayName": "Dark aqua",
         "canonical": "#17464b",
         "tonalRamp": [
-          "oklch(15% 0.05060 204.99)",
+          "oklch(15.0% 0.05060 204.99)",
           "oklch(26.4% 0.05060 204.99)",
           "oklch(37.9% 0.05060 204.99)",
           "oklch(49.3% 0.05060 204.99)",
           "oklch(60.7% 0.05060 204.99)",
           "oklch(72.1% 0.05060 204.99)",
           "oklch(83.6% 0.05060 204.99)",
-          "oklch(95% 0.05060 204.99)"
+          "oklch(95.0% 0.05060 204.99)"
         ]
       },
       "dark-aqua-ink": {
@@ -564,14 +564,14 @@
         "displayName": "Dark aqua ink",
         "canonical": "#adf5ef",
         "tonalRamp": [
-          "oklch(15% 0.07171 189.48)",
+          "oklch(15.0% 0.07171 189.48)",
           "oklch(26.4% 0.07171 189.48)",
           "oklch(37.9% 0.07171 189.48)",
           "oklch(49.3% 0.07171 189.48)",
           "oklch(60.7% 0.07171 189.48)",
           "oklch(72.1% 0.07171 189.48)",
           "oklch(83.6% 0.07171 189.48)",
-          "oklch(95% 0.07171 189.48)"
+          "oklch(95.0% 0.07171 189.48)"
         ]
       },
       "dark-danger": {
@@ -579,14 +579,14 @@
         "displayName": "Dark danger",
         "canonical": "#ffb1b1",
         "tonalRamp": [
-          "oklch(15% 0.09161 19.18)",
+          "oklch(15.0% 0.09161 19.18)",
           "oklch(26.4% 0.09161 19.18)",
           "oklch(37.9% 0.09161 19.18)",
           "oklch(49.3% 0.09161 19.18)",
           "oklch(60.7% 0.09161 19.18)",
           "oklch(72.1% 0.09161 19.18)",
           "oklch(83.6% 0.09161 19.18)",
-          "oklch(95% 0.09161 19.18)"
+          "oklch(95.0% 0.09161 19.18)"
         ]
       },
       "dark-danger-surface": {
@@ -594,44 +594,44 @@
         "displayName": "Dark danger surface",
         "canonical": "#452627",
         "tonalRamp": [
-          "oklch(15% 0.04701 18.07)",
+          "oklch(15.0% 0.04701 18.07)",
           "oklch(26.4% 0.04701 18.07)",
           "oklch(37.9% 0.04701 18.07)",
           "oklch(49.3% 0.04701 18.07)",
           "oklch(60.7% 0.04701 18.07)",
           "oklch(72.1% 0.04701 18.07)",
           "oklch(83.6% 0.04701 18.07)",
-          "oklch(95% 0.04701 18.07)"
+          "oklch(95.0% 0.04701 18.07)"
         ]
       },
       "dark-warning": {
         "role": "tertiary",
-        "displayName": "Dark warning",
-        "canonical": "#efd09b",
+        "displayName": "Dark pending",
+        "canonical": "#adf5ef",
         "tonalRamp": [
-          "oklch(15% 0.07686 80.77)",
-          "oklch(26.4% 0.07686 80.77)",
-          "oklch(37.9% 0.07686 80.77)",
-          "oklch(49.3% 0.07686 80.77)",
-          "oklch(60.7% 0.07686 80.77)",
-          "oklch(72.1% 0.07686 80.77)",
-          "oklch(83.6% 0.07686 80.77)",
-          "oklch(95% 0.07686 80.77)"
+          "oklch(15.0% 0.07171 189.48)",
+          "oklch(26.4% 0.07171 189.48)",
+          "oklch(37.9% 0.07171 189.48)",
+          "oklch(49.3% 0.07171 189.48)",
+          "oklch(60.7% 0.07171 189.48)",
+          "oklch(72.1% 0.07171 189.48)",
+          "oklch(83.6% 0.07171 189.48)",
+          "oklch(95.0% 0.07171 189.48)"
         ]
       },
       "dark-warning-surface": {
         "role": "tertiary",
-        "displayName": "Dark warning surface",
-        "canonical": "#3a301d",
+        "displayName": "Dark pending surface",
+        "canonical": "#17464b",
         "tonalRamp": [
-          "oklch(15% 0.03418 82.88)",
-          "oklch(26.4% 0.03418 82.88)",
-          "oklch(37.9% 0.03418 82.88)",
-          "oklch(49.3% 0.03418 82.88)",
-          "oklch(60.7% 0.03418 82.88)",
-          "oklch(72.1% 0.03418 82.88)",
-          "oklch(83.6% 0.03418 82.88)",
-          "oklch(95% 0.03418 82.88)"
+          "oklch(15.0% 0.05060 204.99)",
+          "oklch(26.4% 0.05060 204.99)",
+          "oklch(37.9% 0.05060 204.99)",
+          "oklch(49.3% 0.05060 204.99)",
+          "oklch(60.7% 0.05060 204.99)",
+          "oklch(72.1% 0.05060 204.99)",
+          "oklch(83.6% 0.05060 204.99)",
+          "oklch(95.0% 0.05060 204.99)"
         ]
       },
       "account-on-dark": {
@@ -639,14 +639,29 @@
         "displayName": "Account secondary on dark",
         "canonical": "#bacabf",
         "tonalRamp": [
-          "oklch(15% 0.02311 155.83)",
+          "oklch(15.0% 0.02311 155.83)",
           "oklch(26.4% 0.02311 155.83)",
           "oklch(37.9% 0.02311 155.83)",
           "oklch(49.3% 0.02311 155.83)",
           "oklch(60.7% 0.02311 155.83)",
           "oklch(72.1% 0.02311 155.83)",
           "oklch(83.6% 0.02311 155.83)",
-          "oklch(95% 0.02311 155.83)"
+          "oklch(95.0% 0.02311 155.83)"
+        ]
+      },
+      "muted-mobile-detail": {
+        "role": "neutral",
+        "displayName": "Muted mobile detail",
+        "canonical": "#6b736f",
+        "tonalRamp": [
+          "oklch(15.0% 0.01144 164.58)",
+          "oklch(26.4% 0.01144 164.58)",
+          "oklch(37.9% 0.01144 164.58)",
+          "oklch(49.3% 0.01144 164.58)",
+          "oklch(60.7% 0.01144 164.58)",
+          "oklch(72.1% 0.01144 164.58)",
+          "oklch(83.6% 0.01144 164.58)",
+          "oklch(95.0% 0.01144 164.58)"
         ]
       }
     },
@@ -677,7 +692,7 @@
       },
       "body-mobile": {
         "displayName": "Mobile body",
-        "purpose": "Primary native text."
+        "purpose": "Shared native text; DM Sans is loaded from assets/DMSans.ttf through the historical Inter alias."
       },
       "label-mobile": {
         "displayName": "Mobile label",
@@ -714,6 +729,14 @@
       "filter-label": {
         "displayName": "Filter label",
         "purpose": "Shared Orders, Offers and Messages filter pills."
+      },
+      "operating-title": {
+        "displayName": "Operating overview title",
+        "purpose": "Expanded operational heading within the base desktop page hierarchy."
+      },
+      "operating-metric": {
+        "displayName": "Operating ledger value",
+        "purpose": "Joined operational ledger values with tabular numerals and responsive reductions."
       }
     },
     "shadows": [
@@ -758,6 +781,36 @@
         "name": "reduced-motion",
         "value": "0.01ms",
         "purpose": "Web prefers-reduced-motion override for animations and transitions."
+      },
+      {
+        "name": "activity-curve-reveal",
+        "value": "activity-reveal 0.65s cubic-bezier(0.16, 1, 0.3, 1) both",
+        "purpose": "Web curve reveal; readings and controls remain visible."
+      },
+      {
+        "name": "aging-bar-update",
+        "value": "height 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Web aging-column change."
+      },
+      {
+        "name": "native-state-arrival",
+        "value": "translateY 6px to 0; 280ms; Easing.out(Easing.exp)",
+        "purpose": "Visible content moves into its new state; zero offset under reduced motion."
+      },
+      {
+        "name": "native-measured-progress",
+        "value": "420ms; Easing.out(Easing.exp)",
+        "purpose": "Finite clamped progressbar; immediate under reduced motion."
+      },
+      {
+        "name": "native-reduced-motion",
+        "value": "AccessibilityInfo.isReduceMotionEnabled + reduceMotionChanged",
+        "purpose": "Starts enabled until the device preference resolves; updates during the session."
+      },
+      {
+        "name": "illustrative-truck-replay",
+        "value": "7000ms phase; requestAnimationFrame",
+        "purpose": "Only enabled replay without reduced motion; illustrative depot positions, independent of observed GPS."
       }
     ],
     "breakpoints": [
@@ -776,6 +829,14 @@
       {
         "name": "phone-web",
         "value": "760px"
+      },
+      {
+        "name": "operating-compact",
+        "value": "1200px"
+      },
+      {
+        "name": "operating-phone",
+        "value": "700px"
       }
     ]
   },
@@ -842,7 +903,7 @@
       "refersTo": "category-beverage",
       "description": "HTML preview of the merchant shortcut using the original inline Figma asset.",
       "html": "<button class=\"ds-category-beverage\" aria-pressed=\"false\"><span class=\"ds-category-beverage-tile\"><svg aria-hidden=\"true\" preserveAspectRatio=\"none\" overflow=\"visible\" style=\"display: block;\" width=\"28\" height=\"28\" viewBox=\"0 0 30 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<g>\n<path d=\"M7.5 10L9.6875 25.35C9.7724 25.9507 10.0728 26.5 10.5328 26.8956C10.9928 27.2912 11.5809 27.506 12.1875 27.5H17.8625C18.4691 27.506 19.0572 27.2912 19.5172 26.8956C19.9772 26.5 20.2776 25.9507 20.3625 25.35L22.5 10\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke=\"#151917\"/>\n<path d=\"M6.25 10H23.75\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke=\"#151917\"/>\n<path d=\"M8.75 18.75C9.73968 18.3354 10.802 18.1219 11.875 18.1219C12.948 18.1219 14.0103 18.3354 15 18.75C15.9897 19.1646 17.052 19.3781 18.125 19.3781C19.198 19.3781 20.2603 19.1646 21.25 18.75\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke=\"#151917\"/>\n<path d=\"M15 10L16.25 2.5H18.75\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke=\"#151917\"/>\n</g>\n</svg></span><span class=\"ds-category-beverage-label\">Boissons</span></button>",
-      "css": ".ds-category-beverage{font-family:\"DM Sans\",sans-serif;width:81px;border:0;padding:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer}.ds-category-beverage-tile{width:76px;height:60px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:#d9eddf}.ds-category-beverage-label{font-size:11px;line-height:14px;text-align:center;min-height:28px;color:#6b736f;font-weight:500}.ds-category-beverage:hover{opacity:1}.ds-category-beverage:active{opacity:.6}.ds-category-beverage:focus-visible{outline:3px solid #087f4f;outline-offset:3px}.ds-category-beverage[aria-pressed=true] .ds-category-beverage-tile{background:#087f4f}.ds-category-beverage[aria-pressed=true] .ds-category-beverage-label{color:#087f4f;font-weight:700}"
+      "css": ".ds-category-beverage{font-family:\"DM Sans\",sans-serif;width:81px;border:0;padding:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer}.ds-category-beverage-tile{width:76px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:#d9eddf}.ds-category-beverage-label{font-size:11px;line-height:14px;text-align:center;min-height:28px;color:#5f6a63;font-weight:500}.ds-category-beverage:hover{opacity:1}.ds-category-beverage:active{opacity:.6}.ds-category-beverage:focus-visible{outline:3px solid #087f4f;outline-offset:3px}.ds-category-beverage[aria-pressed=true] .ds-category-beverage-tile{background:#d9eddf;border:1px solid #087f4f}.ds-category-beverage[aria-pressed=true] .ds-category-beverage-label{color:#087f4f;font-weight:700}"
     },
     {
       "name": "Fresh category",
@@ -850,7 +911,7 @@
       "refersTo": "category-fresh",
       "description": "HTML preview of the merchant shortcut using the original inline Figma asset.",
       "html": "<button class=\"ds-category-fresh\" aria-pressed=\"false\"><span class=\"ds-category-fresh-tile\"><svg aria-hidden=\"true\" preserveAspectRatio=\"none\" overflow=\"visible\" style=\"display: block;\" width=\"28\" height=\"28\" viewBox=\"0 0 30 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<g>\n<path d=\"M10 2.5H20\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke=\"#151917\"/>\n<path d=\"M11.25 2.5V5.98625C11.25 6.97349 10.9577 7.93862 10.41 8.76L9.59 9.99C9.04207 10.8117 8.74978 11.7773 8.75 12.765V25C8.75 25.663 9.01339 26.2989 9.48223 26.7678C9.95107 27.2366 10.587 27.5 11.25 27.5H18.75C19.413 27.5 20.0489 27.2366 20.5178 26.7678C20.9866 26.2989 21.25 25.663 21.25 25V12.7638C21.25 11.7765 20.9577 10.8114 20.41 9.99L19.59 8.76C19.0421 7.93827 18.7498 6.97266 18.75 5.985V2.5\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke=\"#151917\"/>\n<path d=\"M8.75 18.75C9.73972 18.3355 10.802 18.1221 11.875 18.1221C12.948 18.1221 14.0103 18.3355 15 18.75C15.9897 19.1646 17.052 19.3781 18.125 19.3781C19.198 19.3781 20.2603 19.1646 21.25 18.75\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke=\"#151917\"/>\n</g>\n</svg></span><span class=\"ds-category-fresh-label\">Lait & frais</span></button>",
-      "css": ".ds-category-fresh{font-family:\"DM Sans\",sans-serif;width:81px;border:0;padding:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer}.ds-category-fresh-tile{width:76px;height:60px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:#ccffff}.ds-category-fresh-label{font-size:11px;line-height:14px;text-align:center;min-height:28px;color:#6b736f;font-weight:500}.ds-category-fresh:hover{opacity:1}.ds-category-fresh:active{opacity:.6}.ds-category-fresh:focus-visible{outline:3px solid #087f4f;outline-offset:3px}.ds-category-fresh[aria-pressed=true] .ds-category-fresh-tile{background:#087f4f}.ds-category-fresh[aria-pressed=true] .ds-category-fresh-label{color:#087f4f;font-weight:700}"
+      "css": ".ds-category-fresh{font-family:\"DM Sans\",sans-serif;width:81px;border:0;padding:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer}.ds-category-fresh-tile{width:76px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:#ccffff}.ds-category-fresh-label{font-size:11px;line-height:14px;text-align:center;min-height:28px;color:#5f6a63;font-weight:500}.ds-category-fresh:hover{opacity:1}.ds-category-fresh:active{opacity:.6}.ds-category-fresh:focus-visible{outline:3px solid #087f4f;outline-offset:3px}.ds-category-fresh[aria-pressed=true] .ds-category-fresh-tile{background:#d9eddf;border:1px solid #087f4f}.ds-category-fresh[aria-pressed=true] .ds-category-fresh-label{color:#087f4f;font-weight:700}"
     },
     {
       "name": "Mobile ink button",
@@ -866,7 +927,7 @@
       "refersTo": "filter-pill",
       "description": "Orders, Offers and Messages filters: 36px visible surface within a 44px target; selected and unselected examples.",
       "html": "<div class=\"ds-filters\"><button class=\"ds-filter\" aria-pressed=\"true\"><span>Toutes</span></button><button class=\"ds-filter\" aria-pressed=\"false\"><span>Demandes</span></button></div>",
-      "css": ".ds-filters{display:flex;gap:8px;flex-wrap:wrap}.ds-filter{font-family:\"DM Sans\",sans-serif;min-height:44px;display:flex;align-items:center;justify-content:center;border:0;padding:0;background:transparent;cursor:pointer}.ds-filter span{min-height:36px;display:flex;align-items:center;border-radius:24px;padding:0 14px;background:#f4f6f4;color:#6b736f;font-size:13px;font-weight:600;line-height:18px}.ds-filter[aria-pressed=true] span{background:#151917;color:#fff}.ds-filter:hover{opacity:1}.ds-filter:active{opacity:.7}.ds-filter:focus-visible{outline:3px solid #087f4f;outline-offset:3px}"
+      "css": ".ds-filters{display:flex;gap:8px;flex-wrap:wrap}.ds-filter{font-family:\"DM Sans\",sans-serif;min-height:44px;display:flex;align-items:center;justify-content:center;border:0;padding:0;background:transparent;cursor:pointer}.ds-filter span{min-height:36px;display:flex;align-items:center;border-radius:24px;padding:0 14px;background:#f4f6f4;color:#5f6a63;font-size:13px;font-weight:600;line-height:18px}.ds-filter[aria-pressed=true] span{background:#151917;color:#fff}.ds-filter:hover{opacity:1}.ds-filter:active{opacity:.7}.ds-filter:focus-visible{outline:3px solid #087f4f;outline-offset:3px}"
     },
     {
       "name": "Merchant loyalty card",
@@ -879,18 +940,23 @@
   ],
   "narrative": {
     "northStar": "Toushir's connected wholesale workspace",
-    "overview": "The supplied Figma file `4IffhmSg2gHg82narIGfMF` remains the visual authority. This document records how that existing world is implemented in the wholesaler workspace and merchant/courier applications: original Toushir assets, DM Sans, white surfaces, mint selection, bright green actions and dense operational content. It extends that world; it does not establish a replacement identity. Preserve the proportions of the original mark and navigation assets, and the identity of sourced product packaging.\n\nThe atmosphere is quiet and practical. Headings orient the user, tonal panels group work, and restrained status colours make current state visible. A commercial action has an explicit label and outcome. Unknown prices remain unconfirmed, demo content stays labelled, and illustrations never masquerade as observations. The source evidence is `apps/web/src/style.css`, `apps/web/src/main.tsx`, `apps/mobile/src/theme.ts`, `apps/mobile/src/components.tsx`, `apps/mobile/src/Merchant.tsx`, `apps/mobile/src/MerchantAccount.tsx`, `apps/mobile/src/Engagement.tsx`, `apps/mobile/src/Driver.tsx` and the DM Sans font registration in `apps/mobile/App.tsx`.\n\nThis is a source-grounded system record. Exact acceptance of all 265 Figma states, native runtime acceptance and domain/security acceptance have separate evidence; they are not certified by this document.",
+    "overview": "The supplied Figma file `4IffhmSg2gHg82narIGfMF` remains the visual authority. This document records how that existing world is implemented in the wholesaler workspace and merchant/courier applications: original Toushir assets, DM Sans, white surfaces, mint selection, bright green actions and dense operational content. It extends that world; it does not establish a replacement identity. Preserve the proportions of the original mark and navigation assets, and the identity of sourced product packaging.\n\nThe atmosphere is practical and active. Headings orient the user, tonal panels group work, and restrained status colours make current state visible. Merchant discovery gives product packaging, prices and direct ordering a compact commerce hierarchy. Operational views connect current metrics to the next action; deliberate state and progress motion makes changes legible without hiding the content. A commercial action has an explicit label and outcome. Unknown prices remain unconfirmed, demo content stays labelled, and illustrations never masquerade as observations. The source evidence is `apps/web/src/style.css`, `apps/web/src/main.tsx`, `apps/mobile/src/theme.ts`, `apps/mobile/src/components.tsx`, `apps/mobile/src/Merchant.tsx`, `apps/mobile/src/MerchantAccount.tsx`, `apps/mobile/src/Engagement.tsx`, `apps/mobile/src/Driver.tsx`, `apps/mobile/src/MerchantDiscovery.tsx`, `apps/mobile/src/MerchantActivity.tsx`, `apps/mobile/src/Motion.tsx`, `apps/web/src/OperationsDashboard.tsx`, `apps/web/src/Warehouse.tsx` and the DM Sans font registration in `apps/mobile/App.tsx`.\n\nThis is a source-grounded system record of the explicitly approved white/ink/action-green extension, removal of beige/yellow treatments and purposeful motion. The expanded browser evidence is `.impeccable/review/expanded/packet.json`: 18 passed groups, no recorded failures or JavaScript errors, desktop 1600×1040, narrow wholesaler 390×844 and merchant 402×874. It records captures and browser behavior, not final design approval. Exact acceptance of all 265 Figma states, native runtime acceptance, external-provider success and domain/security acceptance have separate evidence; they are not certified by this document.",
     "keyCharacteristics": [
       "Original Figma identity and assets across three operational workspaces.",
       "White and soft neutral surfaces with mint selection and green actions.",
-      "Compact DM Sans hierarchy with tabular financial data on the web.",
-      "Flat content, gently curved containers and transient overlays.",
-      "Explicit commercial states, demo labels and observed-data boundaries."
+      "Compact DM Sans commerce hierarchy with tabular financial data on the web.",
+      "Flat content, gently curved containers, transient overlays and measured state motion.",
+      "Accessible chart exploration, explicit commercial states, demo labels and observed-data boundaries."
     ],
     "rules": [
       {
         "name": "The State Has a Label Rule",
         "body": "Colour supports a named state; it never supplies the only explanation of a commercial outcome.",
+        "section": "colors"
+      },
+      {
+        "name": "The Cool Pending Rule",
+        "body": "Use the source-defined aqua/slate pending pairs and a written state; beige and yellow are excluded by the approved system change.",
         "section": "colors"
       },
       {
@@ -909,6 +975,11 @@
         "section": "layout"
       },
       {
+        "name": "The Readable Without Motion Rule",
+        "body": "Text, numbers and operational status remain visible while animation is disabled, loading or complete.",
+        "section": "elevation"
+      },
+      {
         "name": "The Observed Position Rule",
         "body": "Keep illustrative depot geometry distinct from authorized GPS; never turn an animation, missing signal or stale observation into a live-location claim.",
         "section": "elevation"
@@ -923,14 +994,17 @@
       "**Do** preserve sourced product-photo identity, including an original grey field, until approved owner photography replaces it.",
       "**Do** preserve keyboard focus, native touch targets, safe areas and contained table scrolling.",
       "**Do** label demo content, unknown commercial values, stale GPS and illustrative depot geometry explicitly.",
-      "**Do** keep preparation, custody, receipt, payment and reconciliation visibly distinct."
+      "**Do** keep preparation, custody, receipt, payment and reconciliation visibly distinct.",
+      "**Do** expose chart values, source basis, period and current selection in text and accessible controls.",
+      "**Do** keep operational text visible and respect reduced motion for state arrivals, measured progress and truck replay."
     ],
     "donts": [
       "**Don't** replace unknown prices with zero or present catalogue provenance as an approved commercial offer.",
       "**Don't** invent pending earned points, turn order slips into fiscal-invoice claims or retouch source photography into a different product depiction.",
       "**Don't** imply that illustrative 3D or a missing/stale GPS signal is a live observed position.",
       "**Don't** spread overlay shadows across flat operational panels or replace original icons with decorative text glyphs.",
-      "**Don't** infer exact Figma-screen acceptance, native execution or domain/security acceptance from this design record."
+      "**Don't** reintroduce beige/yellow pending surfaces or turn legacy colour-alias names into new palette choices.",
+      "**Don't** infer exact Figma-screen acceptance, native execution, external-provider success or domain/security acceptance from this design record."
     ]
   }
 }

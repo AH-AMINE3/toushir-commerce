@@ -32,6 +32,16 @@ import { Messages, Supply } from "./Business";
 import { Campaigns, Rewards } from "./Marketing";
 import { Pricing, QuotePricingControls, FrozenPricing } from "./Pricing";
 import { Crm } from "./Crm";
+import OrderAmendments from "./OrderAmendments";
+import Recalls from "./Recalls";
+import {
+  Overview,
+  AnalyticsView,
+  OrderJourney,
+  WorkflowQueue,
+  allPages,
+  DownloadList,
+} from "./OperationsDashboard";
 import {
   startIdentityLogin,
   finishIdentityLogin,
@@ -49,6 +59,7 @@ const icons: Record<string, string> = {
   products: "2b41c.svg",
   pricing: "2b41c.svg",
   stock: "9e889.svg",
+  recalls: "9e889.svg",
   purchases: "c9f30.svg",
   merchants: "f1064.svg",
   crm: "f1064.svg",
@@ -79,6 +90,7 @@ const groups = [
       ["products", "Catalogue"],
       ["pricing", "Tarifs & conditions"],
       ["stock", "Stock & qualité"],
+      ["recalls", "Rappels de lots"],
       ["purchases", "Achats fournisseurs"],
     ],
   },
@@ -106,6 +118,7 @@ const staffRoutes: Record<string, string[]> = {
   WAREHOUSE: [
     "picking",
     "stock",
+    "recalls",
     "delivery",
     "purchases",
     "rewards",
@@ -242,71 +255,6 @@ function Empty({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
-function Chart({ points, field = "sales" }: { points: any[]; field?: string }) {
-  const vals = points.map((p) => Number(p[field] || 0));
-  const max = Math.max(...vals, 1);
-  const xy = vals.map(
-    (v, i) =>
-      `${30 + i * (720 / Math.max(vals.length - 1, 1))},${190 - (v / max) * 155}`,
-  );
-  return (
-    <div className="chart">
-      <svg
-        viewBox="0 0 780 225"
-        role="img"
-        aria-label="Évolution des ventes calculée sur les commandes réceptionnées"
-      >
-        {[0, 1, 2, 3].map((i) => (
-          <g key={i}>
-            <line
-              x1="30"
-              x2="750"
-              y1={35 + i * 52}
-              y2={35 + i * 52}
-              stroke="var(--line)"
-            />
-            <text x="4" y={39 + i * 52} fontSize="10" fill="var(--muted)">
-              {number(Math.round(max * (1 - i / 3)))}
-            </text>
-          </g>
-        ))}
-        <path
-          d={"M" + xy.join(" L") + " L750,190 L30,190 Z"}
-          fill="var(--mint)"
-          opacity=".55"
-        />
-        <polyline
-          points={xy.join(" ")}
-          fill="none"
-          stroke="var(--green)"
-          strokeWidth="3"
-          strokeLinejoin="round"
-        />
-        {points
-          .filter(
-            (_, i) =>
-              i === 0 ||
-              i === points.length - 1 ||
-              i === Math.floor(points.length / 2),
-          )
-          .map((p, i, arr) => (
-            <text
-              key={p.date}
-              x={30 + (i * 720) / Math.max(arr.length - 1, 1)}
-              y="218"
-              textAnchor={
-                i === 0 ? "start" : i === arr.length - 1 ? "end" : "middle"
-              }
-              fontSize="11"
-              fill="var(--muted)"
-            >
-              {date(p.date)}
-            </text>
-          ))}
-      </svg>
-    </div>
-  );
-}
 function Stat({
   label,
   value,
@@ -346,6 +294,7 @@ function App() {
     [filter, setFilter] = useState(""),
     [selected, setSelected] = useState<string | null>(null),
     [product, setProduct] = useState<any>(null),
+    [crmShop, setCrmShop] = useState(""),
     [login, setLogin] = useState({ email: "", password: "" });
   const navigate = (next: string, status = "") => {
     const target = session?.user.role === "SALES" ? "crm" : next;
@@ -369,7 +318,9 @@ function App() {
       const admin = session.user.role === "ADMIN";
       const [d, o, t] = await Promise.all([
         api(admin ? "/admin/dashboard?days=30" : "/operations/dashboard"),
-        api(admin ? "/admin/orders?pageSize=100" : "/operations/orders"),
+        admin
+          ? allPages("/admin/orders").then((items) => ({ items }))
+          : api("/operations/orders"),
         session.user.role === "FINANCE"
           ? Promise.resolve({ items: [] })
           : api("/operations/team"),
@@ -427,6 +378,7 @@ function App() {
         ...(workspaceToken ? { workspaceToken } : {}),
       });
       accept(s);
+      await post("/demo/showcase");
       await post("/admin/demo/scenario");
     } catch (e) {
       setError((e as Error).message);
@@ -451,7 +403,11 @@ function App() {
             "/mobile/" + (s.user.role === "DRIVER" ? "driver" : "merchant"),
           );
           return;
-        } else accept(s);
+        } else {
+          if (s.workspace.isDemo && s.workspace.canSwitchRole)
+            await post("/demo/showcase");
+          accept(s);
+        }
       } catch {
         if (sessionStorage.getItem("toushir-web-personal-account") === "true") {
           setToken("");
@@ -776,6 +732,7 @@ function App() {
                     delivery: "La livraison, sous contrôle.",
                     products: "Un catalogue clair, jusqu’au carton.",
                     stock: "Le bon stock. Au bon endroit.",
+                    recalls: "Un lot à risque. Un périmètre traçable.",
                     merchants: "Vos magasins partenaires.",
                     crm: "Le suivi commercial qui fait avancer.",
                     finance: "Les règlements, sans ambiguïté.",
@@ -850,205 +807,15 @@ function App() {
             ) : (
               <>
                 {route === "overview" && (
-                  <>
-                    <div className="stats">
-                      <Stat
-                        label="Ventes réceptionnées · 30 jours"
-                        value={money(summary.sales)}
-                        detail={`${summary.deliveredOrders} réceptions enregistrées`}
-                        onClick={() => navigate("analytics")}
-                      />
-                      <Stat
-                        label="Demandes à traiter"
-                        value={number(summary.requests)}
-                        detail={`${summary.quotes} offres attendent un accord`}
-                        onClick={() => navigate("orders", "REQUESTED")}
-                      />
-                      <Stat
-                        label="Commandes en cours"
-                        value={number(summary.activeOrders)}
-                        detail="Confirmées, préparées ou en livraison"
-                        onClick={() => navigate("picking")}
-                      />
-                      <Stat
-                        label="Encaissements · 30 jours"
-                        value={money(summary.collected)}
-                        detail="Paiements enregistrés moins remboursements"
-                        onClick={() => navigate("finance")}
-                      />
-                    </div>
-                    <div className="overview-grid">
-                      <section className="panel sales-panel">
-                        <div className="panel-heading">
-                          <div>
-                            <h2>Les ventes au fil des jours</h2>
-                            <p>Montants des commandes réceptionnées · DA</p>
-                          </div>
-                          <span className="badge neutral">
-                            30 derniers jours
-                          </span>
-                        </div>
-                        <Chart points={dashboard.daily} />
-                        <div className="chart-legend">
-                          <i />
-                          Marchandises acceptées et frais de livraison
-                          contractuels
-                        </div>
-                      </section>
-                      <section className="panel priorities">
-                        <h2>À traiter maintenant</h2>
-                        <p>Une décision, un responsable, une suite.</p>
-                        {[
-                          [
-                            summary.requests,
-                            "Commandes à chiffrer",
-                            "Vérifier les lignes et proposer un devis",
-                            "orders",
-                            "REQUESTED",
-                          ],
-                          [
-                            summary.quotes,
-                            "Réponses marchands",
-                            "La version proposée attend leur accord",
-                            "orders",
-                            "QUOTED",
-                          ],
-                          [
-                            summary.pendingMerchants,
-                            "Magasins à vérifier",
-                            "Autoriser leur première demande",
-                            "merchants",
-                            "PENDING",
-                          ],
-                          [
-                            summary.lowStock,
-                            "Références sous le seuil",
-                            "Contrôler les disponibilités publiées",
-                            "stock",
-                            "",
-                          ],
-                        ].map(([n, title, sub, r, f], i) => (
-                          <button
-                            className="priority"
-                            key={String(title)}
-                            onClick={() => navigate(String(r), String(f))}
-                          >
-                            <b
-                              className={["mint", "yellow", "cyan", "pink"][i]}
-                            >
-                              {n}
-                            </b>
-                            <span>
-                              <strong>{title}</strong>
-                              <small>{sub}</small>
-                            </span>
-                            <svg
-                              width="20"
-                              height="20"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="1.75"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              aria-hidden="true"
-                            >
-                              <path d="m9 6 6 6-6 6" />
-                            </svg>
-                          </button>
-                        ))}
-                      </section>
-                      <section className="panel">
-                        <h2>{orders.length} dossiers, des états distincts</h2>
-                        <p>Décision commerciale, remise et paiement.</p>
-                        <div className="stacked-bar">
-                          {counts.map((s: any, i: number) => (
-                            <span
-                              key={s.status}
-                              style={{
-                                flex: s.count,
-                                background: [
-                                  "#087f4f",
-                                  "#d9eddf",
-                                  "#0f2c2c",
-                                  "#06dd81",
-                                  "#bf9352",
-                                  "#a9c6b7",
-                                ][i % 6],
-                              }}
-                            />
-                          ))}
-                        </div>
-                        <div className="status-legend">
-                          {counts.map((s: any) => (
-                            <button
-                              key={s.status}
-                              onClick={() => navigate("orders", s.status)}
-                            >
-                              <span>{labels[s.status] || s.status}</span>
-                              <strong>{s.count}</strong>
-                            </button>
-                          ))}
-                        </div>
-                      </section>
-                      <section className="panel">
-                        <h2>Ce qui arrive de l’app</h2>
-                        <p>Même dossier. Même historique.</p>
-                        <div className="event-list">
-                          {dashboard.recentOrders.slice(0, 4).map((o: any) => (
-                            <button
-                              key={o.id}
-                              onClick={() => setSelected(o.id)}
-                            >
-                              <time>
-                                {new Date(o.createdAt).toLocaleTimeString(
-                                  "fr-DZ",
-                                  {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                    hourCycle: "h23",
-                                  },
-                                )}
-                              </time>
-                              <span>
-                                <strong>{o.number}</strong>
-                                <small>
-                                  {o.shopName} · {money(o.total)}
-                                </small>
-                              </span>
-                            </button>
-                          ))}
-                        </div>
-                      </section>
-                      <section className="panel route-preview">
-                        <h2>Du dépôt au commerce</h2>
-                        <p>
-                          {
-                            orders.filter(
-                              (o) => o.status === "OUT_FOR_DELIVERY",
-                            ).length
-                          }{" "}
-                          commandes en cours de livraison
-                        </p>
-                        <div className="route-line">
-                          <i />
-                          <span />
-                          <i />
-                          <span />
-                          <i />
-                          <span />
-                          <i />
-                        </div>
-                        <p>
-                          Préparation, garde, position et réception restent
-                          traçables.
-                        </p>
-                        <Button secondary onClick={() => navigate("delivery")}>
-                          Ouvrir le centre de livraison
-                        </Button>
-                      </section>
-                    </div>
-                  </>
+                  <Overview
+                    dashboard={dashboard}
+                    orders={orders}
+                    navigate={navigate}
+                    open={setSelected}
+                  />
+                )}
+                {route === "orders" && (
+                  <WorkflowQueue orders={orders} open={setSelected} />
                 )}
                 {["orders", "picking", "finance"].includes(route) && (
                   <>
@@ -1135,7 +902,15 @@ function App() {
                         orders={orders.filter(
                           (o) =>
                             (!query ||
-                              (o.number + " " + o.merchant.shopName)
+                              (
+                                o.number +
+                                " " +
+                                o.merchant.shopName +
+                                " " +
+                                (o.merchant.phone || "") +
+                                " " +
+                                (o.region || o.address?.wilaya || "")
+                              )
                                 .toLowerCase()
                                 .includes(query.toLowerCase())) &&
                             (!filter ||
@@ -1192,16 +967,22 @@ function App() {
                 {route === "stock" && (
                   <LotInventory revision={revision} run={run} />
                 )}
+                {route === "recalls" && <Recalls role={session.user.role} revision={revision} />}
                 {route === "merchants" && (
                   <Merchants
                     query={query}
                     revision={revision}
                     run={run}
                     busy={busy}
+                    onCrm={(id) => {
+                      setCrmShop(id);
+                      navigate("crm");
+                    }}
                   />
                 )}
                 {route === "crm" && (
                   <Crm
+                    initialShopId={crmShop}
                     revision={revision}
                     session={session}
                     query={query}
@@ -1211,9 +992,16 @@ function App() {
                     }}
                   />
                 )}
-                {route === "analytics" && <Analytics revision={revision} />}
+                {route === "analytics" && (
+                  <AnalyticsView
+                    revision={revision}
+                    navigate={navigate}
+                    open={setSelected}
+                  />
+                )}
                 {route === "messages" && (
                   <Messages
+                    onOrder={setSelected}
                     revision={revision}
                     run={run}
                     team={team}
@@ -1678,6 +1466,7 @@ function OrderPanel({
               <span>Reste à encaisser : {money(o.balance.remaining)}</span>
             </div>
           </div>
+          <OrderJourney order={o} assignment={tracking?.assignment} />
           <div className="tabs" role="tablist">
             {[
               ["detail", "Commande"],
@@ -1745,6 +1534,15 @@ function OrderPanel({
                 <OrderPromotions order={o} role={role} run={run} busy={busy} />
                 {role === "ADMIN" && (
                   <FrozenPricing order={o} revision={revision} />
+                )}
+                {role === "ADMIN" && (
+                  <OrderAmendments
+                    order={o}
+                    revision={revision}
+                    role={role}
+                    run={run}
+                    busy={busy}
+                  />
                 )}
                 {o.note && (
                   <div className="note">
@@ -2713,27 +2511,50 @@ function Merchants({
   revision,
   run,
   busy,
+  onCrm,
 }: {
   query: string;
   revision: number;
   run: (f: () => Promise<unknown>, m?: string) => Promise<void>;
   busy: boolean;
+  onCrm: (id: string) => void;
 }) {
+  const [search, setSearch] = useState(""),
+    [region, setRegion] = useState(""),
+    [status, setStatus] = useState("");
   const [data, setData] = useState<any>(null),
     [invites, setInvites] = useState<any[]>([]),
     [link, setLink] = useState(""),
     [error, setError] = useState("");
   useEffect(() => {
     Promise.all([
-      api("/admin/merchants?pageSize=100&q=" + encodeURIComponent(query)),
+      allPages("/admin/merchants").then((items) => ({ items })),
       api("/admin/demo/invitations").catch(() => ({ items: [] })),
     ])
       .then(([d, i]) => {
         setData(d);
+        setError("");
         setInvites(i.items);
       })
       .catch((e) => setError(e.message));
-  }, [query, revision]);
+  }, [revision]);
+  const regions = [
+    ...new Set<string>(
+      (data?.items || []).map((m: any) => m.region).filter(Boolean),
+    ),
+  ].sort();
+  const visible = (data?.items || []).filter(
+    (m: any) =>
+      (!region || m.region === region) &&
+      (!status || m.approvalStatus === status) &&
+      [query, search].every(
+        (q) =>
+          !q ||
+          `${m.shopName} ${m.name} ${m.phone} ${m.email} ${m.region || ""} ${m.commune || ""}`
+            .toLocaleLowerCase("fr")
+            .includes(q.toLocaleLowerCase("fr")),
+      ),
+  );
   return (
     <>
       <section className="panel">
@@ -2742,6 +2563,57 @@ function Merchants({
           L’approbation autorise la prise de commande. Chaque magasin ne voit
           que ses propres dossiers.
         </p>
+        <div className="directory-toolbar">
+          <label>
+            Rechercher un magasin
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Nom, téléphone, commune…"
+              aria-label="Rechercher un magasin par nom ou téléphone"
+            />
+          </label>
+          <label>
+            Région
+            <select
+              value={region}
+              onChange={(e) => setRegion(e.target.value)}
+              aria-label="Région des magasins"
+            >
+              <option value="">Toutes les régions</option>
+              {regions.map((r) => (
+                <option key={r}>{r}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Vérification
+            <select value={status} onChange={(e) => setStatus(e.target.value)}>
+              <option value="">Tous les statuts</option>
+              <option value="APPROVED">Approuvé</option>
+              <option value="PENDING">À vérifier</option>
+              <option value="SUSPENDED">Suspendu</option>
+            </select>
+          </label>
+          <DownloadList rows={visible} />
+        </div>
+        <div className="directory-count">
+          <span>
+            <strong>{visible.length}</strong>magasins affichés
+          </span>
+          <span>
+            <strong>{regions.length}</strong>régions renseignées
+          </span>
+          <span>
+            <strong>
+              {
+                visible.filter((m: any) => m.approvalStatus === "PENDING")
+                  .length
+              }
+            </strong>
+            à vérifier
+          </span>
+        </div>
         {error && <div className="error-banner">{error}</div>}
         {data ? (
           <div className="table-wrap module-section">
@@ -2757,10 +2629,15 @@ function Merchants({
                 </tr>
               </thead>
               <tbody>
-                {data.items.map((m: any) => (
+                {visible.map((m: any) => (
                   <tr key={m.id}>
                     <td>
                       <strong>{m.shopName}</strong>
+                      <span className="directory-region">
+                        {m.region
+                          ? `${m.region}${m.commune ? " · " + m.commune : ""}`
+                          : "Région non renseignée"}
+                      </span>
                       <small>Créé le {date(m.createdAt)}</small>
                     </td>
                     <td>
@@ -2792,11 +2669,22 @@ function Merchants({
                         <option value="APPROVED">Approuvé</option>
                         <option value="SUSPENDED">Suspendu</option>
                       </select>
+                      <div className="directory-actions">
+                        <button
+                          className="text-action"
+                          onClick={() => onCrm(m.id)}
+                        >
+                          Ouvrir le dossier CRM
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            {!visible.length && (
+              <Empty>Aucun magasin ne correspond à ces filtres.</Empty>
+            )}
           </div>
         ) : (
           <Empty>Chargement des commerces…</Empty>
@@ -2916,126 +2804,6 @@ function Merchants({
           </div>
         </section>
       </div>
-    </>
-  );
-}
-function Analytics({ revision }: { revision: number }) {
-  const [days, setDays] = useState(30),
-    [data, setData] = useState<any>(null),
-    [error, setError] = useState("");
-  useEffect(() => {
-    api("/admin/analytics?days=" + days)
-      .then(setData)
-      .catch((e) => setError(e.message));
-  }, [days, revision]);
-  return (
-    <>
-      {error && <div className="error-banner">{error}</div>}
-      <div className="panel-heading">
-        <span />
-        <select
-          aria-label="Période d’analyse"
-          value={days}
-          onChange={(e) => setDays(Number(e.target.value))}
-        >
-          <option value={7}>7 derniers jours</option>
-          <option value={30}>30 derniers jours</option>
-          <option value={90}>90 derniers jours</option>
-        </select>
-      </div>
-      {data ? (
-        <>
-          <div className="stats">
-            {[
-              ["revenue", "Ventes réceptionnées"],
-              ["collected", "Encaissements nets"],
-              ["orders", "Demandes reçues"],
-              ["customers", "Commerces actifs"],
-            ].map(([k, l]) => (
-              <Stat
-                key={k}
-                label={l}
-                value={
-                  ["revenue", "collected"].includes(k)
-                    ? money(data.metrics[k].value)
-                    : number(data.metrics[k].value)
-                }
-                detail={
-                  data.metrics[k].changePercent == null
-                    ? "Période précédente sans base de comparaison"
-                    : `${data.metrics[k].changePercent > 0 ? "+" : ""}${data.metrics[k].changePercent} % vs période précédente`
-                }
-              />
-            ))}
-          </div>
-          <section className="panel">
-            <div className="panel-heading">
-              <div>
-                <h2>Ventes et réceptions</h2>
-                <p>
-                  {date(data.period.from)} — {date(data.period.to)}
-                </p>
-              </div>
-              <span className="badge neutral">Heure d’Alger</span>
-            </div>
-            <Chart points={data.daily} field="revenue" />
-            <p className="metrics-note">{data.basis.revenue}</p>
-          </section>
-          <div className="split-panels module-section">
-            <section className="panel">
-              <h2>Produits réceptionnés</h2>
-              <div className="bar-list">
-                {data.topProducts.map((p: any) => (
-                  <div key={p.productId}>
-                    <div>
-                      <span>{p.name}</span>
-                      <strong>{money(p.revenue)}</strong>
-                    </div>
-                    <progress
-                      max={Math.max(
-                        ...data.topProducts.map((x: any) => x.revenue),
-                        1,
-                      )}
-                      value={p.revenue}
-                    />
-                    <small>{p.quantity} unités acceptées</small>
-                  </div>
-                ))}
-              </div>
-              {data.topProducts.length === 0 && (
-                <Empty>Les produits apparaîtront après leur réception.</Empty>
-              )}
-            </section>
-            <section className="panel">
-              <h2>Soldes à encaisser</h2>
-              <div className="bar-list">
-                {data.aging.map((a: any) => (
-                  <div key={a.label}>
-                    <div>
-                      <span>{a.label}</span>
-                      <strong>{money(a.amount)}</strong>
-                    </div>
-                    <progress
-                      max={Math.max(...data.aging.map((x: any) => x.amount), 1)}
-                      value={a.amount}
-                    />
-                  </div>
-                ))}
-              </div>
-              <p className="metrics-note">{data.basis.aging}</p>
-              <div className="health-chip">
-                <strong>{money(data.operations.unreconciled)}</strong>
-                <span>écritures non rapprochées</span>
-              </div>
-            </section>
-          </div>
-        </>
-      ) : (
-        <div className="boot-inline">
-          <span className="spinner" />
-          Calcul des indicateurs…
-        </div>
-      )}
     </>
   );
 }

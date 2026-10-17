@@ -39,7 +39,7 @@ jobs:
           TOUSHIR_WAREHOUSE_RESULTS: warehouse-verification.json
         run: |
           # A fresh process per suite preserves public demo rate limits.
-          for suite in api operations routes oidc engagement warehouse supplier-documents pricing shop-members crm; do
+          for suite in api operations routes oidc engagement warehouse supplier-documents pricing shop-members crm journey-matrix journey-enhancements amendment-audit recalls recall-independent showcase; do
             if [ "$suite" = pricing ]; then export Wholesale__DeliveryFee=0; else unset Wholesale__DeliveryFee; fi
             export DataPath="$RUNNER_TEMP/toushir-$suite"
             dotnet run --project backend/Toushir.Wholesale.csproj --no-build --urls "$API_URL" > "$RUNNER_TEMP/api-$suite.log" 2>&1 &
@@ -54,6 +54,9 @@ jobs:
               python3 scripts/test-engagement.py "$API_URL"
             elif [ "$suite" = pricing ]; then
               python3 scripts/test-pricing.py "$API_URL"
+            elif [ "$suite" = journey-matrix ] || [ "$suite" = journey-enhancements ] || [ "$suite" = amendment-audit ] || [ "$suite" = recalls ] || [ "$suite" = recall-independent ] || [ "$suite" = showcase ]; then
+              mkdir -p verification/ci
+              TOUSHIR_TEST_RESULTS="verification/ci/$suite.json" TOUSHIR_SHOWCASE_RESULTS="verification/ci/$suite.json" TOUSHIR_RECALL_RESULTS="verification/ci/$suite.json" python3 "scripts/test-$suite.py" "$API_URL"
             elif [ "$suite" = crm ]; then
               python3 scripts/test-crm.py "$API_URL"
             elif [ "$suite" = shop-members ]; then
@@ -88,7 +91,7 @@ jobs:
           ASPNETCORE_ENVIRONMENT: Development
           WEB_URL: http://127.0.0.1:5860
         run: |
-          for suite in smoke identity business warehouse supplier mobile pricing members crm; do
+          for suite in smoke identity business warehouse supplier mobile pricing members crm expanded; do
             if [ "$suite" = pricing ]; then export Wholesale__DeliveryFee=0; else unset Wholesale__DeliveryFee; fi
             export DataPath="$RUNNER_TEMP/browser-$suite"
             dotnet run --project backend/Toushir.Wholesale.csproj --no-build --urls "$WEB_URL" > "$RUNNER_TEMP/browser-$suite.log" 2>&1 &
@@ -98,7 +101,12 @@ jobs:
               if curl --fail --silent "$WEB_URL/api/health" > /dev/null; then break; fi
               sleep 1
             done
-            npm --prefix tests/browser run "$suite"
+            if [ "$suite" = expanded ]; then
+              PRIVATE_FIXTURE="$RUNNER_TEMP/expanded-browser-private.json" REPORT_DIR=reports/expanded npm --prefix tests/browser run expanded
+              rm -f "$RUNNER_TEMP/expanded-browser-private.json"
+            else
+              npm --prefix tests/browser run "$suite"
+            fi
             kill "$API_PID"
             wait "$API_PID" || true
           done
@@ -115,3 +123,5 @@ jobs:
             shop-members-verification.json
             crm-verification.json
             tests/browser/reports/
+            verification/ci/
+            verification/journey/

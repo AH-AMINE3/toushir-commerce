@@ -49,12 +49,15 @@ public sealed class CrmService(WholesaleDb db, OrderService orders)
             && (actor.Role == "ADMIN" || db.CrmPortfolios.Any(p => p.WorkspaceId == actor.WorkspaceId && p.ShopId == x.Id && p.AdvisorId == actor.Id)))
             .Take(500).ToListAsync();
         var shopIds = shops.Select(x => x.Id).ToList();
+        var locations = (await db.Addresses.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId && shopIds.Contains(x.AccountId)).ToListAsync())
+            .GroupBy(x => x.AccountId).ToDictionary(g => g.Key, g => g.OrderByDescending(x => x.IsDefault).ThenBy(x => x.Id).First());
         var people = await db.Accounts.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId
             && (x.Role == "ADMIN" || x.Role == "SALES") && x.ApprovalStatus == "APPROVED"
             && (actor.Role == "ADMIN" || x.Id == actor.Id)).ToListAsync();
         var tasks = await db.CrmTasks.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId && shopIds.Contains(x.ShopId) && x.Status == "OPEN").ToListAsync();
         return new { canAssign = actor.IsAdmin, shops = shops.OrderBy(x => x.ShopName).Select(x => new {
             x.Id, name = x.ShopName, contact = x.Name, x.Phone, x.ApprovalStatus,
+            region = locations.GetValueOrDefault(x.Id)?.Wilaya ?? "", commune = locations.GetValueOrDefault(x.Id)?.Commune ?? "",
             portfolio = portfolios.Where(p => p.ShopId == x.Id).Select(p => new { p.AdvisorId, p.Version }).SingleOrDefault() }),
             advisors = people.Select(x => new { x.Id, x.Name, x.Role }),
             tasks = tasks.OrderBy(x => x.DueAt).Take(100), totalOpenTasks = tasks.Count,
@@ -64,6 +67,7 @@ public sealed class CrmService(WholesaleDb db, OrderService orders)
     {
         var portfolio = await StaffShop(actor, shopId);
         var shop = await Shop(actor.WorkspaceId, shopId);
+        var location = (await db.Addresses.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId && x.AccountId == shopId).ToListAsync()).OrderByDescending(x => x.IsDefault).ThenBy(x => x.Id).FirstOrDefault();
         var advisor = portfolio == null ? null : await db.Accounts.AsNoTracking().FirstOrDefaultAsync(x => x.Id == portfolio.AdvisorId && x.WorkspaceId == actor.WorkspaceId);
         var tasks = await db.CrmTasks.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId && x.ShopId == shopId).ToListAsync();
         var contacts = await db.CrmContacts.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId && x.ShopId == shopId).ToListAsync();
@@ -72,7 +76,7 @@ public sealed class CrmService(WholesaleDb db, OrderService orders)
         var events = await db.CrmEvents.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId && x.ShopId == shopId)
             .OrderByDescending(x => x.UtcTicks).Take(80).ToListAsync();
         var requests = await db.Orders.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId && x.AccountId == shopId).ToListAsync();
-        return new { shop = new { shop.Id, name = shop.ShopName, contact = shop.Name, shop.Phone, shop.ApprovalStatus },
+        return new { shop = new { shop.Id, name = shop.ShopName, contact = shop.Name, shop.Phone, shop.ApprovalStatus, region = location?.Wilaya ?? "", commune = location?.Commune ?? "" },
             portfolio = portfolio == null ? null : new { portfolio.AdvisorId, advisorName = advisor?.Name, portfolio.Version },
             tasks = tasks.OrderBy(x => x.Status != "OPEN").ThenBy(x => x.DueAt).Take(100),
             contacts = contacts.OrderByDescending(x => x.RecordedAt).Take(50).Select(x => new { x.Id, x.WorkspaceId, x.ShopId, x.TaskId, x.Kind, x.Outcome, x.Note, x.NextAction, x.ObservedAt, x.ActorId, actorName = authors.GetValueOrDefault(x.ActorId), x.RecordedAt }), events,

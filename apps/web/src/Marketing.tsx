@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { api, post, patch, key, date, money } from "./api";
 import type { Session } from "./api";
+import { allPages, ShopAudience } from "./OperationsDashboard";
 import { approve, ProductPicker } from "./Business";
 import type { Run } from "./Business";
 const kindLabel: Record<string, string> = {
@@ -26,13 +27,16 @@ export function Campaigns({
     [kind, setKind] = useState("DISCOUNT"),
     [active, setActive] = useState<any>(null),
     [preview, setPreview] = useState<any>(null),
-    [error, setError] = useState("");
+    [error, setError] = useState(""),
+    [audienceMode, setAudienceMode] = useState("ALL"),
+    [audience, setAudience] = useState<string[]>([]),
+    [audienceError, setAudienceError] = useState("");
   useEffect(() => {
     Promise.all([
       api("/admin/campaigns"),
       api("/rewards"),
       session.user.role === "ADMIN"
-        ? api("/admin/merchants?pageSize=100")
+        ? allPages("/admin/merchants").then((items) => ({ items }))
         : Promise.resolve({
             items: [
               ...new Map(
@@ -101,9 +105,18 @@ export function Campaigns({
             className="action-form"
             onSubmit={(e) => {
               e.preventDefault();
+              if (audienceMode === "SELECTED" && !audience.length) {
+                setAudienceError(
+                  "Choisissez au moins un magasin pour cette audience.",
+                );
+                return;
+              }
+              setAudienceError("");
               const d = new FormData(e.currentTarget);
               void run(async () => {
                 const c = await post("/admin/campaigns", {
+                  targetMerchantIds:
+                    audienceMode === "SELECTED" ? audience : [],
                   title: d.get("title"),
                   description: d.get("description"),
                   kind,
@@ -149,6 +162,48 @@ export function Campaigns({
               Conditions à présenter au commerçant
               <textarea name="description" required maxLength={3000} />
             </label>
+            <div
+              className="audience-mode"
+              role="group"
+              aria-label="Audience de la campagne"
+            >
+              <label>
+                <input
+                  type="radio"
+                  name="audienceMode"
+                  checked={audienceMode === "ALL"}
+                  onChange={() => setAudienceMode("ALL")}
+                />
+                Tous les magasins de l’espace
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="audienceMode"
+                  checked={audienceMode === "SELECTED"}
+                  onChange={() => setAudienceMode("SELECTED")}
+                />
+                Liste de magasins ciblés
+              </label>
+            </div>
+            {audienceMode === "SELECTED" && (
+              <>
+                <ShopAudience
+                  shops={shops}
+                  selected={audience}
+                  onChange={(ids) => {
+                    setAudience(ids);
+                    setAudienceError("");
+                  }}
+                  title="Les magasins de cette campagne"
+                />
+                {audienceError && (
+                  <div className="error-banner" role="alert">
+                    {audienceError}
+                  </div>
+                )}
+              </>
+            )}
             <ProductPicker />
             <div className="form-grid">
               <label>
@@ -340,6 +395,14 @@ export function Campaigns({
               <dd>{kindLabel[active.kind]}</dd>
             </div>
             <div>
+              <dt>Audience</dt>
+              <dd>
+                {active.targetMerchantIds?.length
+                  ? `${active.targetMerchantIds.length} magasins ciblés`
+                  : "Tous les magasins de l’espace"}
+              </dd>
+            </div>
+            <div>
               <dt>Seuil d’éligibilité</dt>
               <dd>{active.minimumQuantity} unités</dd>
             </div>
@@ -354,6 +417,27 @@ export function Campaigns({
               </dd>
             </div>
           </dl>
+          {active.targetMerchantIds?.length > 0 && (
+            <details className="module-section">
+              <summary>Voir les magasins ciblés</summary>
+              <div className="simple-list">
+                {active.targetMerchantIds.map((id: string) => (
+                  <div key={id}>
+                    <span>
+                      <strong>
+                        {shops.find((shop) => shop.id === id)?.shopName ||
+                          "Magasin ciblé"}
+                      </strong>
+                      <small>
+                        {shops.find((shop) => shop.id === id)?.region ||
+                          "Région non renseignée"}
+                      </small>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </details>
+          )}
           {active.status === "DRAFT" ? (
             <div className="note">
               <strong>Relecture indépendante</strong>
@@ -490,7 +574,7 @@ export function Rewards({
         : api("/rewards"),
       api("/gift-requests"),
       session.user.role === "ADMIN"
-        ? api("/admin/merchants?pageSize=100")
+        ? allPages("/admin/merchants").then((items) => ({ items }))
         : Promise.resolve({
             items: [
               ...new Map(

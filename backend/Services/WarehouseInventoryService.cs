@@ -30,6 +30,7 @@ public sealed partial class WarehouseService
         });
         if (await Replay(a, input.IdempotencyKey, hash) != null)
             return await Lots(a, lot.ProductId);
+        await RecallGuard.AssertLot(db, a.WorkspaceId, lot);
         Check.That(lot.Version == input.Version, "Lot modifié depuis le comptage.", "VERSION_CONFLICT", 409);
         Check.That(input.Quantity >= lot.Reserved && input.Quantity <= 1000000000, "Le comptage ne peut pas consommer une réserve existante.");
         Check.That(lot.ExpiresAt == null || lot.ExpiresAt > DateTimeOffset.UtcNow || input.Quantity == 0, "Isolez le lot expiré; ne le déclarez pas vendable.");
@@ -67,6 +68,7 @@ public sealed partial class WarehouseService
         });
         if (await Replay(a, input.IdempotencyKey, hash) != null)
             return await Lots(a, lot.ProductId);
+        await RecallGuard.AssertLot(db, a.WorkspaceId, lot);
         Check.That(lot.Version == input.Version, "La version du lot a changé.", "VERSION_CONFLICT", 409);
         Check.That(input.Quantity > 0 && disposition is "QUARANTINE" or "RELEASE" or "DESTROY", "Décision qualité invalide.");
         var q = input.Quantity;
@@ -123,6 +125,8 @@ public sealed partial class WarehouseService
     {
         if (!await IsManaged(a.WorkspaceId, line.ProductId))
             return;
+        if (line.ReceivedQuantity > line.QuarantineQuantity)
+            await RecallGuard.AssertLot(db, a.WorkspaceId, new WarehouseLot { ProductId = line.ProductId, LotNumber = line.LotNumber, ExpiresAt = line.ExpiresAt });
         var source = "SUPPLY:" + line.Id;
         if (await db.WarehouseLots.AnyAsync(x => x.WorkspaceId == a.WorkspaceId && x.SourceKey == source))
             return;
@@ -145,6 +149,7 @@ public sealed partial class WarehouseService
             return;
         var lot = await db.WarehouseLots.FirstOrDefaultAsync(x => x.WorkspaceId == a.WorkspaceId && x.SourceKey == "SUPPLY:" + line.Id);
         Check.That(lot != null && lot.Quarantined >= quantity, "Le lot fournisseur doit être rapproché avant contrôle.", "LOT_REVIEW_REQUIRED", 409);
+        if (disposition == "RELEASE") await RecallGuard.AssertLot(db, a.WorkspaceId, lot);
         lot.Quarantined -= quantity;
         if (disposition == "RELEASE")
             lot.OnHand += quantity;
@@ -208,14 +213,17 @@ public sealed partial class WarehouseService
         if (originalIds.Count > 0)
         {
             var originals = await db.WarehouseLots.AsNoTracking().Where(x => originalIds.Contains(x.Id) && x.LotNumber == number).ToListAsync();
-            var matchingIds = originals.Where(x => x.ExpiresAt?.UtcDateTime.Date == input.ExpiresAt?.UtcDateTime.Date).Select(x => x.Id).ToList();
+            // Preserve the exact dispatched batch identity used by recall holds;
+            // accepting a different hour on the same date could create an unheld return lot.
+            var identity = RecallGuard.Identity(source.Product, number, input.ExpiresAt);
+            var matchingIds = originals.Where(x => RecallGuard.Identity(x.ProductId, x.LotNumber, x.ExpiresAt) == identity).Select(x => x.Id).ToList();
             Check.That(matchingIds.Count > 0, "Ce lot ou sa date ne correspond pas aux lots expédiés dans cette commande.", "LOT_MISMATCH", 422);
             var claimIds = await db.Claims.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId && x.OrderId == source.Order && x.ProductId == source.Product).Select(x => x.Id).ToListAsync();
             var lineIds = await db.Set<OrderLine>().AsNoTracking().Where(x => x.PurchaseOrderId == source.Order && x.ProductId == source.Product).Select(x => x.Id).ToListAsync();
             var giftIds = await db.PromotionSnapshots.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId && x.OrderId == source.Order && x.GiftProductId == source.Product).Select(x => x.Id).ToListAsync();
             var refs = claimIds.Select(x => "CLAIM:" + x).Concat(lineIds.Select(x => "REFUSAL:" + x)).Concat(giftIds.Select(x => "PROMOTION:" + x)).ToList();
             var orderReturns = await db.WarehouseLots.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId && x.ProductId == source.Product && refs.Contains(x.SourceRef) && x.LotNumber == number).ToListAsync();
-            var alreadyIdentified = orderReturns.Where(x => x.ExpiresAt?.UtcDateTime.Date == input.ExpiresAt?.UtcDateTime.Date).Sum(x => x.InitialQuantity);
+            var alreadyIdentified = orderReturns.Where(x => RecallGuard.Identity(x.ProductId, x.LotNumber, x.ExpiresAt) == identity).Sum(x => x.InitialQuantity);
             Check.That(input.Quantity <= originalAllocations.Where(x => matchingIds.Contains(x.LotId)).Sum(x => x.Quantity) - alreadyIdentified, "La quantité déclarée pour ce lot dépasse la quantité expédiée encore non rapprochée.", "RETURN_LOT_QUANTITY", 409);
         }
         var lot = new WarehouseLot { WorkspaceId = a.WorkspaceId, ProductId = source.Product, LotNumber = number, ExpiresAt = input.ExpiresAt?.ToUniversalTime(), Quarantined = input.Quantity, InitialQuantity = input.Quantity, SourceKey = "RETURN:" + IdGen.New(), SourceRef = reference };
@@ -234,6 +242,8 @@ public sealed partial class WarehouseService
         Check.That(source.Order == orderId && source.Product == product && quantity > 0 && quantity <= source.Remaining, "Quantité retournée modifiée.", "RETURN_QUANTITY", 409);
         var lots = (await db.WarehouseLots.Where(x => x.WorkspaceId == a.WorkspaceId && x.ProductId == product && x.SourceRef == sourceType + ":" + sourceId && x.Quarantined > 0).ToListAsync()).OrderBy(x => x.ExpiresAt ?? DateTimeOffset.MaxValue).ToList();
         var restock = disposition is "RESTOCK" or "RELEASE";
+        if (restock)
+            foreach (var lot in lots) await RecallGuard.AssertLot(db, a.WorkspaceId, lot);
         if (restock)
             lots = lots.Where(x => x.ExpiresAt == null || x.ExpiresAt > DateTimeOffset.UtcNow).ToList();
         if (restock)

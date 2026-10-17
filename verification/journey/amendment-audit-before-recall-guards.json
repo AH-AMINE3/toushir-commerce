@@ -1,0 +1,799 @@
+{
+  "success": true,
+  "base": "http://127.0.0.1:5864/api",
+  "at": "2026-10-17T13:24:52.106548+00:00",
+  "passed": 37,
+  "failed": 0,
+  "httpRequests": 125,
+  "scope": "Independent isolated actual API audit of versioned order amendments, merchant consent, privacy, stock rollback and concurrency. No browser or native runtime acceptance.",
+  "checks": [
+    {
+      "name": "Amendment history requires authentication",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/orders/2433f27d0db8476985276782b6f15ebd/amendments",
+          "status": 401,
+          "errorCode": "UNAUTHENTICATED"
+        }
+      ]
+    },
+    {
+      "name": "Another shop cannot inspect the contract-change dossier",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/orders/2433f27d0db8476985276782b6f15ebd/amendments",
+          "status": 404,
+          "errorCode": "NOT_FOUND"
+        }
+      ]
+    },
+    {
+      "name": "Another workspace cannot inspect the contract-change dossier",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/orders/2433f27d0db8476985276782b6f15ebd/amendments",
+          "status": 404,
+          "errorCode": "NOT_FOUND"
+        }
+      ]
+    },
+    {
+      "name": "Warehouse role cannot inspect the commercial change dossier",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/orders/2433f27d0db8476985276782b6f15ebd/amendments",
+          "status": 403,
+          "errorCode": "FORBIDDEN"
+        }
+      ]
+    },
+    {
+      "name": "An eligible unpaid unprepared order allows an owner proposal",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/orders/2433f27d0db8476985276782b6f15ebd/amendments",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Merchant cannot author a wholesaler change proposal",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/orders/2433f27d0db8476985276782b6f15ebd/amendments",
+          "status": 403,
+          "errorCode": "FORBIDDEN"
+        }
+      ]
+    },
+    {
+      "name": "Proposal rejects an outdated base order version",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/orders/2433f27d0db8476985276782b6f15ebd/amendments",
+          "status": 409,
+          "errorCode": "VERSION_CONFLICT"
+        }
+      ]
+    },
+    {
+      "name": "Proposal rejects an empty replacement basket",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/orders/2433f27d0db8476985276782b6f15ebd/amendments",
+          "status": 400,
+          "errorCode": "VALIDATION"
+        }
+      ]
+    },
+    {
+      "name": "Proposal requires a meaningful reason",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/orders/2433f27d0db8476985276782b6f15ebd/amendments",
+          "status": 400,
+          "errorCode": "VALIDATION"
+        }
+      ]
+    },
+    {
+      "name": "Proposal expiry must leave a meaningful review window",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/orders/2433f27d0db8476985276782b6f15ebd/amendments",
+          "status": 400,
+          "errorCode": "VALIDATION"
+        }
+      ]
+    },
+    {
+      "name": "Proposal is a separate immutable contract suggestion with no reservation side effect",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/products/off-6130093062792",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-5410081201039",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/orders/2433f27d0db8476985276782b6f15ebd/amendments",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/orders/2433f27d0db8476985276782b6f15ebd",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-6130093062792",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-5410081201039",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Proposal retries return the original pending suggestion",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/orders/2433f27d0db8476985276782b6f15ebd/amendments",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "An already-used proposal key cannot change contractual quantities",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/orders/2433f27d0db8476985276782b6f15ebd/amendments",
+          "status": 409,
+          "errorCode": "IDEMPOTENCY_CONFLICT"
+        }
+      ]
+    },
+    {
+      "name": "Only one live proposal can await the shop decision",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/orders/2433f27d0db8476985276782b6f15ebd/amendments",
+          "status": 409,
+          "errorCode": "AMENDMENT_PENDING"
+        }
+      ]
+    },
+    {
+      "name": "Merchant frozen before and after projections do not expose private tariff provenance",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/orders/2433f27d0db8476985276782b6f15ebd/amendments",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Wholesaler cannot impersonate merchant acceptance",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders/2433f27d0db8476985276782b6f15ebd/amendments/e64142058381439b97dc3d4e1e1bc1ad/accept",
+          "status": 403,
+          "errorCode": "FORBIDDEN"
+        }
+      ]
+    },
+    {
+      "name": "Another shop cannot accept this merchant proposal",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders/2433f27d0db8476985276782b6f15ebd/amendments/e64142058381439b97dc3d4e1e1bc1ad/accept",
+          "status": 404,
+          "errorCode": "NOT_FOUND"
+        }
+      ]
+    },
+    {
+      "name": "Merchant must present consent to the exact displayed terms",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders/2433f27d0db8476985276782b6f15ebd/amendments/e64142058381439b97dc3d4e1e1bc1ad/accept",
+          "status": 409,
+          "errorCode": "AMENDMENT_CONSENT_REQUIRED"
+        }
+      ]
+    },
+    {
+      "name": "Merchant decision must use the current proposal version",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders/2433f27d0db8476985276782b6f15ebd/amendments/e64142058381439b97dc3d4e1e1bc1ad/accept",
+          "status": 409,
+          "errorCode": "VERSION_CONFLICT"
+        }
+      ]
+    },
+    {
+      "name": "Explicit acceptance atomically replaces products quantities totals and reservations",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders/2433f27d0db8476985276782b6f15ebd/amendments/e64142058381439b97dc3d4e1e1bc1ad/accept",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-6130093062792",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-5410081201039",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Acceptance retries preserve one committed amended contract",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/products/off-5410081201039",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/orders/2433f27d0db8476985276782b6f15ebd/amendments/e64142058381439b97dc3d4e1e1bc1ad/accept",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-5410081201039",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "A second independent decision cannot consume an accepted proposal",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders/2433f27d0db8476985276782b6f15ebd/amendments/e64142058381439b97dc3d4e1e1bc1ad/accept",
+          "status": 409,
+          "errorCode": "AMENDMENT_ALREADY_DECIDED"
+        }
+      ]
+    },
+    {
+      "name": "A rejected decision cannot overwrite accepted history",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders/2433f27d0db8476985276782b6f15ebd/amendments/e64142058381439b97dc3d4e1e1bc1ad/reject",
+          "status": 409,
+          "errorCode": "AMENDMENT_ALREADY_DECIDED"
+        }
+      ]
+    },
+    {
+      "name": "Rejection preserves the original products money and physical reservations",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/cart/quote",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/orders",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/orders/273d4c7fb0a04195b3620b4ba5343d36/amendments",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-6130093062792",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/orders/273d4c7fb0a04195b3620b4ba5343d36/amendments/8ec1fbc71e6346fd8a4582292cf92fbb/reject",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-6130093062792",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Only the wholesaler may withdraw its pending proposal",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/cart/quote",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/orders",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/orders/1dbb47726c6b4286a238e6d3af0be2ee/amendments",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/orders/1dbb47726c6b4286a238e6d3af0be2ee/amendments/1d570adc48c84f45b6160973b222cade/withdraw",
+          "status": 403,
+          "errorCode": "FORBIDDEN"
+        }
+      ]
+    },
+    {
+      "name": "Withdrawal closes the suggestion without replacing the contract",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/orders/1dbb47726c6b4286a238e6d3af0be2ee/amendments/1d570adc48c84f45b6160973b222cade/withdraw",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Withdrawal replay preserves one history decision and the unchanged contract",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/orders/1dbb47726c6b4286a238e6d3af0be2ee/amendments/1d570adc48c84f45b6160973b222cade/withdraw",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Withdrawn terms cannot later be accepted",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders/1dbb47726c6b4286a238e6d3af0be2ee/amendments/1d570adc48c84f45b6160973b222cade/accept",
+          "status": 409,
+          "errorCode": "AMENDMENT_ALREADY_DECIDED"
+        }
+      ]
+    },
+    {
+      "name": "A price change after proposal fails closed and rolls back original reservations",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/cart/quote",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/orders",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/orders/3da482732b2442708ff9378cc9199636/amendments",
+          "status": 200
+        },
+        {
+          "method": "PATCH",
+          "path": "/admin/products/off-5410081201039",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-6130093062792",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-5410081201039",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/orders/3da482732b2442708ff9378cc9199636/amendments/1088aac23b184d15bae9894bd6d5eda7/accept",
+          "status": 409,
+          "errorCode": "AMENDMENT_TERMS_CHANGED"
+        },
+        {
+          "method": "GET",
+          "path": "/orders/3da482732b2442708ff9378cc9199636",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-6130093062792",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-5410081201039",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "A frozen historical proposal does not silently adopt a later catalogue price",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/orders/3da482732b2442708ff9378cc9199636/amendments",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Stock loss after proposal rolls back the attempted contract replacement",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/cart/quote",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/orders",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/orders/e7ce5a756c24414eaa49f03cb7c39366/amendments",
+          "status": 200
+        },
+        {
+          "method": "PATCH",
+          "path": "/admin/products/off-16256866",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-6130093062792",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-16256866",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/orders/e7ce5a756c24414eaa49f03cb7c39366/amendments/f1e177e185814e218848ae26df0292eb/accept",
+          "status": 409,
+          "errorCode": "AMENDMENT_STOCK_OR_TERMS_CHANGED"
+        },
+        {
+          "method": "GET",
+          "path": "/orders/e7ce5a756c24414eaa49f03cb7c39366",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-6130093062792",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-16256866",
+          "status": 200
+        },
+        {
+          "method": "PATCH",
+          "path": "/admin/products/off-16256866",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Fully reserved own stock can be reduced without requiring unrelated spare stock",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/cart/quote",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/orders",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-7622210995063",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/orders/caff8001b1484d6dafbf909d3636bb50/amendments",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/orders/caff8001b1484d6dafbf909d3636bb50/amendments/efcc8ab931b540ebbd2687fde34a407a/accept",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-7622210995063",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "An actual payment blocks proposing a commercial rewrite",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/cart/quote",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/orders",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/orders/59d6605bb650448d90e3c2c61f20ab14/transition",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/orders/59d6605bb650448d90e3c2c61f20ab14/payments",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/orders/59d6605bb650448d90e3c2c61f20ab14",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/orders/59d6605bb650448d90e3c2c61f20ab14/amendments",
+          "status": 409,
+          "errorCode": "AMENDMENT_NOT_ALLOWED"
+        }
+      ]
+    },
+    {
+      "name": "Driver assignment blocks a proposal after operational handoff",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/cart/quote",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/orders",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/orders/32e1b72ebcfa42289f1ca8aeb1c7a844/transition",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/operations/orders/32e1b72ebcfa42289f1ca8aeb1c7a844/assign",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/orders/32e1b72ebcfa42289f1ca8aeb1c7a844",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/orders/32e1b72ebcfa42289f1ca8aeb1c7a844/amendments",
+          "status": 409,
+          "errorCode": "AMENDMENT_NOT_ALLOWED"
+        }
+      ]
+    },
+    {
+      "name": "Beginning physical preparation invalidates an already-open proposal",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/cart/quote",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/orders",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/orders/0de08c7bf12943e6b679926f07d40068/transition",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/orders/0de08c7bf12943e6b679926f07d40068/amendments",
+          "status": 200
+        },
+        {
+          "method": "PATCH",
+          "path": "/operations/orders/0de08c7bf12943e6b679926f07d40068/preparation",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/orders/0de08c7bf12943e6b679926f07d40068/amendments",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/orders/0de08c7bf12943e6b679926f07d40068/amendments/470a2b67c96f49b09098c33c1c79a1bd/accept",
+          "status": 409,
+          "errorCode": "AMENDMENT_STALE"
+        }
+      ]
+    },
+    {
+      "name": "Canceling the original order prevents later acceptance of a stale suggestion",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/cart/quote",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/orders",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/orders/7fc64e396bcb4717b515fd7f38dd2a72/amendments",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/orders/7fc64e396bcb4717b515fd7f38dd2a72/cancel",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/orders/7fc64e396bcb4717b515fd7f38dd2a72/amendments/a648db1e425a43ae82eac63815a3fa42/accept",
+          "status": 409,
+          "errorCode": "AMENDMENT_STALE"
+        },
+        {
+          "method": "GET",
+          "path": "/orders/7fc64e396bcb4717b515fd7f38dd2a72",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Concurrent independent acceptance attempts commit one replacement exactly once",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/cart/quote",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/orders",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/orders/b5d62884434b48359b1d6e52a74af9b1/amendments",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-6130093062792",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-16256866",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/orders/b5d62884434b48359b1d6e52a74af9b1/amendments/906ee735320544a5851bd8eebb6e43d9/accept",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/orders/b5d62884434b48359b1d6e52a74af9b1/amendments/906ee735320544a5851bd8eebb6e43d9/accept",
+          "status": 409,
+          "errorCode": "AMENDMENT_ALREADY_DECIDED"
+        },
+        {
+          "method": "GET",
+          "path": "/orders/b5d62884434b48359b1d6e52a74af9b1",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-6130093062792",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/products/off-16256866",
+          "status": 200
+        }
+      ]
+    }
+  ]
+}

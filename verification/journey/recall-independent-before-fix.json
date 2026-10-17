@@ -1,0 +1,216 @@
+{
+  "success": false,
+  "at": "2026-10-17T13:35:38.323749+00:00",
+  "base": "http://127.0.0.1:5864/api",
+  "passed": 9,
+  "failed": 4,
+  "httpRequests": 46,
+  "observed": {
+    "detailStockWhileHold": 0,
+    "listStockWhileHold": 5,
+    "inStockContainsHeldProduct": true,
+    "favoriteStockWhileHold": 5
+  },
+  "scope": "Independent actual isolated API audit: held stock presentation, in-flight receipt safety, all-refused return, real quarantine reconciliation. No camera or native device acceptance.",
+  "checks": [
+    {
+      "name": "Recall establishes a hold without claiming that physical stock moved",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/admin/warehouse/lots?productId=off-6130093062792",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Merchant product details exclude recalled stock immediately",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/products/off-6130093062792",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Merchant catalogue excludes held units before physical isolation",
+      "pass": false,
+      "error": "Catalogue reports5 held units available; detail reports0",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/products?q=6130093062792",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "In-stock catalogue filter excludes a product whose only batch is held",
+      "pass": false,
+      "error": "Held-only product still passes inStock=true",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/products?inStock=true&q=6130093062792",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Saved favorites exclude held batch stock using the same policy",
+      "pass": false,
+      "error": "Favorite reports5 held units available",
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/favorites/off-6130093062792",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/favorites",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Checkout refuses recalled-only stock even before depot isolation",
+      "pass": false,
+      "error": "Required business outcome did not hold",
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/cart/quote",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "A receipt QR issued before recall cannot hand recalled goods to the merchant",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/courier/orders/16a877e16fa74019b2fcab158453b610/complete",
+          "status": 409,
+          "errorCode": "LOT_RECALLED"
+        }
+      ]
+    },
+    {
+      "name": "A new accepted receipt cannot bypass the active recalled batch hold",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders/16a877e16fa74019b2fcab158453b610/receipt-challenge",
+          "status": 409,
+          "errorCode": "LOT_RECALLED"
+        }
+      ]
+    },
+    {
+      "name": "Merchant acknowledgement records instruction receipt without stock recovery",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/recalls/inbox",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/recalls/notices/4ee3f835c9d0429abe8f9692ba5780a8/ack",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/admin/recalls/4771f17b10e447d68ac8349ba919e1f0",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/admin/warehouse/lots?productId=off-6130093062792",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "All-refused physical receipt remains possible so recalled driver custody can return",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders/16a877e16fa74019b2fcab158453b610/receipt-challenge",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/courier/orders/16a877e16fa74019b2fcab158453b610/complete",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Recalled refused goods enter quarantine rather than silently becoming available stock",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/admin/warehouse/lots?productId=off-6130093062792",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Physical returned-batch identity can reconcile outbound exposure without duplicating stock",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/admin/recalls/4771f17b10e447d68ac8349ba919e1f0",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/admin/warehouse/lots?productId=off-6130093062792",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/recalls/4771f17b10e447d68ac8349ba919e1f0/recover",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/admin/warehouse/lots?productId=off-6130093062792",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Final depot isolation and closure preserve all seven physical units in quarantine",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/recalls/4771f17b10e447d68ac8349ba919e1f0/recover",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/recalls/4771f17b10e447d68ac8349ba919e1f0/close",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/admin/warehouse/lots?productId=off-6130093062792",
+          "status": 200
+        }
+      ]
+    }
+  ]
+}

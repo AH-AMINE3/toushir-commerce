@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-17T13:55:27.527Z",
+  "base": "http://127.0.0.1:5865",
+  "checks": [
+    "Wholesaler sends a reasoned quantity proposal through the actual form",
+    "Merchant compares exact before/after terms, must acknowledge, then atomically accepts persisted new quantity"
+  ],
+  "errors": []
+}

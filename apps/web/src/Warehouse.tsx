@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 type Props = {
   orders: any[];
   selected?: string;
@@ -163,8 +164,50 @@ export default function Warehouse({
     const fleet = new THREE.Group();
     scene.add(fleet);
     let ids = "";
+    let disposed = false;
+    let vehicleTemplate: THREE.Object3D | null = null;
+    let vehicleAnimations: THREE.AnimationClip[] = [];
+    let mixers: THREE.AnimationMixer[] = [];
+    const modelTextures = new Set<THREE.Texture>();
+    new GLTFLoader().load("/models/delivery-truck.glb", (gltf) => {
+      const model = gltf.scene;
+      model.traverse((object) => {
+        if (!(object instanceof THREE.Mesh)) return;
+        object.castShadow = true;
+        object.receiveShadow = true;
+        geometries.push(object.geometry);
+        const source = Array.isArray(object.material) ? object.material : [object.material];
+        for (const material of source) {
+          materials.push(material);
+          if (material instanceof THREE.MeshStandardMaterial && material.map) modelTextures.add(material.map);
+        }
+        // Recolor the licensed demonstration body and remove its original logo texture.
+        if (source.some(material => material.name === "truck")) {
+          const body = new THREE.MeshStandardMaterial({ name: "Toushir demonstration body", color: "#f3fff8", roughness: .62, metalness: .12 });
+          materials.push(body); object.material = body;
+        }
+      });
+      if (disposed) {
+        modelTextures.forEach(texture => texture.dispose());
+        model.traverse(object => { if (object instanceof THREE.Mesh) object.geometry.dispose(); });
+        materials.forEach(material => material.dispose());
+        return;
+      }
+      const initial = new THREE.Box3().setFromObject(model).getSize(new THREE.Vector3());
+      if (initial.x > initial.z) model.rotation.y = Math.PI / 2;
+      const bounds = new THREE.Box3().setFromObject(model), size = bounds.getSize(new THREE.Vector3()), center = bounds.getCenter(new THREE.Vector3());
+      const scale = 5.5 / Math.max(size.x, size.z);
+      model.scale.setScalar(scale);
+      model.position.set(-center.x * scale, -bounds.min.y * scale, -center.z * scale);
+      const normalized = new THREE.Group(); normalized.add(model);
+      vehicleTemplate = normalized;
+      vehicleAnimations = gltf.animations;
+      el.dataset.vehicleModel = "loaded";
+      ids = "";
+    }, undefined, () => { el.dataset.vehicleModel = "fallback"; });
     let simulationStart = performance.now();
     function rebuild() {
+      mixers.forEach(mixer => mixer.stopAllAction()); mixers = [];
       for (const c of [...fleet.children]) fleet.remove(c);
       objects.length = 0;
       const active = state.current.orders
@@ -213,6 +256,14 @@ export default function Warehouse({
         materials.push(markerMat);
         const marker = new THREE.Mesh(markerGeo, markerMat);
         marker.position.set(0, 3.6, 0);
+        if (vehicleTemplate) {
+          for (const child of [...truck.children]) truck.remove(child);
+          const vehicle = vehicleTemplate.clone(true);
+          truck.add(vehicle);
+          const mixer = new THREE.AnimationMixer(vehicle);
+          vehicleAnimations.forEach(clip => mixer.clipAction(clip).play());
+          mixers.push(mixer);
+        }
         truck.add(marker);
         fleet.add(truck);
         objects.push(truck);
@@ -254,8 +305,10 @@ export default function Warehouse({
     renderer.domElement.addEventListener("pointerup", pick);
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     let frame = 0;
+    let lastFrame = performance.now();
     function animate() {
       frame = requestAnimationFrame(animate);
+      const currentFrame = performance.now(), delta = Math.min(.1, (currentFrame - lastFrame) / 1000); lastFrame = currentFrame;
       const next =
         state.current.orders.map((o) => o.id + o.status).join() +
         "|" +
@@ -265,6 +318,7 @@ export default function Warehouse({
         rebuild();
       }
       if (state.current.replay && !reduced) {
+        mixers.forEach(mixer => mixer.update(delta));
         const t = (performance.now() - simulationStart) / 7000;
         for (const truck of fleet.children) {
           const i = truck.userData.index;
@@ -286,7 +340,9 @@ export default function Warehouse({
     }
     animate();
     return () => {
+      disposed = true;
       cancelAnimationFrame(frame);
+      mixers.forEach(mixer => mixer.stopAllAction());
       observer.disconnect();
       controls.dispose();
       renderer.dispose();
@@ -295,6 +351,7 @@ export default function Warehouse({
         if (m instanceof THREE.SpriteMaterial) m.map?.dispose();
         m.dispose();
       });
+      modelTextures.forEach(texture => texture.dispose());
       renderer.domElement.remove();
     };
   }, []);
@@ -318,6 +375,7 @@ export default function Warehouse({
       </div>
       <div className="map-hint">
         Glisser pour pivoter · Molette pour zoomer · Cliquer sur un véhicule
+        <small>Modèle d’illustration adapté de Cesium · CC BY 4.0 · positions illustratives</small>
       </div>
     </div>
   );

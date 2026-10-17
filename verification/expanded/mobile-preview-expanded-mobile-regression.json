@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-17T13:49:30.851Z",
+  "base": "http://127.0.0.1:5865",
+  "checks": [
+    "Packaged React Native web catalogue rendered at402x874",
+    "Mobile basket mutation persisted through the shared API",
+    "Per-tab merchant identity restored after reload",
+    "Shared account route survives session restoration and refresh",
+    "Merchant card, points and actual account activity navigate to connected records",
+    "Account settings preserve contact and address workflows",
+    "Title-row message settings expose actual communication consent",
+    "Courier browser route loads independently",
+    "A first-time visitor can open the shared account link directly"
+  ],
+  "errors": []
+}

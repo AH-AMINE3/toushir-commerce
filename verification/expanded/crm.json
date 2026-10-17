@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-17T13:37:22.589175+00:00",
+  "base": "http://127.0.0.1:5863",
+  "scope": "Actual assigned portfolios, self-reported contacts/visits and one-use merchant-authorized RFQs; no proof of external calls/physical attendance or native execution.",
+  "passed": 19,
+  "failed": 0,
+  "requests": 102,
+  "checks": [
+    "commercial staff sign in with individual accounts without wholesale, warehouse or team administration powers",
+    "only an eligible assigned adviser obtains the primary shop portfolio",
+    "portfolio versions, role boundaries and foreign-shop isolation fail closed",
+    "contact completion retains the actual author, outcome and next action and creates a bounded follow-up",
+    "a future visit cannot be reported complete before its window; a rescheduled visit records self-reported attendance",
+    "reasoned cancellation preserves tasks and direct contact reports remain separate records",
+    "the shop authorizes only its current named adviser, bounded expiry and its own address",
+    "assistance creates only the exact authorized RFQ under the actual adviser identity",
+    "the assisted RFQ neither clears the personal basket nor reserves physical stock",
+    "same-key replay returns the existing request; a different use cannot create another order",
+    "the normal shared price engine produces a quote that still requires the shop own acceptance",
+    "unused authorization revocation immediately prevents the adviser from submitting it",
+    "an address changed after consent cannot be substituted into the authorized RFQ",
+    "reassignment removes the former adviser scope and never transfers an old named authorization",
+    "only owner or manager may authorize, and a manager authority change invalidates pending delegated requests",
+    "concurrent use of a one-use mandate commits exactly one RFQ",
+    "suspending the primary shop blocks pending assistance even for an otherwise active adviser",
+    "assistance inherits the primary guest invitation lifetime and live revocation",
+    "CRM keeps completed/cancelled tasks, immutable contacts and actual-actor audit events"
+  ]
+}

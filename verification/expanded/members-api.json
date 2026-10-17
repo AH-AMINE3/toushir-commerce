@@ -1,0 +1,33 @@
+{
+  "at": "2026-10-17T13:36:10.674520+00:00",
+  "base": "http://127.0.0.1:5863",
+  "scope": "Actual membership API, actor/shop boundaries, personal carts, shared commerce and existing delivery proof issuance. Live sockets and OIDC revocation are separate.",
+  "passed": 23,
+  "failed": 0,
+  "requests": 105,
+  "checks": [
+    "only merchant accounts can read their own shop team",
+    "owner cannot invite a wholesale role or exceed bounded invitation expiry",
+    "one-use private invitations create individual password accounts in the existing shop",
+    "used and unknown tokens cannot create duplicate or standalone shops",
+    "invitation revocation and shop boundaries are checked at acceptance and management",
+    "a manager can invite buyers or viewers but cannot grant manager or owner powers",
+    "manager escalation, manager modification and stale access versions fail closed",
+    "shared shop addresses coexist with strictly personal baskets",
+    "favorites belong to the person rather than the shared shop",
+    "a shop buyer cannot acquire wholesale administration powers",
+    "reviewed price consent binds the actual buyer and shop; creation retains the person",
+    "owner, manager and viewer read the same shop order and frozen prices",
+    "viewer cannot commit or change shared commerce; buyers cannot change contacts or spend gifts",
+    "a person can edit their own profile without renaming the primary shop",
+    "shared messages retain their actual sender and remain read-only for viewers",
+    "people are excluded from wholesale customer and customer-tariff target lists",
+    "changing a manager role revokes existing sessions and unaccepted delegated invitations",
+    "revoked membership is retained and cannot fall back to an independent shop",
+    "suspending the primary shop disables every member account immediately",
+    "concurrent acceptance commits exactly one account and one permanent membership",
+    "a guest shop cannot issue a member invitation beyond its own authority lifetime",
+    "revoking a primary guest invitation immediately disables its shop and child members",
+    "delivery consent records the issuing person while binding the primary shop"
+  ]
+}

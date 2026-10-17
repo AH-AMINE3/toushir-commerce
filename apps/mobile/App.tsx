@@ -108,6 +108,8 @@ function Application() {
       await save("toushir-personal-account", "true");
       await erase("toushir-demo-workspace");
     }
+    if (next.workspace.isDemo && next.workspace.canSwitchRole)
+      await post("/demo/showcase");
     setSession(next);
     setError("");
   }
@@ -170,6 +172,8 @@ function Application() {
       )
         await startDemo(desiredRole);
       else {
+        if (current.workspace.isDemo && current.workspace.canSwitchRole)
+          await post("/demo/showcase");
         setSession({
           ...current,
           ...(current.workspace.canSwitchRole

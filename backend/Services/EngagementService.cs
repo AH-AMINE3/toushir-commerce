@@ -148,7 +148,7 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
         Check.That(status is "OPEN" or "CLOSED", "État inconnu.");
         var assigned = Check.Text(input.AssignedTo, 100, "Responsable", false);
         if (assigned.Length > 0)
-            Check.That(await db.Accounts.AnyAsync(x => x.Id == assigned && x.WorkspaceId == actor.WorkspaceId && x.Role != "MERCHANT" && x.Role != "DRIVER" && x.ApprovalStatus == "APPROVED"), "Responsable introuvable.");
+            Check.That(await db.Accounts.AnyAsync(x => x.Id == assigned && x.WorkspaceId == actor.WorkspaceId && (x.Role == "ADMIN" || x.Role == "WAREHOUSE" || x.Role == "DISPATCHER" || x.Role == "FINANCE") && x.ApprovalStatus == "APPROVED"), "Choisissez une personne habilitée à ouvrir ce dossier.");
         thread.Status = status;
         thread.AssignedTo = assigned;
         thread.Version++;
@@ -282,15 +282,31 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
             actor.RequireRoles("MERCHANT", "ADMIN", "FINANCE");
             q = q.Where(x => x.Status == "PUBLISHED");
         }
+        if (actor.Role == "MERCHANT") q = CampaignAudienceScope.ForShop(db, q, actor.ResourceOwnerId);
+        var campaigns = await q.ToListAsync();
+        if (actor.Role is "ADMIN" or "FINANCE") {
+            var audiences = await db.CampaignAudiences.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId).ToListAsync();
+            foreach (var campaign in campaigns) {
+                campaign.TargetMerchantIds = audiences.Where(x => x.CampaignId == campaign.Id).Select(x => x.MerchantId).ToList();
+                campaign.TargetCount = campaign.TargetMerchantIds.Count;
+            }
+        }
         return new
         {
-            items = (await q.ToListAsync()).OrderByDescending(x => x.CreatedAt),
+            items = campaigns.OrderByDescending(x => x.CreatedAt),
             pricingIntegration = "Campaign previews do not modify accepted quotes. Apply an approved campaign explicitly when quoting."
         };
     }
     public async Task<object> CreateCampaign(Actor actor, CreateCampaignInput x)
     {
         actor.Admin();
+        var targets = x.TargetMerchantIds ?? [];
+        Check.That(targets.Count <= 500 && targets.Distinct().Count() == targets.Count, "Choisissez au maximum 500 magasins distincts.");
+        if (targets.Count > 0) {
+            var eligible = await db.Accounts.AsNoTracking().Where(a => a.WorkspaceId == actor.WorkspaceId && a.Role == "MERCHANT" && a.ApprovalStatus == "APPROVED"
+                && targets.Contains(a.Id) && !db.ShopMemberships.Any(m => m.AccountId == a.Id)).CountAsync();
+            Check.That(eligible == targets.Count, "Un magasin ciblé n’est pas approuvé ou n’appartient pas à cet espace.", "CAMPAIGN_AUDIENCE_INVALID", 400);
+        }
         var kind = x.Kind.ToUpperInvariant();
         Check.That(kind is "DISCOUNT" or "FREE_GOODS" or "CHALLENGE", "Mécanique inconnue.");
         Check.That(await db.Products.AnyAsync(p => p.Id == x.ProductId && p.IsCatalogActive), "Produit introuvable.");
@@ -305,6 +321,8 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
             Check.That(x.GoalQuantity is >= 1 and <= 100000000 && x.AwardLimit is >= 1 and <= 100000 && x.ClaimUntil > x.EndsAt && await db.RewardItems.AnyAsync(r => r.Id == x.RewardId && r.WorkspaceId == actor.WorkspaceId && r.IsActive), "Objectif, dotation ou période de réclamation invalide.");
         var c = new Campaign { WorkspaceId = actor.WorkspaceId, Title = Check.Text(x.Title, 180, "Titre"), Description = Check.Text(x.Description, 3000, "Conditions"), Kind = kind, ProductId = x.ProductId, MinimumQuantity = x.MinimumQuantity, DiscountPercent = x.DiscountPercent, GiftProductId = x.GiftProductId ?? "", GiftQuantity = x.GiftQuantity, GoalQuantity = x.GoalQuantity, UnitFactor = x.UnitFactor, RewardId = x.RewardId ?? "", AwardLimit = x.AwardLimit, StartsAt = x.StartsAt, EndsAt = x.EndsAt, ClaimUntil = x.ClaimUntil, CreatedBy = actor.Id };
         db.Campaigns.Add(c);
+        foreach (var target in targets) db.CampaignAudiences.Add(new() { WorkspaceId = actor.WorkspaceId, CampaignId = c.Id, MerchantId = target });
+        c.TargetMerchantIds = targets.ToList(); c.TargetCount = targets.Count;
         orders.Audit(actor, "CAMPAIGN_DRAFT_CREATED", c.Id);
         await db.SaveChangesAsync();
         return c;
@@ -322,7 +340,10 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
         c.ApprovedBy = actor.Id;
         c.Version++;
         orders.Audit(actor, "CAMPAIGN_PUBLISHED", id);
-        Notice(actor, "", "CAMPAIGN_PUBLISHED", id);
+        var targets = await db.CampaignAudiences.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId && x.CampaignId == id).Select(x => x.MerchantId).ToListAsync();
+        c.TargetMerchantIds = targets; c.TargetCount = targets.Count;
+        if (targets.Count == 0) Notice(actor, "", "CAMPAIGN_PUBLISHED", id);
+        else foreach (var target in targets) Notice(actor, target, "CAMPAIGN_PUBLISHED", id);
         await db.SaveChangesAsync();
         return c;
     }
@@ -331,6 +352,7 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
         actor.RequireRoles("ADMIN", "FINANCE", "MERCHANT");
         var c = await db.Campaigns.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id && x.WorkspaceId == actor.WorkspaceId && (actor.Role != "MERCHANT" || x.Status == "PUBLISHED"));
         Check.That(c != null, "Campagne introuvable.", "NOT_FOUND", 404);
+        if (actor.Role == "MERCHANT") Check.That(await CampaignAudienceScope.Allows(db, c, actor.ResourceOwnerId), "Campagne introuvable.", "NOT_FOUND", 404);
         return c;
     }
     public async Task<object> PreviewCampaign(Actor actor, string id, CampaignPreviewInput x)
@@ -362,6 +384,7 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
     }
     private async Task<int> EligibleCampaignUnits(Campaign c, string merchant)
     {
+        if (!await CampaignAudienceScope.Allows(db, c, merchant)) return 0;
         var list = await db.Orders.AsNoTracking().Include(o => o.Items).Where(o => o.WorkspaceId == c.WorkspaceId && o.AccountId == merchant).ToListAsync();
         var published = await db.Audit.AsNoTracking().Where(x => x.WorkspaceId == c.WorkspaceId && x.EntityId == c.Id && x.Action == "CAMPAIGN_PUBLISHED").Select(x => x.At).ToListAsync();
         if (published.Count == 0)
@@ -378,6 +401,7 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
     {
         var c = await VisibleCampaign(actor, id);
         var merchant = await Merchant(actor, merchantId);
+        Check.That(await CampaignAudienceScope.Allows(db, c, merchant), "Ce magasin ne fait pas partie du périmètre de la campagne.", "CAMPAIGN_NOT_APPLICABLE", 409);
         var units = await EligibleCampaignUnits(c, merchant);
         var grant = await db.CampaignGrants.AsNoTracking().FirstOrDefaultAsync(x => x.CampaignId == id && x.MerchantId == merchant);
         return new
@@ -395,6 +419,7 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
         actor.RequireRoles("ADMIN", "FINANCE");
         var c = await VisibleCampaign(actor, id);
         var merchant = await Merchant(actor, input.MerchantId);
+        Check.That(await CampaignAudienceScope.Allows(db, c, merchant), "Ce magasin ne fait pas partie du périmètre de la campagne.", "CAMPAIGN_NOT_APPLICABLE", 409);
         var old = await db.CampaignGrants.FirstOrDefaultAsync(x => x.CampaignId == id && x.MerchantId == merchant);
         if (old != null)
             return old;

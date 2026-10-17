@@ -1,0 +1,414 @@
+{
+  "success": true,
+  "base": "http://127.0.0.1:5864/api",
+  "at": "2026-10-17T13:23:43.519816+00:00",
+  "passed": 33,
+  "failed": 0,
+  "httpRequests": 57,
+  "scope": "Actual isolated local API acceptance. Geographic filters, persisted campaign audiences, shared checkout pricing and merchant activity; no individual Figma screen or native-device acceptance.",
+  "checks": [
+    {
+      "name": "Merchant activity requires an authenticated session",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/profile/activity?days=7",
+          "status": 401
+        }
+      ]
+    },
+    {
+      "name": "Activity rejects staff instead of leaking a shop aggregate",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/profile/activity?days=7",
+          "status": 403
+        }
+      ]
+    },
+    {
+      "name": "Activity rejects unsupported arbitrary date windows",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/profile/activity?days=8",
+          "status": 400
+        }
+      ]
+    },
+    {
+      "name": "Empty merchant activity has truthful zero values and real daily dates",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/profile/activity?days=7",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Default activity has thirty daily entries",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/profile/activity",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Ninety-day activity has a bounded actual date series",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/profile/activity?days=90",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Shop geography follows its default address",
+      "pass": true,
+      "requests": [
+        {
+          "method": "PUT",
+          "path": "/addresses/371bb9bfa48f4dfa97a7230594900679",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/admin/merchants",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Wholesaler filters stores by region without mixing other regions",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/admin/merchants?region=Alger",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Region filters compare names without case differences",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/admin/merchants?region=alger",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Store text search includes commune",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/admin/merchants?q=Bab%20Ezzouar",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Combined region and telephone filters retain only matching stores",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/admin/merchants?region=Alger&q=0555987654",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/admin/merchants?region=Oran&q=0555987654",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "CRM projects the same actual geography",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/crm",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Campaign creation rejects duplicate target shops",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/campaigns",
+          "status": 400
+        }
+      ]
+    },
+    {
+      "name": "Campaign creation rejects a target from another workspace",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/campaigns",
+          "status": 400
+        }
+      ]
+    },
+    {
+      "name": "Campaign creation rejects a missing or inactive target",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/campaigns",
+          "status": 400
+        }
+      ]
+    },
+    {
+      "name": "Campaign draft persists the exact selected shop audience",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/campaigns",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "A targeted draft stays invisible to the selected merchant",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/campaigns",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Independent publication preserves the chosen audience",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/admin/campaigns/ee59cb19f002460295af46fec366abee/publish",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Published targeted campaign appears to its selected shop",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/campaigns",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Published targeted campaign stays absent from another shop",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/campaigns",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Excluded shop cannot inspect the targeted preview",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/campaigns/ee59cb19f002460295af46fec366abee/preview",
+          "status": 404
+        }
+      ]
+    },
+    {
+      "name": "Excluded shop cannot inspect targeted challenge or campaign progress",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/campaigns/ee59cb19f002460295af46fec366abee/progress",
+          "status": 404
+        }
+      ]
+    },
+    {
+      "name": "Targeted preview and actual basket resolve the selected discount",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/campaigns/ee59cb19f002460295af46fec366abee/preview",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/cart/quote",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Excluded shop keeps its ordinary published price at checkout",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/cart/quote",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Staff simulation uses the same audience-aware pricing engine",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/pricing/simulate",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Direct order commits only the eligible targeted promotion",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Explicit manual quote cannot force a targeted discount onto an excluded shop",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/orders",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/admin/orders/f4ce637544f4462ab2772845bbff2773/quote",
+          "status": 409
+        },
+        {
+          "method": "GET",
+          "path": "/orders/f4ce637544f4462ab2772845bbff2773",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Activity reflects the new actual merchant order and outstanding contract",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/profile/activity?days=7",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Another merchant activity cannot be switched by a merchantId parameter",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/profile/activity?days=7&merchantId=7d0ffeca846746dabb4a0654d507d964",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Activity separates accepted delivered amount from the original ordered amount",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/profile/activity?days=7",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Activity money and daily chart come from the real recorded payment",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/profile/activity?days=7",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Staff campaign overview retains the exact selected audience for future audits",
+      "pass": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/admin/campaigns",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "Support handoff rejects a SALES adviser who cannot open the support dossier",
+      "pass": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/operations/team",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/conversations",
+          "status": 200
+        },
+        {
+          "method": "PATCH",
+          "path": "/conversations/075a3437ea3b42c48b953b375a1308a4",
+          "status": 400
+        },
+        {
+          "method": "GET",
+          "path": "/conversations/075a3437ea3b42c48b953b375a1308a4/messages",
+          "status": 200
+        }
+      ]
+    }
+  ]
+}

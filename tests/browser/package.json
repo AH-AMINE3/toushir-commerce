@@ -12,7 +12,10 @@
     "members": "node shop-members.mjs",
     "crm": "node crm.mjs",
     "map": "node map-check.mjs",
-    "mobile": "node mobile-preview.mjs"
+    "mobile": "node mobile-preview.mjs",
+    "expanded": "node expanded-journey.mjs && node expanded-amendment.mjs",
+    "amendment": "node expanded-amendment.mjs",
+    "expanded:review": "node expanded-review-regression.mjs"
   },
   "devDependencies": {
     "playwright": "1.64.1"

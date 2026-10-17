@@ -1,0 +1,268 @@
+suite,case,actor_side,business_scenario,result
+recall-independent,1,,Recall establishes a hold without claiming that physical stock moved,PASS
+recall-independent,2,,Merchant product details exclude recalled stock immediately,PASS
+recall-independent,3,,Merchant catalogue excludes held units before physical isolation,PASS
+recall-independent,4,,In-stock catalogue filter excludes a product whose only batch is held,PASS
+recall-independent,5,,Saved favorites exclude held batch stock using the same policy,PASS
+recall-independent,6,,Checkout refuses recalled-only stock even before depot isolation,PASS
+recall-independent,7,,A receipt QR issued before recall cannot hand recalled goods to the merchant,PASS
+recall-independent,8,,A new accepted receipt cannot bypass the active recalled batch hold,PASS
+recall-independent,9,,Merchant acknowledgement records instruction receipt without stock recovery,PASS
+recall-independent,10,,All-refused physical receipt remains possible so recalled driver custody can return,PASS
+recall-independent,11,,Recalled refused goods enter quarantine rather than silently becoming available stock,PASS
+recall-independent,12,,Managed recalled returns reject a changed timestamp on the same expiry date,PASS
+recall-independent,13,,Physical returned-batch identity can reconcile outbound exposure without duplicating stock,PASS
+recall-independent,14,,Final depot isolation and closure preserve all seven physical units in quarantine,PASS
+recalls,1,,anonymous and unauthorized roles cannot trace recalls; an untracked product cannot masquerade as a lot,PASS
+recalls,2,,recall creation is versioned and idempotent without inventing a physical movement,PASS
+recalls,3,,preparation is traceable without double-counting the depot custody,PASS
+recalls,4,,foreign workspace cannot inspect or mutate another recall,PASS
+recalls,5,,"new allocation, reserved preparation and recount all fail with LOT_RECALLED",PASS
+recalls,6,,merchant and assigned driver receive scoped versioned notices; acknowledgements never count as physical recovery,PASS
+recalls,7,,"depot recovery requires staff, cannot consume reserved units and unresolved depot stock blocks closure",PASS
+recalls,8,,"depot recovery moves exactly five existing units into quarantine, with replay and stale-write protection",PASS
+recalls,9,,reserved units become recoverable only after the real reservation is released,PASS
+recalls,10,,recall quarantine cannot be released through ordinary lot quality controls,PASS
+recalls,11,,outbound recovery requires an exact physically received RETURN lot; linking and replay add no stock,PASS
+recalls,12,,only ADMIN can record a reasoned residual outbound exception; it never becomes recovered stock,PASS
+recalls,13,,closure follows reconciled depot custody and documented outbound residuals,PASS
+recalls,14,,CLOSED records retain permanent batch safety blocks,PASS
+recalls,15,,"recalled reserved goods cannot depart, complete remaining scans or be falsely recovered",PASS
+recalls,16,,"explicit recall cancellation is ADMIN-only, versioned and idempotent; it releases only the actual reservation",PASS
+recalls,17,,canceling a paid recalled preparation voids the contract while preserving the recorded payment and refund due,PASS
+recalls,18,,recall cancellation detaches the unpicked route stop and invalidates its old loading QR,PASS
+recalls,19,,partially scanned recall cancellation releases the remaining reservation without fabricating a physical movement,PASS
+recalls,20,,prepared recalled stock can close only after explicit cancellation and separate complete physical isolation,PASS
+recalls,21,,historical untracked shipments remain unknown rather than being assigned the newly counted batch,PASS
+recalls,22,,unknown scope needs an explicit closure reason and remains visible after closure,PASS
+journey,M01,MERCHANT,Browse every nonempty catalogue category,PASS
+journey,M02,MERCHANT,Browse available brands,PASS
+journey,W01,WHOLESALER,Publish a confirmed positive offer with physical stock,PASS
+journey,W02,WHOLESALER,Reject a zero price on a published sellable offer,PASS
+journey,W03,WHOLESALER,Reject inconsistent case size and minimum order quantity,PASS
+journey,M03,MERCHANT,Read the same published price in product details,PASS
+journey,M04,MERCHANT,Search a product by its actual barcode,PASS
+journey,M05,MERCHANT,Filter products by a real category,PASS
+journey,M06,MERCHANT,Filter products by a real brand,PASS
+journey,M07,MERCHANT,Save a favorite with its effective price,PASS
+journey,M08,MERCHANT,Remove a favorite without touching the offer,PASS
+journey,M09,MERCHANT,Persist the intended basket quantities,PASS
+journey,M10,MERCHANT,Review a directly orderable exact total and price consent,PASS
+journey,M11,MERCHANT,Reject direct checkout without consent to the displayed price,PASS
+journey,M12,MERCHANT,Reject checkout when quantity differs from reviewed price consent,PASS
+journey,W04,WHOLESALER,Create a stock-backed points reward catalogue item,PASS
+journey,W05,WHOLESALER,Publish a challenge before the qualifying purchase,PASS
+journey,W06,WHOLESALER,Refuse a challenge award before the claim period opens,PASS
+journey,M13,MERCHANT,Place a priced direct order without an RFQ detour,PASS
+journey,M14,MERCHANT,Retry direct checkout without creating a duplicate order,PASS
+journey,M15,MERCHANT,Reject a changed payload reusing the successful order key,PASS
+journey,M16,MERCHANT,Read the submitted order in own order history,PASS
+journey,M17,MERCHANT,Read the immutable agreed price in the order details,PASS
+journey,M18,MERCHANT,Keep another shop from reading an order,PASS
+journey,M19,MERCHANT,Keep the merchant from publishing wholesaler offers,PASS
+journey,W07,WHOLESALER,Receive the mobile order in the operational queue,PASS
+journey,W08,WHOLESALER,Confirm a submitted priced order for warehouse preparation,PASS
+journey,M20,MERCHANT,Follow actual confirmation from the wholesaler,PASS
+journey,W09,WHOLESALER,Protect stock already reserved by an accepted order,PASS
+journey,W10,WHOLESALER,Reject dispatcher preparation outside its team responsibility,PASS
+journey,W11,WHOLESALER,Reject stale warehouse preparation versions,PASS
+journey,W12,WHOLESALER,Reject preparing more units than the order contains,PASS
+journey,W13,WHOLESALER,Record a real partial preparation by the warehouse team,PASS
+journey,M21,MERCHANT,Observe the warehouse preparation progress from the app API,PASS
+journey,W14,WHOLESALER,Reject a driver assignment crossing workspace boundaries,PASS
+journey,W15,WHOLESALER,Assign the delivery to an actual approved driver,PASS
+journey,W16,WHOLESALER,Block pickup until every ordered unit is prepared,PASS
+journey,W17,WHOLESALER,Finish preparation and send the order to the ready queue,PASS
+journey,M22,MERCHANT,See actual readiness and full preparation,PASS
+journey,W18,WHOLESALER,Transfer physical custody and debit stock at departure,PASS
+journey,M23,MERCHANT,Follow the dispatched order and named assigned driver,PASS
+journey,M24,MERCHANT,Block receipt confirmation before the driver arrives,PASS
+journey,M25,MERCHANT,Block cancellation after physical departure,PASS
+journey,W19,WHOLESALER,Reject stale location fixes instead of presenting them as live GPS,PASS
+journey,W20,WHOLESALER,Share a fresh driver position during the assigned delivery,PASS
+journey,M26,MERCHANT,See a timestamped real submitted driver fix,PASS
+journey,W21,WHOLESALER,Reject repeated GPS timestamps that could overwrite newer state,PASS
+journey,W22,WHOLESALER,Revoke driver location sharing explicitly,PASS
+journey,M27,MERCHANT,Stop showing driver coordinates after consent is withdrawn,PASS
+journey,W23,WHOLESALER,Move the assigned courier through en route and arrived states,PASS
+journey,M28,MERCHANT,Reject a receipt created from an outdated order version,PASS
+journey,M29,MERCHANT,Issue a QR receipt bound to accepted and refused quantities,PASS
+journey,W24,WHOLESALER,Reject driver alteration of merchant-confirmed receipt quantities,PASS
+journey,W25,WHOLESALER,Complete the physical receipt using the merchant QR proof,PASS
+journey,M30,MERCHANT,See accepted quantities and the corrected delivered amount,PASS
+journey,W26,WHOLESALER,Reject replay of a consumed delivery receipt proof,PASS
+journey,M31,MERCHANT,Keep physical receipt separate from money actually collected,PASS
+journey,M32,MERCHANT,Earn no spendable points from unpaid delivered goods,PASS
+journey,M33,MERCHANT,Prevent a merchant from fabricating a courier payment,PASS
+journey,W27,WHOLESALER,Reject a cash collection whose tender and change do not reconcile,PASS
+journey,W28,WHOLESALER,Record actual cash tender and change after receipt,PASS
+journey,W29,WHOLESALER,Retry a cash collection without taking payment twice,PASS
+journey,W30,WHOLESALER,Reject collection beyond the actual remaining balance,PASS
+journey,M34,MERCHANT,See the actual collection method and zero remaining balance,PASS
+journey,W31,WHOLESALER,Keep warehouse staff from reconciling financial receipts,PASS
+journey,W32,WHOLESALER,Reconcile the actual cash receipt through the finance role,PASS
+journey,W33,WHOLESALER,Keep refused stock quarantined until a quality decision,PASS
+journey,W34,WHOLESALER,Release physically inspected intact refused units,PASS
+journey,W35,WHOLESALER,Prevent duplicate return inspection from increasing stock twice,PASS
+journey,M35,MERCHANT,Accrue points from accepted paid goods only,PASS
+journey,M36,MERCHANT,Sync points repeatedly without double earning,PASS
+journey,M37,MERCHANT,Discover the wholesaler-created stock-backed gift,PASS
+journey,M38,MERCHANT,Reserve an affordable gift using earned points,PASS
+journey,M39,MERCHANT,Retry a gift reservation without spending points twice,PASS
+journey,M40,MERCHANT,Show points reserved separately from spendable points,PASS
+journey,M41,MERCHANT,Prevent reward reservations from overdrawing the points wallet,PASS
+journey,W36,WHOLESALER,Prepare a merchant reward for handover,PASS
+journey,W37,WHOLESALER,Fulfill the physical gift with a beneficiary proof reference,PASS
+journey,M42,MERCHANT,See gift handover consume the held points exactly once,PASS
+journey,M43,MERCHANT,Keep loyalty balances confined to the signed-in shop,PASS
+journey,M44,MERCHANT,Open support directly against the actual order context,PASS
+journey,M45,MERCHANT,Send an actual contextual support message,PASS
+journey,M46,MERCHANT,Retry a message without duplicating it,PASS
+journey,M47,MERCHANT,Reject changing message text under an already-used message key,PASS
+journey,W38,WHOLESALER,Reply as customer service in the same order conversation,PASS
+journey,M48,MERCHANT,Read the customer-service response in the order thread,PASS
+journey,W39,WHOLESALER,Add an internal warehouse coordination note,PASS
+journey,M49,MERCHANT,Keep private team notes out of merchant messages,PASS
+journey,W40,WHOLESALER,Hand the support dossier to a real warehouse team member,PASS
+journey,W41,WHOLESALER,Reject a stale customer-service handoff instead of overwriting it,PASS
+journey,W42,WHOLESALER,Close a resolved contextual support dossier,PASS
+journey,M50,MERCHANT,Respect a closed support dossier and preserve its message history,PASS
+journey,W43,WHOLESALER,Reopen a support dossier for a new customer-service follow-up,PASS
+journey,W44,WHOLESALER,Create a quantity-threshold discount campaign,PASS
+journey,W45,WHOLESALER,Require an independent reviewer for campaign publication,PASS
+journey,W46,WHOLESALER,Publish the verified campaign through finance,PASS
+journey,M51,MERCHANT,Discover an actual published promotion created by the wholesaler,PASS
+journey,M52,MERCHANT,Calculate the promised discount at the qualifying threshold,PASS
+journey,M53,MERCHANT,Apply no discount below the published campaign threshold,PASS
+journey,M54,MERCHANT,Use the same campaign discount in the real checkout basket,PASS
+journey,M55,MERCHANT,Commit the actual advertised discount as immutable order terms,PASS
+journey,W47,WHOLESALER,Reject invalid campaign percentages before publication,PASS
+journey,W48,WHOLESALER,Publish a distinct free-goods promotion with a named stocked gift,PASS
+journey,M56,MERCHANT,Preview the named free-goods quantity at the threshold,PASS
+journey,M57,MERCHANT,Reserve real free-gift stock with the paid-goods checkout,PASS
+journey,M58,MERCHANT,Show challenge progress from actual accepted paid units,PASS
+journey,W49,WHOLESALER,Award the completed challenge from the actual paid delivery,PASS
+journey,W50,WHOLESALER,Retry a challenge award without granting the same shop twice,PASS
+journey,M59,MERCHANT,Claim a completed challenge reward without spending wallet points,PASS
+journey,M60,MERCHANT,Reject a second independent claim of the consumed challenge grant,PASS
+journey,M61,MERCHANT,Start with marketing disabled while service messaging remains available,PASS
+journey,W51,WHOLESALER,Exclude a merchant who declined promotional messages,PASS
+journey,M62,MERCHANT,Explicitly opt into commercial messages,PASS
+journey,W52,WHOLESALER,Deliver an opted-in promotional message in the shared inbox,PASS
+journey,M63,MERCHANT,Withdraw marketing consent without losing service communications,PASS
+journey,W53,WHOLESALER,Deliver a service message independently of marketing preference,PASS
+journey,W54,WHOLESALER,Search actual merchants by shop name,PASS
+journey,W55,WHOLESALER,Search actual merchants by telephone number,PASS
+journey,W56,WHOLESALER,Filter the order queue by the actual order number,PASS
+journey,W57,WHOLESALER,Calculate dashboard sales and collections from the completed journey,PASS
+journey,W58,WHOLESALER,Keep actual actors and handoffs in the audit history,PASS
+journey,M64,MERCHANT,Calculate own account totals from recorded payment facts,PASS
+journey,M65,MERCHANT,Reorder a previous receipt into a fresh basket without duplicating its payment,PASS
+journey,W59,WHOLESALER,Change a catalogue offer without rewriting existing agreed order prices,PASS
+journey,M66,MERCHANT,Display the new current price while preserving the paid order history,PASS
+journey,W60,WHOLESALER,Reject a warehouse attempt to publish a campaign,PASS
+journey,W61,WHOLESALER,Suspend a shop and revoke its effective access,PASS
+journey,W62,WHOLESALER,Restore a suspended shop without erasing its history,PASS
+journey,M67,MERCHANT,Protect contextual support against another shop opening the same order,PASS
+journey,M68,MERCHANT,Keep another workspace from following a delivery,PASS
+journey,W63,WHOLESALER,Prevent overselling when two shops commit the last unit concurrently,PASS
+journey,M69,MERCHANT,See a clear sold-out checkout after the last available unit is reserved,PASS
+enhancements,1,,Merchant activity requires an authenticated session,PASS
+enhancements,2,,Activity rejects staff instead of leaking a shop aggregate,PASS
+enhancements,3,,Activity rejects unsupported arbitrary date windows,PASS
+enhancements,4,,Empty merchant activity has truthful zero values and real daily dates,PASS
+enhancements,5,,Default activity has thirty daily entries,PASS
+enhancements,6,,Ninety-day activity has a bounded actual date series,PASS
+enhancements,7,,Shop geography follows its default address,PASS
+enhancements,8,,Wholesaler filters stores by region without mixing other regions,PASS
+enhancements,9,,Region filters compare names without case differences,PASS
+enhancements,10,,Store text search includes commune,PASS
+enhancements,11,,Combined region and telephone filters retain only matching stores,PASS
+enhancements,12,,CRM projects the same actual geography,PASS
+enhancements,13,,Campaign creation rejects duplicate target shops,PASS
+enhancements,14,,Campaign creation rejects a target from another workspace,PASS
+enhancements,15,,Campaign creation rejects a missing or inactive target,PASS
+enhancements,16,,Campaign draft persists the exact selected shop audience,PASS
+enhancements,17,,A targeted draft stays invisible to the selected merchant,PASS
+enhancements,18,,Independent publication preserves the chosen audience,PASS
+enhancements,19,,Published targeted campaign appears to its selected shop,PASS
+enhancements,20,,Published targeted campaign stays absent from another shop,PASS
+enhancements,21,,Excluded shop cannot inspect the targeted preview,PASS
+enhancements,22,,Excluded shop cannot inspect targeted challenge or campaign progress,PASS
+enhancements,23,,Targeted preview and actual basket resolve the selected discount,PASS
+enhancements,24,,Excluded shop keeps its ordinary published price at checkout,PASS
+enhancements,25,,Staff simulation uses the same audience-aware pricing engine,PASS
+enhancements,26,,Direct order commits only the eligible targeted promotion,PASS
+enhancements,27,,Explicit manual quote cannot force a targeted discount onto an excluded shop,PASS
+enhancements,28,,Activity reflects the new actual merchant order and outstanding contract,PASS
+enhancements,29,,Another merchant activity cannot be switched by a merchantId parameter,PASS
+enhancements,30,,Activity separates accepted delivered amount from the original ordered amount,PASS
+enhancements,31,,Activity money and daily chart come from the real recorded payment,PASS
+enhancements,32,,Staff campaign overview retains the exact selected audience for future audits,PASS
+enhancements,33,,Support handoff rejects a SALES adviser who cannot open the support dossier,PASS
+amendment-audit,1,,Amendment history requires authentication,PASS
+amendment-audit,2,,Another shop cannot inspect the contract-change dossier,PASS
+amendment-audit,3,,Another workspace cannot inspect the contract-change dossier,PASS
+amendment-audit,4,,Warehouse role cannot inspect the commercial change dossier,PASS
+amendment-audit,5,,An eligible unpaid unprepared order allows an owner proposal,PASS
+amendment-audit,6,,Merchant cannot author a wholesaler change proposal,PASS
+amendment-audit,7,,Proposal rejects an outdated base order version,PASS
+amendment-audit,8,,Proposal rejects an empty replacement basket,PASS
+amendment-audit,9,,Proposal requires a meaningful reason,PASS
+amendment-audit,10,,Proposal expiry must leave a meaningful review window,PASS
+amendment-audit,11,,Proposal is a separate immutable contract suggestion with no reservation side effect,PASS
+amendment-audit,12,,Proposal retries return the original pending suggestion,PASS
+amendment-audit,13,,An already-used proposal key cannot change contractual quantities,PASS
+amendment-audit,14,,Only one live proposal can await the shop decision,PASS
+amendment-audit,15,,Merchant frozen before and after projections do not expose private tariff provenance,PASS
+amendment-audit,16,,Wholesaler cannot impersonate merchant acceptance,PASS
+amendment-audit,17,,Another shop cannot accept this merchant proposal,PASS
+amendment-audit,18,,Merchant must present consent to the exact displayed terms,PASS
+amendment-audit,19,,Merchant decision must use the current proposal version,PASS
+amendment-audit,20,,Explicit acceptance atomically replaces products quantities totals and reservations,PASS
+amendment-audit,21,,Acceptance retries preserve one committed amended contract,PASS
+amendment-audit,22,,A second independent decision cannot consume an accepted proposal,PASS
+amendment-audit,23,,A rejected decision cannot overwrite accepted history,PASS
+amendment-audit,24,,Rejection preserves the original products money and physical reservations,PASS
+amendment-audit,25,,Only the wholesaler may withdraw its pending proposal,PASS
+amendment-audit,26,,Withdrawal closes the suggestion without replacing the contract,PASS
+amendment-audit,27,,Withdrawal replay preserves one history decision and the unchanged contract,PASS
+amendment-audit,28,,Withdrawn terms cannot later be accepted,PASS
+amendment-audit,29,,A price change after proposal fails closed and rolls back original reservations,PASS
+amendment-audit,30,,A frozen historical proposal does not silently adopt a later catalogue price,PASS
+amendment-audit,31,,Stock loss after proposal rolls back the attempted contract replacement,PASS
+amendment-audit,32,,Fully reserved own stock can be reduced without requiring unrelated spare stock,PASS
+amendment-audit,33,,An actual payment blocks proposing a commercial rewrite,PASS
+amendment-audit,34,,Driver assignment blocks a proposal after operational handoff,PASS
+amendment-audit,35,,Beginning physical preparation invalidates an already-open proposal,PASS
+amendment-audit,36,,Canceling the original order prevents later acceptance of a stale suggestion,PASS
+amendment-audit,37,,Concurrent independent acceptance attempts commit one replacement exactly once,PASS
+warehouse,1,,count activation is explicit and idempotent,PASS
+warehouse,2,,warehouse count binds visible selected product and scoped physical stock,PASS
+warehouse,3,,managed stock cannot bypass lot controls through aggregate adjustment,PASS
+warehouse,4,,price edit can preserve managed physical stock,PASS
+warehouse,5,,FEFO reserves earlier expiry first,PASS
+warehouse,6,,manual prepared quantity cannot bypass required scans,PASS
+warehouse,7,,wave creation is persistent and idempotent,PASS
+warehouse,8,,wrong barcode and wrong reserved lot are rejected,PASS
+warehouse,9,,scan replay does not duplicate picked quantity,PASS
+warehouse,10,,completed scans mark wave and order ready,PASS
+warehouse,11,,departure consumes physical and reserved lots once,PASS
+warehouse,12,,returned managed stock cannot restock without identified lot,PASS
+warehouse,13,,returned batch must belong to original shipment,PASS
+warehouse,14,,identified return releases one traceable sellable unit,PASS
+warehouse,15,,returned batch quantity cannot exceed its original shipped allocation,PASS
+warehouse,16,,supplier receiving materializes exact managed lot quantities,PASS
+warehouse,17,,supplier quality decision updates both source and managed lot,PASS
+warehouse,18,,activation cannot relabel existing reserved legacy stock,PASS
+warehouse,19,,concurrent last-lot reservation has one winner,PASS
+warehouse,20,,quality isolation is idempotent and separates its source hold,PASS
+warehouse,21,,quality release restores exact aggregate and batch availability,PASS
+warehouse,22,,promotional gift gets separate managed stock and scan task,PASS
+warehouse,23,,unscanned gift blocks manual ready transition,PASS
+warehouse,24,,managed gift cannot restock without separate return lot identity,PASS
+warehouse,25,,gift return inspection restores one independently traced unit,PASS
+warehouse,26,,per-lot physical recount is idempotent and stale versions cannot change stock,PASS
+warehouse,27,,routed managed refusal cannot bypass physical depot receipt,PASS
+warehouse,28,,routed managed return restocks only after depot receipt and lot identity,PASS
+warehouse,29,,warehouse lot and task projections exclude merchants,PASS

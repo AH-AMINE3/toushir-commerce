@@ -56,6 +56,12 @@ public sealed class BroadcastRecipient
 }
 public sealed class Campaign
 {
+    [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public List<string>? TargetMerchantIds { get; set; }
+    [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public int? TargetCount { get; set; }
     public string Id { get; set; } = IdGen.New(); public string WorkspaceId { get; set; } = ""; public string Title { get; set; } = ""; public string Description { get; set; } = "";
     public string Kind { get; set; } = "DISCOUNT"; public string ProductId { get; set; } = ""; public int MinimumQuantity { get; set; } = 1;
     public decimal DiscountPercent

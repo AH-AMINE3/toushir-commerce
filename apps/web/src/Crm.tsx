@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { api, post, key, money, labels } from "./api";
 import type { Session } from "./api";
+import { DownloadList } from "./OperationsDashboard";
 
 const instant = (value: string) =>
   new Date(value).toLocaleString("fr-DZ", {
@@ -42,25 +43,30 @@ export function Crm({
   session,
   query,
   onOrder,
+  initialShopId = "",
 }: {
   revision: number;
   session: Session;
   query: string;
   onOrder: (id: string) => void;
+  initialShopId?: string;
 }) {
   const [data, setData] = useState<any>(null),
-    [shopId, setShopId] = useState(""),
+    [shopId, setShopId] = useState(initialShopId),
     [dossier, setDossier] = useState<any>(null);
   const [error, setError] = useState(""),
     [formError, setFormError] = useState(""),
     [form, setForm] = useState<any>(null),
     [busy, setBusy] = useState(false),
     [filter, setFilter] = useState("ALL"),
-    [notice, setNotice] = useState("");
+    [notice, setNotice] = useState(""),
+    [localQuery, setLocalQuery] = useState(""),
+    [region, setRegion] = useState(""),
+    [advisorFilter, setAdvisorFilter] = useState("");
   const pending = useRef(false),
     heading = useRef<HTMLHeadingElement>(null),
     requestKeys = useRef<Record<string, string>>({}),
-    selectedShop = useRef(""),
+    selectedShop = useRef(initialShopId),
     loadVersion = useRef(0);
   const clearInaccessibleShop = () => {
     ++loadVersion.current;
@@ -159,16 +165,26 @@ export function Crm({
         {error || "Chargement du suivi commercial…"}
       </div>
     );
-  const shops = data.shops.filter((s: any) =>
-    (s.name + " " + s.contact + " " + s.phone)
-      .toLowerCase()
-      .includes(query.toLowerCase()),
+  const regions = [
+    ...new Set<string>(data.shops.map((s: any) => s.region).filter(Boolean)),
+  ].sort();
+  const shops = data.shops.filter(
+    (s: any) =>
+      (!region || s.region === region) &&
+      (!advisorFilter || s.portfolio?.advisorId === advisorFilter) &&
+      [query, localQuery].every(
+        (term) =>
+          !term ||
+          `${s.name} ${s.contact} ${s.phone} ${s.region || ""} ${s.commune || ""}`
+            .toLocaleLowerCase("fr")
+            .includes(term.toLocaleLowerCase("fr")),
+      ),
   );
   const tasks = data.tasks.filter(
     (t: any) =>
       (!shopId || t.shopId === shopId) &&
       (filter !== "VISIT" || t.kind === "VISIT") &&
-      (!query || shops.some((s: any) => s.id === t.shopId)),
+      shops.some((s: any) => s.id === t.shopId),
   );
   const advisorName = (id: string) =>
     data.advisors.find((a: any) => a.id === id)?.name ||
@@ -228,11 +244,56 @@ export function Crm({
           {notice}
         </div>
       )}
+      <div className="directory-toolbar">
+        <label>
+          Rechercher dans le portefeuille
+          <input
+            value={localQuery}
+            onChange={(e) => setLocalQuery(e.target.value)}
+            placeholder="Magasin, téléphone, commune…"
+            aria-label="Rechercher un magasin dans le CRM"
+          />
+        </label>
+        <label>
+          Région
+          <select
+            value={region}
+            onChange={(e) => setRegion(e.target.value)}
+            aria-label="Région du portefeuille"
+          >
+            <option value="">Toutes les régions</option>
+            {regions.map((r) => (
+              <option key={r}>{r}</option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Conseiller
+          <select
+            value={advisorFilter}
+            onChange={(e) => setAdvisorFilter(e.target.value)}
+          >
+            <option value="">Tous les conseillers</option>
+            {data.advisors.map((advisor: any) => (
+              <option value={advisor.id} key={advisor.id}>
+                {advisor.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <DownloadList rows={shops} name="portefeuille-toushir" />
+      </div>
       <div className="crm-toolbar">
         <label className="field">
           <span>Magasin du portefeuille</span>
           <select value={shopId} onChange={(e) => chooseShop(e.target.value)}>
             <option value="">Tous les magasins autorisés</option>
+            {shopId && !shops.some((s: any) => s.id === shopId) && (
+              <option value={shopId}>
+                {data.shops.find((s: any) => s.id === shopId)?.name} · sélection
+                actuelle
+              </option>
+            )}
             {shops.map((s: any) => (
               <option key={s.id} value={s.id}>
                 {s.name}
@@ -367,6 +428,12 @@ export function Crm({
                     : "Conseiller à affecter"}
                 </span>
               </div>
+              {dossier.shop.region && (
+                <p className="directory-region">
+                  {dossier.shop.region}
+                  {dossier.shop.commune ? " · " + dossier.shop.commune : ""}
+                </p>
+              )}
               <div className="crm-actions">
                 {data.canAssign && (
                   <button
@@ -712,6 +779,7 @@ export function Crm({
                   {formError}
                 </div>
               )}
+
               <div className="crm-actions">
                 <button className="button" type="submit">
                   {busy

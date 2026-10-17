@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-17T13:47:08.293Z",
+  "base": "http://127.0.0.1:5865",
+  "checks": [
+    "Analytics has real periods, metric switching, keyboard graph and custom dates",
+    "Delivery loads attributed 3D truck model and explicit illustrative replay controls"
+  ],
+  "failures": [],
+  "errors": [],
+  "captures": [
+    {
+      "file": ".impeccable/review/expanded/desktop-analytics.png",
+      "width": 1600,
+      "height": 2624
+    },
+    {
+      "file": ".impeccable/review/expanded/desktop-dark.png",
+      "width": 1600,
+      "height": 2624
+    },
+    {
+      "file": ".impeccable/review/expanded/desktop-delivery-3d.png",
+      "width": 1600,
+      "height": 2474
+    },
+    {
+      "file": ".impeccable/review/expanded/desktop-delivery-gps.png",
+      "width": 1600,
+      "height": 2466
+    }
+  ]
+}

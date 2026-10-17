@@ -1,0 +1,33 @@
+{
+  "suite": "batch-recalls",
+  "success": true,
+  "passed": 22,
+  "checks": [
+    "anonymous and unauthorized roles cannot trace recalls; an untracked product cannot masquerade as a lot",
+    "recall creation is versioned and idempotent without inventing a physical movement",
+    "preparation is traceable without double-counting the depot custody",
+    "foreign workspace cannot inspect or mutate another recall",
+    "new allocation, reserved preparation and recount all fail with LOT_RECALLED",
+    "merchant and assigned driver receive scoped versioned notices; acknowledgements never count as physical recovery",
+    "depot recovery requires staff, cannot consume reserved units and unresolved depot stock blocks closure",
+    "depot recovery moves exactly five existing units into quarantine, with replay and stale-write protection",
+    "reserved units become recoverable only after the real reservation is released",
+    "recall quarantine cannot be released through ordinary lot quality controls",
+    "outbound recovery requires an exact physically received RETURN lot; linking and replay add no stock",
+    "only ADMIN can record a reasoned residual outbound exception; it never becomes recovered stock",
+    "closure follows reconciled depot custody and documented outbound residuals",
+    "CLOSED records retain permanent batch safety blocks",
+    "recalled reserved goods cannot depart, complete remaining scans or be falsely recovered",
+    "explicit recall cancellation is ADMIN-only, versioned and idempotent; it releases only the actual reservation",
+    "canceling a paid recalled preparation voids the contract while preserving the recorded payment and refund due",
+    "recall cancellation detaches the unpicked route stop and invalidates its old loading QR",
+    "partially scanned recall cancellation releases the remaining reservation without fabricating a physical movement",
+    "prepared recalled stock can close only after explicit cancellation and separate complete physical isolation",
+    "historical untracked shipments remain unknown rather than being assigned the newly counted batch",
+    "unknown scope needs an explicit closure reason and remains visible after closure"
+  ],
+  "httpRequests": 192,
+  "executedAt": "2026-10-17T13:40:49.355597+00:00",
+  "base": "http://127.0.0.1:5864/api",
+  "scope": "Actual API mutations and fictional payment records in isolated demo workspaces; no database edits, external messages or real payments."
+}

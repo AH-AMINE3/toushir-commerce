@@ -573,6 +573,31 @@ namespace Toushir.Wholesale.Migrations.Postgres
                     b.ToTable("Campaigns", Schema);
                 });
 
+            modelBuilder.Entity("Toushir.Wholesale.CampaignAudience", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CampaignId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("MerchantId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("WorkspaceId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkspaceId", "CampaignId", "MerchantId")
+                        .IsUnique();
+
+                    b.ToTable("CampaignAudiences", Schema);
+                });
+
             modelBuilder.Entity("Toushir.Wholesale.CampaignGrant", b =>
                 {
                     b.Property<string>("Id")
@@ -1881,6 +1906,116 @@ namespace Toushir.Wholesale.Migrations.Postgres
                     b.ToTable("OperationReceipts", Schema);
                 });
 
+            modelBuilder.Entity("Toushir.Wholesale.OrderAmendment", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("AcceptedOrderVersion")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("AfterJson")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("BaseOrderVersion")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("BeforeJson")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset?>("DecidedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DecidedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("DecisionKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("DecisionName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("DecisionReason")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("DecisionRequestHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("IdempotencyKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LinesJson")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("MerchantId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("OrderId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("ProposedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ProposedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProposerName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("RequestHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TermsHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("integer");
+
+                    b.Property<string>("WorkspaceId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkspaceId", "MerchantId");
+
+                    b.HasIndex("WorkspaceId", "OrderId")
+                        .IsUnique()
+                        .HasFilter("\"Status\" = 'PENDING'");
+
+                    b.HasIndex("WorkspaceId", "OrderId", "IdempotencyKey")
+                        .IsUnique();
+
+                    b.ToTable("OrderAmendments", Schema);
+                });
+
             modelBuilder.Entity("Toushir.Wholesale.OrderClaim", b =>
                 {
                     b.Property<string>("Id")
@@ -2589,6 +2724,306 @@ namespace Toushir.Wholesale.Migrations.Postgres
                         .IsUnique();
 
                     b.ToTable("Orders", Schema);
+                });
+
+            modelBuilder.Entity("Toushir.Wholesale.RecallCase", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset?>("ClosedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ClosedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ClosureNote")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("ContainmentActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset?>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("IdentityKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LotId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LotNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProductId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("SafetyInstruction")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UnknownScopeReason")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UnknownUntrackedOrderCount")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UnknownUntrackedQuantity")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("integer");
+
+                    b.Property<string>("WorkspaceId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkspaceId", "IdentityKey")
+                        .IsUnique();
+
+                    b.ToTable("RecallCases", Schema);
+                });
+
+            modelBuilder.Entity("Toushir.Wholesale.RecallEvent", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ActorId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("At")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Destination")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Details")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PositionId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProofReference")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("RecallId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("WarehouseLotId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("WorkspaceId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkspaceId", "RecallId");
+
+                    b.ToTable("RecallEvents", Schema);
+                });
+
+            modelBuilder.Entity("Toushir.Wholesale.RecallNotice", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("RecallId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset?>("ReceivedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ReceivedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("RecipientId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("RecipientRole")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("integer");
+
+                    b.Property<string>("WorkspaceId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecallId", "RecipientRole", "RecipientId")
+                        .IsUnique();
+
+                    b.ToTable("RecallNotices", Schema);
+                });
+
+            modelBuilder.Entity("Toushir.Wholesale.RecallOperation", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ActorId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("At")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("IdempotencyKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("RecallId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("RequestHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("WorkspaceId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkspaceId", "ActorId", "IdempotencyKey")
+                        .IsUnique();
+
+                    b.ToTable("RecallOperations", Schema);
+                });
+
+            modelBuilder.Entity("Toushir.Wholesale.RecallPosition", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AllocationId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("DriverId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset?>("ExceptionAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ExceptionBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ExceptionQuantity")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ExceptionReason")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ExceptionReference")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LotId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("OrderId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PositionKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("RecallId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("RecoveredQuantity")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("RequiresRecovery")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("ShopId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("SnapshotOrderStatus")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("integer");
+
+                    b.Property<string>("WorkspaceId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecallId", "PositionKey")
+                        .IsUnique();
+
+                    b.ToTable("RecallPositions", Schema);
                 });
 
             modelBuilder.Entity("Toushir.Wholesale.ReceiptChallenge", b =>

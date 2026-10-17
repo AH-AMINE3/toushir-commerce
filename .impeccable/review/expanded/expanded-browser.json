@@ -1,0 +1,176 @@
+{
+  "at": "2026-10-17T13:46:51.076Z",
+  "base": "http://127.0.0.1:5865",
+  "checks": [
+    "Actual wholesale dashboard loads seeded records",
+    "Merchant catalogue shares the wholesale workspace and positive demo prices",
+    "Full category grid, semantic icons and category selection work",
+    "Brand directory opens, searches and filters actual products",
+    "Product filters and exact barcode lookup work",
+    "Direct checkout submits priced order and shows confirmation in merchant app",
+    "The exact mobile order is visible in wholesaler operations",
+    "Merchant account card, actual 7/30/90 day activity, measures and bar drilldown work",
+    "All campaign mechanisms and actual gift catalogue render",
+    "Merchant orders and real preparation tracking remain connected",
+    "Shops filter by actual region, name or phone and export the filtered list",
+    "Campaign editor exposes explicit regional audience targeting",
+    "Wholesaler responsive overview renders at 390px without page overflow",
+    "Live work screen runs merchant and wholesale in two actual shared-workspace frames",
+    "Analytics has real periods, metric switching, keyboard graph and custom dates",
+    "Delivery loads attributed 3D truck model and explicit illustrative replay controls"
+  ],
+  "failures": [],
+  "errors": [],
+  "captures": [
+    {
+      "file": ".impeccable/review/expanded/desktop-overview.png",
+      "width": 1600,
+      "height": 2559
+    },
+    {
+      "file": ".impeccable/review/expanded/desktop-overview-chart.png",
+      "width": 1600,
+      "height": 2559
+    },
+    {
+      "file": ".impeccable/review/expanded/merchant-catalog.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": ".impeccable/review/expanded/merchant-categories.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": ".impeccable/review/expanded/merchant-category-products.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": ".impeccable/review/expanded/merchant-brands.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": ".impeccable/review/expanded/merchant-filters.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": ".impeccable/review/expanded/merchant-barcode.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": ".impeccable/review/expanded/merchant-barcode-result.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": ".impeccable/review/expanded/merchant-checkout.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": ".impeccable/review/expanded/merchant-order-success.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": ".impeccable/review/expanded/desktop-mobile-order.png",
+      "width": 1600,
+      "height": 2890
+    },
+    {
+      "file": ".impeccable/review/expanded/merchant-account.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": ".impeccable/review/expanded/merchant-activity.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": ".impeccable/review/expanded/merchant-offers.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": ".impeccable/review/expanded/merchant-offers-remises.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": ".impeccable/review/expanded/merchant-offers-cadeaux.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": ".impeccable/review/expanded/merchant-offers-challenges.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": ".impeccable/review/expanded/merchant-gifts.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": ".impeccable/review/expanded/merchant-orders.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": ".impeccable/review/expanded/merchant-tracking.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": ".impeccable/review/expanded/desktop-analytics.png",
+      "width": 1600,
+      "height": 2624
+    },
+    {
+      "file": ".impeccable/review/expanded/desktop-stores.png",
+      "width": 1600,
+      "height": 1092
+    },
+    {
+      "file": ".impeccable/review/expanded/desktop-campaign-audience.png",
+      "width": 1600,
+      "height": 2359
+    },
+    {
+      "file": ".impeccable/review/expanded/wholesale-mobile.png",
+      "width": 390,
+      "height": 4182
+    },
+    {
+      "file": ".impeccable/review/expanded/live-work-hub.png",
+      "width": 1600,
+      "height": 1040
+    },
+    {
+      "file": ".impeccable/review/expanded/desktop-dark.png",
+      "width": 1600,
+      "height": 2624
+    },
+    {
+      "file": ".impeccable/review/expanded/desktop-delivery-3d.png",
+      "width": 1600,
+      "height": 2474
+    },
+    {
+      "file": ".impeccable/review/expanded/desktop-delivery-gps.png",
+      "width": 1600,
+      "height": 2466
+    }
+  ],
+  "verificationRuns": [
+    "expanded-browser-before-final-corrections.json (diagnostics)",
+    "expanded-browser-corrections.json"
+  ],
+  "knownResolvedDefect": "GLB static MIME mapping: initial404, fixed to model/gltf-binary, actual loaded model verified in corrected run."
+}

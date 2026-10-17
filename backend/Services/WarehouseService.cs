@@ -43,7 +43,8 @@ public sealed partial class WarehouseService(WholesaleDb db, RealtimeChanges cha
         if (!await IsManaged(workspace, product))
             return null;
         var lots = await db.WarehouseLots.AsNoTracking().Where(x => x.WorkspaceId == workspace && x.ProductId == product).ToListAsync();
-        return lots.Where(x => x.ExpiresAt == null || x.ExpiresAt > DateTimeOffset.UtcNow).Sum(x => Math.Max(0, x.OnHand - x.Reserved));
+        var held = await RecallGuard.HeldIdentities(db, workspace, product);
+        return lots.Where(x => !held.Contains(RecallGuard.Identity(x.ProductId, x.LotNumber, x.ExpiresAt)) && (x.ExpiresAt == null || x.ExpiresAt > DateTimeOffset.UtcNow)).Sum(x => Math.Max(0, x.OnHand - x.Reserved));
     }
     public async Task AssertManualStockChange(string workspace, string product, int? newQuantity)
     {
@@ -179,7 +180,8 @@ public sealed partial class WarehouseService(WholesaleDb db, RealtimeChanges cha
             });
             return;
         }
-        var lots = (await db.WarehouseLots.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId && x.ProductId == product && x.OnHand > x.Reserved).ToListAsync()).Where(x => x.ExpiresAt == null || x.ExpiresAt > DateTimeOffset.UtcNow).OrderBy(x => x.ExpiresAt ?? DateTimeOffset.MaxValue).ThenBy(x => x.ReceivedAt).ThenBy(x => x.Id).ToList();
+        var held = await RecallGuard.HeldIdentities(db, a.WorkspaceId, product);
+        var lots = (await db.WarehouseLots.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId && x.ProductId == product && x.OnHand > x.Reserved).ToListAsync()).Where(x => !held.Contains(RecallGuard.Identity(x.ProductId, x.LotNumber, x.ExpiresAt)) && (x.ExpiresAt == null || x.ExpiresAt > DateTimeOffset.UtcNow)).OrderBy(x => x.ExpiresAt ?? DateTimeOffset.MaxValue).ThenBy(x => x.ReceivedAt).ThenBy(x => x.Id).ToList();
         var remaining = quantity;
         foreach (var lot in lots)
         {
@@ -204,10 +206,12 @@ public sealed partial class WarehouseService(WholesaleDb db, RealtimeChanges cha
             if (remaining == 0)
                 break;
         }
+        Check.That(remaining == 0 || held.Count == 0, "Un lot rappelé est exclu de la réservation. Le stock sûr disponible ne couvre pas cette quantité.", "LOT_RECALLED", 409);
         Check.That(remaining == 0, "Les lots non expirés ne couvrent pas la quantité. Aucune réservation partielle n'est conservée.", "LOT_STOCK_INSUFFICIENT", 409);
     }
     public async Task ReserveOrder(Actor a, PurchaseOrder o)
     {
+        await RecallGuard.AssertOrder(db, o);
         foreach (var line in o.Items.Where(x => x.Quantity > 0))
             await Allocate(a, o, line.ProductId, line.Quantity, "LINE:" + line.Id, lineId: line.Id);
     }
@@ -229,11 +233,13 @@ public sealed partial class WarehouseService(WholesaleDb db, RealtimeChanges cha
     }
     public async Task<bool> ScansComplete(PurchaseOrder o)
     {
+        await RecallGuard.AssertOrder(db, o);
         var allocations = await db.LotAllocations.AsNoTracking().Where(x => x.WorkspaceId == o.WorkspaceId && x.OrderId == o.Id && x.Status == "RESERVED").ToListAsync();
         return allocations.Where(x => x.LotId.Length > 0 || x.WaveId.Length > 0).All(x => x.PickedQuantity == x.Quantity);
     }
     public async Task ValidatePreparation(Actor a, PurchaseOrder o, List<PrepareLineInput> input)
     {
+        await RecallGuard.AssertOrder(db, o);
         var allocations = await Allocations(o);
         foreach (var item in input)
         {
@@ -361,6 +367,7 @@ public sealed partial class WarehouseService(WholesaleDb db, RealtimeChanges cha
         if (task.LotId.Length > 0)
         {
             var lot = await db.WarehouseLots.AsNoTracking().FirstAsync(x => x.Id == task.LotId);
+            await RecallGuard.AssertLot(db, a.WorkspaceId, lot);
             Check.That(lot.LotNumber == lotNumber, "Le lot ne correspond pas à la réservation FEFO.", "LOT_MISMATCH", 422);
             Check.That(lot.ExpiresAt == null || lot.ExpiresAt > DateTimeOffset.UtcNow, "Le lot a expiré. Ne le préparez pas.", "LOT_EXPIRED", 422);
         }

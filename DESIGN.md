@@ -1,6 +1,6 @@
 ---
 name: TOUSHIR Commerce
-description: The existing Toushir Figma system for connected wholesale operations.
+description: The Toushir Figma system for active, connected wholesale commerce.
 colors:
   ink: "#151917"
   brand: "#0f2c2c"
@@ -18,16 +18,17 @@ colors:
   line: "#e7ebe7"
   border-web: "#e4e9e6"
   muted-web: "#66736b"
-  muted-mobile: "#6b736f"
+  muted-mobile: "#5f6a63"
+  muted-mobile-detail: "#6b736f"
   account-on-dark: "#bacabf"
   danger-web: "#a92d2d"
   danger-mobile: "#b42332"
   danger-surface-web: "#fff0ef"
   danger-surface-mobile: "#fff0f1"
-  warning-web: "#855413"
-  warning-mobile: "#805413"
-  warning-surface-web: "#fff5db"
-  warning-surface-mobile: "#fff5dc"
+  warning-web: "#145b5b"
+  warning-mobile: "#40534a"
+  warning-surface-web: "#d9f5f2"
+  warning-surface-mobile: "#edf2ef"
   dark-canvas: "#0e1713"
   dark-surface: "#17231c"
   dark-sidebar: "#111d17"
@@ -43,8 +44,8 @@ colors:
   dark-aqua-ink: "#adf5ef"
   dark-danger: "#ffb1b1"
   dark-danger-surface: "#452627"
-  dark-warning: "#efd09b"
-  dark-warning-surface: "#3a301d"
+  dark-warning: "#adf5ef"
+  dark-warning-surface: "#17464b"
 typography:
   headline-web:
     fontFamily: '"DM Sans", sans-serif'
@@ -52,6 +53,17 @@ typography:
     fontWeight: 700
     lineHeight: 1.3
     letterSpacing: "-0.03em"
+  operating-title:
+    fontFamily: '"DM Sans", sans-serif'
+    fontSize: "23px"
+    fontWeight: 700
+    letterSpacing: "-0.03em"
+  operating-metric:
+    fontFamily: '"DM Sans", sans-serif'
+    fontSize: "clamp(24px, 2.2vw, 35px)"
+    fontWeight: 700
+    lineHeight: 1.3
+    letterSpacing: "-0.035em"
   title-web:
     fontFamily: '"DM Sans", sans-serif'
     fontSize: "18px"
@@ -233,12 +245,12 @@ components:
   category-beverage:
     backgroundColor: "{colors.mint}"
     rounded: "{rounded.panel-web}"
-    height: "60px"
+    height: "52px"
     width: "76px"
   category-fresh:
     backgroundColor: "{colors.aqua}"
     rounded: "{rounded.panel-web}"
-    height: "60px"
+    height: "52px"
     width: "76px"
 ---
 
@@ -250,16 +262,16 @@ components:
 
 The supplied Figma file `4IffhmSg2gHg82narIGfMF` remains the visual authority. This document records how that existing world is implemented in the wholesaler workspace and merchant/courier applications: original Toushir assets, DM Sans, white surfaces, mint selection, bright green actions and dense operational content. It extends that world; it does not establish a replacement identity. Preserve the proportions of the original mark and navigation assets, and the identity of sourced product packaging.
 
-The atmosphere is quiet and practical. Headings orient the user, tonal panels group work, and restrained status colours make current state visible. A commercial action has an explicit label and outcome. Unknown prices remain unconfirmed, demo content stays labelled, and illustrations never masquerade as observations. The source evidence is `apps/web/src/style.css`, `apps/web/src/main.tsx`, `apps/mobile/src/theme.ts`, `apps/mobile/src/components.tsx`, `apps/mobile/src/Merchant.tsx`, `apps/mobile/src/MerchantAccount.tsx`, `apps/mobile/src/Engagement.tsx`, `apps/mobile/src/Driver.tsx` and the DM Sans font registration in `apps/mobile/App.tsx`.
+The atmosphere is practical and active. Headings orient the user, tonal panels group work, and restrained status colours make current state visible. Merchant discovery gives product packaging, prices and direct ordering a compact commerce hierarchy. Operational views connect current metrics to the next action; deliberate state and progress motion makes changes legible without hiding the content. A commercial action has an explicit label and outcome. Unknown prices remain unconfirmed, demo content stays labelled, and illustrations never masquerade as observations. The source evidence is `apps/web/src/style.css`, `apps/web/src/main.tsx`, `apps/mobile/src/theme.ts`, `apps/mobile/src/components.tsx`, `apps/mobile/src/Merchant.tsx`, `apps/mobile/src/MerchantAccount.tsx`, `apps/mobile/src/Engagement.tsx`, `apps/mobile/src/Driver.tsx`, `apps/mobile/src/MerchantDiscovery.tsx`, `apps/mobile/src/MerchantActivity.tsx`, `apps/mobile/src/Motion.tsx`, `apps/web/src/OperationsDashboard.tsx`, `apps/web/src/Warehouse.tsx` and the DM Sans font registration in `apps/mobile/App.tsx`.
 
-This is a source-grounded system record. Exact acceptance of all 265 Figma states, native runtime acceptance and domain/security acceptance have separate evidence; they are not certified by this document.
+This is a source-grounded system record of the explicitly approved white/ink/action-green extension, removal of beige/yellow treatments and purposeful motion. The expanded browser evidence is `.impeccable/review/expanded/packet.json`: 18 passed groups, no recorded failures or JavaScript errors, desktop 1600×1040, narrow wholesaler 390×844 and merchant 402×874. It records captures and browser behavior, not final design approval. Exact acceptance of all 265 Figma states, native runtime acceptance, external-provider success and domain/security acceptance have separate evidence; they are not certified by this document.
 
 **Key Characteristics:**
 - Original Figma identity and assets across three operational workspaces.
 - White and soft neutral surfaces with mint selection and green actions.
-- Compact DM Sans hierarchy with tabular financial data on the web.
-- Flat content, gently curved containers and transient overlays.
-- Explicit commercial states, demo labels and observed-data boundaries.
+- Compact DM Sans commerce hierarchy with tabular financial data on the web.
+- Flat content, gently curved containers, transient overlays and measured state motion.
+- Accessible chart exploration, explicit commercial states, demo labels and observed-data boundaries.
 
 ## Colors
 
@@ -272,10 +284,10 @@ Green provides continuity across navigation, actions and successful states; neut
 
 ### Secondary
 - **Mint** (`mint`): active navigation, positive status surfaces, notices, the beverage category shortcut and the account gift shortcut.
-- **Fresh aqua** (`aqua`): the fresh/milk category shortcut and the web informational status treatment. Other unselected merchant categories retain the soft neutral background. Selected category tiles use operational green.
+- **Fresh aqua** (`aqua`): the fresh/milk category shortcut and the web informational status treatment. Other unselected merchant categories retain the soft neutral background. Selected category tiles use mint with an operational-green border and label.
 
 ### Tertiary
-- **Warning amber** (`warning-*` and `warning-surface-*`): pending and warning states.
+- **Pending aqua and slate** (`warning-*` and `warning-surface-*`): cool, labelled pending and caution states. Historical source aliases such as `--yellow` and native `amber` now resolve to these cool colours; their names do not authorize a yellow or beige treatment.
 - **Error red** (`danger-*` and `danger-surface-*`): rejected, failed, destructive and error states. Status labels accompany colour.
 
 ### Neutral
@@ -284,12 +296,14 @@ Green provides continuity across navigation, actions and successful states; neut
 - **White surface** (`surface`): content panels, fields, product-image backplates and navigation bars.
 - **Canvas** (`canvas-web`, `canvas-mobile`) and **sidebar** (`sidebar`): broad page context and subtle surface separation. The web soft fill uses the mobile canvas colour.
 - **Divider and field border** (`line`, `border-web`): quiet one-pixel separation. Mobile shared dividers use `line`.
-- **Muted** (`muted-web`, `muted-mobile`): secondary descriptions, metadata and timestamps.
+- **Muted** (`muted-web`, `muted-mobile`): secondary descriptions, metadata and timestamps. `muted-mobile-detail` records the existing merchant-specific metadata treatment; shared native copy uses the darker `muted-mobile`.
 - **Web dark palette** (`dark-*`): source-defined replacements for canvas, surfaces, text, dividers and semantic pairs. It belongs to the wholesaler web theme; the mobile source currently uses the light palette. The original desktop mark retains a white brand tile.
 
 ### Named Rules
 
 **The State Has a Label Rule.** Colour supports a named state; it never supplies the only explanation of a commercial outcome.
+
+**The Cool Pending Rule.** Use the source-defined aqua/slate pending pairs and a written state; beige and yellow are excluded by the approved system change.
 
 **The Category Meaning Rule.** Keep beverage mint and fresh/milk aqua in the merchant rail; extend other categories from the existing neutral treatment rather than inventing a rainbow.
 
@@ -302,7 +316,7 @@ Green provides continuity across navigation, actions and successful states; neut
 
 ### Hierarchy
 - **Web headline:** `headline-web` for page titles; it reduces at tablet/phone widths. The metric number uses the same large scale with a tighter line height and tabular figures.
-- **Web title:** `title-web` for panel headings; smaller subsection headings use the observed 16px tier.
+- **Web title:** `title-web` for panel headings; smaller subsection headings use the observed 16px tier. The expanded overview uses `operating-title` for its operational heading and `operating-metric` for joined-ledger values; ledger figures reduce to 25px at 1200px and 23px at 700px. Chart readings use the 27px tier, reducing to 25px on phone layouts.
 - **Web body and labels:** `body-web` and `label-web`; operational tables and many descriptions use the compact 12px tier. Paragraph line height is 1.6.
 - **Mobile heading:** `heading-mobile` for shared entry views; `merchant-title` and `courier-title` preserve the shipped surface-specific heading hierarchy.
 - **Mobile title, body and label:** `title-mobile`, `body-mobile` and `label-mobile`; muted copy is 13px/20px and small supporting copy is 12px/18px.
@@ -314,11 +328,11 @@ Green provides continuity across navigation, actions and successful states; neut
 
 ## Layout
 
-The desktop shell has a fixed sidebar (224px), sticky header (64px), page gutter (32px) and content maximum (1920px). The standard metric row has four equal columns with a 16px gap. Overview content uses three columns with a two-column sales panel and a 20px gap. Content panels use the frontmatter panel padding; compact metric panels and phone layouts reduce density deliberately.
+The desktop shell has a fixed sidebar (224px), sticky header (64px), page gutter (32px) and content maximum (1920px). Standard transaction metric rows retain four equal columns with a 16px gap. The expanded operating ledger uses four joined cells, while its chart-and-priority region uses a 2.2:1 grid and a 22px gap; at 1200px that region becomes 1.7:1 and at 1000px it stacks. The ledger becomes two columns at 1000px; phone composition tightens at 700px. Older transaction overview panels retain their own three-column/two-column-span composition. Content panels use the frontmatter panel padding; compact metric panels and phone layouts reduce density deliberately.
 
-The web layout adapts at 1250px, 1000px and 760px, with a wider-layout adjustment at 1800px. At the tablet tier, the sidebar reduces to 190px, overview becomes two columns and standard metrics become two columns. At the phone tier the sidebar slides in, its menu remains accessible in the header, the content gutter becomes 16px, overview stacks and the header is 58px high. Wide operational tables scroll inside their panel instead of shrinking columns into illegibility. The general data table has a 760px minimum width; permissions use a 600px minimum.
+The base web layout adapts at 1250px, 1000px and 760px, with a wider-layout adjustment at 1800px. At the tablet tier, the sidebar reduces to 190px, overview becomes two columns and standard metrics become two columns. At the phone tier the sidebar slides in, its menu remains accessible in the header, the content gutter becomes 16px, overview stacks and the header is 58px high. Wide operational tables scroll inside their panel instead of shrinking columns into illegibility. The general data table has a 760px minimum width; permissions use a 600px minimum.
 
-Merchant and courier layouts center a full-width phone surface within a 520px maximum. Their headers and content use 20px horizontal spacing, with 16px checkout/basket padding where implemented. Safe-area insets, scrolling and keyboard accommodation belong to the native composition. The merchant catalogue has two product columns, a horizontal category rail and persistent bottom navigation. Category tiles are 76px by 60px within 81px shortcuts. Courier route content uses stacked task sections with a persistent four-item bottom bar.
+Merchant and courier layouts center a full-width phone surface within a 520px maximum. Their headers and content use 20px horizontal spacing, with 16px checkout/basket padding where implemented. Safe-area insets, scrolling and keyboard accommodation belong to the native composition. The merchant catalogue has two product columns, a horizontal category rail and persistent bottom navigation. Catalogue category tiles are 76px by 52px within 81px shortcuts. Product imagery uses a compact 120px height, reducing to 112px below a 370px app width; the first merchant viewport keeps price and add actions within the discovery hierarchy. Courier route content uses stacked task sections with a persistent four-item bottom bar.
 
 Merchant Offers, Messages, Orders and Account use title-first headers with contextual controls; the catalogue retains its logo, address and search composition. Account content stacks the loyalty card, an actual reserved-points row, paired gift/activity shortcuts, purchase metrics and account rows. The loyalty card uses 24px padding and an 18px gap; its two shortcut tiles use 16px padding, a 12px gap and a 95px minimum height.
 
@@ -336,9 +350,13 @@ Content is flat at rest: one-pixel borders, soft tonal fills and whitespace esta
 - **Open phone navigation:** `20px 0 60px #0f2c2c30`; separates the revealed sidebar from the page.
 - **GPS marker:** `0 4px 15px #14362930`; local map-marker separation.
 
-Web buttons transition background and transform over 0.15s; their pressed state moves down 1px. The drawer enters over 0.22s with `cubic-bezier(0.16, 1, 0.3, 1)`. Phone navigation slides over 0.18s. The web reduced-motion preference collapses animation and transition duration to 0.01ms.
+Web buttons transition background and transform over 0.15s; their pressed state moves down 1px. The drawer enters over 0.22s with `cubic-bezier(0.16, 1, 0.3, 1)`. Phone navigation slides over 0.18s. Activity curves reveal over 0.65s and aging bars transition height over 0.5s with the same easing; textual values are available independently. The web reduced-motion preference collapses animation and transition duration to 0.01ms and disables smooth scrolling.
+
+Native state arrival moves 6px into place over 280ms with exponential ease-out; it never fades essential content from invisible. Measured progress animates a bounded, finite 0–100% value over 420ms and exposes a labelled progressbar. Native reduced motion starts enabled while preference loads, subscribes to changes, eliminates arrival offset and makes progress immediate. The illustrative truck replay advances only when replay is enabled and reduced motion is off; otherwise trucks rest at depot positions. This replay is independent of GPS and carries model attribution.
 
 ### Named Rules
+
+**The Readable Without Motion Rule.** Text, numbers and operational status remain visible while animation is disabled, loading or complete.
 
 **The Observed Position Rule.** Keep illustrative depot geometry distinct from authorized GPS; never turn an animation, missing signal or stale observation into a live-location claim.
 
@@ -354,7 +372,7 @@ Confident actions with a clear label. Web primary and secondary variants share t
 
 ### Chips
 
-Compact status chips pair a semantic surface with legible text, a modest radius and a written status. Mobile statuses also include a small dot. Web badges use the 10px text tier; mobile chips use the shared small text style. Shared filter pills in Orders, Offers and Messages use ink with white labels when selected, and the soft mobile canvas with muted labels otherwise. Their visible surface is at least 36px high inside a 44px press target, with 14px horizontal padding and 0.7 pressed opacity. The merchant category rail is separate: beverage mint, fresh/milk aqua, neutral remaining tiles and operational-green selected tiles.
+Compact status chips pair a semantic surface with legible text, a modest radius and a written status. Mobile statuses also include a small dot. Web badges use the 10px text tier; mobile chips use the shared small text style. Shared filter pills in Orders, Offers and Messages use ink with white labels when selected, and the soft mobile canvas with muted labels otherwise. Their visible surface is at least 36px high inside a 44px press target, with 14px horizontal padding and 0.7 pressed opacity. The merchant category rail is separate: beverage mint, fresh/milk aqua, neutral remaining tiles, with mint, a green border and green text for selection.
 
 ### Cards / Containers
 
@@ -364,15 +382,19 @@ The merchant account card is a flat ink surface with the original white Toushir 
 
 ### Inputs / Fields
 
-White fields have a one-pixel border and the recorded field radius. Web fields are at least 40px high; native fields are at least 48px high with 12px vertical and 14px horizontal padding. Labels remain visible, placeholders are secondary, and caret colour is green on the web. Native focus changes the border to green; errors use the paired red treatment and text. Multiline fields grow vertically.
+White fields have a one-pixel border and the recorded field radius. Web fields are at least 40px high; native fields are at least 48px high with 12px vertical and 14px horizontal padding. Labels remain visible, placeholders are secondary, and caret colour is green on the web. Native focus changes the border to green; errors use the paired red treatment and text. Multiline fields grow vertically. Brand search in the merchant brand/filter panels fixes the field at 48px high with no flex shrink, preserving its touch target when surrounding content scrolls.
 
 ### Navigation
 
 Desktop navigation combines the original Figma icons with compact labels, a mint active row and operational-green active text. At phone width, the menu button reveals the same navigation. Merchant and courier bottom bars keep icons and labels together, mark the selected item in green and expose their selected state. Existing section labels are navigation structure, not a pattern for decorative eyebrows elsewhere.
 
+### Operational charts
+
+Web charts plot the current service records with visible basis text, a current solid line, a dashed previous-period comparison when requested, zero-aware scales and an accessible SVG description. Pointer exploration is supplemented by a labelled keyboard range control and a polite live reading of date and value. Preset or custom periods and metric controls expose their selected state; drilldowns connect metrics to the relevant work. The merchant activity view offers 7/30/90-day ranges, purchase/net-payment measures, labelled selectable bars, negative refund values below zero and category progress with textual totals. It refreshes every 15 seconds, shows the refresh time and retains explicit loading, retry and empty feedback. Financial bases distinguish current confirmed-order totals, payment-date receipts less refunds, outstanding balances and categories.
+
 ### Order dossier and tracking
 
-The web order drawer anchors to the right, spans up to 740px, scrolls internally and has a sticky header and horizontally scrollable tabs. Escape, focus containment and a labelled dialog preserve access to the dossier. Preparation, custody, receipt, actual payment and reconciliation retain separate controls and states. Successful feedback follows the server operation; visible unknown, loading, empty, error and conflict states remain part of the component behavior.
+The web order drawer anchors to the right, spans up to 740px, scrolls internally and has a sticky header and horizontally scrollable tabs. Escape, focus containment and a labelled dialog preserve access to the dossier. Preparation, custody, receipt, actual payment and reconciliation retain separate controls and states. Successful feedback follows the server operation; visible unknown, loading, empty, error and conflict states remain part of the component behavior. `SUBMITTED` is “Reçue”, explicitly awaiting wholesaler confirmation; `CONFIRMED` is “Confirmée”. The merchant progress sequence keeps preparation, ready, departure, actual receipt and actual payment distinct. Amendments present immutable before/after terms with explicit merchant acceptance or refusal. Campaign audiences use real selected shops and region filters; fictional demonstration presets remain labelled.
 
 ## Do's and Don'ts
 
@@ -386,10 +408,13 @@ The web order drawer anchors to the right, spans up to 740px, scrolls internally
 - **Do** preserve keyboard focus, native touch targets, safe areas and contained table scrolling.
 - **Do** label demo content, unknown commercial values, stale GPS and illustrative depot geometry explicitly.
 - **Do** keep preparation, custody, receipt, payment and reconciliation visibly distinct.
+- **Do** expose chart values, source basis, period and current selection in text and accessible controls.
+- **Do** keep operational text visible and respect reduced motion for state arrivals, measured progress and truck replay.
 
 ### Don't:
 - **Don't** replace unknown prices with zero or present catalogue provenance as an approved commercial offer.
 - **Don't** invent pending earned points, turn order slips into fiscal-invoice claims or retouch source photography into a different product depiction.
 - **Don't** imply that illustrative 3D or a missing/stale GPS signal is a live observed position.
 - **Don't** spread overlay shadows across flat operational panels or replace original icons with decorative text glyphs.
-- **Don't** infer exact Figma-screen acceptance, native execution or domain/security acceptance from this design record.
+- **Don't** reintroduce beige/yellow pending surfaces or turn legacy colour-alias names into new palette choices.
+- **Don't** infer exact Figma-screen acceptance, native execution, external-provider success or domain/security acceptance from this design record.

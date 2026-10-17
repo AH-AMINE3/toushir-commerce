@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-17T13:44:34.335478+00:00",
+  "baseUrl": "http://127.0.0.1:5864",
+  "passed": 12,
+  "requests": 25,
+  "checks": [
+    "Ordinary API demo workspaces remain unpriced until explicit owner-controlled showcase setup",
+    "Concurrent owner setup commits exactly once with explicitly fictional pricing",
+    "Demo catalog exposes positive priced offers and known stock through the shared price engine",
+    "An existing operator-entered price and stock are preserved",
+    "Inactive references are not silently republished",
+    "Priced demo basket has exact subtotal, delivery fee and reviewed checkout consent",
+    "Merchant directly places a priced order with frozen totals rather than an RFQ",
+    "Another workspace remains unaffected",
+    "An invited shop cannot seed or alter the owner showcase",
+    "A new preview exposes discount, free-goods and challenge examples",
+    "Three stock-backed fictional gifts use original Figma product illustrations",
+    "Repeated preview bootstrap does not duplicate examples"
+  ]
+}

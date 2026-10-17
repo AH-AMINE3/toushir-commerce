@@ -1,0 +1,146 @@
+{
+  "at": "2026-10-17T13:41:56.074270+00:00",
+  "status": "passed",
+  "executedChecks": 352,
+  "failed": 0,
+  "backendAssemblySha256": "b41ff4ddc97366be153c01eda2fe3005f380f239f34761b72b46110d371db4df",
+  "suites": [
+    {
+      "name": "domain",
+      "passed": 92,
+      "failed": 0,
+      "report": "domain/expanded-domain.trx",
+      "finalTargetedRepeat": true
+    },
+    {
+      "name": "core",
+      "passed": 16,
+      "failed": 0,
+      "report": "core.json",
+      "at": "2026-10-17T13:35:24.804Z",
+      "finalTargetedRepeat": false,
+      "requests": 122
+    },
+    {
+      "name": "operations",
+      "passed": 9,
+      "failed": 0,
+      "report": "operations.json",
+      "at": "2026-10-17T13:35:29.206Z",
+      "finalTargetedRepeat": false,
+      "requests": 70
+    },
+    {
+      "name": "routes",
+      "passed": 6,
+      "failed": 0,
+      "report": "routes.json",
+      "at": "2026-10-17T13:35:34.819Z",
+      "finalTargetedRepeat": false,
+      "requests": 73
+    },
+    {
+      "name": "oidc",
+      "passed": 6,
+      "failed": 0,
+      "report": "oidc.json",
+      "at": "2026-10-17T13:35:40.687Z",
+      "finalTargetedRepeat": false,
+      "requests": 31
+    },
+    {
+      "name": "pricing",
+      "passed": 38,
+      "failed": 0,
+      "report": "pricing.json",
+      "at": "2026-10-17T13:40:10.588354+00:00",
+      "finalTargetedRepeat": true,
+      "requests": 154
+    },
+    {
+      "name": "engagement",
+      "passed": 51,
+      "failed": 0,
+      "report": "engagement.json",
+      "at": "2026-10-17T13:40:22.532279+00:00",
+      "finalTargetedRepeat": true
+    },
+    {
+      "name": "warehouse",
+      "passed": 29,
+      "failed": 0,
+      "report": "warehouse.json",
+      "at": "2026-10-17T13:40:27.493459+00:00",
+      "finalTargetedRepeat": true
+    },
+    {
+      "name": "supplier",
+      "passed": 32,
+      "failed": 0,
+      "report": "supplier.json",
+      "at": "2026-10-17T13:36:05.379258+00:00",
+      "finalTargetedRepeat": false,
+      "requests": 112
+    },
+    {
+      "name": "members-api",
+      "passed": 23,
+      "failed": 0,
+      "report": "members-api.json",
+      "at": "2026-10-17T13:36:10.674520+00:00",
+      "finalTargetedRepeat": false,
+      "requests": 105
+    },
+    {
+      "name": "members-live",
+      "passed": 8,
+      "failed": 0,
+      "report": "members-live.json",
+      "at": "2026-10-17T13:37:17.429Z",
+      "finalTargetedRepeat": false,
+      "requests": 29
+    },
+    {
+      "name": "crm",
+      "passed": 19,
+      "failed": 0,
+      "report": "crm.json",
+      "at": "2026-10-17T13:37:22.589175+00:00",
+      "finalTargetedRepeat": false,
+      "requests": 102
+    },
+    {
+      "name": "analytics",
+      "passed": 7,
+      "failed": 0,
+      "report": "analytics.json",
+      "at": "2026-10-17T13:39:45.208Z",
+      "finalTargetedRepeat": false,
+      "requests": 68
+    },
+    {
+      "name": "production",
+      "passed": 11,
+      "failed": 0,
+      "report": "production.json",
+      "at": "2026-10-17T13:41:46.224Z",
+      "finalTargetedRepeat": true,
+      "requests": 1303
+    },
+    {
+      "name": "provider-upgrade",
+      "passed": 5,
+      "failed": 0,
+      "report": "provider-upgrade.json",
+      "at": "2026-10-17T13:39:14.344506+00:00",
+      "finalTargetedRepeat": false
+    }
+  ],
+  "provenance": "Broad API regressions ran on isolated databases during the integration pass. Domain, pricing, engagement, warehouse and production restore checks were repeated after the final recalled-stock and return-expiry fixes; each repeated suite is counted once. Provider models did not change during those behavior fixes. Analytics uses its own isolated API and timestamp-only fixtures. All subprocess exits were observed.",
+  "boundaries": [
+    "Checks assert backend business and engineering behavior; browser visual review, hosted PostgreSQL execution and native runtime execution are separate evidence.",
+    "Provider upgrade executed SQLite only on a backup copy, comparing every original column value across 59 business tables including 1,142 orders.",
+    "No live local or hosted business database was destructively modified by this verification.",
+    "Reported check counts are assertions/scenarios, not a claim that every Figma screen or all external integrations are complete."
+  ]
+}

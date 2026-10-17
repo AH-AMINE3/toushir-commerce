@@ -117,6 +117,7 @@ public class OrderService(WholesaleDb db, CatalogService catalog, RealtimeChange
             var property = document.RootElement.EnumerateObject().FirstOrDefault(x => x.Name.Equals(key, StringComparison.OrdinalIgnoreCase));
             result[key] = property.Value.ValueKind == JsonValueKind.String ? property.Value.GetString() ?? "" : "";
         }
+        result["region"] = result["wilaya"];
         return result;
     }
     public async Task<object> Get(Actor a, string id) => await View(a, await Find(a, id));
@@ -128,10 +129,10 @@ public class OrderService(WholesaleDb db, CatalogService catalog, RealtimeChange
         var size = Math.Clamp(CatalogService.Page(query["pageSize"], 20), 1, 100);
         var orders = await db.Orders.AsNoTracking().Include(x => x.Items).Where(x => x.WorkspaceId == a.WorkspaceId && (a.IsAdmin || x.AccountId == a.ResourceOwnerId)).ToListAsync();
         var users = await db.Accounts.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId).ToDictionaryAsync(x => x.Id);
-        var filtered = orders.Where(x => status.Length == 0 || x.Status == status).Where(x => q.Length == 0 || (x.Number + " " + users[x.AccountId].ShopName + " " + users[x.AccountId].Name).ToLowerInvariant().Contains(q)).OrderByDescending(x => x.CreatedAt).ToList();
+        var filtered = orders.Where(x => status.Length == 0 || x.Status == status).Where(x => q.Length == 0 || (x.Number + " " + users[x.AccountId].ShopName + " " + users[x.AccountId].Name + " " + users[x.AccountId].Phone + " " + string.Join(" ", ReadAddress(x.AddressJson).Values)).ToLowerInvariant().Contains(q)).OrderByDescending(x => x.CreatedAt).ToList();
         return new
         {
-            items = filtered.Skip((page - 1) * size).Take(size).Select(o => new { o.Id, o.Number, o.Status, o.PaymentStatus, o.Total, currency = "DZD", o.CreatedAt, o.UpdatedAt, o.QuoteVersion, o.QuoteValidUntil, itemCount = o.Items.Count, quantity = o.Items.Sum(x => x.Quantity), merchant = new { id = o.AccountId, name = users[o.AccountId].Name, shopName = users[o.AccountId].ShopName }, imageUrl = o.Items.FirstOrDefault()?.ImageUrl, balance = new { due = o.Total, collected = o.Collected, remaining = o.Total is decimal t ? Math.Max(0, t - o.Collected) : (decimal?)null } }),
+            items = filtered.Skip((page - 1) * size).Take(size).Select(o => new { o.Id, o.Number, o.Status, o.PaymentStatus, o.Version, o.Total, currency = "DZD", o.CreatedAt, o.UpdatedAt, o.QuoteVersion, o.QuoteValidUntil, itemCount = o.Items.Count, quantity = o.Items.Sum(x => x.Quantity), merchant = new { id = o.AccountId, name = users[o.AccountId].Name, shopName = users[o.AccountId].ShopName, phone = users[o.AccountId].Phone }, address = ReadAddress(o.AddressJson), imageUrl = o.Items.FirstOrDefault()?.ImageUrl, balance = new { due = o.Total, collected = o.Collected, remaining = o.Total is decimal t ? Math.Max(0, t - o.Collected) : (decimal?)null } }),
             total = filtered.Count,
             page,
             pageSize = size,
@@ -273,6 +274,76 @@ public class OrderService(WholesaleDb db, CatalogService catalog, RealtimeChange
         await promotions.Release(a, order);
         order.ReservationHeld = false;
     }
+    internal static AmendmentTerms AmendmentTermsFor(CartPricingPlan plan, IReadOnlyList<LineInput> lines, decimal deliveryFee)
+    {
+        Check.Money(deliveryFee, "Frais de livraison conservés");
+        var terms = new List<AmendmentLineTerms>();
+        foreach (var line in lines.OrderBy(x => x.ProductId, StringComparer.Ordinal))
+        {
+            var product = plan.Products[line.ProductId];
+            var offer = plan.Offers.GetValueOrDefault(line.ProductId);
+            var price = plan.Prices.Lines[line.ProductId];
+            var promotion = plan.Promotions.GetValueOrDefault(line.ProductId);
+            var applied = promotion?.AppliedUnitPrice ?? price.Decision.UnitPrice;
+            Check.That(offer is { IsActive: true, OfferApproved: true, OnHand: not null } && applied > 0,
+                "Chaque produit modifié doit avoir un prix positif, un conditionnement et un stock confirmés.", "AMENDMENT_PRICE_REQUIRED", 409);
+            Check.That(offer!.CaseSize > 0 && line.Quantity >= offer.MinimumQuantity && line.Quantity % offer.CaseSize == 0,
+                "Une quantité proposée ne respecte pas le conditionnement.", "PACK_SIZE", 409);
+            Check.That(promotion == null || promotion.Issue.Length == 0, "Une promotion ne peut pas être chiffrée.", "AMENDMENT_PRICE_REQUIRED", 409);
+            Check.That(promotion is not { GiftQuantity: > 0 } || promotion.GiftProductName.Length > 0,
+                "Le produit offert n’est plus disponible au catalogue.", "GIFT_UNAVAILABLE", 409);
+            terms.Add(new(product.Id, product.Name, product.Brand, product.ImageUrl, line.Quantity,
+                offer.CaseSize, offer.MinimumQuantity, price.BaseUnitPrice, applied!.Value, applied.Value * line.Quantity,
+                price.Source, price.Decision.RuleId, price.Decision.RuleVersion, price.CampaignsAllowed,
+                promotion?.CampaignId ?? "", promotion?.CampaignVersion ?? 0, promotion?.CampaignTitle ?? "", promotion?.Kind ?? "",
+                promotion?.GiftProductId ?? "", promotion?.GiftProductName ?? "", promotion?.GiftQuantity ?? 0));
+        }
+        return new(terms, terms.Sum(x => x.LineTotal), deliveryFee, terms.Sum(x => x.LineTotal) + deliveryFee);
+    }
+    internal async Task<object> AmendmentBeforeTerms(Actor actor, PurchaseOrder order)
+    {
+        // This evidence is deliberately merchant-safe at rest. ADMIN View also contains
+        // private pricing provenance and must never be copied into a merchant response.
+        var promotions = await db.PromotionSnapshots.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId
+            && x.OrderId == order.Id && x.QuoteVersion == order.QuoteVersion).ToListAsync();
+        return new { order.Id, order.Number, order.Status, order.Version, order.QuoteVersion,
+            items = order.Items.OrderBy(x => x.ProductId, StringComparer.Ordinal).Select(x => new { x.ProductId, x.Name, x.Brand, x.ImageUrl,
+                x.RequestedQuantity, x.Quantity, x.UnitPrice, x.LineTotal, x.CaseSize }), order.Subtotal,
+            order.DeliveryFee, order.Total, currency = "DZD", address = ReadAddress(order.AddressJson), order.Note,
+            promotions = promotions.Select(x => new { x.CampaignTitle, x.Kind, x.ProductId, x.QuotedQuantity,
+                x.BaseUnitPrice, x.AppliedUnitPrice, x.DiscountPercent, x.QuotedDiscountMinor,
+                x.GiftProductId, x.GiftProductName, x.GiftQuantity }) };
+    }
+    internal async Task ApplyAcceptedAmendment(Actor actor, PurchaseOrder order, List<LineInput> lines, string expectedTermsHash)
+    {
+        Check.That(db.Database.CurrentTransaction != null, "La modification exige une transaction atomique.", "TRANSACTION_REQUIRED", 409);
+        await Release(actor, order);
+        // Persist releases within the surrounding transaction so the shared quote engine
+        // sees the original order's own stock again. Any later failure rolls all of it back.
+        await db.SaveChangesAsync();
+        var plan = await catalog.BuildQuote(actor, lines, issueConsent: false);
+        Check.That(plan.View.CanOrder, "Le prix, le stock ou les lots ont changé. Demandez une nouvelle proposition.", "AMENDMENT_STOCK_OR_TERMS_CHANGED", 409);
+        var next = AmendmentTermsFor(plan, lines, order.DeliveryFee!.Value);
+        Check.That(Tokens.Hash(OrderAmendmentService.Serialize(next)) == expectedTermsHash,
+            "Les prix ou les avantages ont changé. Le grossiste doit proposer les nouvelles conditions.", "AMENDMENT_TERMS_CHANGED", 409);
+        var previous = order.Items.ToList();
+        db.Set<OrderLine>().RemoveRange(previous);
+        order.Items.Clear();
+        foreach (var term in next.Items)
+            order.Items.Add(new() { PurchaseOrderId = order.Id, ProductId = term.ProductId, Name = term.Name,
+                Brand = term.Brand, ImageUrl = term.ImageUrl, RequestedQuantity = term.Quantity,
+                Quantity = term.Quantity, UnitPrice = term.BaseUnitPrice, LineTotal = term.BaseUnitPrice * term.Quantity, CaseSize = term.CaseSize });
+        order.QuoteVersion++;
+        order.QuoteValidUntil = null;
+        await promotions.ApplyDirectOrder(actor, order, plan.Prices.CampaignBlockedProductIds, plan.Prices.At);
+        Check.That(order.Items.All(item => item.UnitPrice == next.Items.Single(x => x.ProductId == item.ProductId).UnitPrice),
+            "Les promotions ont changé depuis votre accord.", "AMENDMENT_TERMS_CHANGED", 409);
+        order.Subtotal = order.Items.Sum(x => x.LineTotal ?? 0);
+        order.Total = order.Subtotal + order.DeliveryFee;
+        Check.That(order.Total == next.Total, "Le montant proposé a changé.", "AMENDMENT_TERMS_CHANGED", 409);
+        pricing.Capture(actor, order, plan.Prices);
+        await Reserve(actor, order);
+    }
     public async Task<object> Quote(Actor a, string id, QuoteInput input)
     {
         a.Admin();
@@ -389,6 +460,38 @@ public class OrderService(WholesaleDb db, CatalogService catalog, RealtimeChange
         await db.SaveChangesAsync();
         return await View(a, o);
     }
+    // Recall-specific cancellation keeps the ordinary reservation, contract and payment invariants.
+    public async Task CancelRecalledPreparation(Actor a, string id, int version, string reason)
+    {
+        a.Admin();
+        var o = await Find(a, id);
+        Check.That(o.Version == version, "La commande a changé depuis la décision de rappel.", "VERSION_CONFLICT", 409);
+        Check.That(o.Status is "PREPARING" or "READY", "Seule une préparation non partie peut être annulée dans ce dossier.", "INVALID_TRANSITION", 409);
+        Check.That(await RecallGuard.HasHeldReservations(db, o), "Aucune réservation de cette préparation n'est concernée par un rappel actif.", "RECALL_RESERVATION_REQUIRED", 409);
+        var assignment = await db.DeliveryAssignments.FirstOrDefaultAsync(x => x.WorkspaceId == a.WorkspaceId && x.OrderId == o.Id);
+        if (assignment != null)
+        {
+            Check.That(assignment.PickedUpAt == null && assignment.Status is "ASSIGNED" or "CANCELLED", "La garde physique a déjà été transférée au chauffeur. Utilisez le retour réel.", "RETURN_CUSTODY_OPEN", 409);
+            var routeId = assignment.RouteId;
+            if (routeId.Length > 0)
+            {
+                var route = await db.DeliveryRoutes.FirstAsync(x => x.WorkspaceId == a.WorkspaceId && x.Id == routeId);
+                Check.That(route.Status == "PLANNED" && route.DepartedAt == null, "La tournée a déjà quitté le dépôt.", "RETURN_CUSTODY_OPEN", 409);
+                route.Version++;
+                foreach (var proof in await db.RouteCustodyChallenges.Where(x => x.WorkspaceId == a.WorkspaceId && x.RouteId == routeId && x.ConsumedAt == null).ToListAsync()) proof.ExpiresAt = DateTimeOffset.UtcNow;
+                Event(a, o, "RECALL_PLANNED_STOP_REMOVED", "Retrait explicite du manifeste " + routeId + " avant toute prise en charge. " + reason);
+                assignment.RouteId = ""; assignment.StopRank = 0;
+            }
+            assignment.Status = "CANCELLED"; assignment.FailureReason = reason;
+            changes.Driver(a.WorkspaceId, assignment.DriverId);
+        }
+        foreach (var proof in await db.ReceiptChallenges.Where(x => x.WorkspaceId == a.WorkspaceId && x.OrderId == o.Id && x.ConsumedAt == null).ToListAsync()) proof.ExpiresAt = DateTimeOffset.UtcNow;
+        await Release(a, o);
+        o.Status = "CANCELLED";
+        VoidCancelledContract(a, o);
+        Event(a, o, "RECALL_PREPARATION_CANCELLED", reason + " Les réservations sont libérées; aucune récupération physique ni aucun remboursement n'est déclaré.");
+        await db.SaveChangesAsync();
+    }
     public async Task<object> Transition(Actor a, string id, TransitionInput input)
     {
         a.Admin();
@@ -438,6 +541,7 @@ public class OrderService(WholesaleDb db, CatalogService catalog, RealtimeChange
         var o = await Find(a, id);
         Check.That(o.Status == "OUT_FOR_DELIVERY", "La commande doit être en livraison.", "INVALID_TRANSITION", 409);
         Check.That(input.Items != null && input.Items.Count == o.Items.Count && input.Items.Select(x => x.ProductId).Distinct().Count() == o.Items.Count, "Renseignez toutes les lignes une seule fois.");
+        await RecallGuard.AssertDistribution(db, o, input.Items!.Where(x => x.AcceptedQuantity > 0).Select(x => x.ProductId).ToList());
         foreach (var l in o.Items)
         {
             var d = input.Items!.FirstOrDefault(x => x.ProductId == l.ProductId);

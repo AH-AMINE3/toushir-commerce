@@ -1,11 +1,19 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Linking, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Linking,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import Svg, { Rect } from "react-native-svg";
 import qrcode from "qrcode-generator";
 import { api, date, money, Order, post } from "./api";
 import { Tracking, ReceiptSelection } from "./courier-api";
 import { Button, Icon, Notice } from "./components";
 import { C, S } from "./theme";
+import { MeasuredProgress, StateArrival } from "./Motion";
 
 type Challenge = {
   challenge: string;
@@ -73,12 +81,19 @@ export default function MerchantDelivery({
       setTracking(next);
       setLastSync(new Date().toISOString());
       setConnected(true);
+      setError("");
     } catch (e: any) {
       setConnected(false);
       setError(e.message);
     }
   }
   useEffect(() => {
+    setTracking(null);
+    setPhase("tracking");
+    setItems([]);
+    setChallenge(null);
+    setConsent(false);
+    setLastSync(null);
     refresh();
     const timer = setInterval(refresh, 8000),
       clock = setInterval(() => setNow(Date.now()), 1000);
@@ -94,6 +109,13 @@ export default function MerchantDelivery({
       !!location &&
       now - new Date(location.capturedAt).getTime() < 90000 &&
       location.isFresh;
+  const preparation = tracking?.preparation;
+  const preparedTotal =
+    typeof preparation?.prepared === "number" ? preparation.prepared : 0;
+  const requestedTotal =
+    typeof preparation?.total === "number"
+      ? preparation.total
+      : current.items.reduce((sum, item) => sum + item.quantity, 0);
   const finished = [
       "DELIVERED",
       "PARTIALLY_DELIVERED",
@@ -153,37 +175,69 @@ export default function MerchantDelivery({
           reçues.
         </Text>
       ) : null}
-      <View style={V.status}>
-        <Icon
-          name={
-            finished
-              ? "checkmark-circle-outline"
-              : arrived
-                ? "storefront-outline"
-                : current.status === "PREPARING"
-                  ? "cube-outline"
-                  : "car-outline"
-          }
-          color={C.green}
-        />
-        <View style={{ flex: 1, gap: 4 }}>
-          <Text style={S.label}>
-            {finished
-              ? "Réception enregistrée"
-              : arrived
-                ? "Votre livreur est arrivé"
-                : current.status === "OUT_FOR_DELIVERY"
-                  ? "Votre commande arrive"
-                  : current.status === "READY"
-                    ? "Votre commande est prête"
-                    : "Votre grossiste prépare la commande"}
-          </Text>
-          <Text style={S.muted}>
-            {assignment?.driverName ||
-              "Le livreur sera indiqué après affectation"}
-          </Text>
+      <StateArrival changeKey={`${current.status}-${assignment?.status}`}>
+        <View style={V.status}>
+          <Icon
+            name={
+              finished
+                ? "checkmark-circle-outline"
+                : arrived
+                  ? "storefront-outline"
+                  : current.status === "PREPARING"
+                    ? "cube-outline"
+                    : "car-outline"
+            }
+            color={C.green}
+          />
+          <View style={{ flex: 1, gap: 4 }}>
+            <Text style={S.label}>
+              {finished
+                ? "Réception enregistrée"
+                : arrived
+                  ? "Votre livreur est arrivé"
+                  : current.status === "OUT_FOR_DELIVERY"
+                    ? "Votre commande arrive"
+                    : current.status === "READY"
+                      ? "Votre commande est prête"
+                      : "Votre grossiste prépare la commande"}
+            </Text>
+            <Text style={S.muted}>
+              {assignment?.driverName ||
+                "Le livreur sera indiqué après affectation"}
+            </Text>
+          </View>
         </View>
-      </View>
+      </StateArrival>
+      {assignment ? (
+        <View style={V.courier}>
+          <View style={V.avatar}>
+            <Text style={[S.label, { color: C.green }]}>
+              {assignment.driverName
+                .split(" ")
+                .filter(Boolean)
+                .slice(0, 2)
+                .map((part) => part[0])
+                .join("")}
+            </Text>
+          </View>
+          <View style={{ flex: 1, gap: 4 }}>
+            <Text style={S.label}>{assignment.driverName}</Text>
+            <Text style={S.small}>
+              {assignment.status === "ARRIVED"
+                ? "Arrivé au magasin"
+                : assignment.pickedUpAt
+                  ? "Votre livreur a pris en charge la commande"
+                  : "Livreur affecté · en attente du départ"}
+            </Text>
+            {assignment.pickedUpAt ? (
+              <Text style={S.small}>
+                Départ enregistré : {date(assignment.pickedUpAt, true)}
+              </Text>
+            ) : null}
+          </View>
+          <Icon name="car-outline" color={C.green} size={25} />
+        </View>
+      ) : null}
       {location ? (
         <>
           <View style={S.between}>
@@ -197,6 +251,22 @@ export default function MerchantDelivery({
           <Text style={S.small}>
             Précision {Math.round(location.accuracy || 0)} m
             {locationFresh ? "" : " · signal ancien, à actualiser"}
+          </Text>
+          {Platform.OS === "web" ? (
+            <View style={V.map}>
+              {React.createElement("iframe", {
+                title: `Dernière position GPS de ${assignment?.driverName || "votre livreur"}`,
+                src: `https://www.openstreetmap.org/export/embed.html?bbox=${location.longitude - 0.006}%2C${location.latitude - 0.004}%2C${location.longitude + 0.006}%2C${location.latitude + 0.004}&layer=mapnik&marker=${location.latitude}%2C${location.longitude}`,
+                loading: "lazy",
+                referrerPolicy: "no-referrer",
+                style: { width: "100%", height: "100%", border: 0 },
+                tabIndex: 0,
+              })}
+            </View>
+          ) : null}
+          <Text style={S.small}>
+            Point GPS partagé par le livreur. L’itinéraire et l’heure d’arrivée
+            ne sont pas calculés.
           </Text>
           <Button
             variant="secondary"
@@ -218,16 +288,38 @@ export default function MerchantDelivery({
       ) : null}
       {tracking?.preparation ? (
         <View style={V.preparation}>
-          <Text style={S.label}>Préparation des produits</Text>
+          <View style={S.between}>
+            <Text style={S.label}>Préparation des produits</Text>
+            <Text style={[S.label, { color: C.green }]}>
+              {preparedTotal} / {requestedTotal}
+            </Text>
+          </View>
+          <MeasuredProgress
+            value={requestedTotal ? preparedTotal / requestedTotal : 0}
+            label={`${preparedTotal} unités préparées sur ${requestedTotal}`}
+          />
           {current.items.map((i) => (
-            <View key={i.productId} style={S.between}>
+            <View key={i.productId} style={[S.between, { gap: 12 }]}>
+              <Icon
+                name={
+                  (preparation.items?.find(
+                    (p: any) => p.productId === i.productId,
+                  )?.preparedQuantity ??
+                    (i as any).preparedQuantity ??
+                    0) >= i.quantity
+                    ? "checkmark-circle"
+                    : "ellipse-outline"
+                }
+                color={C.green}
+                size={18}
+              />
               <Text style={[S.small, { flex: 1 }]} numberOfLines={2}>
                 {i.name}
               </Text>
               <Text style={S.label}>
                 {(i as any).preparedQuantity ??
-                  (Array.isArray(tracking.preparation)
-                    ? tracking.preparation.find(
+                  (Array.isArray(tracking.preparation?.items)
+                    ? tracking.preparation.items.find(
                         (p: any) => p.productId === i.productId,
                       )?.preparedQuantity
                     : null) ??
@@ -436,6 +528,21 @@ export default function MerchantDelivery({
   );
 }
 const V = StyleSheet.create({
+  courier: { ...S.row, paddingVertical: 8, gap: 12 },
+  avatar: {
+    width: 44,
+    height: 44,
+    backgroundColor: C.mint,
+    borderRadius: 22,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  map: {
+    height: 210,
+    overflow: "hidden",
+    backgroundColor: C.bg,
+    borderRadius: 12,
+  },
   wrap: { backgroundColor: "white", borderRadius: 16, padding: 20, gap: 16 },
   heading: {
     fontFamily: "Inter",
