@@ -1,5 +1,7 @@
 # Verification
 
+Hosted evidence is under `verification/cloud-*.json` plus `backend/hosted-scenario-verification.json`. The concurrent-workspace regression proves one visitor can save a basket and bootstrap its courier while another history transaction is active. The persistence probe records an existing merchant session, accepted order, actual payment and unchanged signing keys across a confirmed Render deployment. Each report retains its actual URL and execution time; earlier suites are not silently relabelled as runs of later source revisions.
+
 Use Node 24, .NET SDK 10 and Python 3. Build/start with `bash scripts/build-all.sh` and `bash scripts/run-local.sh`. API suites need an explicitly enabled demo server and create isolated workspaces.
 
 ```sh

@@ -1,0 +1,22 @@
+{
+  "base": "https://toushir-commerce-staging.onrender.com",
+  "at": "2026-10-17T07:42:34.355Z",
+  "passed": 3,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "Another workspace saves its cart while the first history transaction is still running",
+      "pass": true,
+      "elapsedMs": 1907
+    },
+    {
+      "name": "Courier role bootstrap remains independent of another workspace history",
+      "pass": true,
+      "elapsedMs": 992
+    },
+    {
+      "name": "History commits the configured labelled orders without changing the other workspace cart or orders",
+      "pass": true
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-17T07:26:17.275Z",
+  "createdAt": "2026-10-17T07:15:35.656Z",
+  "base": "https://toushir-commerce-staging.onrender.com",
+  "passed": 4,
+  "failed": 0,
+  "checks": [
+    "Existing merchant session remains valid after deployment",
+    "Same isolated workspace and accepted order remain",
+    "Exactly one 75 DZD payment remains against the 200 DZD order",
+    "Staging public signing keys unchanged"
+  ]
+}

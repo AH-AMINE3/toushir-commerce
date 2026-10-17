@@ -14,7 +14,13 @@ One .NET 10 / ABP backend connects the wholesaler workspace, merchant app and co
 
 Native apps have separate package IDs, icons and callback schemes. Browser previews use the same React Native source and backend. See [native distribution](docs/NATIVE-DISTRIBUTION.md).
 
+Verified Android test packages: [Merchant APK](https://toushir-commerce-staging.onrender.com/downloads/toushir-merchant.apk) and [Courier APK](https://toushir-commerce-staging.onrender.com/downloads/toushir-driver.apk). These standalone signed ARM64 previews use the public API and need no development server. Android requires installation consent. The supplied iOS archives are local-API Simulator builds, with their separate execution limits recorded in the mobile verification notes.
+
 Public test service: [Wholesaler](https://toushir-commerce-staging.onrender.com/), [Merchant](https://toushir-commerce-staging.onrender.com/mobile/merchant), [Courier](https://toushir-commerce-staging.onrender.com/mobile/driver). The free service may need time to wake. Test records use persistent PostgreSQL; the free database expires on **15 November 2026 at 17:52 UTC**. See [release boundaries](docs/RELEASE.md).
+
+Open the wholesaler first, then its merchant/courier links in the same browser to explore one shared demo. The first history is prepared through the business workflow; the free host creates 20 labelled example orders. To invite another person on a separate device, use **Magasins → Créer un lien commerçant** and send that invitation. Each invited shop has its own orders inside your workspace. Keep the owner access capability private.
+
+For an actual courier account, use **Équipe & paramètres** to create a Livreur, assign an order from **Livraisons**, then sign in through the courier app's secure professional login. An independent courier demo starts with an empty assigned manifest. The 3D depot supports drag to rotate, wheel to zoom and vehicle selection; actual GPS is a separate view and requires the assigned courier's location consent.
 
 ## Start locally
 

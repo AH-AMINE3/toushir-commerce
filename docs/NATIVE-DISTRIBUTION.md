@@ -16,7 +16,7 @@ TOUSHIR_SIGNING_KEY_ALIAS
 TOUSHIR_SIGNING_KEY_PASSWORD
 ```
 
-Run `scripts/build-android-release.zsh`. The APK is produced at `apps/mobile/android/app/build/outputs/apk/release/app-release.apk`. Check its signature, manifest, bundled JavaScript, API origin, native-library architectures and SHA256 before distribution. The preview targets ARM64 Android devices; the minimum and target Android SDK versions are recorded in the actual package verification report.
+From the repository root, run `scripts/build-android-release.zsh merchant`, then `scripts/build-android-release.zsh driver`. The script preserves each APK separately as `apps/mobile/build/downloads/toushir-merchant.apk` and `toushir-driver.apk`. Check each signature, package identity, bundled JavaScript, API origin, native-library architectures and SHA256 before distribution. The preview targets ARM64 Android devices; the minimum and target Android SDK versions are recorded in the actual package verification report.
 
 The iOS simulator compilation is a separate verification. An iOS simulator app cannot be installed on an iPhone. Device distribution through TestFlight or the App Store requires the owner's Apple developer signing and distribution setup. The browser version is available independently on iPhone.
 

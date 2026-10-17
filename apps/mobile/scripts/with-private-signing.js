@@ -14,5 +14,13 @@ if (System.getenv('TOUSHIR_RELEASE_SIGNING') == '1') {
     }
     android.buildTypes.release.signingConfig = android.signingConfigs.toushirRelease
 }
+// Public build identity must invalidate Metro's Gradle task when the API or
+// launcher changes; otherwise Gradle can reuse a bundle from another preview.
+tasks.configureEach { task ->
+    if (task.name.startsWith('createBundle') && task.name.endsWith('JsAndAssets')) {
+        task.inputs.property('toushirPublicApiOrigin', System.getenv('EXPO_PUBLIC_API_URL') ?: '')
+        task.inputs.property('toushirAppRole', System.getenv('EXPO_PUBLIC_APP_ROLE') ?: 'MERCHANT')
+    }
+}
 // @toushir-private-signing-end`;
 module.exports=function withPrivateSigning(config){return withAppBuildGradle(config,c=>{if(c.modResults.language!=='groovy')throw Error('Toushir private signing requires a Groovy Android app build.');c.modResults.contents=c.modResults.contents.replace(/\n?\/\/ @toushir-private-signing-start[\s\S]*?\/\/ @toushir-private-signing-end\n?/g,'\n').trimEnd()+'\n\n'+block+'\n';return c;});};

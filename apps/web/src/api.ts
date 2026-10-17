@@ -109,17 +109,24 @@ export function connect(
     .withAutomaticReconnect([0, 2000, 5000, 10000, 30000])
     .configureLogging(LogLevel.Error)
     .build();
+  let updateTimer: ReturnType<typeof setTimeout> | undefined;
+  let stopped = false;
+  const invalidate = () => {
+    if (stopped) return;
+    clearTimeout(updateTimer);
+    updateTimer = setTimeout(() => { if (!stopped) onUpdate(); }, 250);
+  };
   for (const event of [
     "order.updated",
     "tracking.updated",
     "operations.updated",
     "engagement.updated",
   ])
-    connection.on(event, onUpdate);
+    connection.on(event, invalidate);
   connection.onreconnecting(() => onState("Reconnexion"));
   connection.onreconnected(() => {
     onState("En direct");
-    onUpdate();
+    invalidate();
   });
   connection.onclose(() => onState("Actualisation 15 s"));
   connection
@@ -127,6 +134,8 @@ export function connect(
     .then(() => onState("En direct"))
     .catch(() => onState("Actualisation 15 s"));
   return () => {
+    stopped = true;
+    clearTimeout(updateTimer);
     void connection.stop();
   };
 }
