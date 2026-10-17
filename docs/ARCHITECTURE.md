@@ -12,6 +12,8 @@ Professional clients use authorization code with S256 PKCE and the server's hash
 
 Demo mode is explicitly configured. An expiring random owner capability creates personas inside one fictional workspace. Merchant invitations are separately scoped and cannot grant owner access. Every resource checks actor/workspace ownership; logout, suspension, password changes and invitation revocation are checked server-side.
 
+SQLite serializes writes in its single application process. PostgreSQL mutations acquire transaction-scoped advisory locks derived from the dedicated schema and validated workspace, so a long example-history transaction cannot block another visitor's basket or courier bootstrap. Identity entry points use a separate short-lived scope; catalogue imports acquire a shared catalogue lock before their own workspace lock. These PostgreSQL locks also coordinate overlapping service instances during deployment and release automatically with commit/rollback. See the [PostgreSQL lock contract](https://www.postgresql.org/docs/17/explicit-locking.html#ADVISORY-LOCKS) and [parameterized EF SQL](https://learn.microsoft.com/en-us/ef/core/querying/sql-queries).
+
 | Role | Scope |
 | --- | --- |
 | ADMIN | Own workspace, merchants, offers, quotations, team and audit |

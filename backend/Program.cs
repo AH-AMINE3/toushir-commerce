@@ -166,16 +166,24 @@ public sealed class MutationFilter(MutationGate gate) : IEndpointFilter
     {
         if (context.HttpContext.Request.Method is "GET" or "HEAD" or "OPTIONS")
             return await next(context);
-        await gate.Lock.WaitAsync(context.HttpContext.RequestAborted);
+        var db = context.HttpContext.RequestServices.GetRequiredService<WholesaleDb>();
+        var localGate = !db.Database.IsNpgsql();
+        if (localGate) await gate.Lock.WaitAsync(context.HttpContext.RequestAborted);
         try
         {
-            var db = context.HttpContext.RequestServices.GetRequiredService<WholesaleDb>();
             await using var transaction = await db.Database.BeginTransactionAsync(context.HttpContext.RequestAborted);
+            if (!localGate)
+            {
+                var schema = db.Model.GetDefaultSchema() ?? throw new InvalidOperationException("A dedicated PostgreSQL schema is required.");
+                var workspace = context.HttpContext.User.FindFirst("workspace")?.Value;
+                foreach (var key in MutationLocks.Keys(schema, workspace, context.HttpContext.Request.Path))
+                    await db.Database.ExecuteSqlInterpolatedAsync($"SELECT pg_advisory_xact_lock({key})", context.HttpContext.RequestAborted);
+            }
             var result = await next(context);
             await transaction.CommitAsync(context.HttpContext.RequestAborted);
             await context.HttpContext.RequestServices.GetRequiredService<RealtimeChanges>().Publish(context.HttpContext.RequestServices.GetRequiredService<IHubContext<CommerceHub>>(), db, context.HttpContext.RequestServices.GetRequiredService<ILogger<MutationFilter>>());
             return result;
         }
-        finally { gate.Lock.Release(); }
+        finally { if (localGate) gate.Lock.Release(); }
     }
 }

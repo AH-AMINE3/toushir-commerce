@@ -29,7 +29,7 @@ export async function api<T = any>(
         ...(token ? { Authorization: "Bearer " + token } : {}),
         ...options.headers,
       },
-      signal: options.signal || AbortSignal.timeout(30000),
+      signal: options.signal || AbortSignal.timeout(path === "/admin/demo/scenario" ? 120000 : 30000),
     });
   let response = await request();
   if (response.status === 401 && token.includes(".") && !options.headers) {
