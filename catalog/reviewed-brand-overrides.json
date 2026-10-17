@@ -1,0 +1,496 @@
+{
+  "schemaVersion": 1,
+  "scope": "Visual brand-label transcription only; not manufacturer certification. Source image bytes unchanged.",
+  "products": {
+    "6130413002293": {
+      "brand": "Tartino",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/041/300/2293/front_fr.3.400.jpg",
+      "imageSha256": "134fde2fb62ed973d0a513205a18898f6b4ee659f50772a4266aab9a9f61842e",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130413002293",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6133414006932": {
+      "brand": "Happy",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/341/400/6932/front_fr.3.400.jpg",
+      "imageSha256": "539e4df96e8dd76c9790d47e04fd72dc702199a036866197276ac7af781b8b81",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6133414006932",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6132360100169": {
+      "brand": "ifruit",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/236/010/0169/front_fr.3.400.jpg",
+      "imageSha256": "9d58a6bdfb5d8d90203ea302d1f75655d3e728afea43d1661f773a7fd0707c2b",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6132360100169",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6130788000016": {
+      "brand": "صول",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/078/800/0016/front_fr.41.400.jpg",
+      "imageSha256": "6e30f65010b4d29ffb5fcda5068c9cb64a48fe6f3ce179ee18e8fed6da2aca35",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130788000016",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6132242600145": {
+      "brand": "Walid",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/224/260/0145/front_en.6.400.jpg",
+      "imageSha256": "45cc05b5324867c8ed314eae1d76028442b1b0c5cd85d6e55a9f2f96aeab4fbd",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6132242600145",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6130003014385": {
+      "brand": "Schweppes",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/000/301/4385/front_fr.3.400.jpg",
+      "imageSha256": "729b6fd7c5586af9f441cc927f36a76df8d8abbaae73698f032a21f7116cff76",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130003014385",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6133414001999": {
+      "brand": "Kool",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/341/400/1999/front_fr.17.400.jpg",
+      "imageSha256": "637a21e3454543f4e7c510b8bfd8108ca04bb5d093a8fb2ce454ba12b202ad37",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6133414001999",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6130426001245": {
+      "brand": "Elwafi",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/042/600/1245/front_fr.7.400.jpg",
+      "imageSha256": "8409b5b892143298b46f4710485dd95bc0115d794981fba6a6d065a25c5cd84b",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130426001245",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6132516860060": {
+      "brand": "Maruja",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/251/686/0060/front_fr.10.400.jpg",
+      "imageSha256": "e8a0f9808ab132ea45b1a51d3f581d4afe811a28d2a4fe7f56efa680dbc414c6",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6132516860060",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6133337002813": {
+      "brand": "Optilla",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/333/700/2813/front_fr.7.400.jpg",
+      "imageSha256": "117b94405010fd6befb99d791c20c123c1f458b14d66417c64d74effedb329e3",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6133337002813",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6135829000024": {
+      "brand": "Ariaf",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/582/900/0024/front_fr.18.400.jpg",
+      "imageSha256": "fe232687e9cc1a0bcd4fd3435f307f4b24a0e5dfe8c4ce192bb20d18bd05203a",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6135829000024",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6132505350244": {
+      "brand": "Star",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/250/535/0244/front_fr.9.400.jpg",
+      "imageSha256": "616b73b8aa3c3034c4fa6260e25bc854a0017191ed1fd1bb130dba60e70bc620",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6132505350244",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6133566000062": {
+      "brand": "Many",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/356/600/0062/front_ar.4.400.jpg",
+      "imageSha256": "78b4a583ff7dca2aa2f77cf1cbcd94603c7a729b9f8d7fb30173fce642dfd609",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6133566000062",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6133414010212": {
+      "brand": "Maxon",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/341/401/0212/front_fr.3.400.jpg",
+      "imageSha256": "df1e742ec6f2ed7a50f3556e8c15ef449ae5984e703baa411899428b37420ed3",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6133414010212",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6130093067926": {
+      "brand": "ifruit",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/009/306/7926/front_en.3.400.jpg",
+      "imageSha256": "a9da86c10c85e50777bad8f162cf8ba549dbb8d34ea3fe5376c7a56949d608bf",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130093067926",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6130791001239": {
+      "brand": "LFB",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/079/100/1239/front_fr.3.400.jpg",
+      "imageSha256": "1a9a00deaeb19c20e7d13c48d014b99e8dddc97e622d81f21e5a21b51790cac4",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130791001239",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6130822000538": {
+      "brand": "Red Star",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/082/200/0538/front_fr.11.400.jpg",
+      "imageSha256": "449debddb18a9f219e1ba7540d4054460d3d9137b4441dd80d389e3abe85f30d",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130822000538",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6130217050711": {
+      "brand": "توجة",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/021/705/0711/front_fr.3.400.jpg",
+      "imageSha256": "c27d4b06397fa476b5a43e60e525ff54f08ff927f9660b386bf4ab989291c849",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130217050711",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6130413000923": {
+      "brand": "Tartino",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/041/300/0923/front_en.13.400.jpg",
+      "imageSha256": "a641bd1577cad7d6136114859fab320c309c12c8220400c561ffaeb9f1cf4c2f",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130413000923",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6130732003414": {
+      "brand": "بن هارون",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/073/200/3414/front_fr.3.400.jpg",
+      "imageSha256": "92ec92f1216ab3af4d5a64f2e69fe61e00e1057750978892878f738f72fa7626",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130732003414",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6130093067353": {
+      "brand": "Izem",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/009/306/7353/front_fr.10.400.jpg",
+      "imageSha256": "defd2575f2d3ecbf3dd1f9b4c02d46d19c650827f4d58c201d12587ca6e01208",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130093067353",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6133414001395": {
+      "brand": "Maxon",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/341/400/1395/front_fr.13.400.jpg",
+      "imageSha256": "0e1242669fc793421eb4e8a383e531a84d94e7d85e991de7889a3d9996512d1e",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6133414001395",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6134602000022": {
+      "brand": "Arruapan",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/460/200/0022/front_fr.4.400.jpg",
+      "imageSha256": "4fca5fc396ef3f5c40fa370e4b9155b781fbdd1b039b8a038e86eb2937cd0d93",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6134602000022",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6132501941231": {
+      "brand": "Hodna lait",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/250/194/1231/front_fr.3.400.jpg",
+      "imageSha256": "8220693642d9abd073793a165a4430b6d9735b9435b1b49037a14fcd3ef933c4",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6132501941231",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6133337004718": {
+      "brand": "Optilla",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/333/700/4718/front_en.4.400.jpg",
+      "imageSha256": "23bdd3ff6c5adceddc46f076f2c96b2b0c1ff4a1a3d6b59133e51539c9203ebe",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6133337004718",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6130760006999": {
+      "brand": "Soummam",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/076/000/6999/front_fr.3.400.jpg",
+      "imageSha256": "e9f378fd18f63a7b7427e83e235089037d76f120575f22a8b7cc2a66b26cd7c7",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130760006999",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6134261001699": {
+      "brand": "Kiri",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/426/100/1699/front_fr.5.400.jpg",
+      "imageSha256": "4619199c04c89f382f00d82c9fe8e4515f5de0077dc4d3d94d71c7a9092f88a6",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6134261001699",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6132175402687": {
+      "brand": "Celebrity",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/217/540/2687/front_en.3.400.jpg",
+      "imageSha256": "d91c0820feee9af2af1190552b6df541f72752bd2e61968c1b567921b32f8077",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6132175402687",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6132501942788": {
+      "brand": "Hodna lait",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/250/194/2788/front_fr.13.400.jpg",
+      "imageSha256": "634f59f0d095b1ea0d0851f30b0831867445a36ea9dcb03e08f655ddccedb2eb",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6132501942788",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6130234004063": {
+      "brand": "Tchina",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/023/400/4063/front_fr.17.400.jpg",
+      "imageSha256": "f070f69f86fe1044ff238a16776e604862211df3cd7d3b1ab4ac4cc0f6e8cdb3",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130234004063",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6130683000159": {
+      "brand": "Batna",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/068/300/0159/front_fr.3.400.jpg",
+      "imageSha256": "413ae2fca51ca733e371270077a642dc83089239f446154e2abfb8e69eee452e",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130683000159",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6134091916194": {
+      "brand": "Ramy",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/409/191/6194/front_es.5.400.jpg",
+      "imageSha256": "911da86e5e3d9a4b272af5d638b7cbd778ef48429de2fc1791fa317e4da737b9",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6134091916194",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6130093066110": {
+      "brand": "ifruit",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/009/306/6110/front_en.3.400.jpg",
+      "imageSha256": "963229dd915058bf3c0c5d9c0d40ece4c76351cdf19668dfaacf8e951e52e5fd",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130093066110",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6132503150020": {
+      "brand": "Milkospray",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/250/315/0020/front_xx.29.400.jpg",
+      "imageSha256": "0e77b04b0648924d86977219801de91bcf4f4c0d3b5b0dcff18700da26cce462",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6132503150020",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6132500901885": {
+      "brand": "F&H",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/250/090/1885/front_en.7.400.jpg",
+      "imageSha256": "75804e40891aa5115f55f1b128e800e4ec2715c113fb0e86cc2ca37cbd6809b5",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6132500901885",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6134261000272": {
+      "brand": "Kiri",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/426/100/0272/front_fr.3.400.jpg",
+      "imageSha256": "f1f45ca33c92eb809926b756ec78a95eb9ab836f676b5d5defaf74a094d03fab",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6134261000272",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6131044000221": {
+      "brand": "Toffia",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/104/400/0221/front_fr.3.400.jpg",
+      "imageSha256": "e4a3dc34b3e421d32ff11f53b189b41779d578e13b3add4d13c9ee548f54d70f",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6131044000221",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6131575000028": {
+      "brand": "Walid",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/157/500/0028/front_en.3.400.jpg",
+      "imageSha256": "836c4e881f9607cf9ebc231be148d88f58e43f2225e0de661c56069339362960",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6131575000028",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6133414002552": {
+      "brand": "Maxon",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/341/400/2552/front_fr.21.400.jpg",
+      "imageSha256": "d519937adfdf675e712763c6a7b016fdc02bacf397c6937f29e8c3f360ce1a9f",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6133414002552",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6133414006512": {
+      "brand": "Regalo",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/341/400/6512/front_fr.3.400.jpg",
+      "imageSha256": "facdc4d7502ea187a805ce6af323eb68651c9c25cc616e5a3a8e85835767db11",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6133414006512",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6133414009902": {
+      "brand": "El Tadj",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/341/400/9902/front_fr.3.400.jpg",
+      "imageSha256": "9b45ab5feaad02a95822a7f1a6c96ac8766a2531a5d0d8a584acdd17018e9d64",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6133414009902",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6133489001498": {
+      "brand": "أروى",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/348/900/1498/front_fr.11.400.jpg",
+      "imageSha256": "8f5928a56ab232130c7347f03862f8e0c20980dff94a4cb0faa4f90d0a74b0e1",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6133489001498",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6133414008066": {
+      "brand": "Moment",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/341/400/8066/front_fr.3.400.jpg",
+      "imageSha256": "11b0673385a772cea48b10b60eb7024505f60fd02a6325b435a3c36a4a214874",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6133414008066",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6135366000013": {
+      "brand": "Taya",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/536/600/0013/front_fr.3.400.jpg",
+      "imageSha256": "caf57faf6aaef4e7978e7bfe822935ec32005f780826d7264be7eaa1e416d542",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6135366000013",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6132500902264": {
+      "brand": "F&H",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/250/090/2264/front_fr.3.400.jpg",
+      "imageSha256": "d43ed6aa2bab6a6bfb0edc92f34af188333730f7069efb8fc4b74dfa36ab7aeb",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6132500902264",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6130234004032": {
+      "brand": "Tchina",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/023/400/4032/front_fr.4.400.jpg",
+      "imageSha256": "860b5609fbe8adc0f52c0b5a0c4e1e2031f5eea83180520bf5f2fa8c17d20ca1",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130234004032",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6131972000225": {
+      "brand": "Mon jardin Bio",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/197/200/0225/front_fr.3.400.jpg",
+      "imageSha256": "8500ab5d1d6eaae2e6a2a0245544d8b6947bcddfd01b217a3d0b3a3b87fce5c2",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6131972000225",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6132397800018": {
+      "brand": "أريج",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/239/780/0018/front_fr.3.400.jpg",
+      "imageSha256": "c4b27b71554cf60f70c98aade430c8ef158d8e60ae583c146478b889a03c0898",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6132397800018",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    },
+    "6134091916200": {
+      "brand": "Ramy",
+      "sourceBrand": null,
+      "method": "VISUAL_TRANSCRIPTION_OF_SELECTED_SOURCE_FRONT",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/409/191/6200/front_fr.3.400.jpg",
+      "imageSha256": "516ec2a82b0e412fd56548e8ac379b6e87ce756318257d926c649736d40fcd16",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6134091916200",
+      "reviewedAt": "2026-10-16T17:58:20.704354+00:00",
+      "observation": "Brand text is visibly printed on the genuine selected source front. Original source brand field was empty. No ownership/manufacturer relationship, pack quantity, price or stock is inferred."
+    }
+  }
+}

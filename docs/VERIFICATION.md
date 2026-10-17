@@ -28,3 +28,7 @@ python3 scripts/test-warehouse.py http://127.0.0.1:5860
 Browser evidence checks navigation, real forms, secure sign-in, errors, responsive and dark layouts. Native evidence records variant, API origin, build, device/simulator and executed interactions. Hosted tests must run on the final HTTPS origin and persistent database. Compilation is not native execution; local passes are not hosted passes.
 
 Figma acceptance is separate: the screen matrix and derived 122 checks retain unverified states and external evidence requirements. Source presence alone does not accept an original requirement.
+
+## Merchant account finish
+
+The added merchant summary is tested for unauthenticated/role denial, owner/workspace isolation, actual collections minus refunds, and separate partial delivery counts. Browser checks exercise the points card, activity-to-orders navigation, account address form and communication consent after the Figma finish. The catalogue audit decodes all2,500 local photographs and verifies source hashes and provenance; it does not certify community label correctness or local wholesale availability.

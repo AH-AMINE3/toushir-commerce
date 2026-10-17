@@ -1,0 +1,786 @@
+[
+  {
+    "position": 1,
+    "barcode": "6130492000593",
+    "name": "Couscous complet",
+    "brand": "Mama",
+    "unit": "900 g",
+    "imageMetrics": {
+      "width": 174,
+      "height": 217,
+      "variance": 58.23,
+      "edgeSharpness": 79.81,
+      "whiteBorderRatio": 0.946,
+      "sha256": "c2b456e24d61a9ee9bcb62bb3c01b140878040c682e904918aaf9fbf61a04413",
+      "barcode": "6130492000593"
+    }
+  },
+  {
+    "position": 2,
+    "barcode": "6130093067346",
+    "name": "Izem energy saveur pomme - figue",
+    "brand": "Ifri",
+    "unit": "33 cl",
+    "imageMetrics": {
+      "width": 225,
+      "height": 400,
+      "variance": 90.95,
+      "edgeSharpness": 89.84,
+      "whiteBorderRatio": 0.912,
+      "sha256": "1ab8560fbddba21bb896f6b2fb9939c3c1c2d523d5dc501257d24def504d2cd1",
+      "barcode": "6130093067346"
+    }
+  },
+  {
+    "position": 3,
+    "barcode": "6130093068961",
+    "name": "Izem Energy with juice",
+    "brand": "Ifri",
+    "unit": "33 cl",
+    "imageMetrics": {
+      "width": 263,
+      "height": 400,
+      "variance": 91.16,
+      "edgeSharpness": 82.16,
+      "whiteBorderRatio": 0.833,
+      "sha256": "0d922020cb0bb4c183e1fdbe508f626ce9a766146432daf64fd7bb8bebaab11a",
+      "barcode": "6130093068961"
+    }
+  },
+  {
+    "position": 4,
+    "barcode": "6130003014569",
+    "name": "Vimto Pétillant",
+    "brand": "Vimto",
+    "unit": "1L",
+    "imageMetrics": {
+      "width": 224,
+      "height": 400,
+      "variance": 106.14,
+      "edgeSharpness": 86.18,
+      "whiteBorderRatio": 0.823,
+      "sha256": "d36255f195c8a64b74b89e9609cfbe525fda06f355b3fb29bdad9d1c52ee5a4a",
+      "barcode": "6130003014569"
+    }
+  },
+  {
+    "position": 5,
+    "barcode": "6130760003769",
+    "name": "L'ben",
+    "brand": "Soummam",
+    "unit": "1L",
+    "imageMetrics": {
+      "width": 227,
+      "height": 400,
+      "variance": 81.13,
+      "edgeSharpness": 90.05,
+      "whiteBorderRatio": 0.816,
+      "sha256": "7bc334116ad9014c8338a7457ec1b9d8c85ed051b5cbc66be2e87db95549b86a",
+      "barcode": "6130760003769"
+    }
+  },
+  {
+    "position": 6,
+    "barcode": "6130760007224",
+    "name": "GREEK Nature",
+    "brand": "Soummam",
+    "unit": "100 g",
+    "imageMetrics": {
+      "width": 400,
+      "height": 333,
+      "variance": 66.41,
+      "edgeSharpness": 94.8,
+      "whiteBorderRatio": 0.793,
+      "sha256": "aa51d4548c6cb1a65d6a35a3b4cb3c0d4f44ce92bfb8a0d55121a9870c3a3407",
+      "barcode": "6130760007224"
+    }
+  },
+  {
+    "position": 7,
+    "barcode": "6130813602864",
+    "name": "Farha",
+    "brand": "فرحة,Farha",
+    "unit": "1 L",
+    "imageMetrics": {
+      "width": 127,
+      "height": 372,
+      "variance": 61.39,
+      "edgeSharpness": 87.78,
+      "whiteBorderRatio": 0.785,
+      "sha256": "343c5b9bd4532e69d29bdd798e64e9382e9398f73412685d86b8c8ac22d7b077",
+      "barcode": "6130813602864"
+    }
+  },
+  {
+    "position": 8,
+    "barcode": "6130803002308",
+    "name": "Le michèvre fromage à pâte molle",
+    "brand": "Tassili",
+    "unit": "250 g",
+    "imageMetrics": {
+      "width": 400,
+      "height": 389,
+      "variance": 63.86,
+      "edgeSharpness": 82.26,
+      "whiteBorderRatio": 0.78,
+      "sha256": "391173024823de49197c9413fe44cfca6c9d979e0f9f822ce6be144233bc64b1",
+      "barcode": "6130803002308"
+    }
+  },
+  {
+    "position": 9,
+    "barcode": "6134395000346",
+    "name": "F&h beurre de cacahuète chocolat",
+    "brand": "F&h",
+    "unit": null,
+    "imageMetrics": {
+      "width": 356,
+      "height": 400,
+      "variance": 67.04,
+      "edgeSharpness": 93.3,
+      "whiteBorderRatio": 0.758,
+      "sha256": "0894e5d3d6a0160ff6e5b93f70958e837ff6a1bf1ac4b6d798b4d96207ffb3ae",
+      "barcode": "6134395000346"
+    }
+  },
+  {
+    "position": 10,
+    "barcode": "6130265510021",
+    "name": "Sel de table",
+    "brand": "Rafie",
+    "unit": "1 kg",
+    "imageMetrics": {
+      "width": 400,
+      "height": 239,
+      "variance": 76.23,
+      "edgeSharpness": 89.2,
+      "whiteBorderRatio": 0.72,
+      "sha256": "5b4229ba7fafc27d4c4331c4528425e88755c04778b27b6e19e7170bc932cf21",
+      "barcode": "6130265510021"
+    }
+  },
+  {
+    "position": 11,
+    "barcode": "6132376900395",
+    "name": "Whey Coco bar 26% protein",
+    "brand": "SARL Foodchain",
+    "unit": "40 g",
+    "imageMetrics": {
+      "width": 400,
+      "height": 151,
+      "variance": 89.37,
+      "edgeSharpness": 109.98,
+      "whiteBorderRatio": 0.675,
+      "sha256": "9cb07109ace0cb725157bd5e5376d8e1c5a74261130b5660746a8d7dfacac350",
+      "barcode": "6132376900395"
+    }
+  },
+  {
+    "position": 12,
+    "barcode": "6130093063720",
+    "name": "Izem Energy",
+    "brand": "Ifri",
+    "unit": "25 cl",
+    "imageMetrics": {
+      "width": 244,
+      "height": 400,
+      "variance": 101.14,
+      "edgeSharpness": 96.11,
+      "whiteBorderRatio": 0.673,
+      "sha256": "00dac62cfcd0a80d439ee61f8b438ec7c647b9614616bfcfa78d0bedb34fb57d",
+      "barcode": "6130093063720"
+    }
+  },
+  {
+    "position": 13,
+    "barcode": "6132541890254",
+    "name": "Huile d'olive",
+    "brand": "Ath djannad",
+    "unit": "1.5l",
+    "imageMetrics": {
+      "width": 287,
+      "height": 400,
+      "variance": 58.91,
+      "edgeSharpness": 70.62,
+      "whiteBorderRatio": 0.665,
+      "sha256": "fb40aa3eb5ad8d27d025638acc4cd889b41ffcdd536cd604593c04fb236134cd",
+      "barcode": "6132541890254"
+    }
+  },
+  {
+    "position": 14,
+    "barcode": "6130834001011",
+    "name": "Trefle",
+    "brand": "Trefle",
+    "unit": "1kg",
+    "imageMetrics": {
+      "width": 357,
+      "height": 400,
+      "variance": 63.84,
+      "edgeSharpness": 81.03,
+      "whiteBorderRatio": 0.656,
+      "sha256": "328969ccc315fa5b5d4a47186fa761273580be649233575123b4cf144df0051a",
+      "barcode": "6130834001011"
+    }
+  },
+  {
+    "position": 15,
+    "barcode": "6130586001482",
+    "name": "Rôti de poulet fumé",
+    "brand": "Bellat",
+    "unit": "1 kg",
+    "imageMetrics": {
+      "width": 400,
+      "height": 267,
+      "variance": 62.07,
+      "edgeSharpness": 86.21,
+      "whiteBorderRatio": 0.618,
+      "sha256": "06af70756966e9fab86d0a8b2c0e3415cdb715a69a420015f48805563f7565ea",
+      "barcode": "6130586001482"
+    }
+  },
+  {
+    "position": 16,
+    "barcode": "6130760007286",
+    "name": "Yago fraise kiwi",
+    "brand": "Soummam",
+    "unit": "1kg",
+    "imageMetrics": {
+      "width": 181,
+      "height": 400,
+      "variance": 61.6,
+      "edgeSharpness": 90.19,
+      "whiteBorderRatio": 0.602,
+      "sha256": "fe595fecaf013179ca9976fdce519f2da147b32f7cacfeab1aa487c4f61b7a9a",
+      "barcode": "6130760007286"
+    }
+  },
+  {
+    "position": 17,
+    "barcode": "6130093067605",
+    "name": "Izem energy saveur pomme & figur 50cl",
+    "brand": "Ifri",
+    "unit": "50 cl",
+    "imageMetrics": {
+      "width": 197,
+      "height": 400,
+      "variance": 83.36,
+      "edgeSharpness": 102.48,
+      "whiteBorderRatio": 0.571,
+      "sha256": "62989a8cafd7fa91c1924f42979bc2700822fcca4b8cfb293d8e4bb81fa5136e",
+      "barcode": "6130093067605"
+    }
+  },
+  {
+    "position": 18,
+    "barcode": "6135179000033",
+    "name": "Pistaches grillées et salées",
+    "brand": "Raya",
+    "unit": "30 g",
+    "imageMetrics": {
+      "width": 272,
+      "height": 400,
+      "variance": 71.41,
+      "edgeSharpness": 92.74,
+      "whiteBorderRatio": 0.57,
+      "sha256": "511da788996bdd4aaa279e982b30288465c61fd34273b609b86f12ea16326d83",
+      "barcode": "6135179000033"
+    }
+  },
+  {
+    "position": 19,
+    "barcode": "6136559000018",
+    "name": "PROCTOREM",
+    "brand": "BIOSKY",
+    "unit": "tube 50g pour les hemorroides ( ext/int) et fissures anales",
+    "imageMetrics": {
+      "width": 256,
+      "height": 400,
+      "variance": 66.39,
+      "edgeSharpness": 87.76,
+      "whiteBorderRatio": 0.564,
+      "sha256": "e894264abd63cda61811b11883865b8ccd97debd8445a9bd7e8d932122f931c6",
+      "barcode": "6136559000018"
+    }
+  },
+  {
+    "position": 20,
+    "barcode": "6132239800060",
+    "name": "تارتولات",
+    "brand": "موربيدو",
+    "unit": null,
+    "imageMetrics": {
+      "width": 400,
+      "height": 279,
+      "variance": 92.14,
+      "edgeSharpness": 91.33,
+      "whiteBorderRatio": 0.552,
+      "sha256": "5616d049b70f88108239d365c7a845e49abe5122a035a262548e8e9f4e7635a5",
+      "barcode": "6132239800060"
+    }
+  },
+  {
+    "position": 21,
+    "barcode": "6130003016488",
+    "name": "Schweppes Premium Sparkling Mandarine",
+    "brand": "Schweppes",
+    "unit": null,
+    "imageMetrics": {
+      "width": 118,
+      "height": 400,
+      "variance": 41.22,
+      "edgeSharpness": 77.98,
+      "whiteBorderRatio": 0.5,
+      "sha256": "4e08c994a407c41a56416e78457e5384996da46172c4ca1f2ba39d3e237f8bd9",
+      "barcode": "6130003016488"
+    }
+  },
+  {
+    "position": 22,
+    "barcode": "6134960000047",
+    "name": "Confirure Orange",
+    "brand": "Delicia",
+    "unit": "380 gr",
+    "imageMetrics": {
+      "width": 268,
+      "height": 400,
+      "variance": 84.41,
+      "edgeSharpness": 93.23,
+      "whiteBorderRatio": 0.469,
+      "sha256": "a30f8dee8248b53d012c23e2d6a35c7782e99fd6d56525a2951e804adfcb9454",
+      "barcode": "6134960000047"
+    }
+  },
+  {
+    "position": 23,
+    "barcode": "0715235567418",
+    "name": "Tiqle sticks boisson goût fraise",
+    "brand": "Tiqle",
+    "unit": "105g",
+    "imageMetrics": {
+      "width": 400,
+      "height": 321,
+      "variance": 47.03,
+      "edgeSharpness": 64.55,
+      "whiteBorderRatio": 1.0,
+      "sha256": "254f1cab840ab04c5653489390f1f21d708ccfb74eb642c7671d13e66008307f",
+      "barcode": "0715235567418"
+    }
+  },
+  {
+    "position": 24,
+    "barcode": "8445291392083",
+    "name": "Extrafino bombones Dinosaurus",
+    "brand": "Nestlé",
+    "unit": "200g",
+    "imageMetrics": {
+      "width": 400,
+      "height": 397,
+      "variance": 70.38,
+      "edgeSharpness": 84.87,
+      "whiteBorderRatio": 0.943,
+      "sha256": "162d355c22fa38aae20d19cf07b6d115fcae4235a443debf7e39e88643d23448",
+      "barcode": "8445291392083"
+    }
+  },
+  {
+    "position": 25,
+    "barcode": "8436048722161",
+    "name": "Jugo de Tamarindo",
+    "brand": "Amazonia Fruit",
+    "unit": "330ml",
+    "imageMetrics": {
+      "width": 400,
+      "height": 397,
+      "variance": 73.02,
+      "edgeSharpness": 82.71,
+      "whiteBorderRatio": 0.907,
+      "sha256": "ca515dc0017b0c9da3650426befe98b9cddba1533e9cf641ea097f1fe9630490",
+      "barcode": "8436048722161"
+    }
+  },
+  {
+    "position": 26,
+    "barcode": "3574669909136",
+    "name": "Baby oil",
+    "brand": "Johnson's",
+    "unit": "300 ml",
+    "imageMetrics": {
+      "width": 181,
+      "height": 400,
+      "variance": 32.87,
+      "edgeSharpness": 73.32,
+      "whiteBorderRatio": 0.9,
+      "sha256": "1b2b43d8b755d42d42ebf1812c1331d4496755e81ebc9e1f5bd0e3c1abcb7703",
+      "barcode": "3574669909136"
+    }
+  },
+  {
+    "position": 27,
+    "barcode": "8000500310427",
+    "name": "Biscuits NUTELLA Biscuits Noisettes et Cacao x22 - 304g",
+    "brand": "Ferrero Technical Services Srl, Nutella biscuits",
+    "unit": "304 g",
+    "imageMetrics": {
+      "width": 400,
+      "height": 384,
+      "variance": 65.61,
+      "edgeSharpness": 84.83,
+      "whiteBorderRatio": 0.858,
+      "sha256": "129ccffa2f027f447f7a1ce6dcbc19a88c1606a427aa59cd271de0ada519f929",
+      "barcode": "8000500310427"
+    }
+  },
+  {
+    "position": 28,
+    "barcode": "6152269500013",
+    "name": "GUMBALL",
+    "brand": "Djemina food",
+    "unit": "20g",
+    "imageMetrics": {
+      "width": 243,
+      "height": 400,
+      "variance": 67.44,
+      "edgeSharpness": 86.73,
+      "whiteBorderRatio": 0.779,
+      "sha256": "d03a2d4a47acde665022d6aacd4aa79f514d4210d72c376b5cfb89e34f2a9325",
+      "barcode": "6152269500013"
+    }
+  },
+  {
+    "position": 29,
+    "barcode": "3451790886645",
+    "name": "Dessert lacté aux fruits stérilisé UHT - Litchi",
+    "brand": "Elle & Vire, Elle&Vire International, Savencia",
+    "unit": "4 x 125 g",
+    "imageMetrics": {
+      "width": 331,
+      "height": 400,
+      "variance": 62.98,
+      "edgeSharpness": 93.07,
+      "whiteBorderRatio": 0.755,
+      "sha256": "729581ebf7801f52152ec61e9f1f3fe315bb50e66a52c8e0d1eb56f84bd1805f",
+      "barcode": "3451790886645"
+    }
+  },
+  {
+    "position": 30,
+    "barcode": "5410126832372",
+    "name": "Gaufre de Liège Chocolat",
+    "brand": "Lotus",
+    "unit": "363g",
+    "imageMetrics": {
+      "width": 400,
+      "height": 227,
+      "variance": 88.28,
+      "edgeSharpness": 97.18,
+      "whiteBorderRatio": 0.709,
+      "sha256": "f6f05296498e89ede4f84c4f053c870b91dbe32cd6bb1f65606b62224f1a319e",
+      "barcode": "5410126832372"
+    }
+  },
+  {
+    "position": 31,
+    "barcode": "5449000133328",
+    "name": "Cocacola zero sugar",
+    "brand": "COCA-COLA SERVICES SA/NV, Coke ZERO",
+    "unit": "1 L",
+    "imageMetrics": {
+      "width": 141,
+      "height": 400,
+      "variance": 98.63,
+      "edgeSharpness": 94.17,
+      "whiteBorderRatio": 0.706,
+      "sha256": "a5aaafa9620390162293fdf8a531ada24724cad9099094c73f7de398cc13cea8",
+      "barcode": "5449000133328"
+    }
+  },
+  {
+    "position": 32,
+    "barcode": "3161716031003",
+    "name": "Caprice des Dieux",
+    "brand": "Caprice des Dieux, Savencia",
+    "unit": "300 g",
+    "imageMetrics": {
+      "width": 400,
+      "height": 227,
+      "variance": 64.92,
+      "edgeSharpness": 96.97,
+      "whiteBorderRatio": 0.703,
+      "sha256": "fd5d1ae9685eca769390881f3c7bb90104397c6aad9a3f6d56e32d7b25fc8d51",
+      "barcode": "3161716031003"
+    }
+  },
+  {
+    "position": 33,
+    "barcode": "3564700676257",
+    "name": "Galettes suedoises flocon avoine",
+    "brand": "Marque Repère, P'tit Déli",
+    "unit": "100 g",
+    "imageMetrics": {
+      "width": 400,
+      "height": 186,
+      "variance": 71.93,
+      "edgeSharpness": 92.55,
+      "whiteBorderRatio": 0.672,
+      "sha256": "2103db4b1166eb04d67c1d11057ee80883c6e144fc8d95d755c7fc2cb5ecbc45",
+      "barcode": "3564700676257"
+    }
+  },
+  {
+    "position": 34,
+    "barcode": "8000500037560",
+    "name": "Kinder Bueno",
+    "brand": "Kinder",
+    "unit": "43g",
+    "imageMetrics": {
+      "width": 400,
+      "height": 154,
+      "variance": 82.38,
+      "edgeSharpness": 102.3,
+      "whiteBorderRatio": 0.65,
+      "sha256": "52285a854fa2a6073e87fea61ab0127508e32e9f285517f3b50178dbbc713bf6",
+      "barcode": "8000500037560"
+    }
+  },
+  {
+    "position": 35,
+    "barcode": "5000159558280",
+    "name": "Bounty",
+    "brand": "Bounty",
+    "unit": "57 G",
+    "imageMetrics": {
+      "width": 400,
+      "height": 97,
+      "variance": 71.08,
+      "edgeSharpness": 107.58,
+      "whiteBorderRatio": 0.606,
+      "sha256": "8633c5955a4fc82d0f948167341a37584056b8a2f282128a8e160a8d65d64e92",
+      "barcode": "5000159558280"
+    }
+  },
+  {
+    "position": 36,
+    "barcode": "8000500273296",
+    "name": "Ferrero",
+    "brand": "Ferrero",
+    "unit": "375 g",
+    "imageMetrics": {
+      "width": 400,
+      "height": 284,
+      "variance": 62.35,
+      "edgeSharpness": 86.05,
+      "whiteBorderRatio": 0.568,
+      "sha256": "2aac9f1577571a8287a95c7b3108308ab816c61b9429b672137ab612b9ea5395",
+      "barcode": "8000500273296"
+    }
+  },
+  {
+    "position": 37,
+    "barcode": "3564700521274",
+    "name": "Palmiers nappe chocolat lait",
+    "brand": "Marque Repère, P'tit Déli",
+    "unit": "110 g",
+    "imageMetrics": {
+      "width": 400,
+      "height": 172,
+      "variance": 74.93,
+      "edgeSharpness": 92.56,
+      "whiteBorderRatio": 0.564,
+      "sha256": "9cfe84603549dba46be08950cd43f846042c30b2252e0c682507a9465009f7e5",
+      "barcode": "3564700521274"
+    }
+  },
+  {
+    "position": 38,
+    "barcode": "0705632829578",
+    "name": "Olives a l'Andalouse",
+    "brand": "BHS OLIVES,OLIVES ALGERIA,OLIVES SIGOISES",
+    "unit": "400g",
+    "imageMetrics": {
+      "width": 339,
+      "height": 400,
+      "variance": 61.4,
+      "edgeSharpness": 84.63,
+      "whiteBorderRatio": 0.559,
+      "sha256": "2b8cd845bd2bd9808f1d325b50b382b40e57cb974043470852f902cb3da33a29",
+      "barcode": "0705632829578"
+    }
+  },
+  {
+    "position": 39,
+    "barcode": "3564700438671",
+    "name": "Barre fruits rouges x 6",
+    "brand": "Marque Repère, P'tit Déli",
+    "unit": "162 g",
+    "imageMetrics": {
+      "width": 398,
+      "height": 400,
+      "variance": 69.84,
+      "edgeSharpness": 81.96,
+      "whiteBorderRatio": 0.526,
+      "sha256": "d527581a5dc0d1db87e49b265cfed352030d11d80c7cc0d7eede7dc54dd13d91",
+      "barcode": "3564700438671"
+    }
+  },
+  {
+    "position": 40,
+    "barcode": "5449000000286",
+    "name": "Coca-Cola",
+    "brand": "Coca-Cola",
+    "unit": "2 L",
+    "imageMetrics": {
+      "width": 129,
+      "height": 400,
+      "variance": 95.12,
+      "edgeSharpness": 88.61,
+      "whiteBorderRatio": 0.509,
+      "sha256": "088eb0417a9d590ba1505b5103ab14f002b81d615d8d8d41812d9a6535583a69",
+      "barcode": "5449000000286"
+    }
+  },
+  {
+    "position": 41,
+    "barcode": "6062025000001",
+    "name": "Poudre D'avoine",
+    "brand": "Délish",
+    "unit": "2 Kg",
+    "imageMetrics": {
+      "width": 353,
+      "height": 400,
+      "variance": 91.33,
+      "edgeSharpness": 89.69,
+      "whiteBorderRatio": 0.498,
+      "sha256": "ec98ab304f724547a02c1cf6a8672e793b74b0cf915ea25cc435582547b12a84",
+      "barcode": "6062025000001"
+    }
+  },
+  {
+    "position": 42,
+    "barcode": "5449000054227",
+    "name": "Coca-Cola Original Taste",
+    "brand": "COCA-COLA SERVICES SA/NV, Coca-Cola",
+    "unit": "1 L",
+    "imageMetrics": {
+      "width": 122,
+      "height": 400,
+      "variance": 94.19,
+      "edgeSharpness": 90.8,
+      "whiteBorderRatio": 0.495,
+      "sha256": "0ae39b24e1926e0cbc25a3e8856913b86de1f928e40e1f44a6cec822504b0c27",
+      "barcode": "5449000054227"
+    }
+  },
+  {
+    "position": 43,
+    "barcode": "3248710510106",
+    "name": "Hamoud Limonade 1.5L PET",
+    "brand": "Hamoud boualem",
+    "unit": "1500 ml",
+    "imageMetrics": {
+      "width": 107,
+      "height": 400,
+      "variance": 37.93,
+      "edgeSharpness": 83.12,
+      "whiteBorderRatio": 0.483,
+      "sha256": "ce74487cd34e4f38f57755370ba2b5ce276ce03e44cfced43bef0073468a597e",
+      "barcode": "3248710510106"
+    }
+  },
+  {
+    "position": 44,
+    "barcode": "9002859070754",
+    "name": "Biskuit Soft Cakes",
+    "brand": "Feiny",
+    "unit": "135g",
+    "imageMetrics": {
+      "width": 400,
+      "height": 173,
+      "variance": 70.99,
+      "edgeSharpness": 90.92,
+      "whiteBorderRatio": 0.481,
+      "sha256": "a00502b53bbdf627e5e918dbfd6644561f5cd1852e9c815ccd5a567ec301392b",
+      "barcode": "9002859070754"
+    }
+  },
+  {
+    "position": 45,
+    "barcode": "6921204802686",
+    "name": "Sweet Bean Sauce (tianmian Jiang)",
+    "brand": "Cong Ban Lu",
+    "unit": "800g",
+    "imageMetrics": {
+      "width": 327,
+      "height": 266,
+      "variance": 57.86,
+      "edgeSharpness": 79.96,
+      "whiteBorderRatio": 0.47,
+      "sha256": "38cff7e12367be19cb20298acb36dc0810d47a9b5f1116cee4d45d75369003ae",
+      "barcode": "6921204802686"
+    }
+  },
+  {
+    "position": 46,
+    "barcode": "0143072000063",
+    "name": "RAIB",
+    "brand": "EP COLAITAL SPA",
+    "unit": "1L",
+    "imageMetrics": {
+      "width": 128,
+      "height": 400,
+      "variance": 73.29,
+      "edgeSharpness": 90.77,
+      "whiteBorderRatio": 0.466,
+      "sha256": "22cf377c4729e84594147772f8884ab731370b11297ef04dabc5bfc672eb6b9b",
+      "barcode": "0143072000063"
+    }
+  },
+  {
+    "position": 47,
+    "barcode": "6052018198525",
+    "name": "FIT OAT",
+    "brand": "ollagro",
+    "unit": "500 g",
+    "imageMetrics": {
+      "width": 285,
+      "height": 400,
+      "variance": 68.26,
+      "edgeSharpness": 96.73,
+      "whiteBorderRatio": 0.461,
+      "sha256": "0acca9fc65c5329dc105a64abcc5edfab1c95fae815c72403e367b8c692edfee",
+      "barcode": "6052018198525"
+    }
+  },
+  {
+    "position": 48,
+    "barcode": "3564700661383",
+    "name": "Sablé céréales P'tit Déli Chocolat au lait pocket",
+    "brand": "Marque Repère, Leclerc, P'tit Déli",
+    "unit": "225 g",
+    "imageMetrics": {
+      "width": 400,
+      "height": 249,
+      "variance": 68.4,
+      "edgeSharpness": 90.32,
+      "whiteBorderRatio": 0.453,
+      "sha256": "a927837d360f7dd85ef224fd01981071599dfcf4103d0b5ae6fdb389912ce996",
+      "barcode": "3564700661383"
+    }
+  },
+  {
+    "position": 49,
+    "barcode": "7622210449283",
+    "name": "Prince",
+    "brand": "Mondelez Schweiz GmbH",
+    "unit": "300 g e",
+    "imageMetrics": {
+      "width": 220,
+      "height": 400,
+      "variance": 81.22,
+      "edgeSharpness": 100.76,
+      "whiteBorderRatio": 0.451,
+      "sha256": "c2b7533d6941701282bae0f6b2c19d369fc1ca0f574698a95b8a99038f78aad3",
+      "barcode": "7622210449283"
+    }
+  }
+]

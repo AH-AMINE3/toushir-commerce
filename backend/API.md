@@ -58,3 +58,7 @@ Production must explicitly provision owner credentials and a durable database lo
 - `POST /admin/claims/{id}/receive {quantity,note}` explicitly receives authorized physical units into quarantine, bounded by approved quantity.
 - `POST /admin/claims/{id}/inspect {quantity,disposition:"RESTOCK"|"WRITE_OFF",reason}` handles received, uninspected units only; physical inventory and ledger change explicitly.
 - `POST /admin/claims/{id}/credit {amount,reason,idempotencyKey}` explicitly grants a commercial credit, only after accepted claim and physical receipt. Maximum cumulative credit is received units × the original immutable unit price. The current subtotal/total reduce by that explicit amount; original product/quantity/unit-price snapshots stay intact. GET detail and printable document show separate credit records. An overpayment creates refundDue, and `/admin/orders/{id}/refunds` must separately record the actual repayment. Repeated identical credit key is idempotent; changed payload 409. Acceptance/receipt/inspection never silently implies a credit or refund.
+
+### Merchant account summary
+
+`GET /api/profile/summary` requires the authenticated MERCHANT actor and accepts no owner override. Counts include fully delivered and partially delivered orders separately. `netPaidThisMonth` is actual recorded collections minus actual refunds during the current Africa/Algiers calendar month, independent of order creation or delivery date. Unknown commercial prices never become zero-value purchase totals.

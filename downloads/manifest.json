@@ -1,10 +1,10 @@
 {
   "merchant": {
     "apiOrigin": "https://toushir-commerce-staging.onrender.com",
-    "sha256": "6aea5c32e6a5b611b861d31bd157c749bf89b0548e5d5a9e2404e9ec87e034e2",
+    "sha256": "b98de0bb65aef421cf320d1b36ccebaa7b282a6524aa99c1b3a29a92e464060b",
     "packageId": "com.toushir.commerce",
     "applicationLabel": "Toushir Commerce",
-    "bytes": 33722183,
+    "bytes": 33745591,
     "architectures": [
       "arm64-v8a"
     ],
@@ -19,10 +19,10 @@
   },
   "driver": {
     "apiOrigin": "https://toushir-commerce-staging.onrender.com",
-    "sha256": "f4fcba5484a74aa153fdc17c77fe8910d4f39d86a0eae1741533c21132dd5699",
+    "sha256": "38314f53750de1dda90e89d365fb18d38d1e7ea99a5137299675fbd35a1e58fd",
     "packageId": "com.toushir.livreur",
     "applicationLabel": "Toushir Livreur",
-    "bytes": 33697567,
+    "bytes": 33720975,
     "architectures": [
       "arm64-v8a"
     ],

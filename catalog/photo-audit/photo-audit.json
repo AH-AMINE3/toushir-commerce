@@ -1,0 +1,1278 @@
+{
+  "scope": "48 source photos sampled; not an exhaustive human verification of2500products.",
+  "selection": "Automated border/edge metrics with brand/category diversity, followed by human sample review. Metrics are not identity certification.",
+  "photos": [
+    {
+      "sheet": "best",
+      "position": 1,
+      "barcode": "6130093067261",
+      "name": "Izem Energy",
+      "brand": "ifri",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130093067261",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/009/306/7261/front_fr.44.400.jpg",
+      "imagePath": "images/6130093067261.jpg",
+      "automaticImageMetrics": {
+        "width": 225,
+        "height": 400,
+        "variance": 73.38,
+        "edgeSharpness": 83.57,
+        "whiteBorderRatio": 1.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 2,
+      "barcode": "0715235567418",
+      "name": "Tiqle sticks boisson goût fraise",
+      "brand": "Tiqle",
+      "sourceUrl": "https://world.openfoodfacts.org/product/0715235567418",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/071/523/556/7418/front_fr.18.400.jpg",
+      "imagePath": "images/0715235567418.jpg",
+      "automaticImageMetrics": {
+        "width": 400,
+        "height": 321,
+        "variance": 47.03,
+        "edgeSharpness": 64.55,
+        "whiteBorderRatio": 1.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 3,
+      "barcode": "6132500901953",
+      "name": "Crème dessert protéinée saveur pistache",
+      "brand": "Fitness & Health",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6132500901953",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/250/090/1953/front_fr.13.400.jpg",
+      "imagePath": "images/6132500901953.jpg",
+      "automaticImageMetrics": {
+        "width": 400,
+        "height": 256,
+        "variance": 88.3,
+        "edgeSharpness": 100.03,
+        "whiteBorderRatio": 0.966
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 4,
+      "barcode": "6130492000593",
+      "name": "Couscous complet",
+      "brand": "Mama",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130492000593",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/049/200/0593/front_fr.20.400.jpg",
+      "imagePath": "images/6130492000593.jpg",
+      "automaticImageMetrics": {
+        "width": 174,
+        "height": 217,
+        "variance": 58.23,
+        "edgeSharpness": 79.81,
+        "whiteBorderRatio": 0.946
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 5,
+      "barcode": "8445291392083",
+      "name": "Extrafino bombones Dinosaurus",
+      "brand": "Nestlé",
+      "sourceUrl": "https://world.openfoodfacts.org/product/8445291392083",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/844/529/139/2083/front_fr.6.400.jpg",
+      "imagePath": "images/8445291392083.jpg",
+      "automaticImageMetrics": {
+        "width": 400,
+        "height": 397,
+        "variance": 70.38,
+        "edgeSharpness": 84.87,
+        "whiteBorderRatio": 0.943
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 6,
+      "barcode": "6130760003349",
+      "name": "Fromage frais nature",
+      "brand": "Soummam",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130760003349",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/076/000/3349/front_fr.159.400.jpg",
+      "imagePath": "images/6130760003349.jpg",
+      "automaticImageMetrics": {
+        "width": 400,
+        "height": 253,
+        "variance": 63.03,
+        "edgeSharpness": 79.0,
+        "whiteBorderRatio": 0.932
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 7,
+      "barcode": "6130093010069",
+      "name": "Eau minérale naturelle",
+      "brand": "Ifri",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130093010069",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/009/301/0069/front_fr.110.400.jpg",
+      "imagePath": "images/6130093010069.jpg",
+      "automaticImageMetrics": {
+        "width": 225,
+        "height": 400,
+        "variance": 31.37,
+        "edgeSharpness": 73.36,
+        "whiteBorderRatio": 0.932
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 8,
+      "barcode": "6130760007422",
+      "name": "Yago Piña Colada",
+      "brand": "Soummam",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130760007422",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/076/000/7422/front_fr.9.400.jpg",
+      "imagePath": "images/6130760007422.jpg",
+      "automaticImageMetrics": {
+        "width": 156,
+        "height": 400,
+        "variance": 54.88,
+        "edgeSharpness": 91.34,
+        "whiteBorderRatio": 0.922
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 9,
+      "barcode": "6135794000395",
+      "name": "Crème dessert protéinée saveur chocolat naturelle",
+      "brand": "Food & health F&H",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6135794000395",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/579/400/0395/front_fr.29.400.jpg",
+      "imagePath": "images/6135794000395.jpg",
+      "automaticImageMetrics": {
+        "width": 400,
+        "height": 225,
+        "variance": 78.43,
+        "edgeSharpness": 93.71,
+        "whiteBorderRatio": 0.917
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 10,
+      "barcode": "8436048722161",
+      "name": "Jugo de Tamarindo",
+      "brand": "Amazonia Fruit",
+      "sourceUrl": "https://world.openfoodfacts.org/product/8436048722161",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/843/604/872/2161/front_es.34.400.jpg",
+      "imagePath": "images/8436048722161.jpg",
+      "automaticImageMetrics": {
+        "width": 400,
+        "height": 397,
+        "variance": 73.02,
+        "edgeSharpness": 82.71,
+        "whiteBorderRatio": 0.907
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 11,
+      "barcode": "3017620421006",
+      "name": "Pâte à tartiner Nutella noisettes et cacao - 750g",
+      "brand": "Nutella, Ferrero",
+      "sourceUrl": "https://world.openfoodfacts.org/product/3017620421006",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/301/762/042/1006/front_fr.376.400.jpg",
+      "imagePath": "images/3017620421006.jpg",
+      "automaticImageMetrics": {
+        "width": 379,
+        "height": 400,
+        "variance": 84.81,
+        "edgeSharpness": 89.64,
+        "whiteBorderRatio": 0.902
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 12,
+      "barcode": "3017620425035",
+      "name": "Nutella",
+      "brand": "Nutella, FERRERO FRANCE COMMERCIALE",
+      "sourceUrl": "https://world.openfoodfacts.org/product/3017620425035",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/301/762/042/5035/front_fr.708.400.jpg",
+      "imagePath": "images/3017620425035.jpg",
+      "automaticImageMetrics": {
+        "width": 379,
+        "height": 400,
+        "variance": 84.17,
+        "edgeSharpness": 89.42,
+        "whiteBorderRatio": 0.902
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 13,
+      "barcode": "3017620420702",
+      "name": "Nutella pâte à tartiner aux noisettes et au cacao",
+      "brand": "Nutella, Ferrero",
+      "sourceUrl": "https://world.openfoodfacts.org/product/3017620420702",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/301/762/042/0702/front_fr.184.400.jpg",
+      "imagePath": "images/3017620420702.jpg",
+      "automaticImageMetrics": {
+        "width": 379,
+        "height": 400,
+        "variance": 83.76,
+        "edgeSharpness": 89.15,
+        "whiteBorderRatio": 0.876
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 14,
+      "barcode": "8000500310427",
+      "name": "Biscuits NUTELLA Biscuits Noisettes et Cacao x22 - 304g",
+      "brand": "Ferrero Technical Services Srl, Nutella biscuits",
+      "sourceUrl": "https://world.openfoodfacts.org/product/8000500310427",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/800/050/031/0427/front_fr.586.400.jpg",
+      "imagePath": "images/8000500310427.jpg",
+      "automaticImageMetrics": {
+        "width": 400,
+        "height": 384,
+        "variance": 65.61,
+        "edgeSharpness": 84.83,
+        "whiteBorderRatio": 0.858
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 15,
+      "barcode": "6130049000038",
+      "name": "Caramello",
+      "brand": "Rabha",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130049000038",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/004/900/0038/front_fr.33.400.jpg",
+      "imagePath": "images/6130049000038.jpg",
+      "automaticImageMetrics": {
+        "width": 334,
+        "height": 400,
+        "variance": 62.89,
+        "edgeSharpness": 81.35,
+        "whiteBorderRatio": 0.851
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 16,
+      "barcode": "6130695111348",
+      "name": "Hamoud La blanche",
+      "brand": "Hamoud Boualem",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130695111348",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/069/511/1348/front_fr.38.400.jpg",
+      "imagePath": "images/6130695111348.jpg",
+      "automaticImageMetrics": {
+        "width": 225,
+        "height": 400,
+        "variance": 64.41,
+        "edgeSharpness": 80.42,
+        "whiteBorderRatio": 0.847
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 17,
+      "barcode": "6130003014569",
+      "name": "Vimto Pétillant",
+      "brand": "Vimto",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130003014569",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/000/301/4569/front_fr.14.400.jpg",
+      "imagePath": "images/6130003014569.jpg",
+      "automaticImageMetrics": {
+        "width": 224,
+        "height": 400,
+        "variance": 106.14,
+        "edgeSharpness": 86.18,
+        "whiteBorderRatio": 0.823
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 18,
+      "barcode": "6152269500013",
+      "name": "GUMBALL",
+      "brand": "Djemina food",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6152269500013",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/615/226/950/0013/front_ar.4.400.jpg",
+      "imagePath": "images/6152269500013.jpg",
+      "automaticImageMetrics": {
+        "width": 243,
+        "height": 400,
+        "variance": 67.44,
+        "edgeSharpness": 86.73,
+        "whiteBorderRatio": 0.779
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 19,
+      "barcode": "6130433000590",
+      "name": "CANDIA TWIST",
+      "brand": "Candia",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130433000590",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/043/300/0590/front_en.6.400.jpg",
+      "imagePath": "images/6130433000590.jpg",
+      "automaticImageMetrics": {
+        "width": 184,
+        "height": 192,
+        "variance": 46.41,
+        "edgeSharpness": 76.82,
+        "whiteBorderRatio": 0.769
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 20,
+      "barcode": "6134395000346",
+      "name": "F&h beurre de cacahuète chocolat",
+      "brand": "F&h",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6134395000346",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/439/500/0346/front_fr.3.400.jpg",
+      "imagePath": "images/6134395000346.jpg",
+      "automaticImageMetrics": {
+        "width": 356,
+        "height": 400,
+        "variance": 67.04,
+        "edgeSharpness": 93.3,
+        "whiteBorderRatio": 0.758
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 21,
+      "barcode": "6130504000108",
+      "name": "Thon entier a la tomate",
+      "brand": "Maratun",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130504000108",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/050/400/0108/front_fr.21.400.jpg",
+      "imagePath": "images/6130504000108.jpg",
+      "automaticImageMetrics": {
+        "width": 400,
+        "height": 237,
+        "variance": 61.75,
+        "edgeSharpness": 85.87,
+        "whiteBorderRatio": 0.738
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 22,
+      "barcode": "6130265510021",
+      "name": "Sel de table",
+      "brand": "Rafie",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130265510021",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/026/551/0021/front_fr.3.400.jpg",
+      "imagePath": "images/6130265510021.jpg",
+      "automaticImageMetrics": {
+        "width": 400,
+        "height": 239,
+        "variance": 76.23,
+        "edgeSharpness": 89.2,
+        "whiteBorderRatio": 0.72
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 23,
+      "barcode": "6135793000310",
+      "name": "Sardines à la sauce tomate",
+      "brand": "Star fish",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6135793000310",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/579/300/0310/front_fr.7.400.jpg",
+      "imagePath": "images/6135793000310.jpg",
+      "automaticImageMetrics": {
+        "width": 400,
+        "height": 197,
+        "variance": 82.44,
+        "edgeSharpness": 93.95,
+        "whiteBorderRatio": 0.715
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "best",
+      "position": 24,
+      "barcode": "5410126832372",
+      "name": "Gaufre de Liège Chocolat",
+      "brand": "Lotus",
+      "sourceUrl": "https://world.openfoodfacts.org/product/5410126832372",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/541/012/683/2372/front_fr.111.400.jpg",
+      "imagePath": "images/5410126832372.jpg",
+      "automaticImageMetrics": {
+        "width": 400,
+        "height": 227,
+        "variance": 88.28,
+        "edgeSharpness": 97.18,
+        "whiteBorderRatio": 0.709
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_PRESENTATION_USABLE",
+        "roomAroundProduct": "LIGHT_UNIFORM_MARGIN_USABLE_FOR_STUDIO_FRAME",
+        "cropRotation": "FRONT_VIEW_USABLE",
+        "blur": "NO_OBVIOUS_BLUR_AT_CONTACT_SHEET_SCALE",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": false,
+        "scope": "Presentation sample only; not manufacturer identity or every label detail certification."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 1,
+      "barcode": "6130003002023",
+      "name": "Coca cola",
+      "brand": "Coca-Cola,Coca Cola",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130003002023",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/000/300/2023/front_fr.3.400.jpg",
+      "imagePath": "images/6130003002023.jpg",
+      "automaticImageMetrics": {
+        "width": 300,
+        "height": 400,
+        "variance": 19.06,
+        "edgeSharpness": 19.92,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "TIGHT_CROP",
+        "cropRotation": "UPRIGHT_PARTIAL_BOTTLE",
+        "blur": "VERY_DARK_SOFT",
+        "labelLegibility": "MAIN_WORD_PARTIALLY_LEGIBLE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Do not synthesize missing or unreadable brand text."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 2,
+      "barcode": "6130194000419",
+      "name": "ESPRESSO",
+      "brand": "AROMA",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130194000419",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/019/400/0419/front_fr.3.400.jpg",
+      "imagePath": "images/6130194000419.jpg",
+      "automaticImageMetrics": {
+        "width": 300,
+        "height": 400,
+        "variance": 35.07,
+        "edgeSharpness": 32.88,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "SOURCE_CROP_OR_BACKGROUND_NEEDS_OWNER_REVIEW",
+        "cropRotation": "PACK_OR_IDENTIFIABLE_BRAND_VISIBLE_AT_SAMPLE_SCALE",
+        "blur": "SOURCE_LIGHTING_OR_RESOLUTION_LIMITED",
+        "labelLegibility": "MAIN_LABEL_PARTLY_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Visual presentation sample only. Source front may show a label rather than a complete package; no certification of every label detail."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 3,
+      "barcode": "6130433000880",
+      "name": "candy",
+      "brand": "Candia",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130433000880",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/043/300/0880/front_en.4.400.jpg",
+      "imagePath": "images/6130433000880.jpg",
+      "automaticImageMetrics": {
+        "width": 305,
+        "height": 400,
+        "variance": 20.23,
+        "edgeSharpness": 35.17,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "TIGHT_CROP",
+        "cropRotation": "FRONT_VISIBLE",
+        "blur": "DARK_SOFT",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Do not synthesize missing or unreadable brand text."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 4,
+      "barcode": "6130217010036",
+      "name": "Eau minerale naturelle",
+      "brand": "toudja",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130217010036",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/021/701/0036/front_fr.24.400.jpg",
+      "imagePath": "images/6130217010036.jpg",
+      "automaticImageMetrics": {
+        "width": 300,
+        "height": 400,
+        "variance": 41.93,
+        "edgeSharpness": 35.9,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "ENOUGH_ROOM_WITH_HAND",
+        "cropRotation": "UPRIGHT_FRONT",
+        "blur": "VERY_DARK",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Do not synthesize missing or unreadable brand text."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 5,
+      "barcode": "6132148300453",
+      "name": "مايزينة دقيق الذرة MAÏZENA La farine de Maïs",
+      "brand": "EL YASMINE",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6132148300453",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/214/830/0453/front_fr.4.400.jpg",
+      "imagePath": "images/6132148300453.jpg",
+      "automaticImageMetrics": {
+        "width": 323,
+        "height": 400,
+        "variance": 26.05,
+        "edgeSharpness": 35.92,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "SOURCE_CROP_OR_BACKGROUND_NEEDS_OWNER_REVIEW",
+        "cropRotation": "PACK_OR_IDENTIFIABLE_BRAND_VISIBLE_AT_SAMPLE_SCALE",
+        "blur": "SOURCE_LIGHTING_OR_RESOLUTION_LIMITED",
+        "labelLegibility": "MAIN_LABEL_PARTLY_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Visual presentation sample only. Source front may show a label rather than a complete package; no certification of every label detail."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 6,
+      "barcode": "6130386000012",
+      "name": "Pates",
+      "brand": "Spac",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130386000012",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/038/600/0012/front_fr.22.400.jpg",
+      "imagePath": "images/6130386000012.jpg",
+      "automaticImageMetrics": {
+        "width": 300,
+        "height": 400,
+        "variance": 39.72,
+        "edgeSharpness": 36.35,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "SOURCE_CROP_OR_BACKGROUND_NEEDS_OWNER_REVIEW",
+        "cropRotation": "PACK_OR_IDENTIFIABLE_BRAND_VISIBLE_AT_SAMPLE_SCALE",
+        "blur": "SOURCE_LIGHTING_OR_RESOLUTION_LIMITED",
+        "labelLegibility": "MAIN_LABEL_PARTLY_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Visual presentation sample only. Source front may show a label rather than a complete package; no certification of every label detail."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 7,
+      "barcode": "6134427000504",
+      "name": "دايلي جوي",
+      "brand": "Bifa",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6134427000504",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/442/700/0504/front_ar.4.400.jpg",
+      "imagePath": "images/6134427000504.jpg",
+      "automaticImageMetrics": {
+        "width": 300,
+        "height": 400,
+        "variance": 36.6,
+        "edgeSharpness": 36.46,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "TIGHT_CROP",
+        "cropRotation": "FRONT_PARTLY_CROPPED",
+        "blur": "GLARE_DARK",
+        "labelLegibility": "PRODUCT_FAMILY_LEGIBLE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Do not synthesize missing or unreadable brand text."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 8,
+      "barcode": "6132501540403",
+      "name": "Brino",
+      "brand": "bifa",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6132501540403",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/250/154/0403/front_fr.5.400.jpg",
+      "imagePath": "images/6132501540403.jpg",
+      "automaticImageMetrics": {
+        "width": 400,
+        "height": 300,
+        "variance": 37.1,
+        "edgeSharpness": 37.04,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "EXCESS_ROOM_COUNTER_VISIBLE",
+        "cropRotation": "UPRIGHT_WRAPPER",
+        "blur": "MODERATE_SOFT",
+        "labelLegibility": "MAIN_TEXT_LEGIBLE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "CROP_BACKGROUND_ONLY_WITH_LABEL_PRESERVED",
+        "scope": "Do not synthesize missing or unreadable brand text."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 9,
+      "barcode": "6132336300333",
+      "name": "Capthon",
+      "brand": "Capthon",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6132336300333",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/233/630/0333/front_en.3.400.jpg",
+      "imagePath": "images/6132336300333.jpg",
+      "automaticImageMetrics": {
+        "width": 333,
+        "height": 400,
+        "variance": 23.3,
+        "edgeSharpness": 38.33,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "SOURCE_CROP_OR_BACKGROUND_NEEDS_OWNER_REVIEW",
+        "cropRotation": "PACK_OR_IDENTIFIABLE_BRAND_VISIBLE_AT_SAMPLE_SCALE",
+        "blur": "SOURCE_LIGHTING_OR_RESOLUTION_LIMITED",
+        "labelLegibility": "MAIN_LABEL_PARTLY_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Visual presentation sample only. Source front may show a label rather than a complete package; no certification of every label detail."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 10,
+      "barcode": "6130002002727",
+      "name": "Jus d'ananas",
+      "brand": "Rouiba",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130002002727",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/000/200/2727/front_fr.12.400.jpg",
+      "imagePath": "images/6130002002727.jpg",
+      "automaticImageMetrics": {
+        "width": 186,
+        "height": 400,
+        "variance": 21.0,
+        "edgeSharpness": 39.18,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "TIGHT_CROP",
+        "cropRotation": "FRONT_CROPPED_AT_EDGES",
+        "blur": "DIM",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Do not synthesize missing or unreadable brand text."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 11,
+      "barcode": "6130788000108",
+      "name": "Margarine",
+      "brand": "santéa",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130788000108",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/078/800/0108/front_fr.3.400.jpg",
+      "imagePath": "images/6130788000108.jpg",
+      "automaticImageMetrics": {
+        "width": 327,
+        "height": 400,
+        "variance": 52.49,
+        "edgeSharpness": 39.28,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "SOURCE_CROP_OR_BACKGROUND_NEEDS_OWNER_REVIEW",
+        "cropRotation": "PACK_OR_IDENTIFIABLE_BRAND_VISIBLE_AT_SAMPLE_SCALE",
+        "blur": "SOURCE_LIGHTING_OR_RESOLUTION_LIMITED",
+        "labelLegibility": "MAIN_LABEL_PARTLY_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Visual presentation sample only. Source front may show a label rather than a complete package; no certification of every label detail."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 12,
+      "barcode": "6132522250039",
+      "name": "Peanut Butter, Beurre de cacahuètes, زبدة الفول السوداني",
+      "brand": "La LUZ",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6132522250039",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/252/225/0039/front_en.33.400.jpg",
+      "imagePath": "images/6132522250039.jpg",
+      "automaticImageMetrics": {
+        "width": 306,
+        "height": 400,
+        "variance": 34.73,
+        "edgeSharpness": 39.8,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "SOURCE_CROP_OR_BACKGROUND_NEEDS_OWNER_REVIEW",
+        "cropRotation": "PACK_OR_IDENTIFIABLE_BRAND_VISIBLE_AT_SAMPLE_SCALE",
+        "blur": "SOURCE_LIGHTING_OR_RESOLUTION_LIMITED",
+        "labelLegibility": "MAIN_LABEL_PARTLY_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Visual presentation sample only. Source front may show a label rather than a complete package; no certification of every label detail."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 13,
+      "barcode": "6133275000018",
+      "name": "Saida eau minérale",
+      "brand": "Saida",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6133275000018",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/327/500/0018/front_fr.16.400.jpg",
+      "imagePath": "images/6133275000018.jpg",
+      "automaticImageMetrics": {
+        "width": 157,
+        "height": 400,
+        "variance": 33.92,
+        "edgeSharpness": 39.95,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "COUNTER_BACKGROUND",
+        "cropRotation": "UPRIGHT_FRONT",
+        "blur": "DARK_LOW_RESOLUTION",
+        "labelLegibility": "BRAND_LEGIBLE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Do not synthesize missing or unreadable brand text."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 14,
+      "barcode": "6132500710395",
+      "name": "El Mordjene graisse végétale pure",
+      "brand": "CEBON, El Mordjene",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6132500710395",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/250/071/0395/front_fr.25.400.jpg",
+      "imagePath": "images/6132500710395.jpg",
+      "automaticImageMetrics": {
+        "width": 400,
+        "height": 396,
+        "variance": 24.42,
+        "edgeSharpness": 40.06,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "TIGHT_CROP",
+        "cropRotation": "FRONT_PACKAGE_VISIBLE",
+        "blur": "DARK_LOW_CONTRAST",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Do not synthesize missing or unreadable brand text."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 15,
+      "barcode": "6135366000013",
+      "name": "Taya eau de source",
+      "brand": "Taya",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6135366000013",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/536/600/0013/front_fr.3.400.jpg",
+      "imagePath": "images/6135366000013.jpg",
+      "automaticImageMetrics": {
+        "width": 400,
+        "height": 300,
+        "variance": 42.83,
+        "edgeSharpness": 40.3,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "SOURCE_CROP_OR_BACKGROUND_NEEDS_OWNER_REVIEW",
+        "cropRotation": "PACK_OR_IDENTIFIABLE_BRAND_VISIBLE_AT_SAMPLE_SCALE",
+        "blur": "SOURCE_LIGHTING_OR_RESOLUTION_LIMITED",
+        "labelLegibility": "MAIN_LABEL_PARTLY_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Visual presentation sample only. Source front may show a label rather than a complete package; no certification of every label detail."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 16,
+      "barcode": "5900852921070",
+      "name": "Blédilait croissance",
+      "brand": "Bledina, Danone",
+      "sourceUrl": "https://world.openfoodfacts.org/product/5900852921070",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/590/085/292/1070/front_fr.10.400.jpg",
+      "imagePath": "images/5900852921070.jpg",
+      "automaticImageMetrics": {
+        "width": 299,
+        "height": 400,
+        "variance": 43.04,
+        "edgeSharpness": 40.86,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "SOURCE_CROP_OR_BACKGROUND_NEEDS_OWNER_REVIEW",
+        "cropRotation": "PACK_OR_IDENTIFIABLE_BRAND_VISIBLE_AT_SAMPLE_SCALE",
+        "blur": "SOURCE_LIGHTING_OR_RESOLUTION_LIMITED",
+        "labelLegibility": "MAIN_LABEL_PARTLY_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Visual presentation sample only. Source front may show a label rather than a complete package; no certification of every label detail."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 17,
+      "barcode": "10900017",
+      "name": "BS BRUT",
+      "brand": "BS",
+      "sourceUrl": "https://world.openfoodfacts.org/product/10900017",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/10900017/front_fr.9.400.jpg",
+      "imagePath": "images/10900017.jpg",
+      "automaticImageMetrics": {
+        "width": 300,
+        "height": 400,
+        "variance": 41.07,
+        "edgeSharpness": 40.89,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "SOURCE_CROP_OR_BACKGROUND_NEEDS_OWNER_REVIEW",
+        "cropRotation": "PACK_OR_IDENTIFIABLE_BRAND_VISIBLE_AT_SAMPLE_SCALE",
+        "blur": "SOURCE_LIGHTING_OR_RESOLUTION_LIMITED",
+        "labelLegibility": "MAIN_LABEL_PARTLY_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Visual presentation sample only. Source front may show a label rather than a complete package; no certification of every label detail."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 18,
+      "barcode": "6132507374224",
+      "name": "MOUTARDE Daily Sauce خردل",
+      "brand": "Daily Sauce",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6132507374224",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/250/737/4224/front_fr.24.400.jpg",
+      "imagePath": "images/6132507374224.jpg",
+      "automaticImageMetrics": {
+        "width": 264,
+        "height": 366,
+        "variance": 42.89,
+        "edgeSharpness": 40.89,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "ENOUGH_ROOM_COUNTER",
+        "cropRotation": "FRONT_JAR",
+        "blur": "DARK_GLARE",
+        "labelLegibility": "MAIN_WORD_LEGIBLE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Do not synthesize missing or unreadable brand text."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 19,
+      "barcode": "5132544430083",
+      "name": "Mini biscuidate",
+      "brand": "Obinna",
+      "sourceUrl": "https://world.openfoodfacts.org/product/5132544430083",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/513/254/443/0083/front_en.3.400.jpg",
+      "imagePath": "images/5132544430083.jpg",
+      "automaticImageMetrics": {
+        "width": 301,
+        "height": 400,
+        "variance": 32.26,
+        "edgeSharpness": 41.01,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "SOURCE_CROP_OR_BACKGROUND_NEEDS_OWNER_REVIEW",
+        "cropRotation": "PACK_OR_IDENTIFIABLE_BRAND_VISIBLE_AT_SAMPLE_SCALE",
+        "blur": "SOURCE_LIGHTING_OR_RESOLUTION_LIMITED",
+        "labelLegibility": "MAIN_LABEL_PARTLY_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Visual presentation sample only. Source front may show a label rather than a complete package; no certification of every label detail."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 20,
+      "barcode": "6130794000222",
+      "name": "Pure Fizz",
+      "brand": "Nestlé",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6130794000222",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/079/400/0222/front_fr.3.400.jpg",
+      "imagePath": "images/6130794000222.jpg",
+      "automaticImageMetrics": {
+        "width": 263,
+        "height": 400,
+        "variance": 54.57,
+        "edgeSharpness": 41.16,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "HAND_BACKGROUND",
+        "cropRotation": "UPRIGHT_FRONT",
+        "blur": "DIM_SOFT",
+        "labelLegibility": "MAIN_BRAND_LEGIBLE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Do not synthesize missing or unreadable brand text."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 21,
+      "barcode": "8322346529918",
+      "name": "Chocolat Noisettes Entieres",
+      "brand": "Milka",
+      "sourceUrl": "https://world.openfoodfacts.org/product/8322346529918",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/832/234/652/9918/front_fr.10.400.jpg",
+      "imagePath": "images/8322346529918.jpg",
+      "automaticImageMetrics": {
+        "width": 400,
+        "height": 160,
+        "variance": 26.16,
+        "edgeSharpness": 41.25,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "SOURCE_CROP_OR_BACKGROUND_NEEDS_OWNER_REVIEW",
+        "cropRotation": "PACK_OR_IDENTIFIABLE_BRAND_VISIBLE_AT_SAMPLE_SCALE",
+        "blur": "SOURCE_LIGHTING_OR_RESOLUTION_LIMITED",
+        "labelLegibility": "MAIN_LABEL_PARTLY_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Visual presentation sample only. Source front may show a label rather than a complete package; no certification of every label detail."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 22,
+      "barcode": "6135240000016",
+      "name": "Ouwis",
+      "brand": "EURL MANBAA OUWIS",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6135240000016",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/524/000/0016/front_fr.8.400.jpg",
+      "imagePath": "images/6135240000016.jpg",
+      "automaticImageMetrics": {
+        "width": 400,
+        "height": 363,
+        "variance": 43.93,
+        "edgeSharpness": 41.44,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "TIGHT_LABEL_CROP",
+        "cropRotation": "FRONT_LABEL_ONLY_NOT_FULL_BOTTLE",
+        "blur": "DARK_GLARE",
+        "labelLegibility": "BRAND_LEGIBLE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Do not synthesize missing or unreadable brand text."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 23,
+      "barcode": "6134971000401",
+      "name": "PLOMB",
+      "brand": "ALBARAKA",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6134971000401",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/613/497/100/0401/front_en.4.400.jpg",
+      "imagePath": "images/6134971000401.jpg",
+      "automaticImageMetrics": {
+        "width": 344,
+        "height": 400,
+        "variance": 39.54,
+        "edgeSharpness": 41.56,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "SOURCE_CROP_OR_BACKGROUND_NEEDS_OWNER_REVIEW",
+        "cropRotation": "PACK_OR_IDENTIFIABLE_BRAND_VISIBLE_AT_SAMPLE_SCALE",
+        "blur": "SOURCE_LIGHTING_OR_RESOLUTION_LIMITED",
+        "labelLegibility": "MAIN_LABEL_PARTLY_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Visual presentation sample only. Source front may show a label rather than a complete package; no certification of every label detail."
+      }
+    },
+    {
+      "sheet": "needs-review",
+      "position": 24,
+      "barcode": "6281074342331",
+      "name": "ارز سيلا بسمتي هندي",
+      "brand": "الوسام",
+      "sourceUrl": "https://world.openfoodfacts.org/product/6281074342331",
+      "imageSourceUrl": "https://images.openfoodfacts.org/images/products/628/107/434/2331/front_en.33.400.jpg",
+      "imagePath": "images/6281074342331.jpg",
+      "automaticImageMetrics": {
+        "width": 300,
+        "height": 400,
+        "variance": 41.91,
+        "edgeSharpness": 41.58,
+        "whiteBorderRatio": 0.0
+      },
+      "visualAudit": {
+        "status": "SAMPLE_REVIEW_OWNER_CHECK",
+        "roomAroundProduct": "SOURCE_CROP_OR_BACKGROUND_NEEDS_OWNER_REVIEW",
+        "cropRotation": "PACK_OR_IDENTIFIABLE_BRAND_VISIBLE_AT_SAMPLE_SCALE",
+        "blur": "SOURCE_LIGHTING_OR_RESOLUTION_LIMITED",
+        "labelLegibility": "MAIN_LABEL_PARTLY_LEGIBLE_AT_SAMPLE_SCALE",
+        "needsOwnerCheck": true,
+        "recommendedAction": "OWNER_PHOTO_RECOMMENDED",
+        "scope": "Visual presentation sample only. Source front may show a label rather than a complete package; no certification of every label detail."
+      }
+    }
+  ]
+}

@@ -108,6 +108,9 @@ const staffRoutes: Record<string, string[]> = {
   DISPATCHER: ["orders", "delivery", "messages"],
   FINANCE: ["finance", "purchases", "campaigns", "rewards"],
 };
+function ControlIcon({kind}:{kind:'close'|'check'}) {
+  return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{verticalAlign:'middle'}}>{kind==='close'?<path d="m6 6 12 12M18 6 6 18"/>:<path d="m5 12 4 4L19 6"/>}</svg>;
+}
 function Icon({ name }: { name: string }) {
   return (
     <img
@@ -743,7 +746,7 @@ function App() {
             <div className="error-banner" role="alert">
               <span>{error}</span>
               <button onClick={() => setError("")} aria-label="Fermer l’erreur">
-                ×
+                <ControlIcon kind="close" />
               </button>
             </div>
           )}
@@ -1159,15 +1162,15 @@ function App() {
         <div className="toast error-toast" role="alert">
           {error}
           <button onClick={() => setError("")} aria-label="Fermer l’erreur">
-            ×
+            <ControlIcon kind="close" />
           </button>
         </div>
       )}
       {toast && (
         <div className="toast" role="status">
-          ✓ {toast}
+          <ControlIcon kind="check" /> {toast}
           <button onClick={() => setToast("")} aria-label="Fermer">
-            ×
+            <ControlIcon kind="close" />
           </button>
         </div>
       )}
@@ -1460,7 +1463,7 @@ function Drawer({
             aria-label="Fermer le dossier"
             onClick={close}
           >
-            ×
+            <ControlIcon kind="close" />
           </button>
         </header>
         {children}

@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-17T08:04:02.315162+00:00",
+  "products": 2500,
+  "uniqueBarcodes": 2500,
+  "decodedLocalPhotos": 2500,
+  "totalImageBytes": 57992865,
+  "sourceHashesVerified": true,
+  "issues": [],
+  "scope": "Local file, decode, SHA256 and provenance check. Does not certify community labels or wholesale availability."
+}

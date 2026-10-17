@@ -38,3 +38,9 @@ Targeted visual review screened 605 generic-category records, 128 low-sharpness 
 ## Distribution
 
 The extracted factual data and photograph attribution remain available in the app's source/provenance view. Distribute a copy of the extracted catalog under ODbL 1.0, preserve image attribution/source links and the CC BY-SA 3.0 notice, and keep your proprietary offer/stock database separate from the open catalog. Review source corrections before using the catalog for live purchasing or legally required product information.
+
+## Included source tools
+
+The packaged source includes the retained Algeria bulk subset, qualified candidates, exclusions, reviewed brand transcriptions and photo-review evidence. The2,500 cached JPGs are ready to serve; no catalogue download is required to run the platform.
+
+For a deliberate catalogue refresh, install `catalog/requirements.txt`, run `extract_bulk.py` against its pinned official snapshot (or set `TOUSHIR_OFF_PARQUET` to a compatible local Parquet file), then `build_catalog.py`, `cache_images.py` and `finalize_catalog.py`. These tools rewrite catalogue outputs and require a fresh review before publication. `extract_bulk.py` uses the official dataset URL directly; no expired signed URL or original computer path is required.

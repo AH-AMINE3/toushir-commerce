@@ -5,15 +5,18 @@ import { C, S } from './theme';
 import { imageUrl, statuses } from './api';
 
 export const Icon = ({ name, size = 20, color = C.ink }: { name: string; size?: number; color?: string }) => <Ionicons aria-hidden={true} accessibilityElementsHidden={true} accessible={false} importantForAccessibility="no-hide-descendants" name={name as any} size={size} color={color} />;
-export function Button({ children, onPress, variant = 'primary', icon, loading, disabled, small, style, label }: { children?: React.ReactNode; onPress?: () => void; variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'lime'; icon?: string; loading?: boolean; disabled?: boolean; small?: boolean; style?: ViewStyle; label?: string }) {
+export function Button({ children, onPress, variant = 'primary', icon, loading, disabled, small, style, label }: { children?: React.ReactNode; onPress?: () => void; variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'lime' | 'ink'; icon?: string; loading?: boolean; disabled?: boolean; small?: boolean; style?: ViewStyle; label?: string }) {
   const [focus, setFocus] = useState(false);
   const [hover, setHover] = useState(false);
-  const bg = variant === 'primary' || variant === 'lime' ? C.action : variant === 'danger' ? C.redBg : variant === 'secondary' ? C.pale : 'transparent';
-  const fg = variant === 'primary' || variant === 'lime' ? C.ink : variant === 'danger' ? C.red : C.ink;
+  const bg = variant === 'ink' ? C.ink : variant === 'primary' || variant === 'lime' ? C.action : variant === 'danger' ? C.redBg : variant === 'secondary' ? C.pale : 'transparent';
+  const fg = variant === 'ink' ? C.white : variant === 'danger' ? C.red : C.ink;
   return <Pressable accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ disabled: !!disabled || !!loading, busy: !!loading }} disabled={disabled || loading} onPress={onPress} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} onHoverIn={() => setHover(true)} onHoverOut={() => setHover(false)} style={({ pressed }) => [S.button, { backgroundColor: bg, opacity: disabled ? 0.45 : pressed ? 0.7 : hover ? 0.86 : 1, borderWidth: focus ? 2 : 0, borderColor: C.green, ...(small ? { minHeight: 38, paddingVertical: 7, paddingHorizontal: 12 } : {}) }, style]}>
     {loading ? <ActivityIndicator size="small" color={fg} /> : icon ? <Icon name={icon} size={small ? 16 : 18} color={fg} /> : null}
     {children != null && <Text style={[S.buttonText, { color: fg, flexShrink: 1, textAlign: 'center' }]}>{children}</Text>}
   </Pressable>;
+}
+export function FilterPill({children,selected,onPress}:{children:React.ReactNode;selected:boolean;onPress:()=>void}) {
+  return <Pressable accessibilityRole="button" accessibilityState={{selected}} onPress={onPress} style={({pressed})=>({minHeight:44,justifyContent:'center',opacity:pressed?.7:1})}><View style={{borderRadius:24,backgroundColor:selected?C.ink:C.bg,paddingHorizontal:14,minHeight:36,justifyContent:'center'}}><Text style={[S.label,{fontSize:13,lineHeight:18,color:selected?C.white:C.muted}]}>{children}</Text></View></Pressable>;
 }
 export function Field({ label, error, ...props }: TextInputProps & { label: string; error?: string }) {
   const [focus, setFocus] = useState(false);

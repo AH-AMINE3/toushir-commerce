@@ -19,6 +19,7 @@ colors:
   border-web: "#e4e9e6"
   muted-web: "#66736b"
   muted-mobile: "#6b736f"
+  account-on-dark: "#bacabf"
   danger-web: "#a92d2d"
   danger-mobile: "#b42332"
   danger-surface-web: "#fff0ef"
@@ -99,6 +100,39 @@ typography:
     fontWeight: 700
     lineHeight: "40px"
     letterSpacing: "-0.5px"
+  merchant-tab-title:
+    fontFamily: "DM Sans"
+    fontSize: "28px"
+    fontWeight: 700
+    lineHeight: "32px"
+    letterSpacing: "-0.45px"
+  account-title:
+    fontFamily: "DM Sans"
+    fontSize: "22px"
+    fontWeight: 700
+    lineHeight: "30px"
+  account-points:
+    fontFamily: "DM Sans"
+    fontSize: "40px"
+    fontWeight: 700
+    lineHeight: "46px"
+    letterSpacing: "-0.6px"
+  account-stat:
+    fontFamily: "DM Sans"
+    fontSize: "24px"
+    fontWeight: 700
+    lineHeight: "29px"
+    letterSpacing: "-0.6px"
+  button-mobile:
+    fontFamily: "DM Sans"
+    fontSize: "13px"
+    fontWeight: 600
+    lineHeight: "20px"
+  filter-label:
+    fontFamily: "DM Sans"
+    fontSize: "13px"
+    fontWeight: 600
+    lineHeight: "18px"
 rounded:
   badge: "7px"
   compact: "8px"
@@ -107,7 +141,9 @@ rounded:
   panel-mobile: "12px"
   panel-narrow: "13px"
   panel-web: "16px"
-  category-pill: "22px"
+  account-card: "20px"
+  product-add: "22px"
+  filter-pill: "24px"
 spacing:
   xs: "8px"
   sm: "12px"
@@ -136,8 +172,45 @@ components:
   button-primary-mobile:
     backgroundColor: "{colors.action}"
     textColor: "{colors.ink}"
+    typography: "{typography.button-mobile}"
     rounded: "{rounded.panel-mobile}"
     padding: "12px 18px"
+  button-ink-mobile:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.surface}"
+    typography: "{typography.button-mobile}"
+    rounded: "{rounded.panel-mobile}"
+    padding: "12px 18px"
+  filter-pill:
+    backgroundColor: "{colors.canvas-mobile}"
+    textColor: "{colors.muted-mobile}"
+    typography: "{typography.filter-label}"
+    rounded: "{rounded.filter-pill}"
+    padding: "0 14px"
+  filter-pill-selected:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.surface}"
+  product-add-mobile:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.surface}"
+    rounded: "{rounded.product-add}"
+    width: "44px"
+    height: "44px"
+  merchant-account-card:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.surface}"
+    rounded: "{rounded.account-card}"
+    padding: "24px"
+  account-shortcut-mint:
+    backgroundColor: "{colors.mint}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.panel-web}"
+    padding: "16px"
+  account-shortcut-neutral:
+    backgroundColor: "{colors.canvas-mobile}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.panel-web}"
+    padding: "16px"
   field-web:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.ink}"
@@ -177,7 +250,7 @@ components:
 
 The supplied Figma file `4IffhmSg2gHg82narIGfMF` remains the visual authority. This document records how that existing world is implemented in the wholesaler workspace and merchant/courier applications: original Toushir assets, DM Sans, white surfaces, mint selection, bright green actions and dense operational content. It extends that world; it does not establish a replacement identity. Preserve the proportions of the original mark and navigation assets, and the identity of sourced product packaging.
 
-The atmosphere is quiet and practical. Headings orient the user, tonal panels group work, and restrained status colours make current state visible. A commercial action has an explicit label and outcome. Unknown prices remain unconfirmed, demo content stays labelled, and illustrations never masquerade as observations. The source evidence is `apps/web/src/style.css`, `apps/web/src/main.tsx`, `apps/mobile/src/theme.ts`, `apps/mobile/src/components.tsx`, `apps/mobile/src/Merchant.tsx`, `apps/mobile/src/Driver.tsx` and the DM Sans font registration in `apps/mobile/App.tsx`.
+The atmosphere is quiet and practical. Headings orient the user, tonal panels group work, and restrained status colours make current state visible. A commercial action has an explicit label and outcome. Unknown prices remain unconfirmed, demo content stays labelled, and illustrations never masquerade as observations. The source evidence is `apps/web/src/style.css`, `apps/web/src/main.tsx`, `apps/mobile/src/theme.ts`, `apps/mobile/src/components.tsx`, `apps/mobile/src/Merchant.tsx`, `apps/mobile/src/MerchantAccount.tsx`, `apps/mobile/src/Engagement.tsx`, `apps/mobile/src/Driver.tsx` and the DM Sans font registration in `apps/mobile/App.tsx`.
 
 This is a source-grounded system record. Exact acceptance of all 265 Figma states, native runtime acceptance and domain/security acceptance have separate evidence; they are not certified by this document.
 
@@ -198,7 +271,7 @@ Green provides continuity across navigation, actions and successful states; neut
 - **Action green** (`action`): primary action backgrounds. Web buttons pair it with `action-ink`; mobile buttons use `ink`. The action fill remains stable in web dark mode.
 
 ### Secondary
-- **Mint** (`mint`): active navigation, positive status surfaces, notices and the beverage category shortcut.
+- **Mint** (`mint`): active navigation, positive status surfaces, notices, the beverage category shortcut and the account gift shortcut.
 - **Fresh aqua** (`aqua`): the fresh/milk category shortcut and the web informational status treatment. Other unselected merchant categories retain the soft neutral background. Selected category tiles use operational green.
 
 ### Tertiary
@@ -206,7 +279,8 @@ Green provides continuity across navigation, actions and successful states; neut
 - **Error red** (`danger-*` and `danger-surface-*`): rejected, failed, destructive and error states. Status labels accompany colour.
 
 ### Neutral
-- **Ink** (`ink`): primary light-theme text.
+- **Ink** (`ink`): primary light-theme text; also the merchant loyalty card, selected filter pills, compact product-add control and native ink button variant. These dark components are part of the light interface, not a mobile dark theme.
+- **Account-on-dark** (`account-on-dark`): secondary labels within the ink loyalty card; main point values remain white.
 - **White surface** (`surface`): content panels, fields, product-image backplates and navigation bars.
 - **Canvas** (`canvas-web`, `canvas-mobile`) and **sidebar** (`sidebar`): broad page context and subtle surface separation. The web soft fill uses the mobile canvas colour.
 - **Divider and field border** (`line`, `border-web`): quiet one-pixel separation. Mobile shared dividers use `line`.
@@ -232,6 +306,7 @@ Green provides continuity across navigation, actions and successful states; neut
 - **Web body and labels:** `body-web` and `label-web`; operational tables and many descriptions use the compact 12px tier. Paragraph line height is 1.6.
 - **Mobile heading:** `heading-mobile` for shared entry views; `merchant-title` and `courier-title` preserve the shipped surface-specific heading hierarchy.
 - **Mobile title, body and label:** `title-mobile`, `body-mobile` and `label-mobile`; muted copy is 13px/20px and small supporting copy is 12px/18px.
+- **Merchant tabs and account:** `merchant-tab-title` leads Offers, Messages, Orders and Account; account detail titles use `account-title`. The card uses `account-points` for available points, with `account-stat` for purchases/payment metrics. Shared action labels use `button-mobile`; filters use `filter-label`.
 
 ### Named Rules
 
@@ -244,6 +319,8 @@ The desktop shell has a fixed sidebar (224px), sticky header (64px), page gutter
 The web layout adapts at 1250px, 1000px and 760px, with a wider-layout adjustment at 1800px. At the tablet tier, the sidebar reduces to 190px, overview becomes two columns and standard metrics become two columns. At the phone tier the sidebar slides in, its menu remains accessible in the header, the content gutter becomes 16px, overview stacks and the header is 58px high. Wide operational tables scroll inside their panel instead of shrinking columns into illegibility. The general data table has a 760px minimum width; permissions use a 600px minimum.
 
 Merchant and courier layouts center a full-width phone surface within a 520px maximum. Their headers and content use 20px horizontal spacing, with 16px checkout/basket padding where implemented. Safe-area insets, scrolling and keyboard accommodation belong to the native composition. The merchant catalogue has two product columns, a horizontal category rail and persistent bottom navigation. Category tiles are 76px by 60px within 81px shortcuts. Courier route content uses stacked task sections with a persistent four-item bottom bar.
+
+Merchant Offers, Messages, Orders and Account use title-first headers with contextual controls; the catalogue retains its logo, address and search composition. Account content stacks the loyalty card, an actual reserved-points row, paired gift/activity shortcuts, purchase metrics and account rows. The loyalty card uses 24px padding and an 18px gap; its two shortcut tiles use 16px padding, a 12px gap and a 95px minimum height.
 
 ### Named Rules
 
@@ -267,21 +344,23 @@ Web buttons transition background and transform over 0.15s; their pressed state 
 
 ## Shapes
 
-Gently curved rectangles organize the interface. Principal web panels use `panel-web`, shared native panels use `panel-mobile`, narrow web panels use `panel-narrow`, and fields, buttons and badges use their more compact radii. Category filters use fully rounded pills; avatars and progress nodes are circular. Product packaging sits on a white backplate with contain sizing to preserve its silhouette. Original Figma icon assets retain their proportions; new control icons use SVG paths or the existing native icon component, not decorative text glyphs.
+Gently curved rectangles organize the interface. Principal web panels use `panel-web`, shared native panels use `panel-mobile`, narrow web panels use `panel-narrow`, and fields, buttons and badges use their more compact radii. The loyalty card uses `account-card`; paired account shortcuts use the existing 16px corner treatment. Shared filter pills use `filter-pill`, distinct from the rectangular category rail. The compact product-add control is a 44px circle using `product-add`; avatars and progress nodes are circular. Product packaging sits in a white image container with contain sizing to preserve its silhouette. Original community photographs may carry a grey field within their own pixels; that source background is preserved rather than retouched into invented studio imagery. Original Figma icon assets retain their proportions; new control icons use SVG paths or the existing native icon component, not decorative text glyphs.
 
 ## Components
 
 ### Buttons
 
-Confident actions with a clear label. Web primary and secondary variants share the recorded minimum height and padding; the secondary adds a one-pixel border and soft-fill hover. Mobile primary buttons use the larger native minimum height, while small buttons use a 38px minimum. Native secondary buttons use mint; ghost buttons are transparent. Loading and disabled state are explicit. Web controls use a three-pixel green focus outline with a three-pixel offset; native buttons show a green focus border. Keep the web dark-theme focus colour on action green.
+Confident actions with a clear label. Web primary and secondary variants share the recorded minimum height and padding; the secondary adds a one-pixel border and soft-fill hover. Mobile primary buttons use the larger native minimum height, while small buttons use a 38px minimum. Native secondary buttons use mint; ghost buttons are transparent. The native `ink` variant uses ink with white text and the same sizing/states as other native buttons; it anchors the “Écrire à Toushir” support action. The catalogue add control is a separate compact dark circle with a white 22px plus icon, a 44px target and 0.7 pressed opacity; after adding, the existing quantity control takes its place. Loading and disabled state are explicit. Web controls use a three-pixel green focus outline with a three-pixel offset; native buttons show a green focus border. Keep the web dark-theme focus colour on action green.
 
 ### Chips
 
-Compact status chips pair a semantic surface with legible text, a modest radius and a written status. Mobile statuses also include a small dot. Web badges use the 10px text tier; mobile chips use the shared small text style. Merchant category pills expose selected state and switch between green/white and white/ink treatments.
+Compact status chips pair a semantic surface with legible text, a modest radius and a written status. Mobile statuses also include a small dot. Web badges use the 10px text tier; mobile chips use the shared small text style. Shared filter pills in Orders, Offers and Messages use ink with white labels when selected, and the soft mobile canvas with muted labels otherwise. Their visible surface is at least 36px high inside a 44px press target, with 14px horizontal padding and 0.7 pressed opacity. The merchant category rail is separate: beverage mint, fresh/milk aqua, neutral remaining tiles and operational-green selected tiles.
 
 ### Cards / Containers
 
-White operational panels use a quiet border, rounded corners and internal spacing from the frontmatter. They remain flat. Metrics pair a muted label with a large value. Merchant product cards preserve white space around sourced packshots, then group brand, product name, pack, price and the quantity action. Unknown price/availability is stated instead of displayed as a zero-price offer.
+White operational panels use a quiet border, rounded corners and internal spacing from the frontmatter. They remain flat. Metrics pair a muted label with a large value. Merchant product cards preserve white space around sourced packshots, then group brand, product name, pack, price and the quantity action. Unknown price/availability is stated instead of displayed as a zero-price offer. Open Food Facts photographs retain their actual packaging, colour and community-image field; a white container is not a promise that every source image has a white background. Current source-photo quality remains a content limitation until the owner supplies approved replacements.
+
+The merchant account card is a flat ink surface with the original white Toushir asset, large white available-point total and quieter secondary labels. It opens the real loyalty history. The row beneath it reports actual reserved points, not an estimated future earning amount. Gift and activity shortcuts pair mint and neutral fills. Purchase metrics show actual delivered orders and net amounts paid. “Documents et règlements” leads to commercial order documents and payment information; order slips are not presented as fiscal invoices.
 
 ### Inputs / Fields
 
@@ -301,12 +380,16 @@ The web order drawer anchors to the right, spans up to 740px, scrolls internally
 - **Do** extend the supplied Figma world and preserve the original Toushir assets and sourced packaging identity.
 - **Do** use green actions, mint selection and labelled semantic statuses on quiet neutral surfaces.
 - **Do** retain beverage mint, fresh/milk aqua and neutral unselected categories in the merchant rail.
+- **Do** distinguish that category rail from ink-selected filter pills and preserve the pills’ 44px press target.
+- **Do** show actual available/reserved points and identify commercial documents accurately.
+- **Do** preserve sourced product-photo identity, including an original grey field, until approved owner photography replaces it.
 - **Do** preserve keyboard focus, native touch targets, safe areas and contained table scrolling.
 - **Do** label demo content, unknown commercial values, stale GPS and illustrative depot geometry explicitly.
 - **Do** keep preparation, custody, receipt, payment and reconciliation visibly distinct.
 
 ### Don't:
 - **Don't** replace unknown prices with zero or present catalogue provenance as an approved commercial offer.
+- **Don't** invent pending earned points, turn order slips into fiscal-invoice claims or retouch source photography into a different product depiction.
 - **Don't** imply that illustrative 3D or a missing/stale GPS signal is a live observed position.
 - **Don't** spread overlay shadows across flat operational panels or replace original icons with decorative text glyphs.
 - **Don't** infer exact Figma-screen acceptance, native execution or domain/security acceptance from this design record.
