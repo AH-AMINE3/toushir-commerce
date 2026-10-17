@@ -174,6 +174,21 @@ try {
     .getByLabel("Motif de la décision", { exact: true })
     .fill("EXEMPLE · termes contrôlés par Finance");
   await captureDossier("supplier-review-desktop.png");
+  let signalRefresh, releaseRefresh;
+  const refreshHeld = new Promise((resolve) => {
+    signalRefresh = resolve;
+  });
+  const refreshRelease = new Promise((resolve) => {
+    releaseRefresh = resolve;
+  });
+  let holdRefresh = true;
+  await page.route("**/api/admin/dashboard*", async (route) => {
+    if (holdRefresh && route.request().method() === "GET") {
+      signalRefresh();
+      await refreshRelease;
+    }
+    await route.continue();
+  });
   await submit("Enregistrer l’examen distinct", "/review");
   await page
     .locator(".supplier-dossier .badge")
@@ -194,6 +209,19 @@ try {
       exact: true,
     }),
   });
+  await refreshHeld;
+  const receivingButton = receiving.getByRole("button", {
+    name: "Enregistrer les marchandises reçues",
+    exact: true,
+  });
+  const guarded = await receivingButton.isDisabled();
+  holdRefresh = false;
+  releaseRefresh();
+  if (!guarded)
+    throw Error(
+      "Receiving remains clickable while the previous approval is refreshing",
+    );
+  await page.unrouteAll({ behavior: "wait" });
   await receiving.locator('input[name^="qty-"]').fill("5");
   await receiving.locator('input[name^="quarantine-"]').fill("0");
   await receiving.locator('input[name^="lot-"]').fill("EXEMPLE-UI-LOT");

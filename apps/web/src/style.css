@@ -194,6 +194,9 @@ select {
   display: flex;
   min-height: 100vh;
 }
+.workspace-actions {
+  display: contents;
+}
 .sidebar {
   width: 224px;
   background: var(--sidebar);

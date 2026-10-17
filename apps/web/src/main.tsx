@@ -108,8 +108,27 @@ const staffRoutes: Record<string, string[]> = {
   DISPATCHER: ["orders", "delivery", "messages"],
   FINANCE: ["finance", "purchases", "campaigns", "rewards"],
 };
-function ControlIcon({kind}:{kind:'close'|'check'}) {
-  return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{verticalAlign:'middle'}}>{kind==='close'?<path d="m6 6 12 12M18 6 6 18"/>:<path d="m5 12 4 4L19 6"/>}</svg>;
+function ControlIcon({ kind }: { kind: "close" | "check" }) {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      style={{ verticalAlign: "middle" }}
+    >
+      {kind === "close" ? (
+        <path d="m6 6 12 12M18 6 6 18" />
+      ) : (
+        <path d="m5 12 4 4L19 6" />
+      )}
+    </svg>
+  );
 }
 function Icon({ name }: { name: string }) {
   return (
@@ -593,6 +612,7 @@ function App() {
           <button
             className="icon-button"
             title="Se déconnecter"
+            disabled={busy}
             onClick={() =>
               void run(async () => {
                 await post("/auth/logout");
@@ -602,7 +622,17 @@ function App() {
               }, "Déconnecté")
             }
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.75"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
               <path d="M9 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4M14 8l4 4-4 4M9 12h9" />
             </svg>
           </button>
@@ -617,8 +647,19 @@ function App() {
             aria-controls="workspace-navigation"
             onClick={() => setMenu(!menu)}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" aria-hidden="true">
-              <path d={menu ? "m6 6 12 12M6 18 18 6" : "M4 6h16M4 12h16M4 18h16"} />
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.75"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <path
+                d={menu ? "m6 6 12 12M6 18 18 6" : "M4 6h16M4 12h16M4 18h16"}
+              />
             </svg>
           </button>
           <div className="breadcrumb">
@@ -750,386 +791,413 @@ function App() {
               </button>
             </div>
           )}
-          {!dashboard ? (
-            <div className="boot-inline">
-              <span className="spinner" />
-              Chargement des opérations…
-            </div>
-          ) : (
-            <>
-              {route === "overview" && (
-                <>
-                  <div className="stats">
-                    <Stat
-                      label="Ventes réceptionnées · 30 jours"
-                      value={money(summary.sales)}
-                      detail={`${summary.deliveredOrders} réceptions enregistrées`}
-                      onClick={() => navigate("analytics")}
-                    />
-                    <Stat
-                      label="Demandes à traiter"
-                      value={number(summary.requests)}
-                      detail={`${summary.quotes} offres attendent un accord`}
-                      onClick={() => navigate("orders", "REQUESTED")}
-                    />
-                    <Stat
-                      label="Commandes en cours"
-                      value={number(summary.activeOrders)}
-                      detail="Confirmées, préparées ou en livraison"
-                      onClick={() => navigate("picking")}
-                    />
-                    <Stat
-                      label="Encaissements · 30 jours"
-                      value={money(summary.collected)}
-                      detail="Paiements enregistrés moins remboursements"
-                      onClick={() => navigate("finance")}
-                    />
-                  </div>
-                  <div className="overview-grid">
-                    <section className="panel sales-panel">
+          <fieldset
+            className="workspace-actions"
+            disabled={busy}
+            aria-busy={busy}
+            aria-label="Actions de l’espace"
+          >
+            {!dashboard ? (
+              <div className="boot-inline">
+                <span className="spinner" />
+                Chargement des opérations…
+              </div>
+            ) : (
+              <>
+                {route === "overview" && (
+                  <>
+                    <div className="stats">
+                      <Stat
+                        label="Ventes réceptionnées · 30 jours"
+                        value={money(summary.sales)}
+                        detail={`${summary.deliveredOrders} réceptions enregistrées`}
+                        onClick={() => navigate("analytics")}
+                      />
+                      <Stat
+                        label="Demandes à traiter"
+                        value={number(summary.requests)}
+                        detail={`${summary.quotes} offres attendent un accord`}
+                        onClick={() => navigate("orders", "REQUESTED")}
+                      />
+                      <Stat
+                        label="Commandes en cours"
+                        value={number(summary.activeOrders)}
+                        detail="Confirmées, préparées ou en livraison"
+                        onClick={() => navigate("picking")}
+                      />
+                      <Stat
+                        label="Encaissements · 30 jours"
+                        value={money(summary.collected)}
+                        detail="Paiements enregistrés moins remboursements"
+                        onClick={() => navigate("finance")}
+                      />
+                    </div>
+                    <div className="overview-grid">
+                      <section className="panel sales-panel">
+                        <div className="panel-heading">
+                          <div>
+                            <h2>Les ventes au fil des jours</h2>
+                            <p>Montants des commandes réceptionnées · DA</p>
+                          </div>
+                          <span className="badge neutral">
+                            30 derniers jours
+                          </span>
+                        </div>
+                        <Chart points={dashboard.daily} />
+                        <div className="chart-legend">
+                          <i />
+                          Marchandises acceptées et frais de livraison
+                          contractuels
+                        </div>
+                      </section>
+                      <section className="panel priorities">
+                        <h2>À traiter maintenant</h2>
+                        <p>Une décision, un responsable, une suite.</p>
+                        {[
+                          [
+                            summary.requests,
+                            "Commandes à chiffrer",
+                            "Vérifier les lignes et proposer un devis",
+                            "orders",
+                            "REQUESTED",
+                          ],
+                          [
+                            summary.quotes,
+                            "Réponses marchands",
+                            "La version proposée attend leur accord",
+                            "orders",
+                            "QUOTED",
+                          ],
+                          [
+                            summary.pendingMerchants,
+                            "Magasins à vérifier",
+                            "Autoriser leur première demande",
+                            "merchants",
+                            "PENDING",
+                          ],
+                          [
+                            summary.lowStock,
+                            "Références sous le seuil",
+                            "Contrôler les disponibilités publiées",
+                            "stock",
+                            "",
+                          ],
+                        ].map(([n, title, sub, r, f], i) => (
+                          <button
+                            className="priority"
+                            key={String(title)}
+                            onClick={() => navigate(String(r), String(f))}
+                          >
+                            <b
+                              className={["mint", "yellow", "cyan", "pink"][i]}
+                            >
+                              {n}
+                            </b>
+                            <span>
+                              <strong>{title}</strong>
+                              <small>{sub}</small>
+                            </span>
+                            <svg
+                              width="20"
+                              height="20"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="1.75"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              aria-hidden="true"
+                            >
+                              <path d="m9 6 6 6-6 6" />
+                            </svg>
+                          </button>
+                        ))}
+                      </section>
+                      <section className="panel">
+                        <h2>{orders.length} dossiers, des états distincts</h2>
+                        <p>Décision commerciale, remise et paiement.</p>
+                        <div className="stacked-bar">
+                          {counts.map((s: any, i: number) => (
+                            <span
+                              key={s.status}
+                              style={{
+                                flex: s.count,
+                                background: [
+                                  "#087f4f",
+                                  "#d9eddf",
+                                  "#0f2c2c",
+                                  "#06dd81",
+                                  "#bf9352",
+                                  "#a9c6b7",
+                                ][i % 6],
+                              }}
+                            />
+                          ))}
+                        </div>
+                        <div className="status-legend">
+                          {counts.map((s: any) => (
+                            <button
+                              key={s.status}
+                              onClick={() => navigate("orders", s.status)}
+                            >
+                              <span>{labels[s.status] || s.status}</span>
+                              <strong>{s.count}</strong>
+                            </button>
+                          ))}
+                        </div>
+                      </section>
+                      <section className="panel">
+                        <h2>Ce qui arrive de l’app</h2>
+                        <p>Même dossier. Même historique.</p>
+                        <div className="event-list">
+                          {dashboard.recentOrders.slice(0, 4).map((o: any) => (
+                            <button
+                              key={o.id}
+                              onClick={() => setSelected(o.id)}
+                            >
+                              <time>
+                                {new Date(o.createdAt).toLocaleTimeString(
+                                  "fr-DZ",
+                                  {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    hourCycle: "h23",
+                                  },
+                                )}
+                              </time>
+                              <span>
+                                <strong>{o.number}</strong>
+                                <small>
+                                  {o.shopName} · {money(o.total)}
+                                </small>
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                      </section>
+                      <section className="panel route-preview">
+                        <h2>Du dépôt au commerce</h2>
+                        <p>
+                          {
+                            orders.filter(
+                              (o) => o.status === "OUT_FOR_DELIVERY",
+                            ).length
+                          }{" "}
+                          commandes en cours de livraison
+                        </p>
+                        <div className="route-line">
+                          <i />
+                          <span />
+                          <i />
+                          <span />
+                          <i />
+                          <span />
+                          <i />
+                        </div>
+                        <p>
+                          Préparation, garde, position et réception restent
+                          traçables.
+                        </p>
+                        <Button secondary onClick={() => navigate("delivery")}>
+                          Ouvrir le centre de livraison
+                        </Button>
+                      </section>
+                    </div>
+                  </>
+                )}
+                {["orders", "picking", "finance"].includes(route) && (
+                  <>
+                    <div className="stats compact">
+                      {(route === "finance"
+                        ? [
+                            "UNPAID",
+                            "PARTIAL",
+                            "COLLECTED",
+                            "RECONCILED",
+                            "REFUND_DUE",
+                          ]
+                        : [
+                            "REQUESTED",
+                            "QUOTED",
+                            "CONFIRMED",
+                            "PREPARING",
+                            "READY",
+                            "OUT_FOR_DELIVERY",
+                          ]
+                      ).map((s) => (
+                        <Stat
+                          key={s}
+                          label={labels[s]}
+                          value={
+                            orders.filter(
+                              (o) =>
+                                (route === "finance"
+                                  ? o.paymentStatus
+                                  : o.status) === s,
+                            ).length
+                          }
+                          onClick={() => setFilter(filter === s ? "" : s)}
+                        />
+                      ))}
+                    </div>
+                    <section className="panel">
                       <div className="panel-heading">
                         <div>
-                          <h2>Les ventes au fil des jours</h2>
-                          <p>Montants des commandes réceptionnées · DA</p>
+                          <h2>
+                            {route === "picking"
+                              ? "File de préparation"
+                              : route === "finance"
+                                ? "Encaissements et rapprochement"
+                                : "Toutes les commandes"}
+                          </h2>
+                          <p>
+                            {route === "finance"
+                              ? "Une remise de marchandises ne crée jamais automatiquement un paiement."
+                              : "Cliquez sur un dossier pour traiter sa prochaine action."}
+                          </p>
                         </div>
-                        <span className="badge neutral">30 derniers jours</span>
-                      </div>
-                      <Chart points={dashboard.daily} />
-                      <div className="chart-legend">
-                        <i />
-                        Marchandises acceptées et frais de livraison
-                        contractuels
-                      </div>
-                    </section>
-                    <section className="panel priorities">
-                      <h2>À traiter maintenant</h2>
-                      <p>Une décision, un responsable, une suite.</p>
-                      {[
-                        [
-                          summary.requests,
-                          "Commandes à chiffrer",
-                          "Vérifier les lignes et proposer un devis",
-                          "orders",
-                          "REQUESTED",
-                        ],
-                        [
-                          summary.quotes,
-                          "Réponses marchands",
-                          "La version proposée attend leur accord",
-                          "orders",
-                          "QUOTED",
-                        ],
-                        [
-                          summary.pendingMerchants,
-                          "Magasins à vérifier",
-                          "Autoriser leur première demande",
-                          "merchants",
-                          "PENDING",
-                        ],
-                        [
-                          summary.lowStock,
-                          "Références sous le seuil",
-                          "Contrôler les disponibilités publiées",
-                          "stock",
-                          "",
-                        ],
-                      ].map(([n, title, sub, r, f], i) => (
-                        <button
-                          className="priority"
-                          key={String(title)}
-                          onClick={() => navigate(String(r), String(f))}
+                        <select
+                          aria-label="Filtrer par état"
+                          value={filter}
+                          onChange={(e) => setFilter(e.target.value)}
                         >
-                          <b className={["mint", "yellow", "cyan", "pink"][i]}>
-                            {n}
-                          </b>
-                          <span>
-                            <strong>{title}</strong>
-                            <small>{sub}</small>
-                          </span>
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6" /></svg>
-                        </button>
-                      ))}
-                    </section>
-                    <section className="panel">
-                      <h2>{orders.length} dossiers, des états distincts</h2>
-                      <p>Décision commerciale, remise et paiement.</p>
-                      <div className="stacked-bar">
-                        {counts.map((s: any, i: number) => (
-                          <span
-                            key={s.status}
-                            style={{
-                              flex: s.count,
-                              background: [
-                                "#087f4f",
-                                "#d9eddf",
-                                "#0f2c2c",
-                                "#06dd81",
-                                "#bf9352",
-                                "#a9c6b7",
-                              ][i % 6],
-                            }}
-                          />
-                        ))}
+                          <option value="">Tous les états</option>
+                          {Object.entries(labels)
+                            .filter(([s]) =>
+                              route === "finance"
+                                ? [
+                                    "UNPAID",
+                                    "PARTIAL",
+                                    "COLLECTED",
+                                    "RECONCILED",
+                                    "REFUND_DUE",
+                                  ].includes(s)
+                                : ![
+                                    "APPROVED",
+                                    "PENDING",
+                                    "OPEN",
+                                    "ACCEPTED",
+                                  ].includes(s),
+                            )
+                            .map(([s, l]) => (
+                              <option key={s} value={s}>
+                                {l}
+                              </option>
+                            ))}
+                        </select>
                       </div>
-                      <div className="status-legend">
-                        {counts.map((s: any) => (
-                          <button
-                            key={s.status}
-                            onClick={() => navigate("orders", s.status)}
-                          >
-                            <span>{labels[s.status] || s.status}</span>
-                            <strong>{s.count}</strong>
-                          </button>
-                        ))}
-                      </div>
-                    </section>
-                    <section className="panel">
-                      <h2>Ce qui arrive de l’app</h2>
-                      <p>Même dossier. Même historique.</p>
-                      <div className="event-list">
-                        {dashboard.recentOrders.slice(0, 4).map((o: any) => (
-                          <button key={o.id} onClick={() => setSelected(o.id)}>
-                            <time>
-                              {new Date(o.createdAt).toLocaleTimeString(
-                                "fr-DZ",
-                                {
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                  hourCycle: "h23",
-                                },
-                              )}
-                            </time>
-                            <span>
-                              <strong>{o.number}</strong>
-                              <small>
-                                {o.shopName} · {money(o.total)}
-                              </small>
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                    </section>
-                    <section className="panel route-preview">
-                      <h2>Du dépôt au commerce</h2>
-                      <p>
-                        {
-                          orders.filter((o) => o.status === "OUT_FOR_DELIVERY")
-                            .length
-                        }{" "}
-                        commandes en cours de livraison
-                      </p>
-                      <div className="route-line">
-                        <i />
-                        <span />
-                        <i />
-                        <span />
-                        <i />
-                        <span />
-                        <i />
-                      </div>
-                      <p>
-                        Préparation, garde, position et réception restent
-                        traçables.
-                      </p>
-                      <Button secondary onClick={() => navigate("delivery")}>
-                        Ouvrir le centre de livraison
-                      </Button>
-                    </section>
-                  </div>
-                </>
-              )}
-              {["orders", "picking", "finance"].includes(route) && (
-                <>
-                  <div className="stats compact">
-                    {(route === "finance"
-                      ? [
-                          "UNPAID",
-                          "PARTIAL",
-                          "COLLECTED",
-                          "RECONCILED",
-                          "REFUND_DUE",
-                        ]
-                      : [
-                          "REQUESTED",
-                          "QUOTED",
-                          "CONFIRMED",
-                          "PREPARING",
-                          "READY",
-                          "OUT_FOR_DELIVERY",
-                        ]
-                    ).map((s) => (
-                      <Stat
-                        key={s}
-                        label={labels[s]}
-                        value={
-                          orders.filter(
-                            (o) =>
+                      <OrdersTable
+                        orders={orders.filter(
+                          (o) =>
+                            (!query ||
+                              (o.number + " " + o.merchant.shopName)
+                                .toLowerCase()
+                                .includes(query.toLowerCase())) &&
+                            (!filter ||
                               (route === "finance"
                                 ? o.paymentStatus
-                                : o.status) === s,
-                          ).length
-                        }
-                        onClick={() => setFilter(filter === s ? "" : s)}
+                                : o.status) === filter) &&
+                            (route !== "picking" ||
+                              ["CONFIRMED", "PREPARING", "READY"].includes(
+                                o.status,
+                              )),
+                        )}
+                        open={setSelected}
+                        finance={route === "finance"}
                       />
-                    ))}
-                  </div>
-                  <section className="panel">
-                    <div className="panel-heading">
-                      <div>
-                        <h2>
-                          {route === "picking"
-                            ? "File de préparation"
-                            : route === "finance"
-                              ? "Encaissements et rapprochement"
-                              : "Toutes les commandes"}
-                        </h2>
-                        <p>
-                          {route === "finance"
-                            ? "Une remise de marchandises ne crée jamais automatiquement un paiement."
-                            : "Cliquez sur un dossier pour traiter sa prochaine action."}
-                        </p>
-                      </div>
-                      <select
-                        aria-label="Filtrer par état"
-                        value={filter}
-                        onChange={(e) => setFilter(e.target.value)}
-                      >
-                        <option value="">Tous les états</option>
-                        {Object.entries(labels)
-                          .filter(([s]) =>
-                            route === "finance"
-                              ? [
-                                  "UNPAID",
-                                  "PARTIAL",
-                                  "COLLECTED",
-                                  "RECONCILED",
-                                  "REFUND_DUE",
-                                ].includes(s)
-                              : ![
-                                  "APPROVED",
-                                  "PENDING",
-                                  "OPEN",
-                                  "ACCEPTED",
-                                ].includes(s),
-                          )
-                          .map(([s, l]) => (
-                            <option key={s} value={s}>
-                              {l}
-                            </option>
-                          ))}
-                      </select>
-                    </div>
-                    <OrdersTable
-                      orders={orders.filter(
-                        (o) =>
-                          (!query ||
-                            (o.number + " " + o.merchant.shopName)
-                              .toLowerCase()
-                              .includes(query.toLowerCase())) &&
-                          (!filter ||
-                            (route === "finance"
-                              ? o.paymentStatus
-                              : o.status) === filter) &&
-                          (route !== "picking" ||
-                            ["CONFIRMED", "PREPARING", "READY"].includes(
-                              o.status,
-                            )),
-                      )}
-                      open={setSelected}
-                      finance={route === "finance"}
-                    />
-                  </section>
-                </>
-              )}
-              {route === "delivery" && (
-                <Delivery
-                  orders={orders}
-                  selected={selected}
-                  open={setSelected}
-                />
-              )}
-              {["delivery", "finance"].includes(route) && (
-                <RouteConsole
-                  orders={orders}
-                  team={team}
-                  revision={revision}
-                  run={run}
-                  role={session.user.role}
-                  cashOnly={route === "finance"}
-                  open={setSelected}
-                />
-              )}
-              {session.user.role === "ADMIN" &&
-                ["products", "stock"].includes(route) && (
-                  <Products
-                    key={route}
-                    query={query}
-                    revision={revision}
-                    stock={route === "stock"}
-                    edit={setProduct}
+                    </section>
+                  </>
+                )}
+                {route === "delivery" && (
+                  <Delivery
+                    orders={orders}
+                    selected={selected}
+                    open={setSelected}
                   />
                 )}
-              {route === "picking" && (
-                <PickWaves
-                  orders={orders}
-                  revision={revision}
-                  run={run}
-                  role={session.user.role}
-                />
-              )}
-              {route === "stock" && (
-                <LotInventory revision={revision} run={run} />
-              )}
-              {route === "merchants" && (
-                <Merchants
-                  query={query}
-                  revision={revision}
-                  run={run}
-                  busy={busy}
-                />
-              )}
-              {route === "analytics" && <Analytics revision={revision} />}
-              {route === "messages" && (
-                <Messages
-                  revision={revision}
-                  run={run}
-                  team={team}
-                  session={session}
-                  orders={orders}
-                />
-              )}
-              {route === "purchases" && (
-                <Supply revision={revision} run={run} session={session} />
-              )}
-              {route === "campaigns" && (
-                <Campaigns
-                  revision={revision}
-                  run={run}
-                  session={session}
-                  orders={orders}
-                />
-              )}
-              {route === "rewards" && (
-                <Rewards
-                  revision={revision}
-                  run={run}
-                  session={session}
-                  orders={orders}
-                />
-              )}
-              {route === "returns" && (
-                <Returns revision={revision} open={setSelected} run={run} />
-              )}
-              {route === "settings" && (
-                <Settings
-                  session={session}
-                  team={team}
-                  revision={revision}
-                  run={run}
-                />
-              )}
-            </>
-          )}
+                {["delivery", "finance"].includes(route) && (
+                  <RouteConsole
+                    orders={orders}
+                    team={team}
+                    revision={revision}
+                    run={run}
+                    role={session.user.role}
+                    cashOnly={route === "finance"}
+                    open={setSelected}
+                  />
+                )}
+                {session.user.role === "ADMIN" &&
+                  ["products", "stock"].includes(route) && (
+                    <Products
+                      key={route}
+                      query={query}
+                      revision={revision}
+                      stock={route === "stock"}
+                      edit={setProduct}
+                    />
+                  )}
+                {route === "picking" && (
+                  <PickWaves
+                    orders={orders}
+                    revision={revision}
+                    run={run}
+                    role={session.user.role}
+                  />
+                )}
+                {route === "stock" && (
+                  <LotInventory revision={revision} run={run} />
+                )}
+                {route === "merchants" && (
+                  <Merchants
+                    query={query}
+                    revision={revision}
+                    run={run}
+                    busy={busy}
+                  />
+                )}
+                {route === "analytics" && <Analytics revision={revision} />}
+                {route === "messages" && (
+                  <Messages
+                    revision={revision}
+                    run={run}
+                    team={team}
+                    session={session}
+                    orders={orders}
+                  />
+                )}
+                {route === "purchases" && (
+                  <Supply revision={revision} run={run} session={session} />
+                )}
+                {route === "campaigns" && (
+                  <Campaigns
+                    revision={revision}
+                    run={run}
+                    session={session}
+                    orders={orders}
+                  />
+                )}
+                {route === "rewards" && (
+                  <Rewards
+                    revision={revision}
+                    run={run}
+                    session={session}
+                    orders={orders}
+                  />
+                )}
+                {route === "returns" && (
+                  <Returns revision={revision} open={setSelected} run={run} />
+                )}
+                {route === "settings" && (
+                  <Settings
+                    session={session}
+                    team={team}
+                    revision={revision}
+                    run={run}
+                  />
+                )}
+              </>
+            )}
+          </fieldset>
           <footer className="page-foot">
             TOUSHIR ·{" "}
             {session.workspace.isDemo
