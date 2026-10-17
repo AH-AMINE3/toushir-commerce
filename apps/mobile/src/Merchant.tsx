@@ -23,7 +23,7 @@ export default function Merchant({ session, onJoin, onSwitch, onLogout, onNotice
   const insets = useSafeAreaInsets();
   const wide = width >= 900;
   const columns = width >= 1080 ? 4 : width >= 680 ? 3 : 2;
-  const [screen, setScreen] = useState<Screen>(() => { const target = Platform.OS === 'web' ? window.location.hash.slice(1) : ''; return nav.some(n => n.id === target) ? target as Screen : 'catalog'; });
+  const [screen, setScreen] = useState<Screen>(() => { const target = Platform.OS === 'web' ? window.location.hash.slice(1) : ''; return ['catalog','favorites','cart','orders','account','offers','messages'].includes(target) ? target as Screen : 'catalog'; });
   const [communicationSettings,setCommunicationSettings]=useState(false);
   const [accountPanel,setAccountPanel] = useState<AccountPanel>(null);
   const contentRef=useRef<React.ElementRef<typeof ScrollView>>(null);
