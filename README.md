@@ -44,6 +44,7 @@ Business mode disables anonymous demos and creates the configured owner. Sign in
 ## Connected workflows
 
 - Approval, sourced catalogue, search, favourites, saved basket and addresses.
+- Independently approved shop/segment/standard tariffs, quantity/date bands, real customer simulation, explicit basket price consent and frozen quote provenance.
 - Quote requests, explicit promotion selection, versioned prices/expiry, merchant acceptance, atomic reservation, per-line preparation and assignment.
 - Ordered manifests, commercial-unit vehicle capacity, custody QR, permitted GPS, customer quantity proof, partial refusal and depot returns.
 - Actual cash, tendered amount/change, route float, driver declaration, independent finance count/reconciliation. Shortages never recreate customer debt.

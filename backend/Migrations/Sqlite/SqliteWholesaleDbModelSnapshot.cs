@@ -1462,6 +1462,42 @@ namespace Toushir.Wholesale.Migrations.Sqlite
                     b.ToTable("LoyaltyWallets");
                 });
 
+            modelBuilder.Entity("Toushir.Wholesale.MerchantPriceSegment", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MerchantId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SegmentId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("WorkspaceId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkspaceId", "MerchantId")
+                        .IsUnique();
+
+                    b.ToTable("MerchantPriceSegments");
+                });
+
             modelBuilder.Entity("Toushir.Wholesale.Offer", b =>
                 {
                     b.Property<string>("Id")
@@ -1713,6 +1749,83 @@ namespace Toushir.Wholesale.Migrations.Sqlite
                     b.ToTable("OrderLine");
                 });
 
+            modelBuilder.Entity("Toushir.Wholesale.OrderPricingSnapshot", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ActorId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("AppliedUnitPriceMinor")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("BaseUnitPriceMinor")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("CampaignsAllowed")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long?>("ExpectedUnitPriceMinor")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("MerchantId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OrderId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OverrideReason")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProductId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("QuoteVersion")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ResolutionSource")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("ResolvedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RuleId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("RuleVersion")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TermsJson")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("WorkspaceId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkspaceId", "OrderId", "QuoteVersion", "ProductId")
+                        .IsUnique();
+
+                    b.ToTable("OrderPricingSnapshots");
+                });
+
             modelBuilder.Entity("Toushir.Wholesale.Payment", b =>
                 {
                     b.Property<string>("Id")
@@ -1785,6 +1898,85 @@ namespace Toushir.Wholesale.Migrations.Sqlite
                     b.HasKey("Id");
 
                     b.ToTable("PickWaves");
+                });
+
+            modelBuilder.Entity("Toushir.Wholesale.PriceSegment", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NormalizedName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("WorkspaceId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkspaceId", "NormalizedName")
+                        .IsUnique();
+
+                    b.ToTable("PriceSegments");
+                });
+
+            modelBuilder.Entity("Toushir.Wholesale.PricingEvent", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ActorId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AggregateId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("At")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Details")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("UtcTicks")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("WorkspaceId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkspaceId", "AggregateId");
+
+                    b.HasIndex("WorkspaceId", "UtcTicks");
+
+                    b.ToTable("PricingEvents");
                 });
 
             modelBuilder.Entity("Toushir.Wholesale.Product", b =>
@@ -2753,6 +2945,118 @@ namespace Toushir.Wholesale.Migrations.Sqlite
                     b.HasKey("Id");
 
                     b.ToTable("SupplyReceiptLines");
+                });
+
+            modelBuilder.Entity("Toushir.Wholesale.TariffRule", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("AllowCampaigns")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("EndsAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("IdempotencyKey")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("MaximumQuantity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MinimumQuantity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProductId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset?>("PublishedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Reference")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RequestHash")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReviewReason")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset?>("ReviewedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReviewedBy")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Scope")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("StartsAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SupersedesId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("SupersedesVersion")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("TargetId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("UnitPriceMinor")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("WithdrawalReason")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset?>("WithdrawnAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("WithdrawnBy")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("WorkspaceId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkspaceId", "IdempotencyKey")
+                        .IsUnique();
+
+                    b.HasIndex("WorkspaceId", "ProductId", "Status");
+
+                    b.ToTable("TariffRules");
                 });
 
             modelBuilder.Entity("Toushir.Wholesale.WarehouseLot", b =>

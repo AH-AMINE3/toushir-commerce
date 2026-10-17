@@ -1,38 +1,40 @@
 {
   "merchant": {
     "apiOrigin": "https://toushir-commerce-staging.onrender.com",
-    "sha256": "b98de0bb65aef421cf320d1b36ccebaa7b282a6524aa99c1b3a29a92e464060b",
+    "sha256": "7c162a4f3485b72fa61725a0f7d55933ad38766678631ecc39d6df9ba66a4b87",
     "packageId": "com.toushir.commerce",
     "applicationLabel": "Toushir Commerce",
-    "bytes": 33745591,
+    "bytes": 33748195,
     "architectures": [
       "arm64-v8a"
     ],
     "minimumSdk": 24,
     "targetSdk": 36,
-    "versionCode": 1,
-    "versionName": "1.0.0",
+    "versionCode": 2,
+    "versionName": "1.1.0",
     "certificateSubject": "CN=ToushirPreview",
     "certificateSha256": "c7fb5feb8c7631a4d0ed902d033877abf38f43487a2293fc2d1dd85645c63b8e",
     "signatureVerified": true,
-    "channel": "preview"
+    "channel": "preview",
+    "pricingConsentProtocol": 1
   },
   "driver": {
     "apiOrigin": "https://toushir-commerce-staging.onrender.com",
-    "sha256": "38314f53750de1dda90e89d365fb18d38d1e7ea99a5137299675fbd35a1e58fd",
+    "sha256": "00316bfbee46c959d27552e4e381c6bd1eadb6c67b81cd79419421fce912cc12",
     "packageId": "com.toushir.livreur",
     "applicationLabel": "Toushir Livreur",
-    "bytes": 33720975,
+    "bytes": 33723579,
     "architectures": [
       "arm64-v8a"
     ],
     "minimumSdk": 24,
     "targetSdk": 36,
-    "versionCode": 1,
-    "versionName": "1.0.0",
+    "versionCode": 2,
+    "versionName": "1.1.0",
     "certificateSubject": "CN=ToushirPreview",
     "certificateSha256": "c7fb5feb8c7631a4d0ed902d033877abf38f43487a2293fc2d1dd85645c63b8e",
     "signatureVerified": true,
-    "channel": "preview"
+    "channel": "preview",
+    "pricingConsentProtocol": 1
   }
 }

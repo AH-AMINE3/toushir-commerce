@@ -38,7 +38,7 @@ const env = {
   Oidc__signingCertificateBase64: '', Oidc__encryptionCertificateBase64: '',
   Oidc__signingCertificatePassword: '', Oidc__encryptionCertificatePassword: '',
   DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 'true', ASPNETCORE_ENVIRONMENT: 'Production',
-  ASPNETCORE_URLS: base, Demo__Enabled: 'false', DataPath: data, Catalog__Path: fixture,
+  ASPNETCORE_URLS: base, Demo__Enabled: 'false', Demo__DeliveryFee: '0', Wholesale__DeliveryFee: '', DataPath: data, Catalog__Path: fixture,
   Bootstrap__Email: 'owner-test@example.invalid', Bootstrap__Password: ownerPassword,
   ForwardedHeaders__TrustPlatformProxy: 'true', Cors__Origins: 'https://wholesale.example.invalid',
 };
@@ -135,6 +135,12 @@ try {
     assert.equal(order.status, 'REQUESTED');
     assert.equal(order.address.street, input.address.street);
     assert.equal(order.address.commune, input.address.commune);
+  });
+  await test('Fictional demo delivery fees cannot authorize direct checkout in a real business workspace', async () => {
+    const product=order.items[0];
+    await call('/admin/products/'+product.productId,{method:'PATCH',token:owner.data.token,body:{price:100,stock:10,caseSize:1,minimumQuantity:1,offerApproved:true,isActive:true}});
+    const cart=(await call('/cart/quote',{method:'POST',token:merchant.token,body:{items:[{productId:product.productId,quantity:2}]}})).data;
+    assert.equal(cart.subtotal,200);assert.equal(cart.deliveryFee,null);assert.equal(cart.total,null);assert.equal(cart.canOrder,false);assert.equal(cart.needsQuote,true);assert.equal(cart.pricingToken,null);
   });
   await test('HTTPS browser writes work behind trusted platform proxy and foreign origins fail', async () => {
     const profile = { name: 'Nadia · Test', shopName: 'Boutique de test', phone: '0000000000' };
@@ -269,5 +275,5 @@ try {
   const report = { at: new Date().toISOString(), passed: checks.filter(x => x.pass).length, failed: checks.filter(x => !x.pass).length, requests, checks };
   await writeFile(resolvePath(backend, 'production-verification.json'), JSON.stringify(report, null, 2));
   console.log(JSON.stringify({ passed: report.passed, failed: report.failed, requests }));
-  if (report.failed || checks.length !== 10) process.exitCode = 1;
+  if (report.failed || checks.length !== 11) process.exitCode = 1;
 }

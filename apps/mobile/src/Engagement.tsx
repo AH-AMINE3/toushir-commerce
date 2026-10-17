@@ -1,41 +1,820 @@
-import React,{useEffect,useRef,useState} from 'react';
-import {Pressable,StyleSheet,Switch,Text,View} from 'react-native';
-import {api,date,money,operationKey,post,Product,put,Session} from './api';
-import {Button,Empty,Field,FilterPill,Icon,Notice,ProductImage} from './components';
-import {C,S} from './theme';
-import {useEngagementLive} from './realtime';
+import React, { useEffect, useRef, useState } from "react";
+import { Pressable, StyleSheet, Switch, Text, View } from "react-native";
+import {
+  api,
+  date,
+  money,
+  operationKey,
+  post,
+  Product,
+  put,
+  Session,
+} from "./api";
+import {
+  Button,
+  Empty,
+  Field,
+  FilterPill,
+  Icon,
+  Notice,
+  ProductImage,
+} from "./components";
+import { C, S } from "./theme";
+import { useEngagementLive } from "./realtime";
 
-type Context={type:'ORDER'|'DELIVERY'|'GIFT';id:string;subject:string};
-type Conversation={id:string;subject:string;contextType:string;contextId:string;status:string;updatedAt:string};
-type Message={id:string;senderId:string;senderName:string;text:string;at:string};
-export function Conversations({session,initialContext,settingsOpen}:{session:Session;initialContext?:Context;settingsOpen?:boolean}){
- const [threads,setThreads]=useState<Conversation[]>([]),[thread,setThread]=useState<Conversation|null>(null),[messages,setMessages]=useState<Message[]>([]),[text,setText]=useState(''),[error,setError]=useState(''),[busy,setBusy]=useState(false),[filter,setFilter]=useState(''),[marketing,setMarketing]=useState(false),[showSettings,setShowSettings]=useState(false);
- const current=useRef<string|null>(null),key=useRef(operationKey()),loading=useRef(false);
- async function refresh(){if(loading.current)return;loading.current=true;try{const data=await api<{items:Conversation[]}>('/conversations');setThreads(data.items);if(current.current){const detail=await api<{conversation:Conversation;items:Message[]}>(`/conversations/${current.current}/messages`);setThread(detail.conversation);setMessages(detail.items);}}catch(e:any){setError(e.message);}finally{loading.current=false;}}
- const live=useEngagementLive(session.user.id,refresh);
- useEffect(()=>{refresh();const timer=setInterval(refresh,8000);return()=>clearInterval(timer);},[session.user.id]);
- useEffect(()=>{if(initialContext)create(initialContext);},[initialContext?.id]);
- useEffect(()=>{if(settingsOpen===undefined)return;setShowSettings(settingsOpen);if(settingsOpen)api<any>('/preferences/marketing').then(p=>setMarketing(!!p.optIn)).catch(e=>setError(e.message));},[settingsOpen]);
- async function open(t:Conversation){current.current=t.id;setThread(t);setError('');setMessages([]);try{const result=await api<{items:Message[]}>(`/conversations/${t.id}/messages`);setMessages(result.items);}catch(e:any){setError(e.message);}}
- async function create(context?:Context){setBusy(true);setError('');try{const next=await post<Conversation>('/conversations',{contextType:context?.type||'GENERAL',contextId:context?.id,subject:context?.subject||'Votre conseiller Toushir'});await open(next);await refresh();}catch(e:any){setError(e.message);}finally{setBusy(false);}}
- async function send(){if(!thread||!text.trim())return;setBusy(true);setError('');try{await post(`/conversations/${thread.id}/messages`,{text:text.trim(),internal:false,idempotencyKey:key.current});setText('');key.current=operationKey();await refresh();}catch(e:any){setError(e.message);}finally{setBusy(false);}}
- return <View style={E.wrap}>{error?<Notice error>{error}</Notice>:null}{thread?<><View style={S.between}><Button variant="ghost" icon="arrow-back" label="Retour aux conversations" onPress={()=>{current.current=null;setThread(null);setText('');key.current=operationKey();}}/><Text style={[S.label,{flex:1}]}>{thread.subject}</Text><Text style={S.small}>{thread.status==='CLOSED'?'Clôturée':'Ouverte'}</Text></View>{messages.map(m=><View key={m.id} style={[E.bubble,m.senderId===session.user.id?{backgroundColor:C.pale,alignSelf:'flex-end'}:{}]}><Text style={[S.small,{color:C.green}]}>{m.senderName}</Text><Text selectable style={S.text}>{m.text}</Text><Text style={S.small}>{date(m.at,true)} · envoyé</Text></View>)}{!messages.length?<Text style={S.muted}>Cette conversation n’a pas encore de message.</Text>:null}{thread.status==='OPEN'?<><Field label="Votre message" value={text} onChangeText={setText} multiline maxLength={5000}/><Button icon="send-outline" disabled={!text.trim()} loading={busy} onPress={send}>Envoyer dans l’application</Button></>:<Notice>Cette conversation est clôturée. Votre équipe peut la rouvrir.</Notice>}</>:<><View style={S.between}><View style={[S.row,{gap:6,flexWrap:'wrap'}]}>{[['','Tous'],['ORDER','Commandes'],['DELIVERY','Livreur']].map(([id,label])=><FilterPill key={id} selected={filter===id} onPress={()=>setFilter(id)}>{label}</FilterPill>)}</View>{session.user.role==='MERCHANT'&&settingsOpen===undefined?<Button variant="ghost" icon="settings-outline" label="Préférences de communication" onPress={async()=>{setShowSettings(!showSettings);try{const p=await api<any>('/preferences/marketing');setMarketing(!!p.optIn);}catch(e:any){setError(e.message);}}}/>:null}</View>{showSettings?<View style={E.panel}><Text style={S.label}>Recevoir les offres commerciales</Text><View style={S.row}><Text style={[S.muted,{flex:1}]}>Autoriser les campagnes promotionnelles dans l’application.</Text><Switch accessibilityLabel="Recevoir les offres commerciales" value={marketing} onValueChange={async value=>{try{await put('/preferences/marketing',{optIn:value});setMarketing(value);}catch(e:any){setError(e.message);}}} trackColor={{true:C.green}}/></View><Text style={S.small}>Les messages de service restent disponibles.</Text></View>:null}{threads.filter(t=>!filter||t.contextType===filter).map(t=><Pressable key={t.id} accessibilityRole="button" onPress={()=>open(t)} style={E.thread}><View style={E.avatar}><Icon name={t.contextType==='DELIVERY'?'car-outline':t.contextType==='GIFT'?'gift-outline':'chatbubble-outline'} color={C.green}/></View><View style={{flex:1,gap:6}}><Text style={S.label}>{t.subject}</Text><Text style={S.muted}>{t.contextType==='DELIVERY'?'Livraison':t.contextType==='ORDER'?'Commande':t.contextType==='GIFT'?'Cadeau':'Équipe Toushir'} · {date(t.updatedAt,true)}</Text></View><Icon name="chevron-forward" size={18}/></Pressable>)}{!threads.length?<Empty title="Vos échanges, au même endroit" message={session.user.role==='DRIVER'?'Ouvrez un arrêt pour contacter le commerçant à propos de sa livraison.':'Votre conseiller répond à vos questions de réassort.'} icon="chatbubble-outline"/>:null}{session.user.role==='MERCHANT'?<View style={E.panel}><Icon name="chatbubble-outline" size={28}/><Text style={E.title}>Une question sur votre réassort ?</Text><Text style={S.muted}>Votre conseiller Toushir vous accompagne.</Text><Button variant="ink" loading={busy} onPress={()=>create()}>Écrire à Toushir</Button></View>:null}</>}</View>;
+type Context = {
+  type: "ORDER" | "DELIVERY" | "GIFT";
+  id: string;
+  subject: string;
+};
+type Conversation = {
+  id: string;
+  subject: string;
+  contextType: string;
+  contextId: string;
+  status: string;
+  updatedAt: string;
+};
+type Message = {
+  id: string;
+  senderId: string;
+  senderName: string;
+  text: string;
+  at: string;
+};
+export function Conversations({
+  session,
+  initialContext,
+  settingsOpen,
+}: {
+  session: Session;
+  initialContext?: Context;
+  settingsOpen?: boolean;
+}) {
+  const [threads, setThreads] = useState<Conversation[]>([]),
+    [thread, setThread] = useState<Conversation | null>(null),
+    [messages, setMessages] = useState<Message[]>([]),
+    [text, setText] = useState(""),
+    [error, setError] = useState(""),
+    [busy, setBusy] = useState(false),
+    [filter, setFilter] = useState(""),
+    [marketing, setMarketing] = useState(false),
+    [showSettings, setShowSettings] = useState(false);
+  const current = useRef<string | null>(null),
+    key = useRef(operationKey()),
+    loading = useRef(false);
+  async function refresh() {
+    if (loading.current) return;
+    loading.current = true;
+    try {
+      const data = await api<{ items: Conversation[] }>("/conversations");
+      setThreads(data.items);
+      if (current.current) {
+        const detail = await api<{
+          conversation: Conversation;
+          items: Message[];
+        }>(`/conversations/${current.current}/messages`);
+        setThread(detail.conversation);
+        setMessages(detail.items);
+      }
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      loading.current = false;
+    }
+  }
+  const live = useEngagementLive(session.user.id, refresh);
+  useEffect(() => {
+    refresh();
+    const timer = setInterval(refresh, 8000);
+    return () => clearInterval(timer);
+  }, [session.user.id]);
+  useEffect(() => {
+    if (initialContext) create(initialContext);
+  }, [initialContext?.id]);
+  useEffect(() => {
+    if (settingsOpen === undefined) return;
+    setShowSettings(settingsOpen);
+    if (settingsOpen)
+      api<any>("/preferences/marketing")
+        .then((p) => setMarketing(!!p.optIn))
+        .catch((e) => setError(e.message));
+  }, [settingsOpen]);
+  async function open(t: Conversation) {
+    current.current = t.id;
+    setThread(t);
+    setError("");
+    setMessages([]);
+    try {
+      const result = await api<{ items: Message[] }>(
+        `/conversations/${t.id}/messages`,
+      );
+      setMessages(result.items);
+    } catch (e: any) {
+      setError(e.message);
+    }
+  }
+  async function create(context?: Context) {
+    setBusy(true);
+    setError("");
+    try {
+      const next = await post<Conversation>("/conversations", {
+        contextType: context?.type || "GENERAL",
+        contextId: context?.id,
+        subject: context?.subject || "Votre conseiller Toushir",
+      });
+      await open(next);
+      await refresh();
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function send() {
+    if (!thread || !text.trim()) return;
+    setBusy(true);
+    setError("");
+    try {
+      await post(`/conversations/${thread.id}/messages`, {
+        text: text.trim(),
+        internal: false,
+        idempotencyKey: key.current,
+      });
+      setText("");
+      key.current = operationKey();
+      await refresh();
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <View style={E.wrap}>
+      {error ? <Notice error>{error}</Notice> : null}
+      {thread ? (
+        <>
+          <View style={S.between}>
+            <Button
+              variant="ghost"
+              icon="arrow-back"
+              label="Retour aux conversations"
+              onPress={() => {
+                current.current = null;
+                setThread(null);
+                setText("");
+                key.current = operationKey();
+              }}
+            />
+            <Text style={[S.label, { flex: 1 }]}>{thread.subject}</Text>
+            <Text style={S.small}>
+              {thread.status === "CLOSED" ? "Clôturée" : "Ouverte"}
+            </Text>
+          </View>
+          {messages.map((m) => (
+            <View
+              key={m.id}
+              style={[
+                E.bubble,
+                m.senderId === session.user.id
+                  ? { backgroundColor: C.pale, alignSelf: "flex-end" }
+                  : {},
+              ]}
+            >
+              <Text style={[S.small, { color: C.green }]}>{m.senderName}</Text>
+              <Text selectable style={S.text}>
+                {m.text}
+              </Text>
+              <Text style={S.small}>{date(m.at, true)} · envoyé</Text>
+            </View>
+          ))}
+          {!messages.length ? (
+            <Text style={S.muted}>
+              Cette conversation n’a pas encore de message.
+            </Text>
+          ) : null}
+          {thread.status === "OPEN" ? (
+            <>
+              <Field
+                label="Votre message"
+                value={text}
+                onChangeText={setText}
+                multiline
+                maxLength={5000}
+              />
+              <Button
+                icon="send-outline"
+                disabled={!text.trim()}
+                loading={busy}
+                onPress={send}
+              >
+                Envoyer dans l’application
+              </Button>
+            </>
+          ) : (
+            <Notice>
+              Cette conversation est clôturée. Votre équipe peut la rouvrir.
+            </Notice>
+          )}
+        </>
+      ) : (
+        <>
+          <View style={S.between}>
+            <View style={[S.row, { gap: 6, flexWrap: "wrap" }]}>
+              {[
+                ["", "Tous"],
+                ["ORDER", "Commandes"],
+                ["DELIVERY", "Livreur"],
+              ].map(([id, label]) => (
+                <FilterPill
+                  key={id}
+                  selected={filter === id}
+                  onPress={() => setFilter(id)}
+                >
+                  {label}
+                </FilterPill>
+              ))}
+            </View>
+            {session.user.role === "MERCHANT" && settingsOpen === undefined ? (
+              <Button
+                variant="ghost"
+                icon="settings-outline"
+                label="Préférences de communication"
+                onPress={async () => {
+                  setShowSettings(!showSettings);
+                  try {
+                    const p = await api<any>("/preferences/marketing");
+                    setMarketing(!!p.optIn);
+                  } catch (e: any) {
+                    setError(e.message);
+                  }
+                }}
+              />
+            ) : null}
+          </View>
+          {showSettings ? (
+            <View style={E.panel}>
+              <Text style={S.label}>Recevoir les offres commerciales</Text>
+              <View style={S.row}>
+                <Text style={[S.muted, { flex: 1 }]}>
+                  Autoriser les campagnes promotionnelles dans l’application.
+                </Text>
+                <Switch
+                  accessibilityLabel="Recevoir les offres commerciales"
+                  value={marketing}
+                  onValueChange={async (value) => {
+                    try {
+                      await put("/preferences/marketing", { optIn: value });
+                      setMarketing(value);
+                    } catch (e: any) {
+                      setError(e.message);
+                    }
+                  }}
+                  trackColor={{ true: C.green }}
+                />
+              </View>
+              <Text style={S.small}>
+                Les messages de service restent disponibles.
+              </Text>
+            </View>
+          ) : null}
+          {threads
+            .filter((t) => !filter || t.contextType === filter)
+            .map((t) => (
+              <Pressable
+                key={t.id}
+                accessibilityRole="button"
+                onPress={() => open(t)}
+                style={E.thread}
+              >
+                <View style={E.avatar}>
+                  <Icon
+                    name={
+                      t.contextType === "DELIVERY"
+                        ? "car-outline"
+                        : t.contextType === "GIFT"
+                          ? "gift-outline"
+                          : "chatbubble-outline"
+                    }
+                    color={C.green}
+                  />
+                </View>
+                <View style={{ flex: 1, gap: 6 }}>
+                  <Text style={S.label}>{t.subject}</Text>
+                  <Text style={S.muted}>
+                    {t.contextType === "DELIVERY"
+                      ? "Livraison"
+                      : t.contextType === "ORDER"
+                        ? "Commande"
+                        : t.contextType === "GIFT"
+                          ? "Cadeau"
+                          : "Équipe Toushir"}{" "}
+                    · {date(t.updatedAt, true)}
+                  </Text>
+                </View>
+                <Icon name="chevron-forward" size={18} />
+              </Pressable>
+            ))}
+          {!threads.length ? (
+            <Empty
+              title="Vos échanges, au même endroit"
+              message={
+                session.user.role === "DRIVER"
+                  ? "Ouvrez un arrêt pour contacter le commerçant à propos de sa livraison."
+                  : "Votre conseiller répond à vos questions de réassort."
+              }
+              icon="chatbubble-outline"
+            />
+          ) : null}
+          {session.user.role === "MERCHANT" ? (
+            <View style={E.panel}>
+              <Icon name="chatbubble-outline" size={28} />
+              <Text style={E.title}>Une question sur votre réassort ?</Text>
+              <Text style={S.muted}>
+                Votre conseiller Toushir vous accompagne.
+              </Text>
+              <Button variant="ink" loading={busy} onPress={() => create()}>
+                Écrire à Toushir
+              </Button>
+            </View>
+          ) : null}
+        </>
+      )}
+    </View>
+  );
 }
 
-type Campaign={id:string;title:string;description:string;kind:string;productId:string;minimumQuantity:number;discountPercent:number;giftQuantity:number;goalQuantity:number;startsAt:string;endsAt:string;rewardId?:string};
-export function Campaigns({session,onProduct,onNotice}:{session:Session;onProduct:(id:string)=>void;onNotice:(m:string)=>void}){
- const[campaigns,setCampaigns]=useState<Campaign[]>([]),[selected,setSelected]=useState<Campaign|null>(null),[quantity,setQuantity]=useState('1'),[kind,setKind]=useState(''),[preview,setPreview]=useState<any>(null),[progress,setProgress]=useState<any>(null),[busy,setBusy]=useState(false),[error,setError]=useState('');const reserveKey=useRef(operationKey());
- async function refresh(){try{const r=await api<{items:Campaign[]}>('/campaigns');setCampaigns(r.items);if(selected?.kind==='CHALLENGE')setProgress(await api(`/campaigns/${selected.id}/progress`));}catch(e:any){setError(e.message);}}
- const live=useEngagementLive(session.user.id,refresh);useEffect(()=>{refresh();const timer=setInterval(refresh,8000);return()=>clearInterval(timer);},[session.user.id,selected?.id]);
- async function choose(c:Campaign){setSelected(c);setQuantity(String(c.minimumQuantity||1));setPreview(null);setProgress(null);setError('');reserveKey.current=operationKey();if(c.kind==='CHALLENGE')try{setProgress(await api(`/campaigns/${c.id}/progress`));}catch(e:any){setError(e.message);}}
- return <View style={E.wrap}><Text style={S.muted}>Des avantages pour votre réassort.</Text><View style={[S.row,{gap:8,flexWrap:'wrap'}]}>{[['','Tout'],['DISCOUNT','Remises'],['FREE_GOODS','Cadeaux'],['CHALLENGE','Challenges']].map(([id,label])=><FilterPill key={id} selected={kind===id} onPress={()=>setKind(id)}>{label}</FilterPill>)}</View>{error?<Notice error>{error}</Notice>:null}{selected?<><Button variant="ghost" icon="arrow-back" onPress={()=>setSelected(null)}>Toutes les offres</Button><View style={E.panel}><Text style={E.title}>{selected.title}</Text><Text style={S.text}>{selected.description}</Text><Text style={S.small}>Du {date(selected.startsAt)} au {date(selected.endsAt)}</Text>{selected.kind==='CHALLENGE'?<><Text style={E.title}>{progress?.eligibleQuantity??'—'} / {progress?.goal??selected.goalQuantity}</Text><Text style={S.muted}>Unités acceptées et réglées, après retours pris en compte.</Text>{progress?.grant?.status==='GRANTED'?<Button loading={busy} onPress={async()=>{setBusy(true);try{await post(`/rewards/${progress.grant.rewardId}/reserve`,{grantId:progress.grant.id,idempotencyKey:reserveKey.current});onNotice('Votre cadeau attribué est réservé sans débit de points.');reserveKey.current=operationKey();await refresh();}catch(e:any){setError(e.message);}finally{setBusy(false);}}}>Réserver mon cadeau attribué</Button>:<Notice>{progress?.achieved?'Objectif atteint. Votre grossiste doit valider l’attribution après la clôture.':'Votre progression se met à jour avec les commandes éligibles.'}</Notice>}</>:<><Field label="Quantité à simuler" keyboardType="number-pad" value={quantity} onChangeText={setQuantity}/><Button loading={busy} disabled={!quantity||Number(quantity)<0} onPress={async()=>{setBusy(true);try{setPreview(await post(`/campaigns/${selected.id}/preview`,{quantity:Number(quantity)}));}catch(e:any){setError(e.message);}finally{setBusy(false);}}}>Vérifier les conditions de l’offre</Button>{preview?<><Text style={S.label}>{preview.qualifies?'Conditions atteintes':'Conditions non atteintes'}</Text><Text style={S.muted}>{preview.quoteRequired?'Prix à confirmer dans votre devis.':`Marchandises après réduction : ${money(preview.goodsAfter)}`}</Text>{preview.freeQuantity>0?<Text style={S.text}>{preview.freeQuantity} produit(s) offert(s), sous réserve du devis confirmé.</Text>:null}<Notice>Cette simulation ne modifie pas votre commande. Le grossiste confirme les conditions dans son devis.</Notice></>:null}</>}<Button variant="secondary" icon="cube-outline" onPress={()=>onProduct(selected.productId)}>Voir le produit concerné</Button></View></>:<>{campaigns.filter(c=>!kind||c.kind===kind).map(c=><Pressable key={c.id} accessibilityRole="button" onPress={()=>choose(c)} style={[E.panel,{backgroundColor:c.kind==='DISCOUNT'?C.pale:C.bg}]}><View style={S.between}><Icon name={c.kind==='CHALLENGE'?'trophy-outline':'pricetag-outline'} color={C.green} size={26}/><Icon name="arrow-forward"/></View>{c.kind==='DISCOUNT'?<Text style={[E.title,{fontSize:40,lineHeight:50}]}>−{c.discountPercent} %</Text>:null}<Text style={E.title}>{c.title}</Text><Text style={S.muted}>{c.description}</Text><Text style={S.small}>Jusqu’au {date(c.endsAt)}</Text></Pressable>)}{!campaigns.length?<Empty title="Les prochaines offres arrivent ici" message="Votre grossiste publiera ses offres approuvées et leurs conditions." icon="pricetag-outline"/>:null}</>}</View>;
+type Campaign = {
+  id: string;
+  title: string;
+  description: string;
+  kind: string;
+  productId: string;
+  minimumQuantity: number;
+  discountPercent: number;
+  giftQuantity: number;
+  goalQuantity: number;
+  startsAt: string;
+  endsAt: string;
+  rewardId?: string;
+};
+export function Campaigns({
+  session,
+  onProduct,
+  onNotice,
+}: {
+  session: Session;
+  onProduct: (id: string) => void;
+  onNotice: (m: string) => void;
+}) {
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]),
+    [selected, setSelected] = useState<Campaign | null>(null),
+    [quantity, setQuantity] = useState("1"),
+    [kind, setKind] = useState(""),
+    [preview, setPreview] = useState<any>(null),
+    [progress, setProgress] = useState<any>(null),
+    [busy, setBusy] = useState(false),
+    [error, setError] = useState("");
+  const reserveKey = useRef(operationKey());
+  async function refresh() {
+    try {
+      const r = await api<{ items: Campaign[] }>("/campaigns");
+      setCampaigns(r.items);
+      if (selected?.kind === "CHALLENGE")
+        setProgress(await api(`/campaigns/${selected.id}/progress`));
+    } catch (e: any) {
+      setError(e.message);
+    }
+  }
+  const live = useEngagementLive(session.user.id, refresh);
+  useEffect(() => {
+    refresh();
+    const timer = setInterval(refresh, 8000);
+    return () => clearInterval(timer);
+  }, [session.user.id, selected?.id]);
+  async function choose(c: Campaign) {
+    setSelected(c);
+    setQuantity(String(c.minimumQuantity || 1));
+    setPreview(null);
+    setProgress(null);
+    setError("");
+    reserveKey.current = operationKey();
+    if (c.kind === "CHALLENGE")
+      try {
+        setProgress(await api(`/campaigns/${c.id}/progress`));
+      } catch (e: any) {
+        setError(e.message);
+      }
+  }
+  return (
+    <View style={E.wrap}>
+      <Text style={S.muted}>Des avantages pour votre réassort.</Text>
+      <View style={[S.row, { gap: 8, flexWrap: "wrap" }]}>
+        {[
+          ["", "Tout"],
+          ["DISCOUNT", "Remises"],
+          ["FREE_GOODS", "Cadeaux"],
+          ["CHALLENGE", "Challenges"],
+        ].map(([id, label]) => (
+          <FilterPill
+            key={id}
+            selected={kind === id}
+            onPress={() => setKind(id)}
+          >
+            {label}
+          </FilterPill>
+        ))}
+      </View>
+      {error ? <Notice error>{error}</Notice> : null}
+      {selected ? (
+        <>
+          <Button
+            variant="ghost"
+            icon="arrow-back"
+            onPress={() => setSelected(null)}
+          >
+            Toutes les offres
+          </Button>
+          <View style={E.panel}>
+            <Text style={E.title}>{selected.title}</Text>
+            <Text style={S.text}>{selected.description}</Text>
+            <Text style={S.small}>
+              Du {date(selected.startsAt)} au {date(selected.endsAt)}
+            </Text>
+            {selected.kind === "CHALLENGE" ? (
+              <>
+                <Text style={E.title}>
+                  {progress?.eligibleQuantity ?? "—"} /{" "}
+                  {progress?.goal ?? selected.goalQuantity}
+                </Text>
+                <Text style={S.muted}>
+                  Unités acceptées et réglées, après retours pris en compte.
+                </Text>
+                {progress?.grant?.status === "GRANTED" ? (
+                  <Button
+                    loading={busy}
+                    onPress={async () => {
+                      setBusy(true);
+                      try {
+                        await post(
+                          `/rewards/${progress.grant.rewardId}/reserve`,
+                          {
+                            grantId: progress.grant.id,
+                            idempotencyKey: reserveKey.current,
+                          },
+                        );
+                        onNotice(
+                          "Votre cadeau attribué est réservé sans débit de points.",
+                        );
+                        reserveKey.current = operationKey();
+                        await refresh();
+                      } catch (e: any) {
+                        setError(e.message);
+                      } finally {
+                        setBusy(false);
+                      }
+                    }}
+                  >
+                    Réserver mon cadeau attribué
+                  </Button>
+                ) : (
+                  <Notice>
+                    {progress?.achieved
+                      ? "Objectif atteint. Votre grossiste doit valider l’attribution après la clôture."
+                      : "Votre progression se met à jour avec les commandes éligibles."}
+                  </Notice>
+                )}
+              </>
+            ) : (
+              <>
+                <Field
+                  label="Quantité à simuler"
+                  keyboardType="number-pad"
+                  value={quantity}
+                  onChangeText={setQuantity}
+                />
+                <Button
+                  loading={busy}
+                  disabled={!quantity || Number(quantity) < 0}
+                  onPress={async () => {
+                    setBusy(true);
+                    try {
+                      setPreview(
+                        await post(`/campaigns/${selected.id}/preview`, {
+                          quantity: Number(quantity),
+                        }),
+                      );
+                    } catch (e: any) {
+                      setError(e.message);
+                    } finally {
+                      setBusy(false);
+                    }
+                  }}
+                >
+                  Vérifier les conditions de l’offre
+                </Button>
+                {preview ? (
+                  <>
+                    <Text style={S.label}>
+                      {preview.tariffCompatible === false
+                        ? "Non cumulable avec votre tarif"
+                        : preview.qualifies
+                          ? "Conditions atteintes"
+                          : "Conditions non atteintes"}
+                    </Text>
+                    <Text style={S.muted}>
+                      {preview.quoteRequired
+                        ? "Prix à confirmer dans votre devis."
+                        : `Marchandises après réduction : ${money(preview.goodsAfter)}`}
+                    </Text>
+                    {preview.freeQuantity > 0 ? (
+                      <Text style={S.text}>
+                        {preview.freeQuantity} produit(s) offert(s), sous
+                        réserve du devis confirmé.
+                      </Text>
+                    ) : null}
+                    <Notice>
+                      {preview.notice ||
+                        "Cette simulation ne modifie pas votre commande. Le grossiste confirme les conditions dans son devis."}
+                    </Notice>
+                  </>
+                ) : null}
+              </>
+            )}
+            <Button
+              variant="secondary"
+              icon="cube-outline"
+              onPress={() => onProduct(selected.productId)}
+            >
+              Voir le produit concerné
+            </Button>
+          </View>
+        </>
+      ) : (
+        <>
+          {campaigns
+            .filter((c) => !kind || c.kind === kind)
+            .map((c) => (
+              <Pressable
+                key={c.id}
+                accessibilityRole="button"
+                onPress={() => choose(c)}
+                style={[
+                  E.panel,
+                  { backgroundColor: c.kind === "DISCOUNT" ? C.pale : C.bg },
+                ]}
+              >
+                <View style={S.between}>
+                  <Icon
+                    name={
+                      c.kind === "CHALLENGE"
+                        ? "trophy-outline"
+                        : "pricetag-outline"
+                    }
+                    color={C.green}
+                    size={26}
+                  />
+                  <Icon name="arrow-forward" />
+                </View>
+                {c.kind === "DISCOUNT" ? (
+                  <Text style={[E.title, { fontSize: 40, lineHeight: 50 }]}>
+                    −{c.discountPercent} %
+                  </Text>
+                ) : null}
+                <Text style={E.title}>{c.title}</Text>
+                <Text style={S.muted}>{c.description}</Text>
+                <Text style={S.small}>Jusqu’au {date(c.endsAt)}</Text>
+              </Pressable>
+            ))}
+          {!campaigns.length ? (
+            <Empty
+              title="Les prochaines offres arrivent ici"
+              message="Votre grossiste publiera ses offres approuvées et leurs conditions."
+              icon="pricetag-outline"
+            />
+          ) : null}
+        </>
+      )}
+    </View>
+  );
 }
-export function Loyalty({session,onNotice}:{session:Session;onNotice:(m:string)=>void}){
- const[wallet,setWallet]=useState<any>(null),[rewards,setRewards]=useState<any[]>([]),[gifts,setGifts]=useState<any[]>([]),[error,setError]=useState(''),[busy,setBusy]=useState(false),[history,setHistory]=useState(false);const keys=useRef<Record<string,string>>({});
- async function refresh(){try{const[w,r,g]=await Promise.all([api('/loyalty'),api<{items:any[]}>('/rewards'),api<{items:any[]}>('/gift-requests')]);setWallet(w);setRewards(r.items);setGifts(g.items);}catch(e:any){setError(e.message);}}
- const live=useEngagementLive(session.user.id,refresh);useEffect(()=>{refresh();const timer=setInterval(refresh,8000);return()=>clearInterval(timer);},[session.user.id]);
- const entryLabels:Record<string,string>={ORDER_EARNED:'Points gagnés sur une commande',ORDER_CORRECTED:'Régularisation après retour',GIFT_RESERVED:'Points réservés pour un cadeau',GIFT_FULFILLED:'Cadeau remis',GIFT_CANCELLED:'Réservation de cadeau annulée'};
- const labels:Record<string,string>={RESERVED:'Réservé',READY:'Prêt à retirer',FULFILLED:'Remis',CANCELLED:'Annulé'};
- return <View style={E.wrap}><View style={S.between}><Text style={E.title}>Mes points et cadeaux</Text><Icon name="gift-outline" color={C.green} size={26}/></View>{error?<Notice error>{error}</Notice>:null}<View style={[E.panel,{backgroundColor:C.pale}]}><Text style={S.muted}>Points disponibles</Text><Text style={[E.title,{fontSize:32,lineHeight:40}]}>{wallet?.available??'—'}</Text><Text style={S.small}>{wallet?.reserved??0} réservés · {wallet?.spent??0} utilisés</Text><Text style={S.small}>{wallet?.rule||'Vos points sont calculés sur les commandes éligibles.'}</Text>{wallet?.correctionDue>0?<Notice error>{wallet.correctionDue} points à régulariser. Contactez votre grossiste avant une nouvelle remise.</Notice>:null}<Button variant="secondary" icon="refresh-outline" loading={busy} onPress={async()=>{setBusy(true);try{setWallet(await post('/loyalty/sync',{}));onNotice('Vos points ont été rapprochés des commandes réglées.');}catch(e:any){setError(e.message);}finally{setBusy(false);}}}>Actualiser mes points</Button></View>{rewards.map(r=><View key={r.id} style={E.panel}><View style={S.row}>{r.imageUrl?<ProductImage uri={r.imageUrl} name={r.name} size={80}/>:<Icon name="gift-outline" color={C.green} size={32}/>}<View style={{flex:1,gap:5}}><Text style={S.label}>{r.name}</Text><Text style={S.muted}>{r.pointsCost} points</Text></View></View><Text style={S.muted}>{r.description}</Text><Text style={S.small}>{r.availableStock>0?'Disponible à la réservation':'Indisponible pour le moment'}</Text><Button loading={busy} disabled={!wallet||wallet.available<r.pointsCost||wallet.correctionDue>0||r.availableStock<1} onPress={async()=>{setBusy(true);setError('');try{keys.current[r.id]??=operationKey();await post(`/rewards/${r.id}/reserve`,{idempotencyKey:keys.current[r.id]});delete keys.current[r.id];await refresh();onNotice('Cadeau réservé. Vos points sont réservés jusqu’à la remise.');}catch(e:any){setError(e.message);}finally{setBusy(false);}}}>Réserver ce cadeau</Button></View>)}{gifts.length?<><Text style={E.title}>Mes demandes de cadeaux</Text>{gifts.map(g=><View key={g.id} style={E.thread}><Icon name="gift-outline" color={C.green}/><View style={{flex:1,gap:4}}><Text style={S.label}>{g.rewardName}</Text><Text style={S.small}>{labels[g.status]||g.status} · {g.pointsCost} points · {date(g.createdAt)}</Text>{g.proofReference?<Text style={S.small}>Preuve : {g.proofReference}</Text>:null}</View></View>)}</>:null}<Button variant="ghost" onPress={()=>setHistory(!history)}>{history?'Masquer':'Voir'} mon historique de points</Button>{history?wallet?.entries?.map((e:any)=><View key={e.id} style={E.thread}><View style={{flex:1,gap:5}}><Text style={S.label}>{entryLabels[e.kind]||'Mouvement de points'}</Text><Text style={S.small}>{date(e.at,true)}</Text></View><Text style={S.label}>{e.availableDelta>0?'+':''}{e.availableDelta} pts</Text></View>):null}</View>;
+export function Loyalty({
+  session,
+  onNotice,
+}: {
+  session: Session;
+  onNotice: (m: string) => void;
+}) {
+  const [wallet, setWallet] = useState<any>(null),
+    [rewards, setRewards] = useState<any[]>([]),
+    [gifts, setGifts] = useState<any[]>([]),
+    [error, setError] = useState(""),
+    [busy, setBusy] = useState(false),
+    [history, setHistory] = useState(false);
+  const keys = useRef<Record<string, string>>({});
+  async function refresh() {
+    try {
+      const [w, r, g] = await Promise.all([
+        api("/loyalty"),
+        api<{ items: any[] }>("/rewards"),
+        api<{ items: any[] }>("/gift-requests"),
+      ]);
+      setWallet(w);
+      setRewards(r.items);
+      setGifts(g.items);
+    } catch (e: any) {
+      setError(e.message);
+    }
+  }
+  const live = useEngagementLive(session.user.id, refresh);
+  useEffect(() => {
+    refresh();
+    const timer = setInterval(refresh, 8000);
+    return () => clearInterval(timer);
+  }, [session.user.id]);
+  const entryLabels: Record<string, string> = {
+    ORDER_EARNED: "Points gagnés sur une commande",
+    ORDER_CORRECTED: "Régularisation après retour",
+    GIFT_RESERVED: "Points réservés pour un cadeau",
+    GIFT_FULFILLED: "Cadeau remis",
+    GIFT_CANCELLED: "Réservation de cadeau annulée",
+  };
+  const labels: Record<string, string> = {
+    RESERVED: "Réservé",
+    READY: "Prêt à retirer",
+    FULFILLED: "Remis",
+    CANCELLED: "Annulé",
+  };
+  return (
+    <View style={E.wrap}>
+      <View style={S.between}>
+        <Text style={E.title}>Mes points et cadeaux</Text>
+        <Icon name="gift-outline" color={C.green} size={26} />
+      </View>
+      {error ? <Notice error>{error}</Notice> : null}
+      <View style={[E.panel, { backgroundColor: C.pale }]}>
+        <Text style={S.muted}>Points disponibles</Text>
+        <Text style={[E.title, { fontSize: 32, lineHeight: 40 }]}>
+          {wallet?.available ?? "—"}
+        </Text>
+        <Text style={S.small}>
+          {wallet?.reserved ?? 0} réservés · {wallet?.spent ?? 0} utilisés
+        </Text>
+        <Text style={S.small}>
+          {wallet?.rule ||
+            "Vos points sont calculés sur les commandes éligibles."}
+        </Text>
+        {wallet?.correctionDue > 0 ? (
+          <Notice error>
+            {wallet.correctionDue} points à régulariser. Contactez votre
+            grossiste avant une nouvelle remise.
+          </Notice>
+        ) : null}
+        <Button
+          variant="secondary"
+          icon="refresh-outline"
+          loading={busy}
+          onPress={async () => {
+            setBusy(true);
+            try {
+              setWallet(await post("/loyalty/sync", {}));
+              onNotice("Vos points ont été rapprochés des commandes réglées.");
+            } catch (e: any) {
+              setError(e.message);
+            } finally {
+              setBusy(false);
+            }
+          }}
+        >
+          Actualiser mes points
+        </Button>
+      </View>
+      {rewards.map((r) => (
+        <View key={r.id} style={E.panel}>
+          <View style={S.row}>
+            {r.imageUrl ? (
+              <ProductImage uri={r.imageUrl} name={r.name} size={80} />
+            ) : (
+              <Icon name="gift-outline" color={C.green} size={32} />
+            )}
+            <View style={{ flex: 1, gap: 5 }}>
+              <Text style={S.label}>{r.name}</Text>
+              <Text style={S.muted}>{r.pointsCost} points</Text>
+            </View>
+          </View>
+          <Text style={S.muted}>{r.description}</Text>
+          <Text style={S.small}>
+            {r.availableStock > 0
+              ? "Disponible à la réservation"
+              : "Indisponible pour le moment"}
+          </Text>
+          <Button
+            loading={busy}
+            disabled={
+              !wallet ||
+              wallet.available < r.pointsCost ||
+              wallet.correctionDue > 0 ||
+              r.availableStock < 1
+            }
+            onPress={async () => {
+              setBusy(true);
+              setError("");
+              try {
+                keys.current[r.id] ??= operationKey();
+                await post(`/rewards/${r.id}/reserve`, {
+                  idempotencyKey: keys.current[r.id],
+                });
+                delete keys.current[r.id];
+                await refresh();
+                onNotice(
+                  "Cadeau réservé. Vos points sont réservés jusqu’à la remise.",
+                );
+              } catch (e: any) {
+                setError(e.message);
+              } finally {
+                setBusy(false);
+              }
+            }}
+          >
+            Réserver ce cadeau
+          </Button>
+        </View>
+      ))}
+      {gifts.length ? (
+        <>
+          <Text style={E.title}>Mes demandes de cadeaux</Text>
+          {gifts.map((g) => (
+            <View key={g.id} style={E.thread}>
+              <Icon name="gift-outline" color={C.green} />
+              <View style={{ flex: 1, gap: 4 }}>
+                <Text style={S.label}>{g.rewardName}</Text>
+                <Text style={S.small}>
+                  {labels[g.status] || g.status} · {g.pointsCost} points ·{" "}
+                  {date(g.createdAt)}
+                </Text>
+                {g.proofReference ? (
+                  <Text style={S.small}>Preuve : {g.proofReference}</Text>
+                ) : null}
+              </View>
+            </View>
+          ))}
+        </>
+      ) : null}
+      <Button variant="ghost" onPress={() => setHistory(!history)}>
+        {history ? "Masquer" : "Voir"} mon historique de points
+      </Button>
+      {history
+        ? wallet?.entries?.map((e: any) => (
+            <View key={e.id} style={E.thread}>
+              <View style={{ flex: 1, gap: 5 }}>
+                <Text style={S.label}>
+                  {entryLabels[e.kind] || "Mouvement de points"}
+                </Text>
+                <Text style={S.small}>{date(e.at, true)}</Text>
+              </View>
+              <Text style={S.label}>
+                {e.availableDelta > 0 ? "+" : ""}
+                {e.availableDelta} pts
+              </Text>
+            </View>
+          ))
+        : null}
+    </View>
+  );
 }
-const E=StyleSheet.create({wrap:{gap:20,paddingTop:16,paddingBottom:12},title:{fontFamily:'Inter',fontSize:22,fontWeight:'700',lineHeight:30,color:'#151917'},panel:{padding:20,borderRadius:16,backgroundColor:'#F4F6F4',gap:14},thread:{paddingVertical:18,borderBottomWidth:1,borderColor:'#E7EBE7',flexDirection:'row',alignItems:'center',gap:14},avatar:{width:48,height:48,borderRadius:24,backgroundColor:'#D9EDDF',alignItems:'center',justifyContent:'center'},bubble:{alignSelf:'flex-start',maxWidth:'92%',backgroundColor:'#F4F6F4',padding:14,borderRadius:12,gap:7}});
+const E = StyleSheet.create({
+  wrap: { gap: 20, paddingTop: 16, paddingBottom: 12 },
+  title: {
+    fontFamily: "Inter",
+    fontSize: 22,
+    fontWeight: "700",
+    lineHeight: 30,
+    color: "#151917",
+  },
+  panel: { padding: 20, borderRadius: 16, backgroundColor: "#F4F6F4", gap: 14 },
+  thread: {
+    paddingVertical: 18,
+    borderBottomWidth: 1,
+    borderColor: "#E7EBE7",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 14,
+  },
+  avatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "#D9EDDF",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  bubble: {
+    alignSelf: "flex-start",
+    maxWidth: "92%",
+    backgroundColor: "#F4F6F4",
+    padding: 14,
+    borderRadius: 12,
+    gap: 7,
+  },
+});

@@ -36,6 +36,7 @@ builder.Services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(P
 builder.Services.AddScoped<PasswordHasher<Account>>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<CatalogService>();
+builder.Services.AddScoped<PricingService>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<AdminService>();
 builder.Services.AddScoped<OrderDocument>();
@@ -69,6 +70,13 @@ app.UseCors();
 app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
+app.Use(async (context, next) => {
+    var expectedActor = context.Request.Headers["X-Toushir-Actor"].ToString().Trim();
+    if (context.User.Identity?.IsAuthenticated == true && expectedActor.Length > 0)
+        Check.That(expectedActor.Length <= 100 && expectedActor == Actor.From(context).Id,
+            "Le compte actif a changé. Rouvrez le panier avant de continuer.", "ACTOR_CHANGED", 403);
+    await next();
+});
 var catalogDir = Path.GetFullPath(builder.Configuration["Catalog:Directory"] ?? Path.Combine(app.Environment.ContentRootPath, "../catalog"));
 if (Directory.Exists(Path.Combine(catalogDir, "images"))) app.UseStaticFiles(new StaticFileOptions { FileProvider = new PhysicalFileProvider(Path.Combine(catalogDir, "images")), RequestPath = "/catalog/images", OnPrepareResponse = c => c.Context.Response.Headers.CacheControl = "public,max-age=604800" });
 var staticTypes = new FileExtensionContentTypeProvider();
@@ -152,6 +160,7 @@ app.MapCommerceOidc();
 app.MapCommerceOperations(secure);
 app.MapRouteOperations(secure);
 app.MapEngagementEndpoints(secure);
+secure.MapPricingEndpoints();
 app.MapWarehouseEndpoints(secure);
 app.MapHub<CommerceHub>("/hubs/commerce", o => o.CloseOnAuthenticationExpiration = true);
 app.MapFallback("/mobile/{*path:nonfile}", async c => { var mobileIndex = Path.Combine(app.Environment.WebRootPath, "mobile", "index.html"); if (File.Exists(mobileIndex)) { c.Response.ContentType = "text/html"; await c.Response.SendFileAsync(mobileIndex); } else { c.Response.StatusCode = 404; await c.Response.WriteAsync("Mobile export not installed."); } });

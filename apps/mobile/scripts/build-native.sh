@@ -12,11 +12,13 @@ if [ -n "${TOUSHIR_SIGNING_STORE_FILE:-}" ]; then
  signing_path="$(node -e 'process.stdout.write(require("fs").realpathSync(process.env.TOUSHIR_SIGNING_STORE_FILE))')"
  case "$signing_path" in "$PWD/android/"*|"$PWD/ios/"*) echo 'Keep the private keystore outside generated android/ios directories before building.' >&2; exit 2;; esac
 fi
-export CMAKE_BUILD_PARALLEL_LEVEL=2
+build_workers="${TOUSHIR_BUILD_WORKERS:-1}"
+java_heap="${TOUSHIR_JAVA_HEAP:-1024m}"
+export CMAKE_BUILD_PARALLEL_LEVEL="$build_workers"
 ./node_modules/.bin/expo prebuild --platform "$platform" --no-install
 node scripts/mobile-verify.cjs --native "$platform"
 if [ "$platform" = android ]; then
- (cd android && ./gradlew assembleRelease --no-daemon --console=plain --max-workers=2 -PreactNativeArchitectures=arm64-v8a -Dorg.gradle.parallel=false -Dorg.gradle.jvmargs='-Xmx2048m -XX:MaxMetaspaceSize=512m')
+ (cd android && ./gradlew assembleRelease --no-daemon --console=plain --max-workers="$build_workers" -PreactNativeArchitectures=arm64-v8a -Dorg.gradle.parallel=false -Dorg.gradle.jvmargs="-Xmx$java_heap -XX:MaxMetaspaceSize=384m")
  mkdir -p build/downloads
  cp android/app/build/outputs/apk/release/app-release.apk "build/downloads/toushir-${role}.apk"
  echo "Built build/downloads/toushir-${role}.apk"

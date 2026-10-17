@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Toushir.Wholesale;
 
 /// <summary>Contextual communication, campaigns and immutable reward ledger. Mutations run in the parent's database transaction.</summary>
-public sealed partial class EngagementService(WholesaleDb db, OrderService orders, WarehouseService warehouse)
+public sealed partial class EngagementService(WholesaleDb db, OrderService orders, WarehouseService warehouse, PricingService pricing)
 {
     private static string Hash(object value) => Tokens.Hash(JsonSerializer.Serialize(value));
     private static string Key(string value) => Check.Text(value, 100, "Clé d'idempotence");
@@ -334,27 +334,27 @@ public sealed partial class EngagementService(WholesaleDb db, OrderService order
         var c = await VisibleCampaign(actor, id);
         Check.That(x.Quantity is >= 0 and <= 1000000, "Quantité invalide.");
         var offer = await db.Offers.AsNoTracking().FirstOrDefaultAsync(o => o.WorkspaceId == actor.WorkspaceId && o.ProductId == c.ProductId);
-        var now = DateTimeOffset.UtcNow;
-        var active = c.Status == "PUBLISHED" && c.StartsAt <= now && now <= c.EndsAt;
-        var qualifies = active && x.Quantity >= c.MinimumQuantity;
-        var goods = offer?.Price * x.Quantity;
-        var discount = qualifies && c.Kind == "DISCOUNT" && goods.HasValue ? decimal.Round(goods.Value * c.DiscountPercent / 100m, 2, MidpointRounding.AwayFromZero) : 0;
-        return new
-        {
-            campaign = c,
-            active,
-            qualifies,
-            quantity = x.Quantity,
-            goodsBefore = goods,
-            discount,
-            goodsAfter = goods - discount,
+        var book = await pricing.LoadBook(actor.WorkspaceId, actor.Role == "MERCHANT" ? actor.Id : null);
+        var decision = book.Resolve(c.ProductId, Math.Max(1, x.Quantity), offer);
+        var active = c.Status == "PUBLISHED" && c.StartsAt <= book.At && book.At <= c.EndsAt;
+        var tariffCompatible = c.Kind == "CHALLENGE" || decision.RuleId.Length == 0 || decision.AllowCampaigns;
+        var qualifies = active && x.Quantity >= c.MinimumQuantity && tariffCompatible;
+        var price = decision.UnitPrice;
+        var applied = price;
+        var pricingIssue = "";
+        if (qualifies && price.HasValue && c.Kind == "DISCOUNT")
+            try { applied = CampaignPricing.Applied(c, price.Value, x.Quantity); }
+            catch (ApiFailure error) when (error.Code == "PROMOTION_PRICE_INVALID") { pricingIssue = error.Code; qualifies = false; }
+        var goods = price * x.Quantity;
+        var discount = qualifies && price.HasValue && applied.HasValue ? (price.Value - applied.Value) * x.Quantity : 0m;
+        return new { campaign = c, active, qualifies, tariffCompatible, pricingIssue,
+            quantity = x.Quantity, goodsBefore = goods, discount, goodsAfter = goods - discount,
+            baseUnitPrice = price, appliedUnitPrice = applied, pricingSource = decision.Source,
             freeQuantity = qualifies && c.Kind == "FREE_GOODS" ? c.GiftQuantity : 0,
-            maxGiftsPerOrder = 1,
-            currency = "DZD",
-            quoteRequired = offer?.Price == null,
-            pointsDebited = 0,
-            notice = "Simulation de devis; aucune commande existante modifiée."
-        };
+            maxGiftsPerOrder = 1, currency = "DZD", quoteRequired = price == null || pricingIssue.Length > 0, pointsDebited = 0,
+            notice = !tariffCompatible ? "Votre tarif ne permet pas de cumuler cette campagne. Le prix de votre panier reste celui de votre contrat."
+                : pricingIssue.Length > 0 ? "Cette remise doit être revue pour ce prix unitaire. Demandez un devis."
+                : "Simulation de devis; aucune commande existante modifiée. Une seule campagne est retenue par produit." };
     }
     private async Task<int> EligibleCampaignUnits(Campaign c, string merchant)
     {

@@ -1,0 +1,69 @@
+{
+  "at": "2026-10-17T11:25:57.546425+00:00",
+  "scope": "Compiled sequentially with one worker/1GB Java; no emulator or native runtime launched. Browser workflow tests are separate.",
+  "nativeRuntimeExecutedForTheseBuilds": false,
+  "packages": {
+    "merchant": {
+      "apiOrigin": "https://toushir-commerce-staging.onrender.com",
+      "sha256": "7c162a4f3485b72fa61725a0f7d55933ad38766678631ecc39d6df9ba66a4b87",
+      "packageId": "com.toushir.commerce",
+      "applicationLabel": "Toushir Commerce",
+      "bytes": 33748195,
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "minimumSdk": 24,
+      "targetSdk": 36,
+      "versionCode": 2,
+      "versionName": "1.1.0",
+      "certificateSubject": "CN=ToushirPreview",
+      "certificateSha256": "c7fb5feb8c7631a4d0ed902d033877abf38f43487a2293fc2d1dd85645c63b8e",
+      "signatureVerified": true,
+      "channel": "preview",
+      "pricingConsentProtocol": 1
+    },
+    "driver": {
+      "apiOrigin": "https://toushir-commerce-staging.onrender.com",
+      "sha256": "00316bfbee46c959d27552e4e381c6bd1eadb6c67b81cd79419421fce912cc12",
+      "packageId": "com.toushir.livreur",
+      "applicationLabel": "Toushir Livreur",
+      "bytes": 33723579,
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "minimumSdk": 24,
+      "targetSdk": 36,
+      "versionCode": 2,
+      "versionName": "1.1.0",
+      "certificateSubject": "CN=ToushirPreview",
+      "certificateSha256": "c7fb5feb8c7631a4d0ed902d033877abf38f43487a2293fc2d1dd85645c63b8e",
+      "signatureVerified": true,
+      "channel": "preview",
+      "pricingConsentProtocol": 1
+    }
+  },
+  "sourceFilesSha256": {
+    "apps/mobile/App.tsx": "47bfd699f4169e03125de0d452e3ade32ed60616ec64e233b7f008a1b388c302",
+    "apps/mobile/app.config.js": "487085c893722852c2ce84bc6544214f0ae3f8970f080690531cf8f7d6d3680a",
+    "apps/mobile/app.json": "baf3994af03dbdca3b2290fe487f45d42659fd3370d03588ebbfb28ea0d90c17",
+    "apps/mobile/src/Admin.tsx": "d6f848da82fe57f6fb5d26acdc0d2895ff8d579f033da2cca86f55d57e0021ee",
+    "apps/mobile/src/Analytics.tsx": "961a60db18da68ee729ddf2acc90b145b91fc8c85ed1c1abe4693d44f92feb1a",
+    "apps/mobile/src/Claims.tsx": "354dc89c8208e5cd819ecc010a9a06fc42fccb8f2f04b073d63134505009a61f",
+    "apps/mobile/src/Driver.tsx": "79ea529241a57a7a31c26585870e9af9afd646551c5c27b943abb1ee29e9c4aa",
+    "apps/mobile/src/Engagement.tsx": "b4cc9b4923fd31c38b67992ef03b0db96d1e2b779d6cfbba39e13472ac041ee2",
+    "apps/mobile/src/Invitations.tsx": "92ff75f354771b6a1d4dbd2f976165c37b9f77961e857a02330fa2c22519c1d7",
+    "apps/mobile/src/Join.tsx": "0aee245b7855f59ef6d4bd2d689614e5f922888cdb093c9db470c53af557b427",
+    "apps/mobile/src/Merchant.tsx": "fd8fb6e8e247702985bdd017761e9bdd4a0848a128e4f9149d9fb4afd27a1512",
+    "apps/mobile/src/MerchantAccount.tsx": "187563b5aef92a7222f865aebb8af46a130885c5989034900173ecc43bdfb896",
+    "apps/mobile/src/MerchantDelivery.tsx": "aeba6e87da3c38fd16a028e6723ed0b6651e929fe66096f27ac18eff55d6caa3",
+    "apps/mobile/src/OrderGifts.tsx": "9411b3d9539b4c7d16442b7a64613f0be4dc61f39c93fd4c0f22994910662686",
+    "apps/mobile/src/api.ts": "376809ef0908fb4425595f19c41390f3f567b32087eee423035d080989d79358",
+    "apps/mobile/src/components.tsx": "5427294dad95ee7f5085853ce36276dfa159629caf92af9bc147a5414082b0fb",
+    "apps/mobile/src/courier-api.ts": "ec88bb0192f76b689b207b3718ce991dab52138f9c783d986624ff66ab588591",
+    "apps/mobile/src/oidc.ts": "923bd1b1da9b36b1c8e33a8a7d753bb9364fb2463e0cf5f1c950a39be6c65c7b",
+    "apps/mobile/src/pending-cash.ts": "10b16c3cb891dea9a2c7eb2479c357e539c41e464e25f21d77c6f1449a510dd1",
+    "apps/mobile/src/realtime.ts": "0b1e1193f4b37d4514aeeb5f614b7e580454ab8eb02dbe439053058cef73ae34",
+    "apps/mobile/src/runtime.ts": "5fa230298796ad85de56837f8189c9a31f4f7bdb1903a398d391a65c865ae9d9",
+    "apps/mobile/src/theme.ts": "13ffd4da839dd6f8aca6b2021d70ecca39ac0ba2eb92492a6938304420b13bae"
+  }
+}

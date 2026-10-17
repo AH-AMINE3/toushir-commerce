@@ -2,16 +2,18 @@
   "expo": {
     "name": "Toushir Gros",
     "slug": "toushir-gros",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "scheme": "toushirgros",
     "userInterfaceStyle": "light",
     "icon": "./assets/icon.png",
     "ios": {
+      "buildNumber": "2",
       "supportsTablet": true,
       "bundleIdentifier": "com.toushir.gros"
     },
     "android": {
+      "versionCode": 2,
       "package": "com.toushir.gros",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",

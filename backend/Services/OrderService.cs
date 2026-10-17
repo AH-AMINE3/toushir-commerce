@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Toushir.Wholesale;
 
-public class OrderService(WholesaleDb db, CatalogService catalog, IConfiguration config, RealtimeChanges changes, PromotionsService promotions, WarehouseService warehouse)
+public class OrderService(WholesaleDb db, CatalogService catalog, RealtimeChanges changes, PromotionsService promotions, WarehouseService warehouse, PricingService pricing)
 {
     public void Audit(Actor a, string action, string id, string details = "")
     {
@@ -101,6 +101,7 @@ public class OrderService(WholesaleDb db, CatalogService catalog, IConfiguration
             credits = credits.Select(x => new { x.Id, x.ClaimId, x.Amount, x.Reason, x.At, x.Actor }),
             creditTotal = credits.Sum(x => x.Amount),
             promotions = await promotions.View(a, o.Id),
+            pricing = await pricing.CurrentPricing(a, o),
             o.ReservationHeld,
             isDemo = w!.IsDemo
         };
@@ -158,10 +159,17 @@ public class OrderService(WholesaleDb db, CatalogService catalog, IConfiguration
         }
         var address = await db.Addresses.AsNoTracking().FirstOrDefaultAsync(x => x.Id == input.AddressId && x.WorkspaceId == a.WorkspaceId && x.AccountId == a.Id);
         Check.That(address != null, "Sélectionnez une adresse de votre boutique.", "ADDRESS_REQUIRED");
+        CartPricingPlan? direct = null;
+        if (mode == "PLACE_ORDER")
+        {
+            direct = await catalog.BuildQuote(a, lines);
+            Check.That(direct.View.CanOrder, "Le prix, le stock, le conditionnement et les frais doivent être confirmés. Demandez un devis.", "QUOTE_REQUIRED", 409);
+            pricing.RequireConsent(a, a.Id, input.PricingToken, direct.Fingerprint);
+        }
         var ids = lines.Select(x => x.ProductId).ToList();
-        var ps = await db.Products.AsNoTracking().Where(x => x.IsCatalogActive).Where(x => ids.Contains(x.Id)).ToDictionaryAsync(x => x.Id);
+        var ps = direct?.Products ?? await db.Products.AsNoTracking().Where(x => x.IsCatalogActive).Where(x => ids.Contains(x.Id)).ToDictionaryAsync(x => x.Id);
         Check.That(ps.Count == lines.Count, "Un produit de cette demande est introuvable.", "PRODUCT_NOT_FOUND", 404);
-        var os = await db.Offers.Where(x => x.WorkspaceId == a.WorkspaceId && ids.Contains(x.ProductId)).ToDictionaryAsync(x => x.ProductId);
+        var os = direct?.Offers ?? await db.Offers.AsNoTracking().Where(x => x.WorkspaceId == a.WorkspaceId && ids.Contains(x.ProductId)).ToDictionaryAsync(x => x.ProductId);
         Check.That(os.Values.All(x => x.IsActive), "Un produit est désactivé.");
         var order = new PurchaseOrder { WorkspaceId = a.WorkspaceId, AccountId = a.Id, Number = $"TS-{DateTimeOffset.UtcNow:yyMMdd}-{Tokens.New()[..8].ToUpperInvariant()}", IdempotencyKey = key, RequestHash = hash, AddressJson = JsonSerializer.Serialize(new { id = address!.Id, label = address.Label, wilaya = address.Wilaya, commune = address.Commune, street = address.Street }), Note = Check.Text(input.Note, 1500, "Note", false) };
         foreach (var l in lines)
@@ -170,7 +178,7 @@ public class OrderService(WholesaleDb db, CatalogService catalog, IConfiguration
             var o = os.GetValueOrDefault(l.ProductId);
             if (mode == "PLACE_ORDER")
             {
-                Check.That(o?.OfferApproved == true && o.IsActive && o.Price != null && o.OnHand != null, "Le prix et le stock doivent être confirmés. Demandez un devis.", "QUOTE_REQUIRED", 409);
+                Check.That(o?.OfferApproved == true && o.IsActive && o.OnHand != null, "Le prix et le stock doivent être confirmés. Demandez un devis.", "QUOTE_REQUIRED", 409);
                 Check.That(l.Quantity >= o!.MinimumQuantity && l.Quantity % o.CaseSize == 0, "La quantité ne respecte pas le conditionnement.", "PACK_SIZE");
             }
             order.Items.Add(new()
@@ -181,17 +189,24 @@ public class OrderService(WholesaleDb db, CatalogService catalog, IConfiguration
                 ImageUrl = p.ImageUrl,
                 RequestedQuantity = l.Quantity,
                 Quantity = l.Quantity,
-                UnitPrice = mode == "PLACE_ORDER" ? o!.Price : null,
-                LineTotal = mode == "PLACE_ORDER" ? o!.Price * l.Quantity : null,
+                UnitPrice = mode == "PLACE_ORDER" ? direct!.Prices.Lines[l.ProductId].BaseUnitPrice : null,
+                LineTotal = mode == "PLACE_ORDER" ? direct!.Prices.Lines[l.ProductId].BaseUnitPrice * l.Quantity : null,
                 CaseSize = o?.CaseSize ?? 1
             });
         }
         if (mode == "PLACE_ORDER")
         {
-            var fee = config.GetValue<decimal?>("Wholesale:DeliveryFee");
+            var fee = direct!.View.DeliveryFee;
             Check.That(fee != null, "Le tarif de livraison doit être confirmé. Demandez un devis.", "QUOTE_REQUIRED", 409);
             Check.Money(fee!.Value, "Frais de livraison");
-            await promotions.ApplyDirectOrder(a, order);
+            await promotions.ApplyDirectOrder(a, order, direct.Prices.CampaignBlockedProductIds, direct.Prices.At);
+            foreach (var item in order.Items)
+            {
+                var expected = direct.Promotions.GetValueOrDefault(item.ProductId);
+                Check.That(expected != null && item.UnitPrice == expected.AppliedUnitPrice,
+                    "Les conditions du panier ont changé. Vérifiez le prix avant de confirmer.", "PRICE_CONFIRMATION_REQUIRED", 409);
+            }
+            pricing.Capture(a, order, direct.Prices);
             order.Status = "SUBMITTED";
             order.Subtotal = order.Items.Sum(x => x.LineTotal ?? 0);
             order.DeliveryFee = fee;
@@ -243,10 +258,12 @@ public class OrderService(WholesaleDb db, CatalogService catalog, IConfiguration
         Check.That(o.Status is "REQUESTED" or "QUOTED", "Cette demande ne peut plus être chiffrée.", "INVALID_TRANSITION", 409);
         Check.That(input.ValidUntil > DateTimeOffset.UtcNow.AddMinutes(1) && input.ValidUntil <= DateTimeOffset.UtcNow.AddDays(30), "La validité du devis doit être comprise entre une minute et 30 jours.");
         Check.Money(input.DeliveryFee, "Frais de livraison");
-        Check.That(input.Items != null && input.Items.Count == o.Items.Count && input.Items.Select(x => x.ProductId).Distinct().Count() == o.Items.Count, "Le devis doit préciser chaque ligne, sans doublon.");
+        Check.That(input.Items != null && input.Items.All(x => x != null) && input.Items.Count == o.Items.Count && input.Items.Select(x => x.ProductId).Distinct().Count() == o.Items.Count, "Le devis doit préciser chaque ligne, sans doublon.");
+        var pricePlan = await pricing.PlanQuote(a, o, input.Items, input.UseTariffPrices, input.PricingOverrideReason);
         input = input with
         {
-            Items = await promotions.ApplyQuote(a, o, input.Items, campaignIds: input.CampaignIds)
+            Items = await promotions.ApplyQuote(a, o, pricePlan.Items, campaignIds: input.CampaignIds,
+                blockedProductIds: pricePlan.CampaignBlockedProductIds, at: pricePlan.At)
         };
         foreach (var l in o.Items)
         {
@@ -292,6 +309,7 @@ public class OrderService(WholesaleDb db, CatalogService catalog, IConfiguration
         o.QuoteValidUntil = input.ValidUntil.ToUniversalTime();
         o.AdminNote = Check.Text(input.Note, 1500, "Note grossiste", false);
         o.Status = "QUOTED";
+        pricing.Capture(a, o, pricePlan);
         Event(a, o, "QUOTED", $"Devis version {o.QuoteVersion}, valable jusqu'au {o.QuoteValidUntil:O}. Aucun stock réservé avant acceptation.");
         await db.SaveChangesAsync();
         return await View(a, o);

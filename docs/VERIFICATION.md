@@ -12,6 +12,8 @@ API_URL=http://127.0.0.1:5860 node backend/scripts/verify-oidc.mjs
 python3 scripts/test-engagement.py http://127.0.0.1:5860
 python3 scripts/test-warehouse.py http://127.0.0.1:5860
 python3 scripts/test-supplier-documents.py http://127.0.0.1:5860
+# Pricing suite requires a separately started test API with Wholesale__DeliveryFee=0.
+python3 scripts/test-pricing.py http://127.0.0.1:5860
 ```
 
 `VERIFICATION_REPORT` redirects each Node report; `TOUSHIR_TEST_RESULTS` redirects the Python report. Reports omit credentials/capabilities and record actual assertions, URL and time.
@@ -24,6 +26,7 @@ python3 scripts/test-supplier-documents.py http://127.0.0.1:5860
 | OIDC | Discovery/JWKS, exact redirects, S256, antiforgery login, replay, signed tokens, refresh/revocation |
 | Engagement | Supplier receipts/inspection, messages/consent, promotions and points/reward concurrency |
 | Warehouse | Explicit counted lots, FEFO, scan waves, concurrent last-unit reservation, quarantine and identified physical returns |
+| Pricing | Independent customer tariffs, protected reviewed-basket consent, actual direct checkout, frozen quote history, campaign compatibility and centime rounding |
 | Production | Explicit owner, real restart and backup restoration, isolated PostgreSQL migration SQL, static routing, distribution and rate limits |
 
 Browser evidence checks navigation, real forms, secure sign-in, errors, responsive and dark layouts. Native evidence records variant, API origin, build, device/simulator and executed interactions. Hosted tests must run on the final HTTPS origin and persistent database. Compilation is not native execution; local passes are not hosted passes.

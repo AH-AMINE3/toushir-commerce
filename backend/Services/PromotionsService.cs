@@ -37,7 +37,28 @@ public sealed class PromotionsService(WholesaleDb db, WarehouseService warehouse
             currency = "DZD"
         };
     }
-    public async Task<List<QuoteLineInput>> ApplyQuote(Actor actor, PurchaseOrder o, List<QuoteLineInput> lines, int? quoteVersion = null, IReadOnlyList<string>? campaignIds = null)
+    private async Task<List<Campaign>> ActiveCampaigns(string workspaceId, DateTimeOffset at)
+        => (await db.Campaigns.AsNoTracking().Where(x => x.WorkspaceId == workspaceId && x.Status == "PUBLISHED" && x.Kind != "CHALLENGE").ToListAsync())
+            .Where(x => x.StartsAt <= at && at <= x.EndsAt).ToList();
+
+    public async Task<List<CampaignPricePreview>> Preview(string workspaceId, List<QuoteLineInput> lines,
+        IReadOnlySet<string> blockedProductIds, DateTimeOffset at)
+    {
+        var campaigns = (await ActiveCampaigns(workspaceId, at)).Where(x => !blockedProductIds.Contains(x.ProductId)).ToList();
+        return lines.Select(line => {
+            var campaign = CampaignPricing.Select(campaigns, line.ProductId, line.Quantity);
+            var applied = line.UnitPrice; var issue = "";
+            if (campaign != null)
+                try { applied = CampaignPricing.Applied(campaign, line.UnitPrice, line.Quantity); }
+                catch (ApiFailure error) when (error.Code == "PROMOTION_PRICE_INVALID") { issue = error.Code; }
+            return new CampaignPricePreview(line.ProductId, line.UnitPrice, applied,
+                campaign?.Id ?? "", campaign?.Version ?? 0, campaign?.Title ?? "", campaign?.Kind ?? "",
+                campaign?.MinimumQuantity ?? 0, campaign?.GiftProductId ?? "", campaign?.Kind == "FREE_GOODS" ? campaign.GiftQuantity : 0, issue);
+        }).ToList();
+    }
+
+    public async Task<List<QuoteLineInput>> ApplyQuote(Actor actor, PurchaseOrder o, List<QuoteLineInput> lines, int? quoteVersion = null,
+        IReadOnlyList<string>? campaignIds = null, IReadOnlySet<string>? blockedProductIds = null, DateTimeOffset? at = null)
     {
         var version = quoteVersion ?? o.QuoteVersion + 1;
         var old = await db.PromotionSnapshots.Where(x => x.OrderId == o.Id && x.WorkspaceId == actor.WorkspaceId && x.Status == "QUOTED").ToListAsync();
@@ -47,27 +68,28 @@ public sealed class PromotionsService(WholesaleDb db, WarehouseService warehouse
             p.Version++;
             Event(actor, p, "QUOTE_SUPERSEDED", "superseded:" + version);
         }
-        var now = DateTimeOffset.UtcNow;
-        var campaigns = (await db.Campaigns.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId && x.Status == "PUBLISHED" && x.Kind != "CHALLENGE").ToListAsync()).Where(x => x.StartsAt <= now && now <= x.EndsAt).ToList();
+        var campaigns = await ActiveCampaigns(actor.WorkspaceId, at ?? DateTimeOffset.UtcNow);
         if (campaignIds != null)
         {
             Check.That(campaignIds.Count <= 100 && campaignIds.Distinct().Count() == campaignIds.Count, "Choix de campagnes invalide.");
+            Check.That(!campaigns.Any(c => campaignIds.Contains(c.Id) && blockedProductIds?.Contains(c.ProductId) == true),
+                "Le tarif retenu interdit le cumul avec cette campagne.", "TARIFF_CAMPAIGN_COMBINATION", 409);
             Check.That(campaignIds.All(id => campaigns.Any(c => c.Id == id && lines.Any(l => l.ProductId == c.ProductId && l.Quantity >= c.MinimumQuantity))), "Une campagne sélectionnée est expirée, hors périmètre ou sous le seuil.", "CAMPAIGN_NOT_APPLICABLE", 409);
             campaigns = campaigns.Where(c => campaignIds.Contains(c.Id)).ToList();
             Check.That(campaigns.GroupBy(c => c.ProductId).All(g => g.Count() <= 1), "Choisissez une seule mécanique par produit. Aucun cumul implicite.", "CAMPAIGN_COMBINATION", 409);
         }
+        campaigns = campaigns.Where(c => blockedProductIds?.Contains(c.ProductId) != true).ToList();
         var result = new List<QuoteLineInput>();
         foreach (var q in lines)
         {
             Check.Money(q.UnitPrice, "Prix de base");
-            var c = campaigns.Where(x => x.ProductId == q.ProductId && q.Quantity >= x.MinimumQuantity).OrderByDescending(x => x.Kind == "DISCOUNT" ? x.DiscountPercent : -1m).ThenBy(x => x.Id, StringComparer.Ordinal).FirstOrDefault();
+            var c = CampaignPricing.Select(campaigns, q.ProductId, q.Quantity);
             if (c == null)
             {
                 result.Add(q);
                 continue;
             }
-            var applied = c.Kind == "DISCOUNT" ? decimal.Round(q.UnitPrice * (100m - c.DiscountPercent) / 100m, 2, MidpointRounding.AwayFromZero) : q.UnitPrice;
-            Check.That(applied > 0 || q.Quantity == 0, "La remise produit un prix nul. Utilisez une gratuité explicite.", "PROMOTION_PRICE_INVALID", 409);
+            var applied = CampaignPricing.Applied(c, q.UnitPrice, q.Quantity);
             var snapshot = new PromotionSnapshot { WorkspaceId = actor.WorkspaceId, OrderId = o.Id, QuoteVersion = version, CampaignId = c.Id, CampaignVersion = c.Version, CampaignTitle = c.Title, Kind = c.Kind, ProductId = q.ProductId, QuotedQuantity = q.Quantity, MinimumQuantity = c.MinimumQuantity, BaseUnitPrice = q.UnitPrice, AppliedUnitPrice = applied, DiscountPercent = c.DiscountPercent, QuotedDiscountMinor = Minor((q.UnitPrice - applied) * q.Quantity), EffectiveDiscountMinor = Minor((q.UnitPrice - applied) * q.Quantity) };
             if (c.Kind == "FREE_GOODS")
             {
@@ -88,9 +110,10 @@ public sealed class PromotionsService(WholesaleDb db, WarehouseService warehouse
         }
         return result;
     }
-    public async Task ApplyDirectOrder(Actor actor, PurchaseOrder o)
+    public async Task ApplyDirectOrder(Actor actor, PurchaseOrder o, IReadOnlySet<string>? blockedProductIds = null, DateTimeOffset? at = null)
     {
-        var lines = await ApplyQuote(actor, o, o.Items.Select(x => new QuoteLineInput(x.ProductId, x.Quantity, x.UnitPrice ?? 0, x.CaseSize, null)).ToList(), o.QuoteVersion);
+        var lines = await ApplyQuote(actor, o, o.Items.Select(x => new QuoteLineInput(x.ProductId, x.Quantity, x.UnitPrice ?? 0, x.CaseSize, null)).ToList(), o.QuoteVersion,
+            blockedProductIds: blockedProductIds, at: at);
         foreach (var line in o.Items)
         {
             var q = lines.First(x => x.ProductId == line.ProductId);

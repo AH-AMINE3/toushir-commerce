@@ -39,7 +39,8 @@ jobs:
           TOUSHIR_WAREHOUSE_RESULTS: warehouse-verification.json
         run: |
           # A fresh process per suite preserves public demo rate limits.
-          for suite in api operations routes oidc engagement warehouse supplier-documents; do
+          for suite in api operations routes oidc engagement warehouse supplier-documents pricing; do
+            if [ "$suite" = pricing ]; then export Wholesale__DeliveryFee=0; else unset Wholesale__DeliveryFee; fi
             export DataPath="$RUNNER_TEMP/toushir-$suite"
             dotnet run --project backend/Toushir.Wholesale.csproj --no-build --urls "$API_URL" > "$RUNNER_TEMP/api-$suite.log" 2>&1 &
             API_PID=$!
@@ -51,6 +52,8 @@ jobs:
             curl --fail --silent "$API_URL/api/health"
             if [ "$suite" = engagement ]; then
               python3 scripts/test-engagement.py "$API_URL"
+            elif [ "$suite" = pricing ]; then
+              python3 scripts/test-pricing.py "$API_URL"
             elif [ "$suite" = supplier-documents ]; then
               python3 scripts/test-supplier-documents.py "$API_URL"
             elif [ "$suite" = warehouse ]; then
@@ -61,6 +64,11 @@ jobs:
             kill "$API_PID"
             wait "$API_PID" || true
           done
+      - name: Verify production configuration and backup restoration
+        env:
+          DOTNET_BIN: dotnet
+          PYTHON_BIN: python3
+        run: node backend/scripts/verify-production.mjs
       - name: Install browser verifier
         run: |
           npm --prefix tests/browser ci
@@ -72,7 +80,8 @@ jobs:
           ASPNETCORE_ENVIRONMENT: Development
           WEB_URL: http://127.0.0.1:5860
         run: |
-          for suite in smoke identity business warehouse supplier mobile; do
+          for suite in smoke identity business warehouse supplier mobile pricing; do
+            if [ "$suite" = pricing ]; then export Wholesale__DeliveryFee=0; else unset Wholesale__DeliveryFee; fi
             export DataPath="$RUNNER_TEMP/browser-$suite"
             dotnet run --project backend/Toushir.Wholesale.csproj --no-build --urls "$WEB_URL" > "$RUNNER_TEMP/browser-$suite.log" 2>&1 &
             API_PID=$!
@@ -94,4 +103,5 @@ jobs:
             engagement-verification.json
             warehouse-verification.json
             supplier-documents-verification.json
+            pricing-verification.json
             tests/browser/reports/

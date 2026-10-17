@@ -1,8 +1,8 @@
 {
-  "at": "2026-10-17T07:01:51.769Z",
-  "passed": 10,
+  "at": "2026-10-17T11:14:49.072Z",
+  "passed": 11,
   "failed": 0,
-  "requests": 1301,
+  "requests": 1303,
   "checks": [
     {
       "name": "Production mode disables public demo and provisions only explicit owner",
@@ -10,6 +10,10 @@
     },
     {
       "name": "Registration requires real password and merchant approval",
+      "pass": true
+    },
+    {
+      "name": "Fictional demo delivery fees cannot authorize direct checkout in a real business workspace",
       "pass": true
     },
     {

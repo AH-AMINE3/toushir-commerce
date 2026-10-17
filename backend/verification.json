@@ -1,9 +1,9 @@
 {
-  "base": "http://127.0.0.1:5882",
-  "at": "2026-10-17T06:43:29.440Z",
-  "passed": 15,
+  "base": "http://127.0.0.1:5861",
+  "at": "2026-10-17T11:13:01.584Z",
+  "passed": 16,
   "failed": 0,
-  "requests": 119,
+  "requests": 122,
   "checks": [
     {
       "name": "API health and real catalog with unknown own offers",
@@ -47,6 +47,10 @@
     },
     {
       "name": "Return inspection and refund ledger are explicit and bounded",
+      "pass": true
+    },
+    {
+      "name": "Merchant account summary uses actual net payments and isolates owners",
       "pass": true
     },
     {

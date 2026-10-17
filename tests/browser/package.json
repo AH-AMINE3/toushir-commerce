@@ -8,6 +8,7 @@
     "business": "node business-forms.mjs",
     "warehouse": "node warehouse-ui.mjs",
     "supplier": "node supplier-documents.mjs",
+    "pricing": "node pricing.mjs",
     "map": "node map-check.mjs",
     "mobile": "node mobile-preview.mjs"
   },

@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-17T11:14:49.072Z",
+  "passed": 11,
+  "failed": 0,
+  "requests": 1303,
+  "checks": [
+    {
+      "name": "Production mode disables public demo and provisions only explicit owner",
+      "pass": true
+    },
+    {
+      "name": "Registration requires real password and merchant approval",
+      "pass": true
+    },
+    {
+      "name": "Fictional demo delivery fees cannot authorize direct checkout in a real business workspace",
+      "pass": true
+    },
+    {
+      "name": "HTTPS browser writes work behind trusted platform proxy and foreign origins fail",
+      "pass": true
+    },
+    {
+      "name": "Mobile assets retain JavaScript MIME, navigation uses HTML and canonical downloads support GET HEAD and range",
+      "pass": true
+    },
+    {
+      "name": "Static assets preserve commerce quota and exhausted API requests return structured retry responses",
+      "pass": true
+    },
+    {
+      "name": "Database, legacy address snapshots, hashed sessions and orders survive server restart",
+      "pass": true
+    },
+    {
+      "name": "Retired catalog references disappear while existing order snapshots survive",
+      "pass": true
+    },
+    {
+      "name": "Password changes verify old secret and revoke all sessions",
+      "pass": true
+    },
+    {
+      "name": "Online SQLite backup preserves account, order and actual payment records consistently",
+      "pass": true
+    },
+    {
+      "name": "Restored backup and identity keys serve authenticated account, historical order and payment APIs on a separate port",
+      "pass": true
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-17T10:55:37.993771+00:00",
+  "passed": 3,
+  "checks": [
+    "Actual SQLite startup upgrade preserves all 59 pre-existing business table counts",
+    "SQLite integrity and additive five-table pricing migration verified",
+    "PostgreSQL idempotent upgrade SQL targets the configured alternate schema with no destructive table/column operations"
+  ],
+  "scope": "SQLite executed; PostgreSQL SQL generation verified, hosted execution requires deployment"
+}

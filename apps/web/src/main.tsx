@@ -30,6 +30,7 @@ import {
 import { CampaignSelection, OrderPromotions } from "./Promotions";
 import { Messages, Supply } from "./Business";
 import { Campaigns, Rewards } from "./Marketing";
+import { Pricing, QuotePricingControls, FrozenPricing } from "./Pricing";
 import {
   startIdentityLogin,
   finishIdentityLogin,
@@ -45,6 +46,7 @@ const icons: Record<string, string> = {
   delivery: "88da3.svg",
   returns: "3ebf8.svg",
   products: "2b41c.svg",
+  pricing: "2b41c.svg",
   stock: "9e889.svg",
   purchases: "c9f30.svg",
   merchants: "f1064.svg",
@@ -73,6 +75,7 @@ const groups = [
     label: "Assortiment",
     items: [
       ["products", "Catalogue"],
+      ["pricing", "Tarifs & conditions"],
       ["stock", "Stock & qualité"],
       ["purchases", "Achats fournisseurs"],
     ],
@@ -106,7 +109,7 @@ const staffRoutes: Record<string, string[]> = {
     "messages",
   ],
   DISPATCHER: ["orders", "delivery", "messages"],
-  FINANCE: ["finance", "purchases", "campaigns", "rewards"],
+  FINANCE: ["finance", "purchases", "pricing", "campaigns", "rewards"],
 };
 function ControlIcon({ kind }: { kind: "close" | "check" }) {
   return (
@@ -741,6 +744,7 @@ function App() {
                     analytics: "Comprendre pour mieux décider.",
                     settings: "Votre équipe, votre espace.",
                     purchases: "Approvisionner sans surstocker.",
+                    pricing: "Un seul prix de référence, partout.",
                     messages: "La relation client, sans perdre le fil.",
                     campaigns: "Des offres utiles. Des règles solides.",
                     rewards: "Les points se justifient, ligne par ligne.",
@@ -1168,6 +1172,14 @@ function App() {
                 {route === "purchases" && (
                   <Supply revision={revision} run={run} session={session} />
                 )}
+                {route === "pricing" && (
+                  <Pricing
+                    revision={revision}
+                    run={run}
+                    session={session}
+                    campaigns={() => navigate("campaigns")}
+                  />
+                )}
                 {route === "campaigns" && (
                   <Campaigns
                     revision={revision}
@@ -1559,7 +1571,8 @@ function OrderPanel({
   const [o, setO] = useState<any>(null),
     [tracking, setTracking] = useState<any>(null),
     [error, setError] = useState(""),
-    [tab, setTab] = useState("detail");
+    [tab, setTab] = useState("detail"),
+    [useTariffs, setUseTariffs] = useState(false);
   useEffect(() => {
     let active = true;
     Promise.all([
@@ -1678,6 +1691,9 @@ function OrderPanel({
                   </div>
                 </dl>
                 <OrderPromotions order={o} role={role} run={run} busy={busy} />
+                {role === "ADMIN" && (
+                  <FrozenPricing order={o} revision={revision} />
+                )}
                 {o.note && (
                   <div className="note">
                     <strong>Note du commerçant</strong>
@@ -1694,6 +1710,10 @@ function OrderPanel({
                           (data) =>
                             post("/admin/orders/" + id + "/quote", {
                               version: o.version,
+                              useTariffPrices:
+                                data.get("pricingMode") === "TARIFF",
+                              pricingOverrideReason:
+                                data.get("pricingOverrideReason") || null,
                               campaignIds:
                                 data.get("promotionMode") === "auto"
                                   ? null
@@ -1734,6 +1754,11 @@ function OrderPanel({
                         Le stock est réservé après l’acceptation du commerçant.
                         Saisissez vos prix et disponibilités confirmés.
                       </p>
+                      <QuotePricingControls
+                        order={o}
+                        useTariffs={useTariffs}
+                        setUseTariffs={setUseTariffs}
+                      />
                       {o.items.map((l: any) => (
                         <fieldset key={l.productId}>
                           <legend>{l.name}</legend>
@@ -1765,7 +1790,8 @@ function OrderPanel({
                                 }
                                 min="0"
                                 step="0.01"
-                                required
+                                required={!useTariffs}
+                                disabled={useTariffs}
                               />
                             </label>
                             <label>
@@ -2537,18 +2563,26 @@ function ProductPanel({
         >
           <h3>Conditions commerciales</h3>
           <p>
-            Les valeurs s’appliquent aux nouvelles commandes. Les anciennes
-            versions conservent leurs prix contractuels.
+            Cette offre sert de repli aux tarifs publiés. Les contrats des
+            magasins et les segments restent prioritaires. Les versions déjà
+            proposées conservent leurs prix.
           </p>
+          {p.pricing?.ruleId && (
+            <p className="note">
+              Un barème standard publié est actuellement retenu :{" "}
+              {money(p.price)} / unité. Ce formulaire modifie l’offre du dépôt ;
+              le barème se gère dans Tarifs & conditions.
+            </p>
+          )}
           <div className="form-grid">
             <label>
-              Prix unitaire · DA
+              Prix de l’offre du dépôt · DA
               <input
                 name="price"
                 type="number"
                 min="0"
                 step="0.01"
-                defaultValue={p.price ?? ""}
+                defaultValue={p.savedPrice ?? ""}
                 placeholder="Sur devis"
               />
             </label>
@@ -2558,10 +2592,7 @@ function ProductPanel({
                 name="stock"
                 type="number"
                 min="0"
-                defaultValue={
-                  p.onHand ??
-                  (p.stock != null ? p.stock + (p.reserved || 0) : "")
-                }
+                defaultValue={p.physicalStock ?? ""}
                 placeholder="À confirmer"
               />
             </label>
