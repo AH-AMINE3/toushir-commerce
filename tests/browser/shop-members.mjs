@@ -369,7 +369,7 @@ try {
   );
   await add.click();
   assert((await saved).ok());
-  await button(memberPage, "Voir le panier").click();
+  await memberPage.getByRole("button", { name: /^Voir le panier,/ }).click();
   await button(memberPage, "Accès en lecture seule").waitFor();
   assert(await button(memberPage, "Accès en lecture seule").isDisabled());
   await capture(memberPage, "team-viewer-cart-phone.png");

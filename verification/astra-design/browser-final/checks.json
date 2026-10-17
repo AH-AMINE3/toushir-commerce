@@ -1,0 +1,116 @@
+{
+  "at": "2026-10-17T16:00:50.643Z",
+  "base": "http://127.0.0.1:5864",
+  "checks": [
+    {
+      "name": "First product add target",
+      "box": {
+        "x": 156,
+        "y": 623,
+        "width": 44,
+        "height": 44
+      }
+    },
+    {
+      "name": "Cart dock",
+      "box": {
+        "x": 21,
+        "y": 745,
+        "width": 360,
+        "height": 56
+      },
+      "text": "365 DA\n1 unités · hors livraison\nVoir le panier"
+    },
+    {
+      "name": "offers",
+      "url": "http://127.0.0.1:5864/mobile/merchant#offers",
+      "text": "Offres\n\nDémo · prix et stocks fictifs\nEspace grossiste\n\nDes avantages pour votre réassort.\nTout\nRemises\nCadeaux\nChallenges\nMirinda\nanabolics\nMirinda\nRemise · Toushir · Espace de découverte\n−10 %\nDès 6 unités\nMiranda strewabberry 1.25\nConditions selon votre panier\nVoir la remise\nDu 17 oct. au 31 oct. · Conditions applicables\nVotre prochain cadeau\nMirinda\nChallenge · Toushir · Espace de découverte\nObjectif\n12 unités\nObjectif réassort · démo\nميرندا تفاح\nAprès validation des achats éligibles\nVoir mon challenge\nDu 17 oct. au 24 oct. · Conditions applicables\nanabolics\nCadeau · Toushir · Espace de découverte\n1 offert\nDès 2 unités\nmass fusion\nConditions selon votre panier\nDécouvrir le cadeau\nDu 17 oct. au 31 oct. · Conditions applicables\nOffres à jour · 3 offres\n365 DA\n1 unités · hors livraison\nVoir le panier\nAccueil\nOffres\nCommandes\nMessages\nMon Toushir"
+    },
+    {
+      "name": "account",
+      "url": "http://127.0.0.1:5864/mobile/merchant#account",
+      "text": "Mon Toushir\n\nDémo · prix et stocks fictifs\nEspace grossiste\n\nÉpicerie El Bahia · Exemple\nCARTE COMMERÇANT\n0\npoints\ndisponibles\nÉpicerie El Bahia · Exemple\n0 points réservés\nMes cadeaux\nMon activité\nVos achats\n0\nCommandes livrées\n0 DA\nRéglé ce mois-ci\nDocuments et règlements\nSuivre vos paiements\nMon magasin\nCoordonnées et adresses\nÉquipe du magasin\nComptes personnels et droits d’accès\nDemandes assistées\nVotre conseiller, avec votre accord\nParamètres\nCompte et préférences\n365 DA\n1 unités · hors livraison\nVoir le panier\nAccueil\nOffres\nCommandes\nMessages\nMon Toushir"
+    },
+    {
+      "name": "home width 390",
+      "dimensions": {
+        "innerWidth": 390,
+        "clientWidth": 390,
+        "scrollWidth": 390
+      },
+      "pngWidth": 390,
+      "noPageOverflow": true
+    },
+    {
+      "name": "offers width 390",
+      "dimensions": {
+        "innerWidth": 390,
+        "clientWidth": 390,
+        "scrollWidth": 390
+      },
+      "pngWidth": 390,
+      "noPageOverflow": true
+    },
+    {
+      "name": "account width 390",
+      "dimensions": {
+        "innerWidth": 390,
+        "clientWidth": 390,
+        "scrollWidth": 390
+      },
+      "pngWidth": 390,
+      "noPageOverflow": true
+    },
+    {
+      "name": "orders width 390",
+      "dimensions": {
+        "innerWidth": 390,
+        "clientWidth": 390,
+        "scrollWidth": 390
+      },
+      "pngWidth": 390,
+      "noPageOverflow": true
+    },
+    {
+      "name": "home width 320",
+      "dimensions": {
+        "innerWidth": 320,
+        "clientWidth": 320,
+        "scrollWidth": 320
+      },
+      "pngWidth": 320,
+      "noPageOverflow": true
+    },
+    {
+      "name": "offers width 320",
+      "dimensions": {
+        "innerWidth": 320,
+        "clientWidth": 320,
+        "scrollWidth": 320
+      },
+      "pngWidth": 320,
+      "noPageOverflow": true
+    },
+    {
+      "name": "account width 320",
+      "dimensions": {
+        "innerWidth": 320,
+        "clientWidth": 320,
+        "scrollWidth": 320
+      },
+      "pngWidth": 320,
+      "noPageOverflow": true
+    },
+    {
+      "name": "orders width 320",
+      "dimensions": {
+        "innerWidth": 320,
+        "clientWidth": 320,
+        "scrollWidth": 320
+      },
+      "pngWidth": 320,
+      "noPageOverflow": true
+    }
+  ],
+  "errors": []
+}

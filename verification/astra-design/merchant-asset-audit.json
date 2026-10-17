@@ -1,0 +1,425 @@
+{
+  "frames": {
+    "home": "261:21643",
+    "offers": "261:21868",
+    "account": "261:22307",
+    "orders": "261:22049",
+    "activity": "261:22473",
+    "cartMotion": "265:28921"
+  },
+  "assets": [
+    {
+      "source": "Merchant.tsx",
+      "asset": "mobile-merchant-home-c547b.svg",
+      "bytes": 447,
+      "width": "22",
+      "height": "22",
+      "viewBox": "0 0 22 22"
+    },
+    {
+      "source": "Merchant.tsx",
+      "asset": "mobile-merchant-home-237ad.svg",
+      "bytes": 883,
+      "width": "18",
+      "height": "18",
+      "viewBox": "0 0 18 18"
+    },
+    {
+      "source": "Merchant.tsx",
+      "asset": "mobile-merchant-home-6fe86.svg",
+      "bytes": 315,
+      "width": "16",
+      "height": "16",
+      "viewBox": "0 0 16 16"
+    },
+    {
+      "source": "Merchant.tsx",
+      "asset": "mobile-merchant-home-16ce4.svg",
+      "bytes": 632,
+      "width": "22",
+      "height": "22",
+      "viewBox": "0 0 22 22"
+    },
+    {
+      "source": "Merchant.tsx",
+      "asset": "mobile-merchant-home-59ff6.svg",
+      "bytes": 1219,
+      "width": "22",
+      "height": "22",
+      "viewBox": "0 0 22 22"
+    },
+    {
+      "source": "Merchant.tsx",
+      "asset": "mobile-merchant-home-71cce.svg",
+      "bytes": 1196,
+      "width": "22",
+      "height": "22",
+      "viewBox": "0 0 22 22"
+    },
+    {
+      "source": "Merchant.tsx",
+      "asset": "mobile-merchant-account-60888.svg",
+      "bytes": 2850,
+      "width": "22",
+      "height": "22",
+      "viewBox": "0 0 22 22"
+    },
+    {
+      "source": "Merchant.tsx",
+      "asset": "mobile-merchant-home-ef546.svg",
+      "bytes": 7610,
+      "width": "112",
+      "height": "29.0829",
+      "viewBox": "0 0 112 29.0829"
+    },
+    {
+      "source": "Merchant.tsx",
+      "asset": "mobile-merchant-home-2e62d.svg",
+      "bytes": 1263,
+      "width": "22",
+      "height": "22",
+      "viewBox": "0 0 22 22"
+    },
+    {
+      "source": "Merchant.tsx",
+      "asset": "astra-home-truck.svg",
+      "bytes": 1448,
+      "width": "24",
+      "height": "24",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "source": "Merchant.tsx",
+      "asset": "astra-order-check.svg",
+      "bytes": 812,
+      "width": "24",
+      "height": "24",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "source": "Merchant.tsx",
+      "asset": "mobile-merchant-home-83fb6.svg",
+      "bytes": 1232,
+      "width": "24",
+      "height": "24",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "source": "Merchant.tsx",
+      "asset": "astra-order-chevron.svg",
+      "bytes": 322,
+      "width": "20",
+      "height": "20",
+      "viewBox": "0 0 20 20"
+    },
+    {
+      "source": "Merchant.tsx",
+      "asset": "mobile-merchant-home-82961.svg",
+      "bytes": 463,
+      "width": "20",
+      "height": "20",
+      "viewBox": "0 0 20 20"
+    },
+    {
+      "source": "Merchant.tsx",
+      "asset": "mobile-merchant-home-41ec3.svg",
+      "bytes": 1025,
+      "width": "24",
+      "height": "24",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "source": "Merchant.tsx",
+      "asset": "mobile-merchant-home-dca2a.svg",
+      "bytes": 921,
+      "width": "24",
+      "height": "24",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "source": "Merchant.tsx",
+      "asset": "mobile-merchant-home-2e2be.svg",
+      "bytes": 997,
+      "width": "24",
+      "height": "24",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "source": "Merchant.tsx",
+      "asset": "mobile-merchant-home-c5de3.svg",
+      "bytes": 685,
+      "width": "24",
+      "height": "24",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "source": "Merchant.tsx",
+      "asset": "astra-orders-map.svg",
+      "bytes": 2387,
+      "width": "330",
+      "height": "168",
+      "viewBox": "0 0 330 168"
+    },
+    {
+      "source": "Engagement.tsx",
+      "asset": "mobile-merchant-home-29d02.png",
+      "bytes": 9558
+    },
+    {
+      "source": "Engagement.tsx",
+      "asset": "mobile-merchant-home-335f4.png",
+      "bytes": 5651
+    },
+    {
+      "source": "Engagement.tsx",
+      "asset": "mobile-merchant-home-15b43.png",
+      "bytes": 9096
+    },
+    {
+      "source": "Engagement.tsx",
+      "asset": "mobile-merchant-home-da930.png",
+      "bytes": 19488
+    },
+    {
+      "source": "MerchantAccount.tsx",
+      "asset": "mobile-merchant-account-43633.svg",
+      "bytes": 7740,
+      "width": "96",
+      "height": "24.9282",
+      "viewBox": "0 0 96 24.9282"
+    },
+    {
+      "source": "MerchantAccount.tsx",
+      "asset": "mobile-merchant-account-6b6dd.svg",
+      "bytes": 431,
+      "width": "24",
+      "height": "24",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "source": "MerchantAccount.tsx",
+      "asset": "mobile-merchant-account-60474.svg",
+      "bytes": 748,
+      "width": "20",
+      "height": "20",
+      "viewBox": "0 0 20 20"
+    },
+    {
+      "source": "MerchantAccount.tsx",
+      "asset": "mobile-merchant-account-dc894.svg",
+      "bytes": 322,
+      "width": "20",
+      "height": "20",
+      "viewBox": "0 0 20 20"
+    },
+    {
+      "source": "MerchantAccount.tsx",
+      "asset": "mobile-merchant-account-5b801.svg",
+      "bytes": 1635,
+      "width": "28",
+      "height": "28",
+      "viewBox": "0 0 28 28"
+    },
+    {
+      "source": "MerchantAccount.tsx",
+      "asset": "mobile-merchant-account-fbf01.svg",
+      "bytes": 1287,
+      "width": "28",
+      "height": "28",
+      "viewBox": "0 0 28 28"
+    },
+    {
+      "source": "MerchantAccount.tsx",
+      "asset": "mobile-merchant-account-04c8f.svg",
+      "bytes": 1210,
+      "width": "24",
+      "height": "24",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "source": "MerchantAccount.tsx",
+      "asset": "mobile-merchant-account-903ac.svg",
+      "bytes": 1266,
+      "width": "24",
+      "height": "24",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "source": "MerchantAccount.tsx",
+      "asset": "mobile-merchant-account-44fa4.svg",
+      "bytes": 2768,
+      "width": "24",
+      "height": "24",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "source": "MerchantActivity.tsx",
+      "asset": "astra-activity-wallet.svg",
+      "bytes": 1440,
+      "width": "22",
+      "height": "22",
+      "viewBox": "0 0 22 22"
+    },
+    {
+      "source": "MerchantActivity.tsx",
+      "asset": "astra-order-check.svg",
+      "bytes": 812,
+      "width": "24",
+      "height": "24",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "source": "MerchantActivity.tsx",
+      "asset": "astra-order-chevron.svg",
+      "bytes": 322,
+      "width": "20",
+      "height": "20",
+      "viewBox": "0 0 20 20"
+    },
+    {
+      "source": "MerchantDiscovery.tsx",
+      "asset": "mobile-merchant-home-4dda0.svg",
+      "bytes": 1294,
+      "width": "30",
+      "height": "30",
+      "viewBox": "0 0 30 30"
+    },
+    {
+      "source": "MerchantDiscovery.tsx",
+      "asset": "mobile-merchant-categories-65173.svg",
+      "bytes": 1510,
+      "width": "30",
+      "height": "30",
+      "viewBox": "0 0 30 30"
+    },
+    {
+      "source": "MerchantDiscovery.tsx",
+      "asset": "mobile-merchant-categories-69bd9.svg",
+      "bytes": 1213,
+      "width": "30",
+      "height": "30",
+      "viewBox": "0 0 30 30"
+    },
+    {
+      "source": "MerchantDiscovery.tsx",
+      "asset": "mobile-merchant-categories-2a51f.svg",
+      "bytes": 2012,
+      "width": "30",
+      "height": "30",
+      "viewBox": "0 0 30 30"
+    },
+    {
+      "source": "MerchantDiscovery.tsx",
+      "asset": "mobile-merchant-categories-48384.svg",
+      "bytes": 839,
+      "width": "30",
+      "height": "30",
+      "viewBox": "0 0 30 30"
+    },
+    {
+      "source": "MerchantDiscovery.tsx",
+      "asset": "mobile-merchant-categories-8b747.svg",
+      "bytes": 1112,
+      "width": "30",
+      "height": "30",
+      "viewBox": "0 0 30 30"
+    },
+    {
+      "source": "MerchantDiscovery.tsx",
+      "asset": "mobile-merchant-categories-91e4a.svg",
+      "bytes": 2255,
+      "width": "30",
+      "height": "30",
+      "viewBox": "0 0 30 30"
+    },
+    {
+      "source": "MerchantDiscovery.tsx",
+      "asset": "mobile-merchant-categories-b06c7.svg",
+      "bytes": 2914,
+      "width": "30",
+      "height": "30",
+      "viewBox": "0 0 30 30"
+    },
+    {
+      "source": "MerchantDiscovery.tsx",
+      "asset": "mobile-merchant-categories-c97cd.svg",
+      "bytes": 966,
+      "width": "30",
+      "height": "30",
+      "viewBox": "0 0 30 30"
+    },
+    {
+      "source": "MerchantDiscovery.tsx",
+      "asset": "mobile-merchant-categories-55d78.svg",
+      "bytes": 1067,
+      "width": "30",
+      "height": "30",
+      "viewBox": "0 0 30 30"
+    },
+    {
+      "source": "MerchantDiscovery.tsx",
+      "asset": "mobile-merchant-categories-3caf6.svg",
+      "bytes": 2036,
+      "width": "30",
+      "height": "30",
+      "viewBox": "0 0 30 30"
+    },
+    {
+      "source": "MerchantDiscovery.tsx",
+      "asset": "mobile-merchant-categories-bf5f0.svg",
+      "bytes": 1590,
+      "width": "30",
+      "height": "30",
+      "viewBox": "0 0 30 30"
+    },
+    {
+      "source": "MerchantDiscovery.tsx",
+      "asset": "mobile-merchant-categories-523ab.svg",
+      "bytes": 1248,
+      "width": "30",
+      "height": "30",
+      "viewBox": "0 0 30 30"
+    },
+    {
+      "source": "MerchantDiscovery.tsx",
+      "asset": "mobile-merchant-categories-f1e73.svg",
+      "bytes": 1582,
+      "width": "30",
+      "height": "30",
+      "viewBox": "0 0 30 30"
+    },
+    {
+      "source": "MerchantDiscovery.tsx",
+      "asset": "mobile-merchant-categories-4dda0.svg",
+      "bytes": 1294,
+      "width": "30",
+      "height": "30",
+      "viewBox": "0 0 30 30"
+    }
+  ],
+  "missingOrEmpty": [],
+  "typecheck": "passed",
+  "geometryPendingBrowser": true,
+  "motion": {
+    "node": "265:28993",
+    "durationMs": 180,
+    "translateY": [
+      6,
+      0
+    ],
+    "opacity": [
+      0.72,
+      1
+    ],
+    "easing": "cubic-bezier(0,0,0.58,1)",
+    "scope": "first dock appearance only",
+    "reducedMotion": "static"
+  },
+  "dataTruth": [
+    "Dock shows server subtotal before delivery; checkout total untouched.",
+    "Campaign products and brands dynamic; known brand logos exact match only.",
+    "Tracking uses actual server driver/location/balance; no synthetic ETA.",
+    "Map illustration only in demo without coordinates and explicitly labeled.",
+    "Activity primary amount netPaid; ordered total retained in expandable chart."
+  ]
+}

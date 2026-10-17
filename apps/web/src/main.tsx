@@ -304,60 +304,72 @@ function App() {
     location.hash = target;
     setMenu(false);
   };
-  const refresh = useCallback(async () => {
-    if (!session) return;
-    try {
-      if (session.user.role === "SALES") {
-        await api("/crm");
-        setDashboard({ summary: {}, daily: [], recentOrders: [] });
-        setOrders([]);
-        setTeam([]);
-        setRevision((x) => x + 1);
-        return;
-      }
-      const admin = session.user.role === "ADMIN";
-      const [d, o, t] = await Promise.all([
-        api(admin ? "/admin/dashboard?days=30" : "/operations/dashboard"),
-        admin
-          ? allPages("/admin/orders").then((items) => ({ items }))
-          : api("/operations/orders"),
-        session.user.role === "FINANCE"
-          ? Promise.resolve({ items: [] })
-          : api("/operations/team"),
-      ]);
-      const items = admin
-        ? o.items
-        : o.items.map((x: any) => ({
-            ...x,
-            itemCount: x.items.length,
-            quantity: x.items.reduce((a: number, l: any) => a + l.quantity, 0),
-          }));
-      setDashboard(
-        admin
-          ? d
-          : {
-              summary: {
-                requests: d.awaitingQuote,
-                quotes: items.filter((x: any) => x.status === "QUOTED").length,
-                activeOrders: d.preparing + d.ready + d.enRoute,
-                deliveredOrders: d.delivered,
+  const refreshSequence = useRef(0);
+  const refresh = useCallback(
+    async (current: Session | null = session) => {
+      if (!current) return;
+      const sequence = ++refreshSequence.current;
+      try {
+        if (current.user.role === "SALES") {
+          await api("/crm");
+          if (sequence !== refreshSequence.current) return;
+          setDashboard({ summary: {}, daily: [], recentOrders: [] });
+          setOrders([]);
+          setTeam([]);
+          setRevision((x) => x + 1);
+          return;
+        }
+        const admin = current.user.role === "ADMIN";
+        const [d, o, t] = await Promise.all([
+          api(admin ? "/admin/dashboard?days=30" : "/operations/dashboard"),
+          admin
+            ? allPages("/admin/orders").then((items) => ({ items }))
+            : api("/operations/orders"),
+          current.user.role === "FINANCE"
+            ? Promise.resolve({ items: [] })
+            : api("/operations/team"),
+        ]);
+        if (sequence !== refreshSequence.current) return;
+        const items = admin
+          ? o.items
+          : o.items.map((x: any) => ({
+              ...x,
+              itemCount: x.items.length,
+              quantity: x.items.reduce(
+                (a: number, l: any) => a + l.quantity,
+                0,
+              ),
+            }));
+        setDashboard(
+          admin
+            ? d
+            : {
+                summary: {
+                  requests: d.awaitingQuote,
+                  quotes: items.filter((x: any) => x.status === "QUOTED")
+                    .length,
+                  activeOrders: d.preparing + d.ready + d.enRoute,
+                  deliveredOrders: d.delivered,
+                },
+                daily: [],
+                statusCounts: [],
+                recentOrders: [],
               },
-              daily: [],
-              statusCounts: [],
-              recentOrders: [],
-            },
-      );
-      setOrders(items);
-      setTeam(Array.isArray(t) ? t : t.items || t.members || []);
-      setRevision((x) => x + 1);
-    } catch (e) {
-      setError((e as Error).message);
-      if ((e as any).status === 401 && session.user.role === "SALES") {
-        setToken("");
-        setSession(null);
+        );
+        setOrders(items);
+        setTeam(Array.isArray(t) ? t : t.items || t.members || []);
+        setRevision((x) => x + 1);
+      } catch (e) {
+        if (sequence !== refreshSequence.current) return;
+        setError((e as Error).message);
+        if ((e as any).status === 401 && current.user.role === "SALES") {
+          setToken("");
+          setSession(null);
+        }
       }
-    }
-  }, [session?.user.id]);
+    },
+    [session?.user.id],
+  );
   const accept = (s: Session) => {
     if (s.token) setToken(s.token);
     if (s.workspaceToken)
@@ -370,6 +382,7 @@ function App() {
   };
   async function demo() {
     setBusy(true);
+    setBoot(true);
     setError("");
     try {
       const workspaceToken = localStorage.getItem("toushir-demo-workspace");
@@ -380,6 +393,7 @@ function App() {
       accept(s);
       await post("/demo/showcase");
       await post("/admin/demo/scenario");
+      await refresh(s);
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -486,6 +500,16 @@ function App() {
   };
   const summary = dashboard?.summary || {};
   const counts = dashboard?.statusCounts || [];
+  const receivedRequests = counts.length
+    ? counts.reduce(
+        (sum: number, item: any) =>
+          sum +
+          (["REQUESTED", "SUBMITTED"].includes(item.status)
+            ? Number(item.count || 0)
+            : 0),
+        0,
+      )
+    : Number(summary.requests || 0);
   if (boot)
     return (
       <div className="boot">
@@ -574,8 +598,8 @@ function App() {
                     >
                       <Icon name={id} />
                       {label}
-                      {id === "orders" && summary.requests > 0 && (
-                        <b>{summary.requests}</b>
+                      {id === "orders" && receivedRequests > 0 && (
+                        <b>{receivedRequests}</b>
                       )}
                     </button>
                   ))}
@@ -705,7 +729,11 @@ function App() {
           </button>
           <span className="avatar">TS</span>
         </header>
-        <main className="content">
+        <main
+          className={
+            "content" + (route === "overview" ? " overview-content" : "")
+          }
+        >
           {session.workspace.isDemo && (
             <div className="demo-strip">
               <span>
@@ -765,12 +793,9 @@ function App() {
               {route === "overview" ? (
                 <>
                   <span className="today">
-                    {new Intl.DateTimeFormat("fr-DZ", {
-                      dateStyle: "medium",
-                      timeZone: "Africa/Algiers",
-                    }).format(new Date())}
+                    {dashboard?.period?.days || 30} derniers jours
                   </span>
-                  <Button onClick={() => navigate("orders", "REQUESTED")}>
+                  <Button onClick={() => navigate("orders", "RECEIVED")}>
                     Voir les priorités
                   </Button>
                 </>
@@ -874,6 +899,11 @@ function App() {
                           onChange={(e) => setFilter(e.target.value)}
                         >
                           <option value="">Tous les états</option>
+                          {route === "orders" && (
+                            <option value="RECEIVED">
+                              Demandes à confirmer
+                            </option>
+                          )}
                           {Object.entries(labels)
                             .filter(([s]) =>
                               route === "finance"
@@ -914,9 +944,11 @@ function App() {
                                 .toLowerCase()
                                 .includes(query.toLowerCase())) &&
                             (!filter ||
-                              (route === "finance"
-                                ? o.paymentStatus
-                                : o.status) === filter) &&
+                              (route === "orders" && filter === "RECEIVED"
+                                ? ["REQUESTED", "SUBMITTED"].includes(o.status)
+                                : (route === "finance"
+                                    ? o.paymentStatus
+                                    : o.status) === filter)) &&
                             (route !== "picking" ||
                               ["CONFIRMED", "PREPARING", "READY"].includes(
                                 o.status,
@@ -967,7 +999,9 @@ function App() {
                 {route === "stock" && (
                   <LotInventory revision={revision} run={run} />
                 )}
-                {route === "recalls" && <Recalls role={session.user.role} revision={revision} />}
+                {route === "recalls" && (
+                  <Recalls role={session.user.role} revision={revision} />
+                )}
                 {route === "merchants" && (
                   <Merchants
                     query={query}

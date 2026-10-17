@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-17T13:52:41.653471+00:00",
+  "generatedAt": "2026-10-17T16:02:09.893965+00:00",
   "title": "Design System: TOUSHIR Commerce",
   "extensions": {
     "colorMeta": {
@@ -247,16 +247,16 @@
       "muted-mobile": {
         "role": "neutral",
         "displayName": "Mobile muted",
-        "canonical": "#5f6a63",
+        "canonical": "#5f6d65",
         "tonalRamp": [
-          "oklch(15.0% 0.01729 157.84)",
-          "oklch(26.4% 0.01729 157.84)",
-          "oklch(37.9% 0.01729 157.84)",
-          "oklch(49.3% 0.01729 157.84)",
-          "oklch(60.7% 0.01729 157.84)",
-          "oklch(72.1% 0.01729 157.84)",
-          "oklch(83.6% 0.01729 157.84)",
-          "oklch(95.0% 0.01729 157.84)"
+          "oklch(15.0% 0.02101 160.58)",
+          "oklch(26.4% 0.02101 160.58)",
+          "oklch(37.9% 0.02101 160.58)",
+          "oklch(49.3% 0.02101 160.58)",
+          "oklch(60.7% 0.02101 160.58)",
+          "oklch(72.1% 0.02101 160.58)",
+          "oklch(83.6% 0.02101 160.58)",
+          "oklch(95.0% 0.02101 160.58)"
         ]
       },
       "danger-web": {
@@ -337,16 +337,16 @@
       "warning-mobile": {
         "role": "tertiary",
         "displayName": "Pending mobile",
-        "canonical": "#40534a",
+        "canonical": "#6c5a92",
         "tonalRamp": [
-          "oklch(15.0% 0.02791 164.61)",
-          "oklch(26.4% 0.02791 164.61)",
-          "oklch(37.9% 0.02791 164.61)",
-          "oklch(49.3% 0.02791 164.61)",
-          "oklch(60.7% 0.02791 164.61)",
-          "oklch(72.1% 0.02791 164.61)",
-          "oklch(83.6% 0.02791 164.61)",
-          "oklch(95.0% 0.02791 164.61)"
+          "oklch(15.0% 0.08889 297.97)",
+          "oklch(26.4% 0.08889 297.97)",
+          "oklch(37.9% 0.08889 297.97)",
+          "oklch(49.3% 0.08889 297.97)",
+          "oklch(60.7% 0.08889 297.97)",
+          "oklch(72.1% 0.08889 297.97)",
+          "oklch(83.6% 0.08889 297.97)",
+          "oklch(95.0% 0.08889 297.97)"
         ]
       },
       "warning-surface-web": {
@@ -367,16 +367,16 @@
       "warning-surface-mobile": {
         "role": "tertiary",
         "displayName": "Pending surface mobile",
-        "canonical": "#edf2ef",
+        "canonical": "#f0ecf7",
         "tonalRamp": [
-          "oklch(15.0% 0.00663 160.07)",
-          "oklch(26.4% 0.00663 160.07)",
-          "oklch(37.9% 0.00663 160.07)",
-          "oklch(49.3% 0.00663 160.07)",
-          "oklch(60.7% 0.00663 160.07)",
-          "oklch(72.1% 0.00663 160.07)",
-          "oklch(83.6% 0.00663 160.07)",
-          "oklch(95.0% 0.00663 160.07)"
+          "oklch(15.0% 0.01523 302.55)",
+          "oklch(26.4% 0.01523 302.55)",
+          "oklch(37.9% 0.01523 302.55)",
+          "oklch(49.3% 0.01523 302.55)",
+          "oklch(60.7% 0.01523 302.55)",
+          "oklch(72.1% 0.01523 302.55)",
+          "oklch(83.6% 0.01523 302.55)",
+          "oklch(95.0% 0.01523 302.55)"
         ]
       },
       "dark-canvas": {
@@ -663,6 +663,201 @@
           "oklch(83.6% 0.01144 164.58)",
           "oklch(95.0% 0.01144 164.58)"
         ]
+      },
+      "muted-astra": {
+        "role": "neutral",
+        "displayName": "Muted astra",
+        "canonical": "#5f6d65",
+        "tonalRamp": [
+          "oklch(15.0% 0.02101 160.58)",
+          "oklch(26.4% 0.02101 160.58)",
+          "oklch(37.9% 0.02101 160.58)",
+          "oklch(49.3% 0.02101 160.58)",
+          "oklch(60.7% 0.02101 160.58)",
+          "oklch(72.1% 0.02101 160.58)",
+          "oklch(83.6% 0.02101 160.58)",
+          "oklch(95.0% 0.02101 160.58)"
+        ]
+      },
+      "info": {
+        "role": "tertiary",
+        "displayName": "Info",
+        "canonical": "#456b8c",
+        "tonalRamp": [
+          "oklch(15.0% 0.06813 245.84)",
+          "oklch(26.4% 0.06813 245.84)",
+          "oklch(37.9% 0.06813 245.84)",
+          "oklch(49.3% 0.06813 245.84)",
+          "oklch(60.7% 0.06813 245.84)",
+          "oklch(72.1% 0.06813 245.84)",
+          "oklch(83.6% 0.06813 245.84)",
+          "oklch(95.0% 0.06813 245.84)"
+        ]
+      },
+      "info-surface": {
+        "role": "tertiary",
+        "displayName": "Info surface",
+        "canonical": "#eaf1f7",
+        "tonalRamp": [
+          "oklch(15.0% 0.01102 243.65)",
+          "oklch(26.4% 0.01102 243.65)",
+          "oklch(37.9% 0.01102 243.65)",
+          "oklch(49.3% 0.01102 243.65)",
+          "oklch(60.7% 0.01102 243.65)",
+          "oklch(72.1% 0.01102 243.65)",
+          "oklch(83.6% 0.01102 243.65)",
+          "oklch(95.0% 0.01102 243.65)"
+        ]
+      },
+      "pending": {
+        "role": "tertiary",
+        "displayName": "Pending",
+        "canonical": "#6c5a92",
+        "tonalRamp": [
+          "oklch(15.0% 0.08889 297.97)",
+          "oklch(26.4% 0.08889 297.97)",
+          "oklch(37.9% 0.08889 297.97)",
+          "oklch(49.3% 0.08889 297.97)",
+          "oklch(60.7% 0.08889 297.97)",
+          "oklch(72.1% 0.08889 297.97)",
+          "oklch(83.6% 0.08889 297.97)",
+          "oklch(95.0% 0.08889 297.97)"
+        ]
+      },
+      "pending-surface": {
+        "role": "tertiary",
+        "displayName": "Pending surface",
+        "canonical": "#f0ecf7",
+        "tonalRamp": [
+          "oklch(15.0% 0.01523 302.55)",
+          "oklch(26.4% 0.01523 302.55)",
+          "oklch(37.9% 0.01523 302.55)",
+          "oklch(49.3% 0.01523 302.55)",
+          "oklch(60.7% 0.01523 302.55)",
+          "oklch(72.1% 0.01523 302.55)",
+          "oklch(83.6% 0.01523 302.55)",
+          "oklch(95.0% 0.01523 302.55)"
+        ]
+      },
+      "reward": {
+        "role": "tertiary",
+        "displayName": "Reward",
+        "canonical": "#6c5a92",
+        "tonalRamp": [
+          "oklch(15.0% 0.08889 297.97)",
+          "oklch(26.4% 0.08889 297.97)",
+          "oklch(37.9% 0.08889 297.97)",
+          "oklch(49.3% 0.08889 297.97)",
+          "oklch(60.7% 0.08889 297.97)",
+          "oklch(72.1% 0.08889 297.97)",
+          "oklch(83.6% 0.08889 297.97)",
+          "oklch(95.0% 0.08889 297.97)"
+        ]
+      },
+      "reward-surface": {
+        "role": "tertiary",
+        "displayName": "Reward surface",
+        "canonical": "#f0ecf7",
+        "tonalRamp": [
+          "oklch(15.0% 0.01523 302.55)",
+          "oklch(26.4% 0.01523 302.55)",
+          "oklch(37.9% 0.01523 302.55)",
+          "oklch(49.3% 0.01523 302.55)",
+          "oklch(60.7% 0.01523 302.55)",
+          "oklch(72.1% 0.01523 302.55)",
+          "oklch(83.6% 0.01523 302.55)",
+          "oklch(95.0% 0.01523 302.55)"
+        ]
+      },
+      "chart-muted": {
+        "role": "neutral",
+        "displayName": "Chart muted",
+        "canonical": "#abc8ba",
+        "tonalRamp": [
+          "oklch(15.0% 0.03686 164.76)",
+          "oklch(26.4% 0.03686 164.76)",
+          "oklch(37.9% 0.03686 164.76)",
+          "oklch(49.3% 0.03686 164.76)",
+          "oklch(60.7% 0.03686 164.76)",
+          "oklch(72.1% 0.03686 164.76)",
+          "oklch(83.6% 0.03686 164.76)",
+          "oklch(95.0% 0.03686 164.76)"
+        ]
+      },
+      "dark-info": {
+        "role": "tertiary",
+        "displayName": "Dark info",
+        "canonical": "#a7c9e5",
+        "tonalRamp": [
+          "oklch(15.0% 0.05380 243.28)",
+          "oklch(26.4% 0.05380 243.28)",
+          "oklch(37.9% 0.05380 243.28)",
+          "oklch(49.3% 0.05380 243.28)",
+          "oklch(60.7% 0.05380 243.28)",
+          "oklch(72.1% 0.05380 243.28)",
+          "oklch(83.6% 0.05380 243.28)",
+          "oklch(95.0% 0.05380 243.28)"
+        ]
+      },
+      "dark-info-surface": {
+        "role": "tertiary",
+        "displayName": "Dark info surface",
+        "canonical": "#203849",
+        "tonalRamp": [
+          "oklch(15.0% 0.04261 240.63)",
+          "oklch(26.4% 0.04261 240.63)",
+          "oklch(37.9% 0.04261 240.63)",
+          "oklch(49.3% 0.04261 240.63)",
+          "oklch(60.7% 0.04261 240.63)",
+          "oklch(72.1% 0.04261 240.63)",
+          "oklch(83.6% 0.04261 240.63)",
+          "oklch(95.0% 0.04261 240.63)"
+        ]
+      },
+      "dark-pending": {
+        "role": "tertiary",
+        "displayName": "Dark pending",
+        "canonical": "#d0bfea",
+        "tonalRamp": [
+          "oklch(15.0% 0.06194 303.07)",
+          "oklch(26.4% 0.06194 303.07)",
+          "oklch(37.9% 0.06194 303.07)",
+          "oklch(49.3% 0.06194 303.07)",
+          "oklch(60.7% 0.06194 303.07)",
+          "oklch(72.1% 0.06194 303.07)",
+          "oklch(83.6% 0.06194 303.07)",
+          "oklch(95.0% 0.06194 303.07)"
+        ]
+      },
+      "dark-pending-surface": {
+        "role": "tertiary",
+        "displayName": "Dark pending surface",
+        "canonical": "#382e49",
+        "tonalRamp": [
+          "oklch(15.0% 0.04856 300.75)",
+          "oklch(26.4% 0.04856 300.75)",
+          "oklch(37.9% 0.04856 300.75)",
+          "oklch(49.3% 0.04856 300.75)",
+          "oklch(60.7% 0.04856 300.75)",
+          "oklch(72.1% 0.04856 300.75)",
+          "oklch(83.6% 0.04856 300.75)",
+          "oklch(95.0% 0.04856 300.75)"
+        ]
+      },
+      "dark-chart-muted": {
+        "role": "neutral",
+        "displayName": "Dark chart muted",
+        "canonical": "#729486",
+        "tonalRamp": [
+          "oklch(15.0% 0.04337 167.84)",
+          "oklch(26.4% 0.04337 167.84)",
+          "oklch(37.9% 0.04337 167.84)",
+          "oklch(49.3% 0.04337 167.84)",
+          "oklch(60.7% 0.04337 167.84)",
+          "oklch(72.1% 0.04337 167.84)",
+          "oklch(83.6% 0.04337 167.84)",
+          "oklch(95.0% 0.04337 167.84)"
+        ]
       }
     },
     "typographyMeta": {
@@ -737,6 +932,10 @@
       "operating-metric": {
         "displayName": "Operating ledger value",
         "purpose": "Joined operational ledger values with tabular numerals and responsive reductions."
+      },
+      "overview-metric": {
+        "displayName": "G01 KPI",
+        "purpose": "Separate overview metric cards; 25px at compact desktop and 24px on phones."
       }
     },
     "shadows": [
@@ -785,7 +984,7 @@
       {
         "name": "activity-curve-reveal",
         "value": "activity-reveal 0.65s cubic-bezier(0.16, 1, 0.3, 1) both",
-        "purpose": "Web curve reveal; readings and controls remain visible."
+        "purpose": "Legacy web curve reveal; disabled in Astra G01. Readings and controls remain visible."
       },
       {
         "name": "aging-bar-update",
@@ -811,6 +1010,21 @@
         "name": "illustrative-truck-replay",
         "value": "7000ms phase; requestAnimationFrame",
         "purpose": "Only enabled replay without reduced motion; illustrative depot positions, independent of observed GPS."
+      },
+      {
+        "name": "astra-cart-first-arrival",
+        "value": "180ms; cubic-bezier(0, 0, 0.58, 1); translateY 6px to 0; opacity 0.72 to 1",
+        "purpose": "First visible basket only; no loop or replay on quantity changes; immediate under reduced motion."
+      },
+      {
+        "name": "astra-overview-hover",
+        "value": "160ms",
+        "purpose": "G01 metric border/background and priority-row background transitions; disabled with reduced motion."
+      },
+      {
+        "name": "astra-distribution-update",
+        "value": "flex-grow 220ms ease-out",
+        "purpose": "G01 distribution segments; disabled with reduced motion."
       }
     ],
     "breakpoints": [
@@ -837,6 +1051,14 @@
       {
         "name": "operating-phone",
         "value": "700px"
+      },
+      {
+        "name": "astra-compact",
+        "value": "1350px"
+      },
+      {
+        "name": "astra-stacked",
+        "value": "1100px"
       }
     ]
   },
@@ -903,7 +1125,7 @@
       "refersTo": "category-beverage",
       "description": "HTML preview of the merchant shortcut using the original inline Figma asset.",
       "html": "<button class=\"ds-category-beverage\" aria-pressed=\"false\"><span class=\"ds-category-beverage-tile\"><svg aria-hidden=\"true\" preserveAspectRatio=\"none\" overflow=\"visible\" style=\"display: block;\" width=\"28\" height=\"28\" viewBox=\"0 0 30 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<g>\n<path d=\"M7.5 10L9.6875 25.35C9.7724 25.9507 10.0728 26.5 10.5328 26.8956C10.9928 27.2912 11.5809 27.506 12.1875 27.5H17.8625C18.4691 27.506 19.0572 27.2912 19.5172 26.8956C19.9772 26.5 20.2776 25.9507 20.3625 25.35L22.5 10\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke=\"#151917\"/>\n<path d=\"M6.25 10H23.75\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke=\"#151917\"/>\n<path d=\"M8.75 18.75C9.73968 18.3354 10.802 18.1219 11.875 18.1219C12.948 18.1219 14.0103 18.3354 15 18.75C15.9897 19.1646 17.052 19.3781 18.125 19.3781C19.198 19.3781 20.2603 19.1646 21.25 18.75\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke=\"#151917\"/>\n<path d=\"M15 10L16.25 2.5H18.75\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke=\"#151917\"/>\n</g>\n</svg></span><span class=\"ds-category-beverage-label\">Boissons</span></button>",
-      "css": ".ds-category-beverage{font-family:\"DM Sans\",sans-serif;width:81px;border:0;padding:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer}.ds-category-beverage-tile{width:76px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:#d9eddf}.ds-category-beverage-label{font-size:11px;line-height:14px;text-align:center;min-height:28px;color:#5f6a63;font-weight:500}.ds-category-beverage:hover{opacity:1}.ds-category-beverage:active{opacity:.6}.ds-category-beverage:focus-visible{outline:3px solid #087f4f;outline-offset:3px}.ds-category-beverage[aria-pressed=true] .ds-category-beverage-tile{background:#d9eddf;border:1px solid #087f4f}.ds-category-beverage[aria-pressed=true] .ds-category-beverage-label{color:#087f4f;font-weight:700}"
+      "css": ".ds-category-beverage{font-family:\"DM Sans\",sans-serif;width:81.5px;border:0;padding:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer}.ds-category-beverage-tile{width:81.5px;height:60px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:#d9eddf}.ds-category-beverage-label{font-size:11px;line-height:15px;text-align:center;min-height:15px;color:#5f6d65;font-weight:500}.ds-category-beverage:hover{opacity:1}.ds-category-beverage:active{opacity:.6}.ds-category-beverage:focus-visible{outline:3px solid #087f4f;outline-offset:3px}.ds-category-beverage[aria-pressed=true] .ds-category-beverage-tile{background:#d9eddf;border:1px solid #087f4f}.ds-category-beverage[aria-pressed=true] .ds-category-beverage-label{color:#087f4f;font-weight:700}"
     },
     {
       "name": "Fresh category",
@@ -911,7 +1133,7 @@
       "refersTo": "category-fresh",
       "description": "HTML preview of the merchant shortcut using the original inline Figma asset.",
       "html": "<button class=\"ds-category-fresh\" aria-pressed=\"false\"><span class=\"ds-category-fresh-tile\"><svg aria-hidden=\"true\" preserveAspectRatio=\"none\" overflow=\"visible\" style=\"display: block;\" width=\"28\" height=\"28\" viewBox=\"0 0 30 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<g>\n<path d=\"M10 2.5H20\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke=\"#151917\"/>\n<path d=\"M11.25 2.5V5.98625C11.25 6.97349 10.9577 7.93862 10.41 8.76L9.59 9.99C9.04207 10.8117 8.74978 11.7773 8.75 12.765V25C8.75 25.663 9.01339 26.2989 9.48223 26.7678C9.95107 27.2366 10.587 27.5 11.25 27.5H18.75C19.413 27.5 20.0489 27.2366 20.5178 26.7678C20.9866 26.2989 21.25 25.663 21.25 25V12.7638C21.25 11.7765 20.9577 10.8114 20.41 9.99L19.59 8.76C19.0421 7.93827 18.7498 6.97266 18.75 5.985V2.5\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke=\"#151917\"/>\n<path d=\"M8.75 18.75C9.73972 18.3355 10.802 18.1221 11.875 18.1221C12.948 18.1221 14.0103 18.3355 15 18.75C15.9897 19.1646 17.052 19.3781 18.125 19.3781C19.198 19.3781 20.2603 19.1646 21.25 18.75\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke=\"#151917\"/>\n</g>\n</svg></span><span class=\"ds-category-fresh-label\">Lait & frais</span></button>",
-      "css": ".ds-category-fresh{font-family:\"DM Sans\",sans-serif;width:81px;border:0;padding:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer}.ds-category-fresh-tile{width:76px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:#ccffff}.ds-category-fresh-label{font-size:11px;line-height:14px;text-align:center;min-height:28px;color:#5f6a63;font-weight:500}.ds-category-fresh:hover{opacity:1}.ds-category-fresh:active{opacity:.6}.ds-category-fresh:focus-visible{outline:3px solid #087f4f;outline-offset:3px}.ds-category-fresh[aria-pressed=true] .ds-category-fresh-tile{background:#d9eddf;border:1px solid #087f4f}.ds-category-fresh[aria-pressed=true] .ds-category-fresh-label{color:#087f4f;font-weight:700}"
+      "css": ".ds-category-fresh{font-family:\"DM Sans\",sans-serif;width:81.5px;border:0;padding:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer}.ds-category-fresh-tile{width:81.5px;height:60px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:#ccffff}.ds-category-fresh-label{font-size:11px;line-height:15px;text-align:center;min-height:15px;color:#5f6d65;font-weight:500}.ds-category-fresh:hover{opacity:1}.ds-category-fresh:active{opacity:.6}.ds-category-fresh:focus-visible{outline:3px solid #087f4f;outline-offset:3px}.ds-category-fresh[aria-pressed=true] .ds-category-fresh-tile{background:#d9eddf;border:1px solid #087f4f}.ds-category-fresh[aria-pressed=true] .ds-category-fresh-label{color:#087f4f;font-weight:700}"
     },
     {
       "name": "Mobile ink button",
@@ -927,7 +1149,7 @@
       "refersTo": "filter-pill",
       "description": "Orders, Offers and Messages filters: 36px visible surface within a 44px target; selected and unselected examples.",
       "html": "<div class=\"ds-filters\"><button class=\"ds-filter\" aria-pressed=\"true\"><span>Toutes</span></button><button class=\"ds-filter\" aria-pressed=\"false\"><span>Demandes</span></button></div>",
-      "css": ".ds-filters{display:flex;gap:8px;flex-wrap:wrap}.ds-filter{font-family:\"DM Sans\",sans-serif;min-height:44px;display:flex;align-items:center;justify-content:center;border:0;padding:0;background:transparent;cursor:pointer}.ds-filter span{min-height:36px;display:flex;align-items:center;border-radius:24px;padding:0 14px;background:#f4f6f4;color:#5f6a63;font-size:13px;font-weight:600;line-height:18px}.ds-filter[aria-pressed=true] span{background:#151917;color:#fff}.ds-filter:hover{opacity:1}.ds-filter:active{opacity:.7}.ds-filter:focus-visible{outline:3px solid #087f4f;outline-offset:3px}"
+      "css": ".ds-filters{display:flex;gap:8px;flex-wrap:wrap}.ds-filter{font-family:\"DM Sans\",sans-serif;min-height:44px;display:flex;align-items:center;justify-content:center;border:0;padding:0;background:transparent;cursor:pointer}.ds-filter span{min-height:36px;display:flex;align-items:center;border-radius:24px;padding:0 14px;background:#f4f6f4;color:#5f6d65;font-size:13px;font-weight:600;line-height:18px}.ds-filter[aria-pressed=true] span{background:#151917;color:#fff}.ds-filter:hover{opacity:1}.ds-filter:active{opacity:.7}.ds-filter:focus-visible{outline:3px solid #087f4f;outline-offset:3px}"
     },
     {
       "name": "Merchant loyalty card",
@@ -940,10 +1162,10 @@
   ],
   "narrative": {
     "northStar": "Toushir's connected wholesale workspace",
-    "overview": "The supplied Figma file `4IffhmSg2gHg82narIGfMF` remains the visual authority. This document records how that existing world is implemented in the wholesaler workspace and merchant/courier applications: original Toushir assets, DM Sans, white surfaces, mint selection, bright green actions and dense operational content. It extends that world; it does not establish a replacement identity. Preserve the proportions of the original mark and navigation assets, and the identity of sourced product packaging.\n\nThe atmosphere is practical and active. Headings orient the user, tonal panels group work, and restrained status colours make current state visible. Merchant discovery gives product packaging, prices and direct ordering a compact commerce hierarchy. Operational views connect current metrics to the next action; deliberate state and progress motion makes changes legible without hiding the content. A commercial action has an explicit label and outcome. Unknown prices remain unconfirmed, demo content stays labelled, and illustrations never masquerade as observations. The source evidence is `apps/web/src/style.css`, `apps/web/src/main.tsx`, `apps/mobile/src/theme.ts`, `apps/mobile/src/components.tsx`, `apps/mobile/src/Merchant.tsx`, `apps/mobile/src/MerchantAccount.tsx`, `apps/mobile/src/Engagement.tsx`, `apps/mobile/src/Driver.tsx`, `apps/mobile/src/MerchantDiscovery.tsx`, `apps/mobile/src/MerchantActivity.tsx`, `apps/mobile/src/Motion.tsx`, `apps/web/src/OperationsDashboard.tsx`, `apps/web/src/Warehouse.tsx` and the DM Sans font registration in `apps/mobile/App.tsx`.\n\nThis is a source-grounded system record of the explicitly approved white/ink/action-green extension, removal of beige/yellow treatments and purposeful motion. The expanded browser evidence is `.impeccable/review/expanded/packet.json`: 18 passed groups, no recorded failures or JavaScript errors, desktop 1600×1040, narrow wholesaler 390×844 and merchant 402×874. It records captures and browser behavior, not final design approval. Exact acceptance of all 265 Figma states, native runtime acceptance, external-provider success and domain/security acceptance have separate evidence; they are not certified by this document.",
+    "overview": "The supplied Figma file `4IffhmSg2gHg82narIGfMF` remains the visual authority. This document records how that existing world is implemented in the wholesaler workspace and merchant/courier applications: original Toushir assets, DM Sans, white surfaces, mint selection, bright green actions and dense operational content. It extends that world; it does not establish a replacement identity. Preserve the proportions of the original mark and navigation assets, and the identity of sourced product packaging.\n\nThe atmosphere is practical and active. Headings orient the user, tonal panels group work, and restrained status colours make current state visible. Merchant discovery gives product packaging, prices and direct ordering a compact commerce hierarchy. Operational views connect current metrics to the next action; deliberate state and progress motion makes changes legible without hiding the content. A commercial action has an explicit label and outcome. Unknown prices remain unconfirmed, demo content stays labelled, and illustrations never masquerade as observations. The source evidence is `apps/web/src/style.css`, `apps/web/src/main.tsx`, `apps/mobile/src/theme.ts`, `apps/mobile/src/components.tsx`, `apps/mobile/src/Merchant.tsx`, `apps/mobile/src/MerchantAccount.tsx`, `apps/mobile/src/Engagement.tsx`, `apps/mobile/src/Driver.tsx`, `apps/mobile/src/MerchantDiscovery.tsx`, `apps/mobile/src/MerchantActivity.tsx`, `apps/mobile/src/Motion.tsx`, `apps/web/src/OperationsDashboard.tsx`, `apps/web/src/Warehouse.tsx` and the DM Sans font registration in `apps/mobile/App.tsx`.\n\nThe authorized Astra revision preserves the original Figma core and uses a separate editable page (`261:21629`), with review cover `267:2376`. Its 41 structurally audited native-layer design states describe a wider prototype scope; current frontend translation centers on merchant Home, Offers, Orders, Account and Activity plus wholesaler G01. [The Astra implementation record](docs/ASTRA-DESIGN.md) separates the frame map, implemented geometry, motion intent and evidence. This update preserves unrelated CRM, pricing and operational workflows.\n\nThe previous expanded browser packet (`.impeccable/review/expanded/packet.json`) is historical evidence for the earlier implementation. Astra source builds passed. Final evidence records 18 passing journey/amendment groups, 20 passing final desktop/responsive checks and 9 passing mobile browser smoke checks, with zero reported JavaScript errors. The independent final design review gives a scoped ship verdict for the six inspected core surfaces. The Figma structural audit covers 41 editable states and 460 internal navigation actions with zero broken internal destinations; conditional branches were not all manually replayed. See the [final Figma handoff](verification/astra-design/FIGMA-HANDOFF.md) and [independent review](verification/astra-design/final-review.md). The `final-audit.json`, `final-node-ledger.json` and `final-prototype-ledger.json` files supersede earlier incomplete ledgers. This evidence does not certify complete 265-state parity, native-runtime acceptance, CI or deployment readiness.",
     "keyCharacteristics": [
       "Original Figma identity and assets across three operational workspaces.",
-      "White and soft neutral surfaces with mint selection and green actions.",
+      "White and soft neutral surfaces with mint selection, green actions, blue information and purple pending/reward states.",
       "Compact DM Sans commerce hierarchy with tabular financial data on the web.",
       "Flat content, gently curved containers, transient overlays and measured state motion.",
       "Accessible chart exploration, explicit commercial states, demo labels and observed-data boundaries."
@@ -956,7 +1178,7 @@
       },
       {
         "name": "The Cool Pending Rule",
-        "body": "Use the source-defined aqua/slate pending pairs and a written state; beige and yellow are excluded by the approved system change.",
+        "body": "Use the Astra purple pending pair with a written state; retain the existing cool web caution pair outside this revision. Beige and yellow are excluded by the approved system change.",
         "section": "colors"
       },
       {
@@ -987,7 +1209,7 @@
     ],
     "dos": [
       "**Do** extend the supplied Figma world and preserve the original Toushir assets and sourced packaging identity.",
-      "**Do** use green actions, mint selection and labelled semantic statuses on quiet neutral surfaces.",
+      "**Do** use green actions, mint selection, blue information and purple pending/reward states on quiet neutral surfaces.",
       "**Do** retain beverage mint, fresh/milk aqua and neutral unselected categories in the merchant rail.",
       "**Do** distinguish that category rail from ink-selected filter pills and preserve the pills’ 44px press target.",
       "**Do** show actual available/reserved points and identify commercial documents accurately.",

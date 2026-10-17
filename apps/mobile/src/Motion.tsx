@@ -21,6 +21,65 @@ export function useReducedMotion() {
   return reduced;
 }
 
+/** Figma 265:28993: the first basket arrival, independent of later quantity updates. */
+export function CartDockArrival({
+  visible,
+  children,
+  style,
+}: {
+  visible: boolean;
+  children: React.ReactNode;
+  style?: ViewStyle;
+}) {
+  const reduced = useReducedMotion();
+  const appeared = useRef(false);
+  const arrival = useRef(new Animated.Value(1)).current;
+  useEffect(() => {
+    if (!visible || appeared.current) {
+      arrival.setValue(1);
+      return;
+    }
+    appeared.current = true;
+    if (reduced) return;
+    arrival.setValue(0);
+    const animation = Animated.timing(arrival, {
+      toValue: 1,
+      duration: 180,
+      easing: Easing.bezier(0, 0, 0.58, 1),
+      useNativeDriver: true,
+    });
+    animation.start();
+    return () => {
+      animation.stop();
+      arrival.setValue(1);
+    };
+  }, [visible, reduced]);
+  if (!visible) return null;
+  return (
+    <Animated.View
+      style={[
+        style,
+        !reduced && {
+          opacity: arrival.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0.72, 1],
+          }),
+          transform: [
+            {
+              translateY: arrival.interpolate({
+                inputRange: [0, 1],
+                outputRange: [6, 0],
+              }),
+            },
+          ],
+        },
+      ]}
+    >
+      {children}
+    </Animated.View>
+  );
+}
+
 /** A small state transition: content is always visible, even before JS settles. */
 export function StateArrival({
   children,

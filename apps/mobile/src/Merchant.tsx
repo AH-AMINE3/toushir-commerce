@@ -71,7 +71,8 @@ import MerchantDiscovery, {
   type DiscoveryPanel,
 } from "./MerchantDiscovery";
 import { merchantTab } from "./runtime";
-import { MeasuredProgress, StateArrival } from "./Motion";
+import { Tracking } from "./courier-api";
+import { CartDockArrival, MeasuredProgress, StateArrival } from "./Motion";
 
 type Props = {
   session: Session;
@@ -192,6 +193,8 @@ export default function Merchant({
   const [orderPages, setOrderPages] = useState(1);
   const [order, setOrder] = useState<Order | null>(null);
   const [orderFilter, setOrderFilter] = useState("");
+  const [orderView, setOrderView] = useState<"current" | "history">("current");
+  const [orderFiltersOpen, setOrderFiltersOpen] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const [addressForm, setAddressForm] = useState<{
     label: string;
@@ -634,9 +637,6 @@ export default function Merchant({
         </Pressable>
       </View>
       <View style={M.productBody}>
-        <Text style={M.brand} numberOfLines={1}>
-          {product.brand || "Épicerie"}
-        </Text>
         <Pressable
           accessibilityRole="button"
           onPress={() => setSelectedProduct(product)}
@@ -659,9 +659,14 @@ export default function Merchant({
             },
           ]}
         >
-          <Text style={[M.price, { flex: 1, marginTop: 0, marginBottom: 0 }]}>
-            {money(product.price)}
-          </Text>
+          <View style={{ flex: 1, minWidth: 0 }}>
+            <Text style={[M.price, { marginTop: 0, marginBottom: 0 }]}>
+              {money(product.price)}
+            </Text>
+            <Text style={[S.small, { fontSize: 10, lineHeight: 14 }]}>
+              {product.unit || "unité à confirmer"}
+            </Text>
+          </View>
           {cartQuantity(product) ? (
             <QuantityControl
               disabled={busy}
@@ -674,6 +679,7 @@ export default function Merchant({
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={`Ajouter ${product.name} au panier`}
+              hitSlop={5}
               accessibilityState={{ disabled: busy }}
               disabled={busy}
               onPress={() => {
@@ -685,7 +691,12 @@ export default function Merchant({
                 { opacity: busy ? 0.45 : pressed ? 0.7 : 1 },
               ]}
             >
-              <Icon name="add" size={22} color={C.white} />
+              <View style={M.addButtonFace}>
+                <FigmaImage
+                  source={require("../assets/figma/mobile-merchant-home-c547b.svg")}
+                  style={{ width: 22, height: 22 }}
+                />
+              </View>
             </Pressable>
           )}
         </View>
@@ -755,6 +766,72 @@ export default function Merchant({
               : screen === "messages"
                 ? "Messages"
                 : "Catalogue";
+  const catalogTools = (
+    <View style={{ gap: 16, paddingTop: 12, paddingBottom: 16 }}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Choisir l’adresse de livraison"
+        onPress={() => setLocationOpen(true)}
+        hitSlop={{ top: 12, bottom: 12 }}
+        style={[S.row, { minHeight: 19, gap: 8 }]}
+      >
+        <FigmaImage
+          source={require("../assets/figma/mobile-merchant-home-237ad.svg")}
+          style={{ width: 18, height: 18 }}
+        />
+        <Text style={[S.label, { flex: 1 }]} numberOfLines={1}>
+          {selectedAddress?.label || session.user.shopName || "Mon commerce"} ·{" "}
+          {selectedAddress?.commune || "Oran"}
+        </Text>
+        <FigmaImage
+          source={require("../assets/figma/mobile-merchant-home-6fe86.svg")}
+          style={{ width: 16, height: 16 }}
+        />
+      </Pressable>
+
+      <View style={[S.row, { gap: 10 }]}>
+        <View style={[M.search, { flex: 1, marginTop: 0 }]}>
+          <FigmaImage
+            source={require("../assets/figma/mobile-merchant-home-16ce4.svg")}
+            style={{ width: 22, height: 22 }}
+          />
+          <TextInput
+            accessibilityLabel="Rechercher un produit, une marque ou un code-barres"
+            placeholder="Produit, marque, code-barres"
+            placeholderTextColor={C.muted}
+            value={search}
+            onChangeText={(v) => {
+              setSearch(v);
+              if (screen === "favorites") navigate("catalog");
+            }}
+            style={M.searchInput}
+            returnKeyType="search"
+          />
+          {search ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Effacer la recherche"
+              onPress={() => setSearch("")}
+              style={M.iconButton}
+            >
+              <Icon name="close-circle" color={C.muted} size={20} />
+            </Pressable>
+          ) : null}
+        </View>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Rechercher un produit par code-barres"
+          onPress={() => setDiscovery("scanner")}
+          style={[M.headerAction, { backgroundColor: C.ink }]}
+        >
+          <FigmaImage
+            source={require("../assets/figma/mobile-merchant-home-59ff6.svg")}
+            style={{ width: 22, height: 22 }}
+          />
+        </Pressable>
+      </View>
+    </View>
+  );
   const header = ["offers", "messages", "orders", "account"].includes(
     screen,
   ) ? (
@@ -864,65 +941,8 @@ export default function Merchant({
           </Pressable>
         </View>
       </View>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel="Choisir l’adresse de livraison"
-        onPress={() => setLocationOpen(true)}
-        style={[S.row, { minHeight: 44, gap: 10 }]}
-      >
-        <FigmaImage
-          source={require("../assets/figma/mobile-merchant-home-237ad.svg")}
-          style={{ width: 18, height: 18 }}
-        />
-        <Text style={[S.label, { flex: 1 }]} numberOfLines={1}>
-          {selectedAddress?.label || session.user.shopName || "Mon commerce"} ·{" "}
-          {selectedAddress?.commune || "Oran"}
-        </Text>
-        <Icon name="chevron-down" size={14} />
-      </Pressable>
-      {screen === "catalog" || screen === "favorites" ? (
-        <View style={[S.row, { gap: 10 }]}>
-          <View style={[M.search, { flex: 1, marginTop: 0 }]}>
-            <FigmaImage
-              source={require("../assets/figma/mobile-merchant-home-16ce4.svg")}
-              style={{ width: 22, height: 22 }}
-            />
-            <TextInput
-              accessibilityLabel="Rechercher un produit, une marque ou un code-barres"
-              placeholder="Produit, marque, code-barres"
-              placeholderTextColor={C.muted}
-              value={search}
-              onChangeText={(v) => {
-                setSearch(v);
-                if (screen === "favorites") navigate("catalog");
-              }}
-              style={M.searchInput}
-              returnKeyType="search"
-            />
-            {search ? (
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="Effacer la recherche"
-                onPress={() => setSearch("")}
-                style={M.iconButton}
-              >
-                <Icon name="close-circle" color={C.muted} size={20} />
-              </Pressable>
-            ) : null}
-          </View>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Rechercher un produit par code-barres"
-            onPress={() => setDiscovery("scanner")}
-            style={[M.headerAction, { backgroundColor: C.ink }]}
-          >
-            <FigmaImage
-              source={require("../assets/figma/mobile-merchant-home-59ff6.svg")}
-              style={{ width: 22, height: 22 }}
-            />
-          </Pressable>
-        </View>
-      ) : (
+      {screen === "favorites" ? catalogTools : null}
+      {screen === "catalog" || screen === "favorites" ? null : (
         <View style={[S.between, { paddingTop: 14, paddingBottom: 3 }]}>
           <Text style={M.screenTitle}>{title}</Text>
           {screen === "orders" ? (
@@ -1091,6 +1111,7 @@ export default function Merchant({
           }
           ListHeaderComponent={
             <>
+              {catalogTools}
               <Recalls revision={refresh} canAcknowledge={canWrite} />
               {!query && !category && page === 1 && incomingOrder ? (
                 <Pressable
@@ -1103,11 +1124,11 @@ export default function Merchant({
                   }
                   style={[
                     M.valueStrip,
-                    { backgroundColor: C.pale, padding: 10 },
+                    { backgroundColor: C.blueBg, padding: 14 },
                   ]}
                 >
                   <FigmaImage
-                    source={require("../assets/figma/mobile-merchant-home-8ac27.svg")}
+                    source={require("../assets/figma/astra-home-truck.svg")}
                     style={{ width: 24, height: 24 }}
                   />
                   <View style={{ flex: 1, gap: 3 }}>
@@ -1122,63 +1143,44 @@ export default function Merchant({
                               ? "Votre commande est reçue"
                               : "Votre commande est confirmée"}
                     </Text>
-                    <Text style={[M.valueText, { color: C.green }]}>
+                    <Text style={[M.valueText, { color: C.blue }]}>
                       {incomingOrder.number} · consulter le suivi
                     </Text>
                   </View>
                 </Pressable>
               ) : null}
               {categoryStrip}
-              <View style={[S.between, { paddingBottom: 8, paddingTop: 4 }]}>
-                <View style={{ flex: 1, paddingRight: 10 }}>
-                  <Text style={M.sectionTitle}>
-                    {query
-                      ? `« ${query} »`
-                      : category
-                        ? categories.find((c) => c.id === category)?.name ||
-                          category
-                        : brand || "Pour votre réassort"}
-                  </Text>
-                  <Text style={[S.small, { marginTop: 4 }]}>
-                    {total.toLocaleString("fr-DZ")} produits
-                    {category ? "" : " au catalogue"}
-                  </Text>
-                </View>
+              <View style={[S.between, { paddingBottom: 16, paddingTop: 8 }]}>
+                <Text style={[M.sectionTitle, { flex: 1 }]}>
+                  {query
+                    ? `« ${query} »`
+                    : category
+                      ? categories.find((c) => c.id === category)?.name ||
+                        category
+                      : brand || "Pour votre réassort"}
+                </Text>
                 <Pressable
                   accessibilityRole="button"
-                  accessibilityLabel="Filtrer les produits"
+                  accessibilityLabel="Filtrer et trier les produits"
                   onPress={() => setDiscovery("filters")}
-                  style={M.sort}
+                  hitSlop={10}
+                  style={{ minHeight: 30, justifyContent: "center" }}
                 >
-                  <Icon name="options-outline" size={18} color={C.ink} />
-                </Pressable>
-                <Pressable
-                  accessibilityRole="button"
-                  accessibilityLabel="Trier les produits"
-                  onPress={() => setSortOpen(true)}
-                  style={M.sort}
-                >
-                  <Icon name="swap-vertical-outline" size={17} color={C.ink} />
-                  <Text style={S.label}>Trier</Text>
+                  <Text style={[S.label, { color: C.green, fontSize: 12 }]}>
+                    Filtres
+                  </Text>
                 </Pressable>
               </View>
-              <View
-                style={[S.row, { flexWrap: "wrap", gap: 8, marginBottom: 6 }]}
-              >
-                <Button
-                  small
-                  variant="ghost"
-                  icon="storefront-outline"
-                  onPress={() => setDiscovery("brands")}
-                >
-                  Toutes les marques
-                </Button>
-                {category || brand || inStock ? (
+              {query || category || brand || inStock ? (
+                <View style={[S.between, { marginBottom: 12 }]}>
+                  <Text style={S.small}>
+                    {total.toLocaleString("fr-DZ")} produits
+                  </Text>
                   <Button
                     small
-                    variant="secondary"
-                    icon="close"
+                    variant="ghost"
                     onPress={() => {
+                      setSearch("");
                       setCategory("");
                       setBrand("");
                       setInStock(false);
@@ -1187,8 +1189,8 @@ export default function Merchant({
                   >
                     Effacer les filtres
                   </Button>
-                ) : null}
-              </View>
+                </View>
+              ) : null}
               {loading ? <Loading count={2} /> : null}
             </>
           }
@@ -1215,32 +1217,44 @@ export default function Merchant({
             ) : undefined
           }
           ListFooterComponent={
-            totalPages > 1 ? (
-              <View
-                style={[
-                  S.row,
-                  { justifyContent: "space-between", marginTop: 14 },
-                ]}
-              >
+            <>
+              <View style={[S.between, { marginTop: 16, marginBottom: 8 }]}>
+                <Text style={M.sectionTitle}>Vos marques</Text>
                 <Button
-                  variant="secondary"
-                  icon="chevron-back"
-                  disabled={page <= 1}
-                  onPress={() => setPage((p) => p - 1)}
-                  label="Page précédente"
-                />
-                <Text style={S.small}>
-                  Page {page} sur {totalPages}
-                </Text>
-                <Button
-                  variant="secondary"
-                  icon="chevron-forward"
-                  disabled={page >= totalPages}
-                  onPress={() => setPage((p) => p + 1)}
-                  label="Page suivante"
-                />
+                  variant="ghost"
+                  small
+                  onPress={() => setDiscovery("brands")}
+                >
+                  Tout voir
+                </Button>
               </View>
-            ) : undefined
+              {totalPages > 1 ? (
+                <View
+                  style={[
+                    S.row,
+                    { justifyContent: "space-between", marginTop: 14 },
+                  ]}
+                >
+                  <Button
+                    variant="secondary"
+                    icon="chevron-back"
+                    disabled={page <= 1}
+                    onPress={() => setPage((p) => p - 1)}
+                    label="Page précédente"
+                  />
+                  <Text style={S.small}>
+                    Page {page} sur {totalPages}
+                  </Text>
+                  <Button
+                    variant="secondary"
+                    icon="chevron-forward"
+                    disabled={page >= totalPages}
+                    onPress={() => setPage((p) => p + 1)}
+                    label="Page suivante"
+                  />
+                </View>
+              ) : undefined}
+            </>
           }
         />
       ) : (
@@ -1464,34 +1478,95 @@ export default function Merchant({
           ) : null}
           {screen === "orders" ? (
             <>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ gap: 8, paddingVertical: 17 }}
-              >
-                {[
-                  ["", "Toutes"],
-                  ["REQUESTED", "Demandes"],
-                  ["QUOTED", "Offres à valider"],
-                  ["CONFIRMED", "Confirmées"],
-                  ["PREPARING", "En préparation"],
-                  ["READY", "Prêtes"],
-                  ["OUT_FOR_DELIVERY", "En livraison"],
-                  ["DELIVERED", "Livrées"],
-                  ["PARTIALLY_DELIVERED", "Livraisons partielles"],
-                  ["CANCELLED", "Annulées"],
-                ].map(([value, label]) => (
-                  <CategoryPill
-                    key={value}
-                    label={label}
-                    active={orderFilter === value}
-                    onPress={() => {
-                      setOrderFilter(value);
-                      setOrderPage(1);
-                    }}
-                  />
-                ))}
-              </ScrollView>
+              <View style={[S.between, { paddingTop: 12, paddingBottom: 20 }]}>
+                <View style={[S.row, { gap: 8 }]}>
+                  {(
+                    [
+                      ["current", "En cours"],
+                      ["history", "Historique"],
+                    ] as const
+                  ).map(([id, label]) => (
+                    <Pressable
+                      key={id}
+                      accessibilityRole="button"
+                      accessibilityState={{ selected: orderView === id }}
+                      onPress={() => {
+                        setOrderView(id);
+                        setOrderFilter("");
+                        setOrderPage(1);
+                      }}
+                      style={[
+                        M.orderFilterPill,
+                        { backgroundColor: orderView === id ? C.ink : C.bg },
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          M.orderFilterText,
+                          { color: orderView === id ? C.white : C.ink },
+                        ]}
+                      >
+                        {label}
+                      </Text>
+                    </Pressable>
+                  ))}
+                </View>
+                <Button
+                  variant="ghost"
+                  icon="options-outline"
+                  label="Filtrer par état de commande"
+                  onPress={() => setOrderFiltersOpen((value) => !value)}
+                  style={{ width: 44, minHeight: 44, paddingHorizontal: 0 }}
+                />
+              </View>
+              {orderFiltersOpen ? (
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{ gap: 8, paddingVertical: 17 }}
+                >
+                  {[
+                    ["", "Toutes"],
+                    ["REQUESTED", "Demandes"],
+                    ["QUOTED", "Offres à valider"],
+                    ["CONFIRMED", "Confirmées"],
+                    ["PREPARING", "En préparation"],
+                    ["READY", "Prêtes"],
+                    ["OUT_FOR_DELIVERY", "En livraison"],
+                    ["DELIVERED", "Livrées"],
+                    ["PARTIALLY_DELIVERED", "Livraisons partielles"],
+                    ["CANCELLED", "Annulées"],
+                  ].map(([value, label]) => (
+                    <CategoryPill
+                      key={value}
+                      label={label}
+                      active={orderFilter === value}
+                      onPress={() => {
+                        setOrderFilter(value);
+                        setOrderPage(1);
+                      }}
+                    />
+                  ))}
+                </ScrollView>
+              ) : null}
+              {orderView === "current" && !orderFilter && incomingOrder ? (
+                <OrderDeliveryPreview
+                  summary={incomingOrder}
+                  isDemo={session.workspace.isDemo}
+                  onOpen={() =>
+                    api<Order>(`/orders/${incomingOrder.id}`)
+                      .then(setOrder)
+                      .catch((e) => setError(e.message))
+                  }
+                />
+              ) : null}
+              <View style={[S.between, { marginTop: 20, marginBottom: 8 }]}>
+                <Text style={M.sectionTitle}>
+                  {orderView === "history"
+                    ? "Historique des commandes"
+                    : "Dernières commandes"}
+                </Text>
+              </View>
               {loading ? (
                 <Loading count={2} />
               ) : orders.length ? (
@@ -1500,61 +1575,44 @@ export default function Merchant({
                     <Pressable
                       accessibilityRole="button"
                       accessibilityLabel={`Ouvrir ${o.number}`}
-                      onPress={async () => {
-                        try {
-                          setOrder(await api<Order>(`/orders/${o.id}`));
-                        } catch (e: any) {
-                          setError(e.message);
-                        }
-                      }}
                       key={o.id}
+                      onPress={() =>
+                        api<Order>(`/orders/${o.id}`)
+                          .then(setOrder)
+                          .catch((e) => setError(e.message))
+                      }
                       style={({ pressed }) => [
-                        M.orderCard,
+                        M.recentOrder,
                         { opacity: pressed ? 0.7 : 1 },
                       ]}
                     >
-                      <View style={S.between}>
-                        <Status value={o.status} />
-                        <Icon
-                          name="chevron-forward"
-                          size={18}
-                          color={C.muted}
-                        />
-                      </View>
-                      <View style={[S.row, { marginVertical: 16 }]}>
-                        <ProductImage
-                          uri={o.imageUrl}
-                          name={`Aperçu de ${o.number}`}
-                          size={58}
-                        />
-                        <View style={{ flex: 1, gap: 4 }}>
-                          <Text style={S.label}>{o.number}</Text>
-                          <Text style={S.small}>
-                            {date(o.createdAt)} · {o.itemCount} références
-                          </Text>
-                        </View>
-                        <Text style={[S.text, { fontWeight: "700" }]}>
-                          {money(o.total)}
+                      <FigmaImage
+                        source={
+                          o.status === "DELIVERED"
+                            ? require("../assets/figma/astra-order-check.svg")
+                            : require("../assets/figma/mobile-merchant-home-83fb6.svg")
+                        }
+                        style={{ width: 24, height: 24 }}
+                      />
+                      <View style={{ flex: 1, gap: 4 }}>
+                        <Text
+                          style={[S.label, { fontSize: 15, lineHeight: 21 }]}
+                        >
+                          {o.number} · {statuses[o.status] || o.status}
                         </Text>
-                      </View>
-                      {o.status === "QUOTED" ? (
-                        <View style={M.orderPrompt}>
-                          <Icon
-                            name="document-text-outline"
-                            size={17}
-                            color={C.green}
-                          />
-                          <Text style={[S.label, { color: C.green, flex: 1 }]}>
+                        <Text style={S.small}>
+                          {date(o.createdAt)} · {money(o.total)}
+                        </Text>
+                        {o.status === "QUOTED" ? (
+                          <Text style={[S.small, { color: C.reward }]}>
                             Votre offre est prête à valider
                           </Text>
-                        </View>
-                      ) : (
-                        <Text style={S.small}>
-                          {o.status === "REQUESTED"
-                            ? "Votre grossiste prépare son offre."
-                            : statuses[o.status]}
-                        </Text>
-                      )}
+                        ) : null}
+                      </View>
+                      <FigmaImage
+                        source={require("../assets/figma/astra-order-chevron.svg")}
+                        style={{ width: 20, height: 20 }}
+                      />
                     </Pressable>
                   ))}
                 </View>
@@ -1621,95 +1679,107 @@ export default function Merchant({
         </ScrollView>
       )}
       {checkoutFooter}
-      {screen !== "cart" && cart.length > 0 ? (
-        <View
-          style={{
-            paddingHorizontal: 20,
-            paddingTop: 8,
-            paddingBottom: 8,
-            backgroundColor: "white",
-          }}
+      <CartDockArrival
+        visible={
+          screen !== "cart" &&
+          !(
+            screen === "account" &&
+            (accountPanel === "activity" || accountPanel === "payments")
+          ) &&
+          cart.length > 0
+        }
+        style={M.cartDock}
+      >
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`Voir le panier, ${cartCount} unités, ${quote?.needsQuote || quote?.subtotal == null ? "sur devis" : money(quote.subtotal)}`}
+          onPress={() => navigate("cart")}
+          style={({ pressed }) => [
+            M.cartDockPanel,
+            { opacity: pressed ? 0.8 : 1 },
+          ]}
         >
-          <View
-            style={[
-              S.between,
-              {
-                borderWidth: 1,
-                borderColor: C.border,
-                borderRadius: 16,
-                padding: 8,
-                paddingLeft: 14,
-                minHeight: 56,
-              },
-            ]}
-          >
-            <View style={{ flex: 1 }}>
-              <Text style={[M.price, { marginBottom: 0 }]}>
-                {quote?.needsQuote || quote?.total == null
-                  ? "Sur devis"
-                  : money(quote.total)}
-              </Text>
-              <Text style={S.small}>{cartCount} unités · hors livraison</Text>
-            </View>
-            <Button
-              style={{ minWidth: 152, minHeight: 44 }}
-              icon="arrow-forward"
-              onPress={() => navigate("cart")}
+          <View style={{ flex: 1, minWidth: 0 }}>
+            <Text
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.7}
+              style={M.cartDockAmount}
             >
-              Voir le panier
-            </Button>
+              {quote?.needsQuote || quote?.subtotal == null
+                ? "Sur devis"
+                : money(quote.subtotal).replace(/ DA$/, "")}
+              <Text style={{ fontSize: 12 }}>
+                {quote?.needsQuote || quote?.subtotal == null ? "" : " DA"}
+              </Text>
+            </Text>
+            <Text numberOfLines={1} style={M.cartDockQuantity}>
+              {cartCount} unités · hors livraison
+            </Text>
           </View>
+          <View style={[M.cartDockAction, appWidth < 360 && { width: 140 }]}>
+            <Text style={M.cartDockActionText}>Voir le panier</Text>
+            <FigmaImage
+              source={require("../assets/figma/mobile-merchant-home-82961.svg")}
+              style={{ width: 20, height: 20 }}
+            />
+          </View>
+        </Pressable>
+      </CartDockArrival>
+      {!(
+        screen === "account" &&
+        (accountPanel === "activity" || accountPanel === "payments")
+      ) ? (
+        <View style={M.tabBar}>
+          {nav.map((item) => (
+            <Pressable
+              accessibilityRole="tab"
+              accessibilityState={{ selected: screen === item.id }}
+              key={item.id}
+              onPress={() => navigate(item.id)}
+              style={({ pressed }) => [M.tab, { opacity: pressed ? 0.6 : 1 }]}
+            >
+              <View>
+                <FigmaImage
+                  source={
+                    item.id === "catalog"
+                      ? require("../assets/figma/mobile-merchant-home-41ec3.svg")
+                      : item.id === "offers"
+                        ? require("../assets/figma/mobile-merchant-home-dca2a.svg")
+                        : item.id === "orders"
+                          ? require("../assets/figma/mobile-merchant-home-83fb6.svg")
+                          : item.id === "messages"
+                            ? require("../assets/figma/mobile-merchant-home-2e2be.svg")
+                            : require("../assets/figma/mobile-merchant-home-c5de3.svg")
+                  }
+                  style={{ width: 24, height: 24 }}
+                  tintColor={screen === item.id ? C.green : C.muted}
+                />
+                {item.id === "cart" && cart.length > 0 ? (
+                  <View style={M.tabBadge}>
+                    <Text
+                      style={{ color: C.white, fontSize: 9, fontWeight: "700" }}
+                    >
+                      {cart.length}
+                    </Text>
+                  </View>
+                ) : null}
+              </View>
+              <Text
+                style={[
+                  M.tabText,
+                  {
+                    color: screen === item.id ? C.green : C.muted,
+                    fontWeight: screen === item.id ? "700" : "500",
+                  },
+                ]}
+              >
+                {item.label}
+              </Text>
+            </Pressable>
+          ))}
         </View>
       ) : null}
-      <View style={M.tabBar}>
-        {nav.map((item) => (
-          <Pressable
-            accessibilityRole="tab"
-            accessibilityState={{ selected: screen === item.id }}
-            key={item.id}
-            onPress={() => navigate(item.id)}
-            style={({ pressed }) => [M.tab, { opacity: pressed ? 0.6 : 1 }]}
-          >
-            <View>
-              <FigmaImage
-                source={
-                  item.id === "catalog"
-                    ? require("../assets/figma/mobile-merchant-home-41ec3.svg")
-                    : item.id === "offers"
-                      ? require("../assets/figma/mobile-merchant-home-dca2a.svg")
-                      : item.id === "orders"
-                        ? require("../assets/figma/mobile-merchant-home-83fb6.svg")
-                        : item.id === "messages"
-                          ? require("../assets/figma/mobile-merchant-home-2e2be.svg")
-                          : require("../assets/figma/mobile-merchant-home-c5de3.svg")
-                }
-                style={{ width: 24, height: 24 }}
-                tintColor={screen === item.id ? C.green : C.muted}
-              />
-              {item.id === "cart" && cart.length > 0 ? (
-                <View style={M.tabBadge}>
-                  <Text
-                    style={{ color: C.white, fontSize: 9, fontWeight: "700" }}
-                  >
-                    {cart.length}
-                  </Text>
-                </View>
-              ) : null}
-            </View>
-            <Text
-              style={[
-                M.tabText,
-                {
-                  color: screen === item.id ? C.green : C.muted,
-                  fontWeight: screen === item.id ? "700" : "500",
-                },
-              ]}
-            >
-              {item.label}
-            </Text>
-          </Pressable>
-        ))}
-      </View>
 
       <Modal
         visible={!!selectedProduct}
@@ -2430,6 +2500,160 @@ export default function Merchant({
   );
 }
 
+function OrderDeliveryPreview({
+  summary,
+  isDemo,
+  onOpen,
+}: {
+  summary: OrderSummary;
+  isDemo: boolean;
+  onOpen: () => void;
+}) {
+  const [tracking, setTracking] = useState<Tracking | null>(null);
+  const [connected, setConnected] = useState(true);
+  useEffect(() => {
+    let active = true;
+    setTracking(null);
+    const load = () =>
+      api<Tracking>(`/orders/${summary.id}/tracking`)
+        .then((value) => {
+          if (active) {
+            setTracking(value);
+            setConnected(true);
+          }
+        })
+        .catch(() => {
+          if (active) setConnected(false);
+        });
+    load();
+    const timer = setInterval(load, 15000);
+    return () => {
+      active = false;
+      clearInterval(timer);
+    };
+  }, [summary.id]);
+  const assignment = tracking?.assignment;
+  const location = tracking?.location;
+  const fresh =
+    connected &&
+    !!location?.isFresh &&
+    Date.now() - new Date(location.capturedAt).getTime() < 90000;
+  const status = tracking?.order.status || summary.status;
+  const driver = assignment?.driverName;
+  const title =
+    assignment?.status === "ARRIVED"
+      ? "Votre livreur est arrivé"
+      : status === "OUT_FOR_DELIVERY"
+        ? "Livraison en cours"
+        : status === "READY"
+          ? "Votre commande est prête"
+          : status === "PREPARING"
+            ? "Préparation en cours"
+            : "Commande enregistrée";
+  return (
+    <View style={M.deliveryHero}>
+      <View style={S.between}>
+        <Text style={S.small}>{summary.number}</Text>
+        <Status value={status} />
+      </View>
+      <Text
+        style={[S.heading, { fontSize: 28, lineHeight: 32, fontWeight: "700" }]}
+      >
+        {title}
+      </Text>
+      <Text style={S.muted}>
+        {assignment?.status === "ARRIVED"
+          ? "Votre livreur est devant votre magasin."
+          : "Horaire d’arrivée non communiqué."}
+      </Text>
+      <View style={M.deliveryMap}>
+        {!location && isDemo ? (
+          <FigmaImage
+            source={require("../assets/figma/astra-orders-map.svg")}
+            contentFit="cover"
+            style={{
+              width: 330,
+              height: 168,
+              position: "absolute",
+              left: 0,
+              top: 0,
+            }}
+          />
+        ) : null}
+        <View style={M.deliveryLocationCopy}>
+          <FigmaImage
+            source={require("../assets/figma/astra-home-truck.svg")}
+            style={{ width: 24, height: 24 }}
+          />
+          <Text style={[S.label, { textAlign: "center" }]}>
+            {location
+              ? isDemo
+                ? "Position de démonstration"
+                : fresh
+                  ? "Position reçue du livreur"
+                  : "Dernière position connue"
+              : "Position du livreur indisponible"}
+          </Text>
+          {location ? (
+            <>
+              <Text style={S.small}>{date(location.capturedAt, true)}</Text>
+              <Button
+                small
+                variant="ghost"
+                onPress={() =>
+                  Linking.openURL(
+                    `https://www.google.com/maps?q=${location.latitude},${location.longitude}`,
+                  )
+                }
+              >
+                Ouvrir la position
+              </Button>
+            </>
+          ) : (
+            <Text style={[S.small, { textAlign: "center" }]}>
+              {isDemo
+                ? "Carte illustrative · aucun suivi GPS"
+                : connected
+                  ? "Le suivi apparaîtra après le partage de sa position."
+                  : "Connexion interrompue · réessayez le suivi."}
+            </Text>
+          )}
+        </View>
+      </View>
+      <View style={[S.row, { gap: 12 }]}>
+        <View style={M.deliveryAvatar}>
+          <Text style={S.label}>
+            {driver
+              ? driver
+                  .split(" ")
+                  .filter(Boolean)
+                  .slice(0, 2)
+                  .map((part) => part[0])
+                  .join("")
+              : "—"}
+          </Text>
+        </View>
+        <View style={{ flex: 1, gap: 3 }}>
+          <Text style={S.label}>{driver || "Livreur à affecter"}</Text>
+          <Text style={S.small}>
+            {summary.quantity} unités ·{" "}
+            {tracking
+              ? `${money(tracking.order.balance.remaining)} à régler`
+              : `${money(summary.total)} au total`}
+          </Text>
+        </View>
+        <FigmaImage
+          source={require("../assets/figma/astra-home-truck.svg")}
+          style={{ width: 24, height: 24 }}
+        />
+      </View>
+      <Button variant="ink" onPress={onOpen} style={{ minHeight: 52 }}>
+        Suivre ma livraison
+      </Button>
+    </View>
+  );
+}
+
 function CategoryShortcut({
   label,
   icon,
@@ -2473,7 +2697,7 @@ function CategoryShortcut({
         style={[
           M.categoryLabel,
           {
-            color: active ? C.green : C.muted,
+            color: active ? C.green : C.ink,
             fontWeight: active ? "700" : "500",
           },
         ]}
@@ -2671,6 +2895,103 @@ function OrderProgress({ order }: { order: Order }) {
 }
 
 const M = StyleSheet.create({
+  orderFilterPill: {
+    minHeight: 44,
+    paddingHorizontal: 12,
+    borderRadius: 24,
+    justifyContent: "center",
+  },
+  orderFilterText: { ...S.text, fontSize: 12, lineHeight: 17 },
+  recentOrder: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 14,
+    minHeight: 84,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderColor: C.border,
+  },
+  deliveryHero: {
+    backgroundColor: C.bg,
+    borderRadius: 16,
+    padding: 16,
+    gap: 16,
+    minHeight: 447,
+  },
+  deliveryMap: {
+    height: 168,
+    borderRadius: 20,
+    overflow: "hidden",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: C.white,
+  },
+  deliveryLocationCopy: {
+    padding: 12,
+    gap: 6,
+    alignItems: "center",
+    backgroundColor: "#FFFFFFE8",
+    borderRadius: 12,
+    maxWidth: "90%",
+  },
+  deliveryAvatar: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: C.white,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  cartDock: {
+    height: 64,
+    paddingHorizontal: 20,
+    justifyContent: "center",
+    backgroundColor: C.white,
+  },
+  cartDockPanel: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    height: 56,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: C.border,
+    borderRadius: 16,
+    backgroundColor: C.white,
+    shadowColor: C.forest,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  cartDockAmount: {
+    ...S.label,
+    fontSize: 18,
+    lineHeight: 24,
+    fontWeight: "700",
+  },
+  cartDockQuantity: {
+    ...S.small,
+    fontSize: 10,
+    lineHeight: 14,
+    fontWeight: "500",
+  },
+  cartDockAction: {
+    width: 152,
+    height: 44,
+    borderRadius: 12,
+    backgroundColor: C.action,
+    flexDirection: "row",
+    gap: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  cartDockActionText: {
+    ...S.label,
+    fontSize: 14,
+    lineHeight: 20,
+    fontWeight: "700",
+  },
   confirmedOrder: {
     backgroundColor: C.mint,
     borderRadius: 16,
@@ -2691,8 +3012,8 @@ const M = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     paddingHorizontal: 20,
     paddingTop: 0,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
+    paddingBottom: 0,
+    borderBottomWidth: 0,
     borderColor: "#E7EBE7",
   },
   headerAction: {
@@ -2717,7 +3038,7 @@ const M = StyleSheet.create({
     fontFamily: "Inter",
     fontSize: 11,
     lineHeight: 15,
-    color: "#6B736F",
+    color: C.muted,
   },
   locationName: {
     fontFamily: "Inter",
@@ -2740,7 +3061,7 @@ const M = StyleSheet.create({
     color: "#151917",
     flex: 1,
     minWidth: 0,
-    height: 48,
+    height: 50,
     fontSize: 13,
     paddingVertical: 12,
   },
@@ -2762,7 +3083,7 @@ const M = StyleSheet.create({
   },
   demoText: {
     fontFamily: "Inter",
-    color: "#6B736F",
+    color: C.muted,
     fontSize: 11,
     lineHeight: 16,
   },
@@ -2776,15 +3097,16 @@ const M = StyleSheet.create({
   },
   sectionTitle: {
     fontFamily: "Inter",
-    fontSize: 17,
-    lineHeight: 23,
+    fontSize: 22,
+    lineHeight: 30,
     fontWeight: "700",
     letterSpacing: -0.25,
     color: "#151917",
   },
   valueStrip: {
-    marginTop: 10,
-    borderRadius: 10,
+    marginTop: 0,
+    marginBottom: 4,
+    borderRadius: 12,
     backgroundColor: "#FFFFFF",
     paddingVertical: 12,
     paddingHorizontal: 13,
@@ -2795,21 +3117,21 @@ const M = StyleSheet.create({
   valueTitle: {
     fontFamily: "Inter",
     color: "#151917",
-    fontSize: 13,
-    lineHeight: 18,
-    fontWeight: "600",
+    fontSize: 14,
+    lineHeight: 19,
+    fontWeight: "700",
   },
   valueText: {
     fontFamily: "Inter",
-    color: "#6B736F",
-    fontSize: 11,
-    lineHeight: 16,
+    color: C.muted,
+    fontSize: 12,
+    lineHeight: 17,
   },
   categoryRail: { paddingTop: 0, paddingBottom: 8, gap: 12 },
-  category: { width: 81, alignItems: "center", gap: 8 },
+  category: { width: 81.5, alignItems: "center", gap: 8 },
   categoryIcon: {
-    width: 76,
-    height: 52,
+    width: 81.5,
+    height: 60,
     borderRadius: 16,
     alignItems: "center",
     justifyContent: "center",
@@ -2818,9 +3140,9 @@ const M = StyleSheet.create({
   categoryLabel: {
     fontFamily: "Inter",
     fontSize: 11,
-    lineHeight: 14,
+    lineHeight: 15,
     textAlign: "center",
-    minHeight: 28,
+    minHeight: 15,
   },
   sort: {
     flexDirection: "row",
@@ -2831,7 +3153,7 @@ const M = StyleSheet.create({
     paddingRight: 2,
   },
   productCard: { backgroundColor: "#FFFFFF", overflow: "hidden" },
-  packshot: { backgroundColor: "#FFFFFF", paddingTop: 5, position: "relative" },
+  packshot: { backgroundColor: "#FFFFFF", paddingTop: 0, position: "relative" },
   favorite: {
     position: "absolute",
     top: 3,
@@ -2843,28 +3165,28 @@ const M = StyleSheet.create({
     backgroundColor: "#FFFFFFDD",
     borderRadius: 22,
   },
-  productBody: { padding: 0, paddingTop: 4, gap: 4, flex: 1 },
+  productBody: { padding: 0, paddingTop: 7, gap: 7, flex: 1 },
   brand: {
     fontFamily: "Inter",
     fontSize: 11,
     lineHeight: 16,
-    color: "#6B736F",
+    color: C.muted,
     fontWeight: "500",
   },
   productName: {
     fontFamily: "Inter",
     fontSize: 14,
-    lineHeight: 20,
-    fontWeight: "600",
+    lineHeight: 19,
+    fontWeight: "700",
     color: "#151917",
-    minHeight: 34,
+    minHeight: 38,
   },
   pack: {
     fontFamily: "Inter",
     fontSize: 11,
     lineHeight: 16,
-    color: "#6B736F",
-    marginBottom: 5,
+    color: C.muted,
+    marginBottom: 0,
   },
   price: {
     fontFamily: "Inter",
@@ -2878,7 +3200,14 @@ const M = StyleSheet.create({
   addButton: {
     minHeight: 44,
     width: 44,
-    borderRadius: 22,
+    marginRight: -5,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  addButtonFace: {
+    height: 34,
+    width: 34,
+    borderRadius: 17,
     backgroundColor: C.ink,
     alignItems: "center",
     justifyContent: "center",
@@ -2961,7 +3290,7 @@ const M = StyleSheet.create({
     alignItems: "center",
     gap: 5,
   },
-  tabText: { fontFamily: "Inter", fontSize: 11, lineHeight: 14 },
+  tabText: { fontFamily: "Inter", fontSize: 10, lineHeight: 14 },
   tabBadge: {
     position: "absolute",
     right: -8,

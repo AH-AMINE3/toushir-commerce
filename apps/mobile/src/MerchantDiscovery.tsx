@@ -22,6 +22,8 @@ export type CatalogFilters = {
 };
 export type Category = { id: string; name: string; count: number };
 export function categoryArtwork(name: string): number {
+  if (/épicerie/i.test(name))
+    return require("../assets/figma/mobile-merchant-home-4dda0.svg");
   if (/bébé/i.test(name))
     return require("../assets/figma/mobile-merchant-categories-65173.svg");
   if (/café|thé/i.test(name))

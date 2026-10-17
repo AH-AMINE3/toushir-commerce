@@ -71,7 +71,7 @@ try {
     "At402x874 with an active received order, first product price and44px add action appear above bottom navigation",
   );
   await p
-    .getByRole("button", { name: "Filtrer les produits", exact: true })
+    .getByRole("button", { name: "Filtrer et trier les produits", exact: true })
     .click();
   const input = p.getByRole("textbox", {
     name: "Trouver une marque",
@@ -99,7 +99,7 @@ try {
   );
   await add.click();
   assert((await saved).ok());
-  await p.getByRole("button", { name: "Voir le panier", exact: true }).click();
+  await p.getByRole("button", { name: /^Voir le panier,/ }).click();
   const pending = p.waitForResponse(
     (r) => r.url().endsWith("/api/orders") && r.request().method() === "POST",
   );
@@ -127,6 +127,9 @@ try {
   await p.getByRole("tab", { name: "Mon Toushir", exact: true }).click();
   await p.getByRole("button", { name: "Mon activité", exact: true }).click();
   await p.getByRole("button", { name: "90 jours", exact: true }).click();
+  await p
+    .getByRole("button", { name: "Explorer mon activité", exact: true })
+    .click();
   await p.getByRole("button", { name: "Encaissé net", exact: true }).click();
   await p
     .locator('[aria-label="Évolution des encaissements sur 90 jours"]')

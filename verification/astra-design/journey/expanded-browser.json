@@ -1,0 +1,181 @@
+{
+  "at": "2026-10-17T15:59:45.634Z",
+  "base": "http://127.0.0.1:5864",
+  "checks": [
+    "Actual wholesale dashboard loads seeded records",
+    "Merchant catalogue shares the wholesale workspace and positive demo prices",
+    "Full category grid, semantic icons and category selection work",
+    "Brand directory opens, searches and filters actual products",
+    "Product filters and exact barcode lookup work",
+    "Direct checkout submits priced order and shows confirmation in merchant app",
+    "The exact mobile order is visible in wholesaler operations",
+    "Merchant account card, actual 7/30/90 day activity, measures and bar drilldown work",
+    "All campaign mechanisms and actual gift catalogue render",
+    "Merchant orders and real preparation tracking remain connected",
+    "Analytics has real periods, metric switching, keyboard graph and custom dates",
+    "Shops filter by actual region, name or phone and export the filtered list",
+    "Campaign editor exposes explicit regional audience targeting",
+    "Delivery loads attributed 3D truck model and explicit illustrative replay controls",
+    "Wholesaler responsive overview renders at 390px without page overflow",
+    "Live work screen runs merchant and wholesale in two actual shared-workspace frames"
+  ],
+  "failures": [],
+  "errors": [],
+  "captures": [
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/desktop-overview.png",
+      "width": 1600,
+      "height": 1080
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/desktop-overview-chart.png",
+      "width": 1600,
+      "height": 1080
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/merchant-catalog.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/merchant-categories.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/merchant-category-products.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/merchant-brands.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/merchant-filters.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/merchant-barcode.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/merchant-barcode-result.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/merchant-checkout.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/merchant-order-success.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/desktop-mobile-order.png",
+      "width": 1600,
+      "height": 2820
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/merchant-account.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/merchant-activity-summary.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/merchant-activity.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/merchant-activity-chart.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/merchant-offers.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/merchant-offers-remises.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/merchant-offers-cadeaux.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/merchant-offers-challenges.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/merchant-gifts.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/merchant-orders.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/merchant-tracking.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/desktop-analytics.png",
+      "width": 1600,
+      "height": 2624
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/desktop-dark.png",
+      "width": 1600,
+      "height": 2624
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/desktop-stores.png",
+      "width": 1600,
+      "height": 1092
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/desktop-campaign-audience.png",
+      "width": 1600,
+      "height": 2359
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/desktop-delivery-3d.png",
+      "width": 1600,
+      "height": 2474
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/desktop-delivery-gps.png",
+      "width": 1600,
+      "height": 2466
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/wholesale-mobile.png",
+      "width": 390,
+      "height": 2368
+    },
+    {
+      "file": "/Users/amine/Documents/Codex/2026-10-17/g/outputs/verification/astra-design/journey/live-work-hub.png",
+      "width": 1600,
+      "height": 1040
+    }
+  ]
+}

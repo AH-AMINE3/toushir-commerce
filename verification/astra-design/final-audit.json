@@ -1,0 +1,1447 @@
+{
+  "darkSemanticAlignment": {
+    "collectionId": "VariableCollectionId:261:21630",
+    "modeId": "267:0",
+    "modeName": "Dark",
+    "mutatedVariableIds": [
+      "VariableID:261:21631",
+      "VariableID:261:21632",
+      "VariableID:261:21633",
+      "VariableID:261:21634",
+      "VariableID:261:21635"
+    ],
+    "changed": [
+      {
+        "id": "VariableID:261:21631",
+        "name": "primitive/slate-blue",
+        "before": {
+          "r": 0.686274528503418,
+          "g": 0.7882353067398071,
+          "b": 0.8784313797950745,
+          "a": 1
+        },
+        "after": "#A7C9E5",
+        "value": {
+          "r": 0.6549019813537598,
+          "g": 0.7882353067398071,
+          "b": 0.8980392217636108,
+          "a": 1
+        }
+      },
+      {
+        "id": "VariableID:261:21632",
+        "name": "primitive/slate-blue-soft",
+        "before": {
+          "r": 0.09019608050584793,
+          "g": 0.1725490242242813,
+          "b": 0.239215686917305,
+          "a": 1
+        },
+        "after": "#203849",
+        "value": {
+          "r": 0.125490203499794,
+          "g": 0.21960784494876862,
+          "b": 0.2862745225429535,
+          "a": 1
+        }
+      },
+      {
+        "id": "VariableID:261:21633",
+        "name": "primitive/violet",
+        "before": {
+          "r": 0.7843137383460999,
+          "g": 0.7372549176216125,
+          "b": 0.8823529481887817,
+          "a": 1
+        },
+        "after": "#D0BFEA",
+        "value": {
+          "r": 0.8156862854957581,
+          "g": 0.7490196228027344,
+          "b": 0.9176470637321472,
+          "a": 1
+        }
+      },
+      {
+        "id": "VariableID:261:21634",
+        "name": "primitive/violet-soft",
+        "before": {
+          "r": 0.16470588743686676,
+          "g": 0.13725490868091583,
+          "b": 0.21960784494876862,
+          "a": 1
+        },
+        "after": "#382E49",
+        "value": {
+          "r": 0.21960784494876862,
+          "g": 0.18039216101169586,
+          "b": 0.2862745225429535,
+          "a": 1
+        }
+      },
+      {
+        "id": "VariableID:261:21635",
+        "name": "primitive/muted",
+        "before": {
+          "r": 0.6784313917160034,
+          "g": 0.729411780834198,
+          "b": 0.6941176652908325,
+          "a": 1
+        },
+        "after": "#A5B8AB",
+        "value": {
+          "r": 0.6470588445663452,
+          "g": 0.7215686440467834,
+          "b": 0.6705882549285889,
+          "a": 1
+        }
+      }
+    ],
+    "nodeMutations": [],
+    "originalCollectionsMutated": false,
+    "reason": "Align Astra v2 Dark semantics with accepted, tested frontend source.",
+    "roles": {
+      "info": "#A7C9E5",
+      "infoSurface": "#203849",
+      "pending": "#D0BFEA",
+      "reward": "#D0BFEA",
+      "pendingSurface": "#382E49",
+      "rewardSurface": "#382E49",
+      "secondaryText": "#A5B8AB"
+    },
+    "validation": "Values read back from the five primitive variables after mutation. Existing semantic aliases retained. No nodes, layouts, original collections or Reference-mode values changed."
+  },
+  "page": {
+    "id": "261:21629",
+    "name": "40 — TOUSHIR · Astra v2 · Référence produit"
+  },
+  "coverId": "267:2376",
+  "counts": {
+    "screenFrames": 41,
+    "nativeNodes": 5007,
+    "texts": 1351,
+    "instances": 552,
+    "autoLayout": 1833,
+    "imageFillNodes": 67,
+    "internalConnections": 460,
+    "externalConnections": 460,
+    "isolatedVariables": 149,
+    "distinctPeripheralExits": 74,
+    "reusedOriginalComponents": 94
+  },
+  "frames": [
+    {
+      "id": "261:21643",
+      "name": "A2 · M01 · Accueil / home",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 224
+    },
+    {
+      "id": "261:21868",
+      "name": "A2 · M02 · Offres / offers",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 180
+    },
+    {
+      "id": "261:22049",
+      "name": "A2 · M03 · Commandes / orders",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 146
+    },
+    {
+      "id": "261:22196",
+      "name": "A2 · M04 · Messages / messages",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 110
+    },
+    {
+      "id": "261:22307",
+      "name": "A2 · M05 · Mon Toushir / account",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 165
+    },
+    {
+      "id": "261:22473",
+      "name": "A2 · M12 · Mon activité / dashboard",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 77
+    },
+    {
+      "id": "261:22551",
+      "name": "A2 · M06 · Offre Coca-Cola / promotion",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 81
+    },
+    {
+      "id": "261:22633",
+      "name": "A2 · M07 · Challenge Coca-Cola / challenge",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 81
+    },
+    {
+      "id": "261:22715",
+      "name": "A2 · M54 · Catalogue / category_boissons",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 178
+    },
+    {
+      "id": "261:22894",
+      "name": "A2 · M39 · Fiche produit / product_cola",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 65
+    },
+    {
+      "id": "261:22960",
+      "name": "A2 · M50 · Mon panier / cart",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 256
+    },
+    {
+      "id": "261:23217",
+      "name": "A2 · M51 · Confirmer la commande / checkout",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 61
+    },
+    {
+      "id": "261:23279",
+      "name": "A2 · M52 · Commande envoyée / confirmation",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 64
+    },
+    {
+      "id": "261:23344",
+      "name": "A2 · M93 · Votre panier est conservé / submit_recovery",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 52
+    },
+    {
+      "id": "261:23397",
+      "name": "A2 · M31 · Votre livraison / tracking",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 138
+    },
+    {
+      "id": "261:23536",
+      "name": "A2 · M33 · Votre livraison / tracking_offline",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 146
+    },
+    {
+      "id": "261:23683",
+      "name": "A2 · M32 · Ma commande / order_detail",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 140
+    },
+    {
+      "id": "261:23824",
+      "name": "A2 · M34 · Ma nouvelle commande / confirmation_detail",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 207
+    },
+    {
+      "id": "261:24032",
+      "name": "A2 · M90 · Modification à valider / order_amendment",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 51
+    },
+    {
+      "id": "261:24084",
+      "name": "A2 · M91 · Décision enregistrée / amendment_accepted",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 43
+    },
+    {
+      "id": "261:24128",
+      "name": "A2 · M92 · Décision enregistrée / amendment_refused",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 33
+    },
+    {
+      "id": "261:24162",
+      "name": "A2 · M78 · Commandes / orders_submitted",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 84
+    },
+    {
+      "id": "261:24247",
+      "name": "A2 · M35 · Recherche / search",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 120
+    },
+    {
+      "id": "261:24368",
+      "name": "A2 · M53 · Tous les rayons / categories",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 245
+    },
+    {
+      "id": "261:24614",
+      "name": "A2 · M94 · Votre livraison / reception_arrived",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 43
+    },
+    {
+      "id": "261:24658",
+      "name": "A2 · M101 · Réception enregistrée / reception_payment_pending",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 38
+    },
+    {
+      "id": "261:24697",
+      "name": "A2 · M102 · Votre reçu / reception_paid",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 50
+    },
+    {
+      "id": "261:24748",
+      "name": "A2 · M21 · Mes cadeaux / gifts",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 178
+    },
+    {
+      "id": "261:24927",
+      "name": "A2 · G01 · Vue d’ensemble / overview",
+      "width": 1600,
+      "height": 1040,
+      "nativeDescendants": 354
+    },
+    {
+      "id": "265:4075",
+      "name": "A2 · M80 · Offres / offers_discounts",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 90
+    },
+    {
+      "id": "265:4166",
+      "name": "A2 · M81 · Offres / offers_gifts",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 101
+    },
+    {
+      "id": "265:4268",
+      "name": "A2 · M82 · Offres / offers_challenges",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 107
+    },
+    {
+      "id": "265:4376",
+      "name": "A2 · M95 · Vérifier la réception / reception_check",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 43
+    },
+    {
+      "id": "265:4420",
+      "name": "A2 · M96 · Signaler un écart / reception_issue",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 47
+    },
+    {
+      "id": "265:4468",
+      "name": "A2 · M97 · Résumé de réception / reception_partial_summary",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 54
+    },
+    {
+      "id": "265:4523",
+      "name": "A2 · M98 · Votre accord / reception_consent",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 44
+    },
+    {
+      "id": "265:4568",
+      "name": "A2 · M99 · QR de réception / reception_qr",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 34
+    },
+    {
+      "id": "265:4603",
+      "name": "A2 · M100 · Code expiré / reception_qr_expired",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 34
+    },
+    {
+      "id": "265:28696",
+      "name": "A2 · M01b · Accueil sans commande ni panier",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 204
+    },
+    {
+      "id": "265:28921",
+      "name": "A2 · M01c · Ajout au panier · mouvement",
+      "width": 402,
+      "height": 874,
+      "nativeDescendants": 218
+    },
+    {
+      "id": "265:29146",
+      "name": "A2 · G01b · Sélection du graphique · 8 octobre",
+      "width": 1600,
+      "height": 1040,
+      "nativeDescendants": 354
+    }
+  ],
+  "oldPrototypeVariableReferences": [],
+  "brokenInternalDestinations": [],
+  "distinctExternalURLs": [
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-7147",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=97-3775",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-1479",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-5380",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-5741",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-6251",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-4153",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-6421",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-6560",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-6653",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-6746",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=97-3909",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=120-6355",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=120-3794",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-4449",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=97-3550",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=97-3847",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=97-3623",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=97-3682",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=97-3176",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=97-3248",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=121-3839",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=97-3395",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=97-3318",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=97-4150",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=97-4074",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-4329",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-4270",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=233-4075",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=101-3557",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-1422",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-7301",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-7389",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-5515",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-5974",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-7476",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-5628",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-7569",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-6087",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-5854",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-7656",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-7743",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=100-7829",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=221-4365",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=120-6608",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=97-4905",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=97-4402",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=97-4462",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=97-4519",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=97-4576",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=97-4641",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=97-4707",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=97-4772",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=179-57",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=179-62",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=179-65",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=179-99",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=179-70",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=179-74",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=179-76",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=179-80",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=179-84",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=179-87",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=179-92",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=179-95",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=179-101",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=179-102",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=179-105",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=179-106",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=179-98",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=179-60",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=179-58",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=179-93",
+    "https://www.figma.com/proto/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=221-4432"
+  ],
+  "collections": [
+    {
+      "id": "VariableCollectionId:261:21630",
+      "name": "Toushir / Astra v2 / Semantic roles",
+      "modes": [
+        {
+          "name": "Reference",
+          "modeId": "261:0"
+        },
+        {
+          "name": "Dark",
+          "modeId": "267:0"
+        }
+      ],
+      "variableCount": 12
+    },
+    {
+      "id": "VariableCollectionId:265:4638",
+      "name": "Toushir / Astra v2 / Prototype isolated",
+      "modes": [
+        {
+          "name": "Demo",
+          "modeId": "265:0"
+        }
+      ],
+      "variableCount": 149
+    }
+  ],
+  "flowStartingPoints": [
+    {
+      "nodeId": "267:2376",
+      "name": "Astra v2 — Démarrer"
+    },
+    {
+      "nodeId": "261:21643",
+      "name": "Commerçant — Référence active"
+    },
+    {
+      "nodeId": "265:28696",
+      "name": "Commerçant — Premier ajout et mouvement"
+    },
+    {
+      "nodeId": "261:24927",
+      "name": "Grossiste — Vue d’ensemble"
+    }
+  ],
+  "firstAdd": [
+    {
+      "trigger": {
+        "type": "ON_CLICK"
+      },
+      "actionCount": 67,
+      "destination": [
+        "265:28921"
+      ]
+    }
+  ],
+  "emptyEntry": [
+    {
+      "trigger": {
+        "type": "AFTER_TIMEOUT",
+        "timeout": 0.009999999776482582
+      },
+      "actionCount": 66
+    }
+  ],
+  "reusedComponents": [
+    {
+      "id": "90:131",
+      "name": "Toushir / Merchant / Toushir / black",
+      "count": 3
+    },
+    {
+      "id": "90:256",
+      "name": "Toushir / Merchant / Icon / heart",
+      "count": 10
+    },
+    {
+      "id": "90:208",
+      "name": "Toushir / Merchant / Icon / bell",
+      "count": 5
+    },
+    {
+      "id": "90:268",
+      "name": "Toushir / Merchant / Icon / map-pin",
+      "count": 8
+    },
+    {
+      "id": "90:238",
+      "name": "Toushir / Merchant / Icon / chevron-down",
+      "count": 7
+    },
+    {
+      "id": "90:197",
+      "name": "Toushir / Merchant / Icon / search",
+      "count": 8
+    },
+    {
+      "id": "90:201",
+      "name": "Toushir / Merchant / Icon / scan-line",
+      "count": 6
+    },
+    {
+      "id": "90:181",
+      "name": "Toushir / Merchant / Icon / truck",
+      "count": 13
+    },
+    {
+      "id": "91:60",
+      "name": "Toushir / Merchant / Icon / cup-soda",
+      "count": 4
+    },
+    {
+      "id": "91:49",
+      "name": "Toushir / Merchant / Icon / cookie",
+      "count": 4
+    },
+    {
+      "id": "91:122",
+      "name": "Toushir / Merchant / Icon / milk",
+      "count": 4
+    },
+    {
+      "id": "91:132",
+      "name": "Toushir / Merchant / Icon / shopping-basket",
+      "count": 8
+    },
+    {
+      "id": "91:359",
+      "name": "SKU=cola",
+      "count": 4
+    },
+    {
+      "id": "59:361",
+      "name": "TOUSHIR / Assets / cola",
+      "count": 16
+    },
+    {
+      "id": "90:216",
+      "name": "Toushir / Merchant / Icon / plus",
+      "count": 22
+    },
+    {
+      "id": "91:360",
+      "name": "SKU=milk",
+      "count": 3
+    },
+    {
+      "id": "59:365",
+      "name": "TOUSHIR / Assets / milk",
+      "count": 9
+    },
+    {
+      "id": "59:369",
+      "name": "TOUSHIR / Assets / logo_cola",
+      "count": 14
+    },
+    {
+      "id": "59:371",
+      "name": "TOUSHIR / Assets / logo_milk",
+      "count": 4
+    },
+    {
+      "id": "59:373",
+      "name": "TOUSHIR / Assets / logo_juice",
+      "count": 5
+    },
+    {
+      "id": "60:288",
+      "name": "TOUSHIR / Assets / logo_nutella",
+      "count": 4
+    },
+    {
+      "id": "90:227",
+      "name": "Toushir / Merchant / Icon / arrow-right",
+      "count": 18
+    },
+    {
+      "id": "59:363",
+      "name": "TOUSHIR / Assets / juice",
+      "count": 6
+    },
+    {
+      "id": "113:456",
+      "name": "State=Default",
+      "count": 16
+    },
+    {
+      "id": "91:168",
+      "name": "Active=home",
+      "count": 5
+    },
+    {
+      "id": "90:160",
+      "name": "Toushir / Merchant / Icon / house",
+      "count": 16
+    },
+    {
+      "id": "91:141",
+      "name": "Toushir / Merchant / Icon / tag",
+      "count": 17
+    },
+    {
+      "id": "90:175",
+      "name": "Toushir / Merchant / Icon / package",
+      "count": 24
+    },
+    {
+      "id": "90:194",
+      "name": "Toushir / Merchant / Icon / message-circle",
+      "count": 31
+    },
+    {
+      "id": "90:212",
+      "name": "Toushir / Merchant / Icon / user",
+      "count": 14
+    },
+    {
+      "id": "90:442",
+      "name": "Tone=Accent, State=Default",
+      "count": 19
+    },
+    {
+      "id": "59:379",
+      "name": "TOUSHIR / Assets / coffee",
+      "count": 3
+    },
+    {
+      "id": "60:280",
+      "name": "TOUSHIR / Assets / water",
+      "count": 5
+    },
+    {
+      "id": "91:160",
+      "name": "Toushir / Merchant / Icon / trophy",
+      "count": 3
+    },
+    {
+      "id": "60:286",
+      "name": "TOUSHIR / Assets / cola_can",
+      "count": 5
+    },
+    {
+      "id": "90:452",
+      "name": "Toushir / Merchant / Badge / neutral",
+      "count": 3
+    },
+    {
+      "id": "90:188",
+      "name": "Toushir / Merchant / Icon / gift",
+      "count": 9
+    },
+    {
+      "id": "90:235",
+      "name": "Toushir / Merchant / Icon / chevron-right",
+      "count": 22
+    },
+    {
+      "id": "91:169",
+      "name": "Active=offers",
+      "count": 4
+    },
+    {
+      "id": "90:299",
+      "name": "Toushir / Merchant / Icon / receipt",
+      "count": 4
+    },
+    {
+      "id": "90:440",
+      "name": "Tone=Secondary, State=Default",
+      "count": 6
+    },
+    {
+      "id": "90:454",
+      "name": "Toushir / Merchant / Badge / green",
+      "count": 6
+    },
+    {
+      "id": "90:438",
+      "name": "Tone=Primary, State=Default",
+      "count": 5
+    },
+    {
+      "id": "90:248",
+      "name": "Toushir / Merchant / Icon / check-circle",
+      "count": 12
+    },
+    {
+      "id": "91:170",
+      "name": "Active=orders",
+      "count": 2
+    },
+    {
+      "id": "90:336",
+      "name": "Toushir / Merchant / Icon / settings",
+      "count": 5
+    },
+    {
+      "id": "91:171",
+      "name": "Active=messages",
+      "count": 1
+    },
+    {
+      "id": "90:145",
+      "name": "Toushir / Merchant / Toushir / white",
+      "count": 1
+    },
+    {
+      "id": "90:231",
+      "name": "Toushir / Merchant / Icon / arrow-up-right",
+      "count": 2
+    },
+    {
+      "id": "90:278",
+      "name": "Toushir / Merchant / Icon / clock",
+      "count": 3
+    },
+    {
+      "id": "90:366",
+      "name": "Toushir / Merchant / Icon / chart-no-axes-combined",
+      "count": 3
+    },
+    {
+      "id": "90:286",
+      "name": "Toushir / Merchant / Icon / wallet",
+      "count": 5
+    },
+    {
+      "id": "90:346",
+      "name": "Toushir / Merchant / Icon / warehouse",
+      "count": 5
+    },
+    {
+      "id": "91:172",
+      "name": "Active=account",
+      "count": 2
+    },
+    {
+      "id": "90:223",
+      "name": "Toushir / Merchant / Icon / arrow-left",
+      "count": 27
+    },
+    {
+      "id": "90:374",
+      "name": "Toushir / Merchant / Icon / calendar-days",
+      "count": 2
+    },
+    {
+      "id": "90:170",
+      "name": "Toushir / Merchant / Icon / shopping-cart",
+      "count": 8
+    },
+    {
+      "id": "91:365",
+      "name": "SKU=cola_can",
+      "count": 1
+    },
+    {
+      "id": "91:363",
+      "name": "SKU=juice",
+      "count": 1
+    },
+    {
+      "id": "91:362",
+      "name": "SKU=water",
+      "count": 1
+    },
+    {
+      "id": "90:220",
+      "name": "Toushir / Merchant / Icon / minus",
+      "count": 12
+    },
+    {
+      "id": "60:278",
+      "name": "TOUSHIR / Assets / nutella",
+      "count": 2
+    },
+    {
+      "id": "60:284",
+      "name": "TOUSHIR / Assets / prince",
+      "count": 2
+    },
+    {
+      "id": "94:282",
+      "name": "TOUSHIR / Assets / barilla",
+      "count": 2
+    },
+    {
+      "id": "60:282",
+      "name": "TOUSHIR / Assets / nescafe",
+      "count": 2
+    },
+    {
+      "id": "59:367",
+      "name": "TOUSHIR / Assets / oil",
+      "count": 2
+    },
+    {
+      "id": "94:3058",
+      "name": "TOUSHIR / Assets / nutella_biscuits",
+      "count": 2
+    },
+    {
+      "id": "90:439",
+      "name": "Tone=Primary, State=Disabled",
+      "count": 1
+    },
+    {
+      "id": "90:252",
+      "name": "Toushir / Merchant / Icon / x",
+      "count": 1
+    },
+    {
+      "id": "90:290",
+      "name": "Toushir / Merchant / Icon / banknote",
+      "count": 1
+    },
+    {
+      "id": "90:407",
+      "name": "Toushir / Merchant / Icon / more-horizontal",
+      "count": 2
+    },
+    {
+      "id": "90:311",
+      "name": "Toushir / Merchant / Icon / sliders-horizontal",
+      "count": 2
+    },
+    {
+      "id": "91:66",
+      "name": "Toushir / Merchant / Icon / croissant",
+      "count": 2
+    },
+    {
+      "id": "91:73",
+      "name": "Toushir / Merchant / Icon / baby",
+      "count": 1
+    },
+    {
+      "id": "91:79",
+      "name": "Toushir / Merchant / Icon / coffee",
+      "count": 1
+    },
+    {
+      "id": "91:85",
+      "name": "Toushir / Merchant / Icon / candy",
+      "count": 1
+    },
+    {
+      "id": "91:92",
+      "name": "Toushir / Merchant / Icon / spray-can",
+      "count": 1
+    },
+    {
+      "id": "91:104",
+      "name": "Toushir / Merchant / Icon / droplets",
+      "count": 1
+    },
+    {
+      "id": "90:262",
+      "name": "Toushir / Merchant / Icon / sparkles",
+      "count": 1
+    },
+    {
+      "id": "91:108",
+      "name": "Toushir / Merchant / Icon / egg",
+      "count": 1
+    },
+    {
+      "id": "91:111",
+      "name": "Toushir / Merchant / Icon / utensils",
+      "count": 1
+    },
+    {
+      "id": "91:116",
+      "name": "Toushir / Merchant / Icon / cake-slice",
+      "count": 1
+    },
+    {
+      "id": "91:127",
+      "name": "Toushir / Merchant / Icon / beef",
+      "count": 1
+    },
+    {
+      "id": "90:282",
+      "name": "Toushir / Merchant / Icon / shield-check",
+      "count": 9
+    },
+    {
+      "id": "59:377",
+      "name": "TOUSHIR / Assets / airpods",
+      "count": 1
+    },
+    {
+      "id": "94:3060",
+      "name": "TOUSHIR / Assets / phone",
+      "count": 1
+    },
+    {
+      "id": "91:151",
+      "name": "Toushir / Merchant / Icon / car",
+      "count": 1
+    },
+    {
+      "id": "181:32",
+      "name": "Active=overview",
+      "count": 2
+    },
+    {
+      "id": "214:15127",
+      "name": "Toushir / Platform / Brand",
+      "count": 2
+    },
+    {
+      "id": "90:396",
+      "name": "Toushir / Merchant / Icon / refresh-cw",
+      "count": 2
+    },
+    {
+      "id": "90:164",
+      "name": "Toushir / Merchant / Icon / layout-grid",
+      "count": 2
+    },
+    {
+      "id": "90:352",
+      "name": "Toushir / Merchant / Icon / boxes",
+      "count": 2
+    },
+    {
+      "id": "90:340",
+      "name": "Toushir / Merchant / Icon / users",
+      "count": 2
+    },
+    {
+      "id": "181:1957",
+      "name": "Toushir / Wholesale v2 / Topbar",
+      "count": 2
+    }
+  ],
+  "sourceIntegrity": [
+    {
+      "page": "90:48",
+      "name": "01 — Application commerçant · Écrans",
+      "nodes": [
+        {
+          "id": "93:48",
+          "exists": true,
+          "name": "M01 · Accueil / home",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 224
+        },
+        {
+          "id": "93:260",
+          "exists": true,
+          "name": "M02 · Offres / offers",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 180
+        },
+        {
+          "id": "93:406",
+          "exists": true,
+          "name": "M03 · Commandes / orders",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 146
+        },
+        {
+          "id": "93:566",
+          "exists": true,
+          "name": "M04 · Messages / messages",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 110
+        },
+        {
+          "id": "93:688",
+          "exists": true,
+          "name": "M05 · Mon Toushir / account",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 165
+        },
+        {
+          "id": "97:3472",
+          "exists": true,
+          "name": "M12 · Mon activité / dashboard",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 77
+        },
+        {
+          "id": "97:3063",
+          "exists": true,
+          "name": "M06 · Offre Coca-Cola / promotion",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 81
+        },
+        {
+          "id": "97:3115",
+          "exists": true,
+          "name": "M07 · Challenge Coca-Cola / challenge",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 81
+        },
+        {
+          "id": "100:5205",
+          "exists": true,
+          "name": "M54 · Catalogue / category_boissons",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 178
+        },
+        {
+          "id": "100:4097",
+          "exists": true,
+          "name": "M39 · Fiche produit / product_cola",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 65
+        },
+        {
+          "id": "100:4761",
+          "exists": true,
+          "name": "M50 · Mon panier / cart",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 256
+        },
+        {
+          "id": "100:4833",
+          "exists": true,
+          "name": "M51 · Confirmer la commande / checkout",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 61
+        },
+        {
+          "id": "100:4892",
+          "exists": true,
+          "name": "M52 · Commande envoyée / confirmation",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 64
+        },
+        {
+          "id": "122:3885",
+          "exists": true,
+          "name": "M93 · Votre panier est conservé / submit_recovery",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 52
+        },
+        {
+          "id": "99:1117",
+          "exists": true,
+          "name": "M31 · Votre livraison / tracking",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 138
+        },
+        {
+          "id": "99:1397",
+          "exists": true,
+          "name": "M33 · Votre livraison / tracking_offline",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 146
+        },
+        {
+          "id": "99:1256",
+          "exists": true,
+          "name": "M32 · Ma commande / order_detail",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 140
+        },
+        {
+          "id": "99:1544",
+          "exists": true,
+          "name": "M34 · Ma nouvelle commande / confirmation_detail",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 207
+        },
+        {
+          "id": "121:6415",
+          "exists": true,
+          "name": "M90 · Modification à valider / order_amendment",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 51
+        },
+        {
+          "id": "121:6467",
+          "exists": true,
+          "name": "M91 · Décision enregistrée / amendment_accepted",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 43
+        },
+        {
+          "id": "121:6511",
+          "exists": true,
+          "name": "M92 · Décision enregistrée / amendment_refused",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 33
+        },
+        {
+          "id": "101:3474",
+          "exists": true,
+          "name": "M78 · Commandes / orders_submitted",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 84
+        },
+        {
+          "id": "100:1310",
+          "exists": true,
+          "name": "M35 · Recherche / search",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 120
+        },
+        {
+          "id": "100:4963",
+          "exists": true,
+          "name": "M53 · Tous les rayons / categories",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 245
+        },
+        {
+          "id": "221:3969",
+          "exists": true,
+          "name": "M94 · Votre livraison / reception_arrived",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 43
+        },
+        {
+          "id": "221:4275",
+          "exists": true,
+          "name": "M101 · Réception enregistrée / reception_payment_pending",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 38
+        },
+        {
+          "id": "221:4314",
+          "exists": true,
+          "name": "M102 · Votre reçu / reception_paid",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 50
+        },
+        {
+          "id": "97:4231",
+          "exists": true,
+          "name": "M21 · Mes cadeaux / gifts",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 178
+        },
+        {
+          "id": "114:3941",
+          "exists": true,
+          "name": "M80 · Offres / offers_discounts",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 90
+        },
+        {
+          "id": "114:4029",
+          "exists": true,
+          "name": "M81 · Offres / offers_gifts",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 101
+        },
+        {
+          "id": "114:4128",
+          "exists": true,
+          "name": "M82 · Offres / offers_challenges",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 107
+        },
+        {
+          "id": "221:4013",
+          "exists": true,
+          "name": "M95 · Vérifier la réception / reception_check",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 43
+        },
+        {
+          "id": "221:4057",
+          "exists": true,
+          "name": "M96 · Signaler un écart / reception_issue",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 47
+        },
+        {
+          "id": "221:4105",
+          "exists": true,
+          "name": "M97 · Résumé de réception / reception_partial_summary",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 54
+        },
+        {
+          "id": "221:4160",
+          "exists": true,
+          "name": "M98 · Votre accord / reception_consent",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 44
+        },
+        {
+          "id": "221:4205",
+          "exists": true,
+          "name": "M99 · QR de réception / reception_qr",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 34
+        },
+        {
+          "id": "221:4240",
+          "exists": true,
+          "name": "M100 · Code expiré / reception_qr_expired",
+          "parent": "90:48",
+          "width": 402,
+          "height": 874,
+          "nativeDescendants": 34
+        }
+      ]
+    },
+    {
+      "page": "59:276",
+      "name": "10 — Grossiste · Écrans",
+      "nodes": [
+        {
+          "id": "179:56",
+          "exists": true,
+          "name": "G01 · Vue d’ensemble / overview",
+          "parent": "59:276",
+          "width": 1600,
+          "height": 1040,
+          "nativeDescendants": 347
+        }
+      ]
+    },
+    {
+      "page": "158:271",
+      "name": "00 — TOUSHIR · Produit & développement",
+      "nodes": [
+        {
+          "id": "160:2",
+          "exists": true,
+          "name": "TOUSHIR / Merchant / Guide du périmètre approuvé",
+          "parent": "158:271",
+          "width": 1440,
+          "height": 1251,
+          "nativeDescendants": 32
+        },
+        {
+          "id": "243:2",
+          "exists": true,
+          "name": "TOUSHIR / Produit / Démarrer ici",
+          "parent": "158:271",
+          "width": 1600,
+          "height": 1622,
+          "nativeDescendants": 58
+        },
+        {
+          "id": "267:2406",
+          "exists": true,
+          "name": "Astra v2 — Version à intégrer / 17 octobre",
+          "parent": "158:271",
+          "width": 920,
+          "height": 446,
+          "nativeDescendants": 5
+        }
+      ]
+    }
+  ],
+  "validationLimits": {
+    "visualScreens": [
+      "261:21643",
+      "261:21868",
+      "261:22049",
+      "261:22307",
+      "261:22473",
+      "261:24927",
+      "265:28696",
+      "265:28921",
+      "261:23279",
+      "261:23344",
+      "261:24032"
+    ],
+    "cover": "267:2376",
+    "motion": "Native Figma timeline MP4 exported; three timestamps visually inspected.",
+    "prototype": "Recursive action graph, isolated variable references, first-add state actions inspected. Not exhaustive manual playback of every conditional branch.",
+    "originals": "Original screens, components and collections retained. Only the new index entry 267:2406 was appended outside the v2 page.",
+    "dark": "Semantic Dark values defined; dark screen visual validation not part of this Figma milestone.",
+    "acceptance": "No claim of 265-state application parity or full application acceptance."
+  }
+}

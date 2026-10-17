@@ -1,0 +1,67 @@
+{
+  "at": "2026-10-17T16:02:21.927181+00:00",
+  "scope": "Astra Figma-first revision: five main merchant surfaces and wholesaler overview",
+  "results": [
+    {
+      "evidence": "journey/expanded-browser.json",
+      "checkCount": 16,
+      "errors": 0,
+      "failures": 0,
+      "capturedAt": "2026-10-17T15:59:45.634Z"
+    },
+    {
+      "evidence": "journey/expanded-amendment.json",
+      "checkCount": 2,
+      "errors": 0,
+      "failures": 0,
+      "capturedAt": "2026-10-17T16:00:00.912Z"
+    },
+    {
+      "evidence": "browser-final/checks.json",
+      "checkCount": 12,
+      "errors": 0,
+      "failures": 0,
+      "capturedAt": "2026-10-17T16:00:50.643Z"
+    },
+    {
+      "evidence": "browser-final/desktop-checks.json",
+      "checkCount": 8,
+      "errors": 0,
+      "failures": 0,
+      "capturedAt": "2026-10-17T16:00:29.633Z"
+    },
+    {
+      "evidence": "mobile-smoke/mobile-preview.json",
+      "checkCount": 9,
+      "errors": 0,
+      "failures": 0,
+      "capturedAt": "2026-10-17T16:01:11.621Z"
+    },
+    {
+      "evidence": "membership/shop-members-browser.json",
+      "checkCount": 12,
+      "errors": 0,
+      "failures": 0,
+      "capturedAt": "2026-10-17T16:02:05.808Z"
+    }
+  ],
+  "sourceBuilds": {
+    "web": "pass",
+    "mobileTypeScript": "pass",
+    "mobileWebExport": "pass"
+  },
+  "visualReview": "Scoped ship; see final-review.md",
+  "limitations": [
+    "No claim of pixel identity or complete265-state parity",
+    "Native simulators remain off; native binaries predate this browser revision",
+    "Product photographs retain source quality",
+    "GPS, ETA, payments and promotions remain bound to actual data; illustrations are labeled",
+    "120ms Figma chart timing remains design intent; implemented chart selection is immediate"
+  ],
+  "correctedDuringVerification": [
+    "Incorrect local API-origin build setting corrected before final tests",
+    "Screenshot repaint timing corrected before visual scoring",
+    "Tablet legend restored and chart axis scaling fixed",
+    "Product add hit target44px and320px promotion layout fixed"
+  ]
+}

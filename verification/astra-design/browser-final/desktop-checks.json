@@ -1,0 +1,187 @@
+{
+  "at": "2026-10-17T16:00:29.633Z",
+  "base": "http://127.0.0.1:5864",
+  "checks": [
+    {
+      "name": "Dashboard",
+      "text": "Démonstration isolée · prix, stocks et opérations fictifs\nApp commerçant ↗\nApp livreur ↗\nVotre activité, en clair.\n\nDemandes, préparation, livraison et encaissement · Les mêmes données sur les trois interfaces.\n\n30 derniers jours\nVoir les priorités\nVentes réceptionnées\n15 040DA\n3 commandes\nsur 30 jours\nDemandes à confirmer\n2\n11 demandes\nsur 30 jours\nRéceptions enregistrées\n3\nRéceptions\nsur 30 jours\nEncaissements nets\n8 125DA\nSur 30 jours\nmoins remboursements\nVentes et encaissements\n\nMontants cumulés · DA · 30 derniers jours\n\nVentes\nEncaissements\nDemandes\nTotal sur la période\n15 040 DA\nVentes réceptionnées\nEncaissements nets\n15 k\n10 k\n5 k\n0\n18 sept.\n2 oct.\n17 oct.\nExplorer les jours\n17 oct. · 15 040 DA\nÀ traiter maintenant\n\nUne décision, un responsable, une suite.\n\n2\nCommandes à confirmer\nDemandes en attente de votre décision\n2\nRéponses marchands\nVersions proposées en attente d’accord\n0\nMagasins à vérifier\nContrôler les informations du magasin\n0\nRéférences sous le seuil\nVérifier le réassort\n20 dossiers, 6 groupes\n\nÉtat actuel · décision commerciale ≠ paiement\n\nReçues\n2\nAccord attendu\n2\nPréparation\n3\nEn livraison\n1\nRéceptionnées\n11\nAutres états\n1\nVoir les commandes\nCe qui arrive de l’app\n\nMême dossier. Même historique.\n\n17 oct.\nEXEMPLE-261017-6BAD3A · Accord attendu\nAlimentation Akid Lotfi · EXEMPLE · 2 845 DA\n15 oct.\nEXEMPLE-261015-7CD0FB · Demande reçue\nÉpicerie Bir El Djir · EXEMPLE · Prix à confirmer\n12 oct.\nEXEMPLE-261012-89CE0F · En livraison\nSupérette Es Sénia · EXEMPLE · 8 185 DA\nLivraisons en cours\n\n1 commande sur la route\n\n2\nÀ préparer\n1\nAu départ\n1\nEn route\nConsulter les affectations et le suivi de remise.\nOuvrir le centre de livraison\n\nDemandes, réceptions et encaissements nets restent distincts. Commandes livrées selon la date de livraison; montant des unités acceptées et frais contractuels, diminué des avoirs commerciaux explicites.\n\nTOUSHIR · Environnement de test isolé · Données calculées par le serveur · Heure d’Alger",
+      "height": {
+        "x": 256,
+        "y": 194.1875,
+        "width": 1312,
+        "height": 828.375
+      },
+      "pageOverflow": false
+    },
+    {
+      "name": "Chart Encaissements",
+      "sliderValue": "11",
+      "text": "29 sept. · cumul\n8 125 DA\nEncaissements nets\n8,1 k\n5,4 k\n2,7 k\n0\n18 sept.\n2 oct.\n17 oct.\nExplorer les jours\n29 sept. · 8 125 DA"
+    },
+    {
+      "name": "Chart Demandes",
+      "sliderValue": "11",
+      "text": "29 sept. · cumul\n4\nDemandes reçues\n11\n7,3\n3,7\n0\n18 sept.\n2 oct.\n17 oct.\nExplorer les jours\n29 sept. · 4"
+    },
+    {
+      "name": "Chart Ventes",
+      "sliderValue": "11",
+      "text": "29 sept. · cumul\n15 040 DA\nVentes réceptionnées\nEncaissements nets\n15 k\n10 k\n5 k\n0\n18 sept.\n2 oct.\n17 oct.\nExplorer les jours\n29 sept. · 15 040 DA"
+    },
+    {
+      "name": "Priority filter opens",
+      "text": "Démonstration isolée · prix, stocks et opérations fictifs\nApp commerçant ↗\nApp livreur ↗\nCommandes\n\nOuvrez un dossier pour voir son historique et effectuer la prochaine action.\n\nActualiser\nLe relais entre les équipes\n\nLa prochaine action dépend de l’état réel du dossier. Ouvrez-le pour la réaliser.\n\n8 en cours\nToutes les équipes8\nCommerce2\nMagasin2\nEntrepôt2\nExpédition1\nLivraison1\nEXEMPLE-260927-C90243\nÉpicerie El Bahia · Exemple · 27 sept., 03:00 PM\nVérifier les lignes\nCommerce · Demande reçue\nSur devis\nEXEMPLE-260930-4FD6E6\nSupérette Es Sénia · EXEMPLE · 30 sept., 03:00 PM\nConsulter l’offre\nMagasin · Accord attendu\n3 215 DA\nEXEMPLE-261003-9D0722\nÉpicerie Bir El Djir · EXEMPLE · 3 oct., 03:00 PM\nPréparer la commande\nEntrepôt · Confirmée\n8 775 DA\nEXEMPLE-261006-00EC14\nAlimentation Akid Lotfi · EXEMPLE · 6 oct., 03:00 PM\nVérifier les prélèvements\nEntrepôt · En préparation\n2 035 DA\nEXEMPLE-261009-61646B\nÉpicerie El Bahia · Exemple · 9 oct., 03:00 PM\nAffecter le chauffeur\nExpédition · Prête à charger\n6 545 DA\nEXEMPLE-261012-89CE0F\nSupérette Es Sénia · EXEMPLE · 12 oct., 03:00 PM\nSuivre la remise\nLivraison · En livraison\n8 185 DA\nEXEMPLE-261015-7CD0FB\nÉpicerie Bir El Djir · EXEMPLE · 15 oct., 03:00 PM\nVérifier les lignes\nCommerce · Demande reçue\nSur devis\nEXEMPLE-261017-6BAD3A\nAlimentation Akid Lotfi · EXEMPLE · 17 oct., 03:00 PM\nConsulter l’offre\nMagasin · Accord attendu\n2 845 DA\nDemande reçue\n2\nAccord attendu\n2\nConfirmée\n1\nEn préparation\n1\nPrête à charger\n1\nEn livraison\n1\nToutes les commandes\n\nCliquez sur un dossier pour traiter sa prochaine action.\n\nTous les états\nDemandes à confirmer\nDemande reçue\nAccord attendu\nÀ confirmer\nConfirmée\nEn préparation\nPrête à charger\nEn livraison\nLivrée\nRéception partielle\nLivraison refusée\nAnnulée\nRefusée\nOffre refusée\nÀ encaisser\nPaiement partiel\nEncaissé\nRapproché\nRemboursement dû\nEn route\nSur place\nAffecté\nSous garde\nCommande\tMagasin\tCartons / unités\tMontant contractuel\tDécision / exécution\tProchaine action\nEXEMPLE-261015-7CD0FB\n15"
+    },
+    {
+      "name": "Dark computed colours",
+      "colours": {
+        "body": {
+          "color": "rgb(237, 243, 238)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        ".shell": {
+          "color": "rgb(237, 243, 238)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        ".sidebar": {
+          "color": "rgb(237, 243, 238)",
+          "background": "rgb(17, 29, 23)"
+        },
+        ".topbar": {
+          "color": "rgb(237, 243, 238)",
+          "background": "rgb(23, 35, 28)"
+        },
+        ".overview-activity h2": {
+          "color": "rgb(237, 243, 238)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        ".overview-priorities h2": {
+          "color": "rgb(237, 243, 238)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        ".overview-event-list": {
+          "color": "rgb(237, 243, 238)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      }
+    },
+    {
+      "name": "Tablet legend",
+      "visible": true,
+      "series": "Ventes réceptionnées\nEncaissements nets"
+    },
+    {
+      "name": "390px",
+      "dimensions": {
+        "innerWidth": 390,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "overflow": [
+          {
+            "name": "ASIDE.sidebar ",
+            "left": -224,
+            "right": 0
+          },
+          {
+            "name": "A.brand",
+            "left": -214,
+            "right": -11
+          },
+          {
+            "name": "IMG.",
+            "left": -206,
+            "right": -82
+          },
+          {
+            "name": "SMALL.space-label",
+            "left": -206,
+            "right": -19
+          },
+          {
+            "name": "DIV.depot-switch",
+            "left": -214,
+            "right": -11
+          },
+          {
+            "name": "IMG.icon",
+            "left": -202,
+            "right": -182
+          },
+          {
+            "name": "DIV.",
+            "left": -172,
+            "right": -23
+          },
+          {
+            "name": "STRONG.",
+            "left": -172,
+            "right": -23
+          },
+          {
+            "name": "SMALL.",
+            "left": -172,
+            "right": -23
+          },
+          {
+            "name": "NAV.",
+            "left": -214,
+            "right": -11
+          },
+          {
+            "name": "DIV.nav-group",
+            "left": -214,
+            "right": -11
+          },
+          {
+            "name": "SPAN.",
+            "left": -214,
+            "right": -11
+          },
+          {
+            "name": "BUTTON.active",
+            "left": -214,
+            "right": -11
+          },
+          {
+            "name": "IMG.icon",
+            "left": -204,
+            "right": -184
+          },
+          {
+            "name": "BUTTON.",
+            "left": -214,
+            "right": -11
+          },
+          {
+            "name": "IMG.icon",
+            "left": -204,
+            "right": -184
+          },
+          {
+            "name": "B.",
+            "left": -36.78125,
+            "right": -21
+          },
+          {
+            "name": "BUTTON.",
+            "left": -214,
+            "right": -11
+          },
+          {
+            "name": "IMG.icon",
+            "left": -204,
+            "right": -184
+          },
+          {
+            "name": "BUTTON.",
+            "left": -214,
+            "right": -11
+          }
+        ]
+      },
+      "pngWidth": 390,
+      "noPageOverflow": true
+    }
+  ],
+  "errors": []
+}

@@ -282,7 +282,7 @@ export default function MerchantAccount({
               contentFit="contain"
               accessibilityLabel="Toushir"
             />
-            <Text style={A.cardLabel}>Carte commerçant</Text>
+            <Text style={A.cardLabel}>CARTE COMMERÇANT</Text>
           </View>
           <View style={[S.row, { gap: 10 }]}>
             <Text
@@ -303,12 +303,6 @@ export default function MerchantAccount({
               {session.user.shopName || session.user.name}
             </Text>
             <Graphic source={assets.arrow} />
-          </View>
-          <View style={A.cardFooter}>
-            <Text style={A.onDark}>Votre fidélité, à chaque commande</Text>
-            <Text style={[A.onDark, { color: C.action }]}>
-              Voir mes cadeaux
-            </Text>
           </View>
         </Pressable>
       </StateArrival>
@@ -345,7 +339,7 @@ export default function MerchantAccount({
             style={({ pressed }) => [
               A.tile,
               {
-                backgroundColor: item.id === "rewards" ? C.mint : C.bg,
+                backgroundColor: item.id === "rewards" ? C.rewardBg : C.bg,
                 opacity: pressed ? 0.7 : 1,
               },
             ]}
@@ -413,15 +407,7 @@ const A = StyleSheet.create({
     lineHeight: 19,
     color: C.muted,
   },
-  card: { backgroundColor: C.ink, borderRadius: 16, padding: 24, gap: 18 },
-  cardFooter: {
-    ...S.between,
-    flexWrap: "wrap",
-    gap: 5,
-    borderTopWidth: 1,
-    borderColor: "#405346",
-    paddingTop: 14,
-  },
+  card: { backgroundColor: C.ink, borderRadius: 20, padding: 24, gap: 18 },
   cardLabel: {
     fontFamily: "Inter",
     fontSize: 10,
@@ -458,7 +444,7 @@ const A = StyleSheet.create({
     minHeight: 44,
     marginVertical: -10,
   },
-  tile: { flex: 1, borderRadius: 16, padding: 16, gap: 12, minHeight: 95 },
+  tile: { flex: 1, borderRadius: 16, padding: 16, gap: 14, minHeight: 96 },
   tileLabel: {
     fontFamily: "Inter",
     fontSize: 16,

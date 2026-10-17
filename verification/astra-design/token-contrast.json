@@ -1,0 +1,47 @@
+{
+  "checks": [
+    {
+      "role": "ink",
+      "foreground": "#151917",
+      "background": "#FFFFFF",
+      "ratio": 17.75,
+      "passesNormalText": true
+    },
+    {
+      "role": "secondary",
+      "foreground": "#5F6D65",
+      "background": "#FFFFFF",
+      "ratio": 5.44,
+      "passesNormalText": true
+    },
+    {
+      "role": "green link",
+      "foreground": "#087F4F",
+      "background": "#FFFFFF",
+      "ratio": 5.05,
+      "passesNormalText": true
+    },
+    {
+      "role": "action",
+      "foreground": "#151917",
+      "background": "#06DD81",
+      "ratio": 9.86,
+      "passesNormalText": true
+    },
+    {
+      "role": "info",
+      "foreground": "#456B8C",
+      "background": "#EAF1F7",
+      "ratio": 4.93,
+      "passesNormalText": true
+    },
+    {
+      "role": "pending/reward",
+      "foreground": "#6C5A92",
+      "background": "#F0ECF7",
+      "ratio": 5.13,
+      "passesNormalText": true
+    }
+  ],
+  "note": "Proposed Figma v2 light semantic pairs only; not a full accessibility audit."
+}

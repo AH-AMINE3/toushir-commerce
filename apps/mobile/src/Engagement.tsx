@@ -1,5 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Pressable, StyleSheet, Switch, Text, View } from "react-native";
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  View,
+  useWindowDimensions,
+} from "react-native";
+import { Image } from "expo-image";
 import {
   api,
   date,
@@ -390,6 +399,41 @@ type Campaign = {
   endsAt: string;
   rewardId?: string;
 };
+// Brand artwork is used only when the connected product identifies that brand.
+function CampaignBrand({
+  name,
+  rail = false,
+}: {
+  name: string;
+  rail?: boolean;
+}) {
+  const brand = name.trim().toLocaleLowerCase();
+  const artwork =
+    brand === "coca-cola" || brand === "coca cola"
+      ? require("../assets/figma/mobile-merchant-home-29d02.png")
+      : brand === "candia"
+        ? require("../assets/figma/mobile-merchant-home-335f4.png")
+        : brand === "rouiba"
+          ? require("../assets/figma/mobile-merchant-home-15b43.png")
+          : brand === "nutella"
+            ? require("../assets/figma/mobile-merchant-home-da930.png")
+            : null;
+  return artwork ? (
+    <Image
+      source={artwork}
+      accessibilityLabel={name}
+      contentFit="contain"
+      style={{ width: rail ? 65.5 : 84, height: rail ? 28 : 24 }}
+    />
+  ) : (
+    <Text
+      numberOfLines={2}
+      style={[O.brandName, rail && { textAlign: "center" }]}
+    >
+      {name || "Votre grossiste"}
+    </Text>
+  );
+}
 export function Campaigns({
   session,
   onProduct,
@@ -399,6 +443,7 @@ export function Campaigns({
   onProduct: (id: string) => void;
   onNotice: (m: string) => void;
 }) {
+  const { width } = useWindowDimensions();
   const [campaigns, setCampaigns] = useState<Campaign[]>([]),
     [campaignProducts, setCampaignProducts] = useState<Record<string, Product>>(
       {},
@@ -406,6 +451,8 @@ export function Campaigns({
     [selected, setSelected] = useState<Campaign | null>(null),
     [quantity, setQuantity] = useState("1"),
     [kind, setKind] = useState(""),
+    [brand, setBrand] = useState(""),
+    [loaded, setLoaded] = useState(false),
     [preview, setPreview] = useState<any>(null),
     [progress, setProgress] = useState<any>(null),
     [busy, setBusy] = useState(false),
@@ -415,6 +462,7 @@ export function Campaigns({
     try {
       const r = await api<{ items: Campaign[] }>("/campaigns");
       setCampaigns(r.items);
+      setLoaded(true);
       setError("");
       if (selected?.kind === "CHALLENGE")
         setProgress(await api(`/campaigns/${selected.id}/progress`));
@@ -463,37 +511,89 @@ export function Campaigns({
         setError(e.message);
       }
   }
+  const brands = [
+    ...new Set(
+      campaigns
+        .map((c) => campaignProducts[c.productId]?.brand)
+        .filter((name): name is string => !!name),
+    ),
+  ];
+  const visibleCampaigns = campaigns
+    .filter(
+      (c) =>
+        (!kind || c.kind === kind) &&
+        (!brand || campaignProducts[c.productId]?.brand === brand),
+    )
+    .sort(
+      (a, b) =>
+        (({ DISCOUNT: 0, CHALLENGE: 1, FREE_GOODS: 2 })[a.kind] ?? 3) -
+        ({ DISCOUNT: 0, CHALLENGE: 1, FREE_GOODS: 2 }[b.kind] ?? 3),
+    );
   return (
-    <View style={E.wrap}>
-      <View style={{ gap: 6 }}>
-        <Text style={S.subheading}>Chaque réassort compte.</Text>
-        <Text style={S.muted}>
-          Remises, produits offerts et objectifs de votre grossiste, avec leurs
-          conditions.
-        </Text>
-        <Text style={S.small}>
-          {live ? "Offres connectées" : "Actualisation toutes les 8 s"} ·{" "}
-          {campaigns.length} offre{campaigns.length === 1 ? "" : "s"} disponible
-          {campaigns.length === 1 ? "" : "s"}
-        </Text>
-      </View>
-      <View style={[S.row, { gap: 8, flexWrap: "wrap" }]}>
+    <View style={O.wrap}>
+      <Text style={O.intro}>Des avantages pour votre réassort.</Text>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ gap: 8 }}
+      >
         {[
           ["", "Tout"],
           ["DISCOUNT", "Remises"],
           ["FREE_GOODS", "Cadeaux"],
           ["CHALLENGE", "Challenges"],
         ].map(([id, label]) => (
-          <FilterPill
+          <Pressable
             key={id}
-            selected={kind === id}
+            accessibilityRole="button"
+            accessibilityState={{ selected: kind === id }}
             onPress={() => setKind(id)}
+            style={({ pressed }) => [
+              O.filter,
+              {
+                backgroundColor: kind === id ? C.ink : C.bg,
+                opacity: pressed ? 0.7 : 1,
+              },
+            ]}
           >
-            {label}
-          </FilterPill>
+            <Text
+              style={[O.filterText, { color: kind === id ? C.white : C.ink }]}
+            >
+              {label}
+            </Text>
+          </Pressable>
         ))}
-      </View>
+      </ScrollView>
+      {!selected && brands.length ? (
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ gap: 12 }}
+        >
+          {brands.map((name) => (
+            <Pressable
+              key={name}
+              accessibilityRole="button"
+              accessibilityLabel={`Offres ${name}`}
+              accessibilityState={{ selected: brand === name }}
+              onPress={() => setBrand(brand === name ? "" : name)}
+              style={[
+                O.brandTile,
+                brand === name && {
+                  borderColor: C.green,
+                  backgroundColor: C.pale,
+                },
+              ]}
+            >
+              <CampaignBrand name={name} rail />
+            </Pressable>
+          ))}
+        </ScrollView>
+      ) : null}
       {error ? <Notice error>{error}</Notice> : null}
+      {!loaded && !error ? (
+        <Text style={S.small}>Chargement des offres…</Text>
+      ) : null}
       {selected ? (
         <>
           <Button
@@ -697,67 +797,114 @@ export function Campaigns({
         </>
       ) : (
         <>
-          {campaigns
-            .filter((c) => !kind || c.kind === kind)
-            .map((c) => (
-              <Pressable
-                key={c.id}
-                accessibilityRole="button"
-                onPress={() => choose(c)}
-                style={[
-                  E.panel,
-                  { backgroundColor: c.kind === "DISCOUNT" ? C.pale : C.bg },
-                ]}
-              >
-                <View style={S.between}>
-                  <Icon
-                    name={
-                      c.kind === "CHALLENGE"
-                        ? "trophy-outline"
-                        : "pricetag-outline"
-                    }
-                    color={C.green}
-                    size={26}
-                  />
-                  <Icon name="arrow-forward" />
-                </View>
-                {c.kind === "DISCOUNT" ? (
-                  <Text style={[E.title, { fontSize: 40, lineHeight: 50 }]}>
-                    −{c.discountPercent} %
-                  </Text>
+          {visibleCampaigns.map((c, index) => {
+            const product = campaignProducts[c.productId];
+            const challenge = c.kind === "CHALLENGE";
+            const discount = c.kind === "DISCOUNT";
+            return (
+              <React.Fragment key={c.id}>
+                {challenge &&
+                (index === 0 ||
+                  visibleCampaigns[index - 1].kind !== "CHALLENGE") ? (
+                  <Text style={O.sectionTitle}>Votre prochain cadeau</Text>
                 ) : null}
-                {c.kind === "FREE_GOODS" ? (
-                  <Text style={[E.title, { fontSize: 32, lineHeight: 42 }]}>
-                    + {c.giftQuantity} offert{c.giftQuantity === 1 ? "" : "s"}
-                  </Text>
-                ) : c.kind === "CHALLENGE" ? (
-                  <Text style={[S.label, { color: C.green }]}>
-                    Objectif · {c.goalQuantity} unités éligibles
-                  </Text>
-                ) : null}
-                <Text style={E.title}>{c.title}</Text>
-                <Text style={S.muted}>{c.description}</Text>
-                {campaignProducts[c.productId] ? (
-                  <View style={S.row}>
-                    <ProductImage
-                      uri={campaignProducts[c.productId].imageUrl}
-                      name={campaignProducts[c.productId].name}
-                      size={54}
-                    />
-                    <Text style={[S.small, { flex: 1 }]} numberOfLines={2}>
-                      {campaignProducts[c.productId].name}
+                <View
+                  style={[
+                    O.campaign,
+                    {
+                      backgroundColor: discount
+                        ? C.mint
+                        : challenge
+                          ? C.rewardBg
+                          : C.blueBg,
+                    },
+                  ]}
+                >
+                  <View style={S.between}>
+                    <View style={O.brandPlate}>
+                      <CampaignBrand name={product?.brand || ""} />
+                    </View>
+                    <Text style={O.publisher}>
+                      {challenge ? "Challenge" : discount ? "Remise" : "Cadeau"}{" "}
+                      · {session.workspace.name}
                     </Text>
                   </View>
-                ) : null}
-                <Text style={S.small}>Jusqu’au {date(c.endsAt)}</Text>
-                <Text style={[S.label, { color: C.green }]}>
-                  {c.kind === "CHALLENGE"
-                    ? "Voir ma progression"
-                    : "Découvrir les conditions"}
-                </Text>
-              </Pressable>
-            ))}
-          {!campaigns.filter((c) => !kind || c.kind === kind).length ? (
+                  <View style={O.benefitRow}>
+                    <View style={O.benefit}>
+                      <Text
+                        numberOfLines={discount ? 1 : undefined}
+                        adjustsFontSizeToFit={discount}
+                        minimumFontScale={0.65}
+                        style={[
+                          O.offerValue,
+                          discount &&
+                            width < 360 && { fontSize: 36, lineHeight: 49 },
+                          !discount && O.goalValue,
+                        ]}
+                      >
+                        {discount
+                          ? `−${c.discountPercent} %`
+                          : challenge
+                            ? `Objectif\n${c.goalQuantity.toLocaleString("fr-DZ")} unités`
+                            : `${c.giftQuantity} offert${c.giftQuantity === 1 ? "" : "s"}`}
+                      </Text>
+                      <Text style={O.condition}>
+                        {challenge
+                          ? c.title
+                          : `Dès ${c.minimumQuantity} unités`}
+                      </Text>
+                      <Text style={O.productName} numberOfLines={1}>
+                        {product?.name || c.title}
+                      </Text>
+                      <Text
+                        style={[
+                          O.finePrint,
+                          {
+                            color: challenge
+                              ? C.reward
+                              : discount
+                                ? C.green
+                                : C.blue,
+                          },
+                        ]}
+                      >
+                        {challenge
+                          ? "Après validation des achats éligibles"
+                          : "Conditions selon votre panier"}
+                      </Text>
+                    </View>
+                    <View style={O.packshot}>
+                      <ProductImage
+                        uri={product?.imageUrl}
+                        name={product?.name || c.title}
+                        style={{
+                          width: 100,
+                          height: 132,
+                          aspectRatio: undefined,
+                        }}
+                      />
+                    </View>
+                  </View>
+                  <Button
+                    onPress={() => choose(c)}
+                    label={`${challenge ? "Voir mon challenge" : discount ? "Voir la remise" : "Découvrir le cadeau"} : ${c.title}`}
+                    style={{ width: "100%", minHeight: 52 }}
+                  >
+                    {challenge
+                      ? "Voir mon challenge"
+                      : discount
+                        ? "Voir la remise"
+                        : "Découvrir le cadeau"}
+                  </Button>
+                  <Text style={O.finePrint}>
+                    Du {date(c.startsAt)} au {date(c.endsAt)} · Conditions
+                    applicables
+                  </Text>
+                </View>
+              </React.Fragment>
+            );
+          })}
+          {loaded && !visibleCampaigns.length ? (
             <Empty
               title={
                 campaigns.length
@@ -774,6 +921,10 @@ export function Campaigns({
           ) : null}
         </>
       )}
+      <Text style={O.finePrint}>
+        {live ? "Offres à jour" : "Actualisation automatique"} ·{" "}
+        {campaigns.length} offre{campaigns.length === 1 ? "" : "s"}
+      </Text>
     </View>
   );
 }
@@ -1041,5 +1192,85 @@ const E = StyleSheet.create({
     padding: 14,
     borderRadius: 12,
     gap: 7,
+  },
+});
+
+const O = StyleSheet.create({
+  wrap: { gap: 16, paddingTop: 12, paddingBottom: 12 },
+  intro: { ...S.text, lineHeight: 19, color: C.muted },
+  filter: {
+    height: 44,
+    borderRadius: 24,
+    paddingHorizontal: 12,
+    justifyContent: "center",
+  },
+  filterText: { ...S.text, fontSize: 12, lineHeight: 17, fontWeight: "500" },
+  brandTile: {
+    width: 81.5,
+    height: 54,
+    borderWidth: 1,
+    borderColor: C.border,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 8,
+  },
+  brandName: { ...S.label, fontSize: 12, lineHeight: 16, flexShrink: 1 },
+  brandPlate: {
+    width: 96,
+    minHeight: 34,
+    padding: 6,
+    backgroundColor: C.white,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  publisher: {
+    ...S.small,
+    color: C.ink,
+    fontSize: 11,
+    lineHeight: 15,
+    textAlign: "right",
+    flex: 1,
+  },
+  campaign: { padding: 16, borderRadius: 16, gap: 12 },
+  benefitRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+    minHeight: 140,
+  },
+  benefit: { flex: 1, minWidth: 0, gap: 4 },
+  offerValue: {
+    ...S.heading,
+    fontSize: 48,
+    lineHeight: 65,
+    fontWeight: "700",
+    letterSpacing: -0.6,
+  },
+  goalValue: { fontSize: 24, lineHeight: 29 },
+  condition: {
+    ...S.subheading,
+    fontSize: 20,
+    lineHeight: 27,
+    fontWeight: "700",
+  },
+  productName: { ...S.small, fontSize: 11, lineHeight: 15, color: C.ink },
+  finePrint: { ...S.small, fontSize: 11, lineHeight: 15 },
+  packshot: {
+    width: 110,
+    height: 140,
+    borderRadius: 12,
+    backgroundColor: C.white,
+    overflow: "hidden",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  sectionTitle: {
+    ...S.subheading,
+    fontSize: 22,
+    lineHeight: 30,
+    fontWeight: "700",
+    marginTop: 0,
   },
 });

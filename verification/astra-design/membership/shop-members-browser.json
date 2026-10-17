@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-17T16:02:05.808Z",
+  "base": "http://127.0.0.1:5864",
+  "passed": 12,
+  "failed": 0,
+  "checks": [
+    "The shop owner reaches a useful team empty state from the actual account screen",
+    "A real rejected owner invitation keeps its error, retry action and entered value at the action position",
+    "The real invitation form persists an individual buyer role and passes its private fragment URL to the copy handler",
+    "A person creates a password account through the actual invitation screen and joins the existing shop without a demo-owner capability",
+    "A link revoked after preview shows its real acceptance error beside the retry action without losing the entered name",
+    "The personal member identity survives reload without silently creating a demonstration",
+    "The owner changes actual role permissions with an explicit reason, and the old member session returns to personal sign-in",
+    "A viewer retains a personal basket while the actual checkout control is disabled",
+    "Read-only members cannot send shared messages or change shop marketing consent",
+    "The team list remains readable at 390 pixels and in the wide browser preview",
+    "Revoking the person through the real form preserves their historical row and prevents demo fallback on reload",
+    "A consumed invitation shows a truthful recovery state without another account-creation form"
+  ],
+  "javascriptErrors": []
+}

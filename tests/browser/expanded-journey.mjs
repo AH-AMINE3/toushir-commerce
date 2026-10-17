@@ -226,7 +226,11 @@ try {
   await step(
     "Full category grid, semantic icons and category selection work",
     async () => {
-      await btn(m, "Tout voir").click();
+      await m
+        .getByText("Vos rayons", { exact: true })
+        .locator("..")
+        .getByRole("button", { name: "Tout voir", exact: true })
+        .click();
       await m
         .getByRole("textbox", { name: "Rechercher un rayon", exact: true })
         .waitFor();
@@ -243,7 +247,11 @@ try {
   await step(
     "Brand directory opens, searches and filters actual products",
     async () => {
-      await btn(m, "Toutes les marques").click();
+      await m
+        .getByText("Vos marques", { exact: true })
+        .locator("..")
+        .getByRole("button", { name: "Tout voir", exact: true })
+        .click();
       await m
         .getByRole("textbox", { name: "Rechercher une marque", exact: true })
         .fill("Ifri");
@@ -255,7 +263,7 @@ try {
   );
   await step("Product filters and exact barcode lookup work", async () => {
     await m.goto(base + "/mobile/merchant#catalog");
-    await btn(m, "Filtrer les produits").click();
+    await btn(m, "Filtrer et trier les produits").click();
     await m.getByText("Trier les résultats", { exact: true }).waitFor();
     await shot(m, "merchant-filters");
     await btn(m, "Fermer la découverte").click();
@@ -288,7 +296,7 @@ try {
       );
       await add.click();
       assert((await saved).ok());
-      await btn(m, "Voir le panier").click();
+      await m.getByRole("button", { name: /^Voir le panier,/ }).click();
       await btn(m, "Confirmer la commande").waitFor();
       await shot(m, "merchant-checkout");
       created = await posted(m, "/orders", () =>
@@ -328,7 +336,8 @@ try {
       await m.getByRole("button", { name: /^Ma carte Toushir/ }).waitFor();
       await shot(m, "merchant-account");
       await btn(m, "Mon activité").click();
-      await m.getByText("L’activité de mon magasin", { exact: true }).waitFor();
+      await btn(m, "Actualiser mon activité").waitFor();
+      await shot(m, "merchant-activity-summary");
       for (const d of [7, 30, 90]) {
         const req = m.waitForResponse(
           (r) =>
@@ -339,6 +348,7 @@ try {
         const data = await (await req).json();
         assert.equal(data.period.days, d);
       }
+      await btn(m, "Explorer mon activité").click();
       await btn(m, "Encaissé net").click();
       await btn(m, "Commandé").click();
       await m
@@ -355,6 +365,7 @@ try {
   await step(
     "All campaign mechanisms and actual gift catalogue render",
     async () => {
+      await btn(m, "Retour à Mon Toushir").click();
       await m.getByRole("tab", { name: "Offres", exact: true }).click();
       await m.getByText("Remises", { exact: true }).waitFor();
       await shot(m, "merchant-offers");

@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { api, date, labels, money, number } from "./api";
 
 type Navigate = (route: string, status?: string) => void;
@@ -235,14 +235,32 @@ export function ActivityChart({
   previous = [],
   field,
   title,
+  cumulative = false,
+  companionField,
+  compact = false,
 }: {
   points: any[];
   previous?: any[];
   field: string;
   title?: string;
+  cumulative?: boolean;
+  companionField?: string;
+  compact?: boolean;
 }) {
   const [selected, setSelected] = useState<number | null>(null);
+  const chartElement = useRef<HTMLDivElement>(null);
+  const [measuredWidth, setMeasuredWidth] = useState(800);
   const id = useId().replaceAll(":", "");
+  useEffect(() => {
+    if (!compact || !chartElement.current) return;
+    const element = chartElement.current;
+    const measure = () =>
+      setMeasuredWidth(Math.max(180, element.getBoundingClientRect().width));
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [compact, points.length]);
   useEffect(() => {
     setSelected(null);
   }, [points.length, field, points[0]?.date]);
@@ -252,31 +270,54 @@ export function ActivityChart({
         Les mouvements enregistrés apparaîtront ici.
       </div>
     );
-  const values = points.map((p) => Number(p[field] || 0)),
-    prior = previous.map((p) => Number(p[field] || 0));
-  const low = Math.min(0, ...values, ...prior),
-    high = Math.max(1, ...values, ...prior),
+  const series = (rows: any[], key: string) => {
+    let running = 0;
+    return rows.map((point) => {
+      const value = Number(point[key] || 0);
+      running += value;
+      return cumulative ? running : value;
+    });
+  };
+  const values = series(points, field),
+    prior = series(previous, field),
+    companion = companionField ? series(points, companionField) : [];
+  const low = Math.min(0, ...values, ...prior, ...companion),
+    high = Math.max(1, ...values, ...prior, ...companion),
     span = high - low;
+  const plotWidth = compact ? measuredWidth : 800;
+  const plotLeft = compact && plotWidth < 480 ? 40 : 64;
+  const plotRight = plotWidth - (compact && plotWidth < 480 ? 8 : 24);
   const x = (index: number) =>
-    64 + index * (712 / Math.max(1, points.length - 1));
-  const y = (value: number) => 30 + ((high - value) / span) * 188;
+    plotLeft +
+    index * ((plotRight - plotLeft) / Math.max(1, points.length - 1));
+  const y = (value: number) =>
+    (compact ? 12 : 30) + ((high - value) / span) * (compact ? 130 : 188);
   const coords = values.map((value, index) => `${x(index)},${y(value)}`);
   const index =
     selected == null
       ? points.length - 1
       : Math.min(selected, points.length - 1);
-  const total = values.reduce((sum, value) => sum + value, 0);
+  const total = points.reduce(
+    (sum, point) => sum + Number(point[field] || 0),
+    0,
+  );
   const format = (value: number) =>
     field === "orders" ? number(value) : money(value);
   const caption = title || metricTitles[field] || "Activité";
   return (
-    <div className="activity-chart">
+    <div
+      ref={chartElement}
+      className={
+        "activity-chart" +
+        (compact ? " activity-chart-compact activity-field-" + field : "")
+      }
+    >
       <div className="chart-reading" aria-live="polite" aria-atomic="true">
         <div>
           <span>
             {selected == null
               ? "Total sur la période"
-              : date(points[index].date)}
+              : date(points[index].date) + (cumulative ? " · cumul" : "")}
           </span>
           <strong>{format(selected == null ? total : values[index])}</strong>
         </div>
@@ -291,19 +332,30 @@ export function ActivityChart({
               Période précédente
             </span>
           )}
+          {companionField && (
+            <span>
+              <i className="companion" />
+              {metricTitles[companionField]}
+            </span>
+          )}
         </div>
       </div>
       <svg
-        viewBox="0 0 800 255"
+        viewBox={compact ? `0 0 ${plotWidth} 180` : "0 0 800 255"}
+        preserveAspectRatio={compact ? "none" : undefined}
         role="img"
         aria-label={
           caption +
-          " par jour. Utilisez le curseur sous le graphique pour lire les valeurs."
+          (companionField ? " et " + metricTitles[companionField] : "") +
+          (cumulative ? " en cumul par jour." : " par jour.") +
+          " Utilisez le curseur sous le graphique pour lire les valeurs."
         }
         onPointerMove={(event) => {
           const rect = event.currentTarget.getBoundingClientRect();
           const position =
-            (((event.clientX - rect.left) / rect.width) * 800 - 64) / 712;
+            (((event.clientX - rect.left) / rect.width) * plotWidth -
+              plotLeft) /
+            (plotRight - plotLeft);
           setSelected(
             Math.max(
               0,
@@ -318,8 +370,16 @@ export function ActivityChart({
       >
         <defs>
           <linearGradient id={id} x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="var(--green)" stopOpacity=".19" />
-            <stop offset="100%" stopColor="var(--green)" stopOpacity=".015" />
+            <stop
+              offset="0%"
+              stopColor="var(--chart-primary, var(--green))"
+              stopOpacity=".19"
+            />
+            <stop
+              offset="100%"
+              stopColor="var(--chart-primary, var(--green))"
+              stopOpacity=".015"
+            />
           </linearGradient>
         </defs>
         {[0, 1, 2, 3].map((tick) => {
@@ -327,14 +387,14 @@ export function ActivityChart({
           return (
             <g key={tick}>
               <line
-                x1="64"
-                x2="776"
+                x1={plotLeft}
+                x2={plotRight}
                 y1={y(value)}
                 y2={y(value)}
                 stroke="var(--line)"
               />
               <text
-                x="54"
+                x={plotLeft - 10}
                 y={y(value) + 4}
                 textAnchor="end"
                 fontSize="11"
@@ -357,6 +417,18 @@ export function ActivityChart({
             strokeWidth="1.6"
           />
         )}
+        {companion.length > 0 && (
+          <polyline
+            points={companion
+              .map((value, i) => `${x(i)},${y(value)}`)
+              .join(" ")}
+            fill="none"
+            stroke="var(--info)"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        )}
         <path
           d={`M${coords.join(" L")} L${x(points.length - 1)},${y(0)} L${x(0)},${y(0)} Z`}
           fill={`url(#${id})`}
@@ -365,7 +437,7 @@ export function ActivityChart({
           className="activity-curve"
           points={coords.join(" ")}
           fill="none"
-          stroke="var(--green)"
+          stroke="var(--chart-primary, var(--green))"
           strokeWidth="3"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -375,9 +447,9 @@ export function ActivityChart({
             <line
               x1={x(index)}
               x2={x(index)}
-              y1="24"
-              y2="220"
-              stroke="var(--green)"
+              y1={compact ? 10 : 24}
+              y2={compact ? 145 : 220}
+              stroke="var(--chart-primary, var(--green))"
               strokeDasharray="3 4"
             />
             <circle
@@ -385,7 +457,7 @@ export function ActivityChart({
               cy={y(values[index])}
               r="5"
               fill="var(--surface)"
-              stroke="var(--green)"
+              stroke="var(--chart-primary, var(--green))"
               strokeWidth="3"
             />
           </g>
@@ -396,7 +468,7 @@ export function ActivityChart({
             <text
               key={i}
               x={x(i)}
-              y="248"
+              y={compact ? 172 : 248}
               textAnchor={
                 i === 0 ? "start" : i === points.length - 1 ? "end" : "middle"
               }
@@ -416,7 +488,7 @@ export function ActivityChart({
           max={points.length - 1}
           value={index}
           onChange={(e) => setSelected(Number(e.target.value))}
-          aria-valuetext={`${date(points[index].date)} : ${format(values[index])}`}
+          aria-valuetext={`${date(points[index].date)} : ${format(values[index])}${cumulative ? " en cumul" : ""}`}
         />
         <span>
           {date(points[index].date)} · {format(values[index])}
@@ -559,9 +631,79 @@ export function WorkflowQueue({
   );
 }
 
+/** Small charts share the server series; no decorative trend or inferred conversion. */
+function MetricSpark({
+  points,
+  field,
+  bars = false,
+}: {
+  points: any[];
+  field: string;
+  bars?: boolean;
+}) {
+  const values = points.map((point) => Number(point[field] || 0));
+  if (!values.length) return null;
+  let running = 0;
+  const cumulative = values.map((value) => (running += value));
+  const bins = Array.from({ length: 8 }, (_, i) =>
+    values
+      .slice(
+        Math.floor((i * values.length) / 8),
+        Math.floor(((i + 1) * values.length) / 8),
+      )
+      .reduce((sum, value) => sum + value, 0),
+  );
+  const series = bars ? bins : cumulative;
+  const low = Math.min(0, ...series),
+    high = Math.max(1, ...series),
+    span = high - low;
+  const y = (value: number) => 4 + ((high - value) / span) * 36;
+  return (
+    <svg
+      className={"metric-spark metric-spark-" + field}
+      viewBox="0 0 76 46"
+      aria-hidden="true"
+    >
+      {bars ? (
+        bins.map((value, i) => (
+          <rect
+            key={i}
+            x={i * 9 + 3}
+            y={Math.min(y(value), y(0))}
+            width="5"
+            height={Math.max(value === 0 ? 1 : 2, Math.abs(y(value) - y(0)))}
+            rx="1.5"
+            fill={value === 0 ? "var(--line)" : "currentColor"}
+          />
+        ))
+      ) : (
+        <>
+          <polyline
+            points={cumulative
+              .map(
+                (value, i) =>
+                  `${3 + (i / Math.max(1, cumulative.length - 1)) * 70},${y(value)}`,
+              )
+              .join(" ")}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinejoin="round"
+          />
+          <circle
+            cx="73"
+            cy={y(cumulative[cumulative.length - 1])}
+            r="2.5"
+            fill="currentColor"
+          />
+        </>
+      )}
+    </svg>
+  );
+}
+
 export function Overview({
   dashboard,
-  orders,
   navigate,
   open,
 }: {
@@ -572,62 +714,150 @@ export function Overview({
 }) {
   const [metric, setMetric] = useState("sales");
   const summary = dashboard.summary || {},
-    counts = dashboard.statusCounts || [];
-  const pending =
-    Number(summary.requests || 0) +
-    Number(summary.quotes || 0) +
-    Number(summary.activeOrders || 0);
+    counts = dashboard.statusCounts || [],
+    daily = dashboard.daily || [];
+  const count = (...states: string[]) =>
+    counts.reduce(
+      (sum: number, item: any) =>
+        sum + (states.includes(item.status) ? Number(item.count || 0) : 0),
+      0,
+    );
+  const received = count("REQUESTED", "SUBMITTED"),
+    quoted = count("QUOTED"),
+    preparation = count("CONFIRMED", "PREPARING", "READY"),
+    transit = count("OUT_FOR_DELIVERY"),
+    delivered = count("DELIVERED", "PARTIALLY_DELIVERED");
+  const total = counts.reduce(
+    (sum: number, item: any) => sum + Number(item.count || 0),
+    0,
+  );
+  const other = Math.max(
+    0,
+    total - received - quoted - preparation - transit - delivered,
+  );
+  const days = dashboard.period?.days || daily.length || 30;
+  const distribution = [
+    { label: "Reçues", count: received, tone: "received" },
+    { label: "Accord attendu", count: quoted, tone: "pending" },
+    { label: "Préparation", count: preparation, tone: "preparation" },
+    { label: "En livraison", count: transit, tone: "info" },
+    { label: "Réceptionnées", count: delivered, tone: "delivered" },
+    { label: "Autres états", count: other, tone: "closed" },
+  ];
+  const priorities = [
+    {
+      count: received,
+      label: "Commandes à confirmer",
+      detail: "Demandes en attente de votre décision",
+      route: "orders",
+      status: "RECEIVED",
+      tone: "received",
+    },
+    {
+      count: quoted,
+      label: "Réponses marchands",
+      detail: "Versions proposées en attente d’accord",
+      route: "orders",
+      status: "QUOTED",
+      tone: "pending",
+    },
+    {
+      count: summary.pendingMerchants || 0,
+      label: "Magasins à vérifier",
+      detail: "Contrôler les informations du magasin",
+      route: "merchants",
+      status: "PENDING",
+      tone: "info",
+    },
+    {
+      count: summary.lowStock || 0,
+      label: "Références sous le seuil",
+      detail: "Vérifier le réassort",
+      route: "stock",
+      status: "",
+      tone: "closed",
+    },
+  ];
   return (
-    <div className="operations-overview">
-      <div className="operating-headline">
-        <div>
-          <h2>Chaque commande avance.</h2>
-          <p>Du magasin à la remise, votre équipe retrouve le même dossier.</p>
-        </div>
-        <div className="operating-live">
-          <i />
-          Actualisation des opérations
-        </div>
+    <div className="operations-overview overview-v2">
+      <div className="overview-metrics">
+        <button
+          className="overview-metric"
+          onClick={() => navigate("analytics")}
+        >
+          <span>Ventes réceptionnées</span>
+          <div className="overview-metric-reading">
+            <strong>
+              {number(Number(summary.sales || 0))}
+              <small>DA</small>
+            </strong>
+            <MetricSpark points={daily} field="sales" />
+          </div>
+          <div className="overview-metric-note">
+            <b>{number(summary.deliveredOrders || 0)} commandes</b>
+            <small>sur {days} jours</small>
+          </div>
+        </button>
+        <button
+          className="overview-metric"
+          onClick={() => navigate("orders", "RECEIVED")}
+        >
+          <span>Demandes à confirmer</span>
+          <div className="overview-metric-reading">
+            <strong>{number(received)}</strong>
+            <MetricSpark points={daily} field="orders" bars />
+          </div>
+          <div className="overview-metric-note">
+            <b>{number(summary.newOrders || 0)} demandes</b>
+            <small>sur {days} jours</small>
+          </div>
+        </button>
+        <button
+          className="overview-metric"
+          onClick={() => navigate("analytics")}
+        >
+          <span>Réceptions enregistrées</span>
+          <div className="overview-metric-reading">
+            <strong>{number(summary.deliveredOrders || 0)}</strong>
+            <span className="overview-receipt-icon">
+              <img src="/figma/overview-v2/package.svg" alt="" />
+            </span>
+          </div>
+          <div className="overview-metric-note">
+            <b>Réceptions</b>
+            <small>sur {days} jours</small>
+          </div>
+        </button>
+        <button className="overview-metric" onClick={() => navigate("finance")}>
+          <span>Encaissements nets</span>
+          <div className="overview-metric-reading">
+            <strong>
+              {number(Number(summary.collected || 0))}
+              <small>DA</small>
+            </strong>
+            <MetricSpark points={daily} field="collected" bars />
+          </div>
+          <div className="overview-metric-note">
+            <b>Sur {days} jours</b>
+            <small>moins remboursements</small>
+          </div>
+        </button>
       </div>
-      <div className="operating-ledger">
-        <button onClick={() => navigate("analytics")}>
-          <span>Ventes réceptionnées · 30 jours</span>
-          <strong>{money(summary.sales)}</strong>
-          <small>
-            {number(summary.deliveredOrders)} réceptions enregistrées
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              aria-hidden="true"
-            >
-              <path d="M5 19 19 5M5 5h14v14" />
-            </svg>
-          </small>
-        </button>
-        <button onClick={() => navigate("orders", "REQUESTED")}>
-          <span>Demandes à traiter</span>
-          <strong>{number(summary.requests)}</strong>
-          <small>{number(summary.quotes)} offres attendent un accord</small>
-        </button>
-        <button onClick={() => navigate("picking")}>
-          <span>Commandes en cours</span>
-          <strong>{number(summary.activeOrders)}</strong>
-          <small>Préparation, départ et livraison</small>
-        </button>
-        <button onClick={() => navigate("finance")}>
-          <span>Encaissements · 30 jours</span>
-          <strong>{money(summary.collected)}</strong>
-          <small>Paiements enregistrés moins remboursements</small>
-        </button>
-      </div>
-      <div className="operating-main-grid">
-        <section className="panel operating-activity">
+      <div className="overview-main-grid">
+        <section className="panel overview-activity">
           <div className="panel-heading">
             <div>
-              <h2>Le rythme de votre activité</h2>
-              <p>30 derniers jours · heure d’Alger</p>
+              <h2>
+                {metric === "orders"
+                  ? "Demandes reçues"
+                  : "Ventes et encaissements"}
+              </h2>
+              <p>
+                {metric === "orders"
+                  ? "Demandes cumulées"
+                  : "Montants cumulés · DA"}{" "}
+                · {days} derniers jours
+              </p>
             </div>
             <div
               className="insight-tabs"
@@ -650,164 +880,141 @@ export function Overview({
               ))}
             </div>
           </div>
-          <ActivityChart points={dashboard.daily || []} field={metric} />
-          <p className="metrics-note">
-            {dashboard.basis?.[metric] ||
-              (metric === "orders"
-                ? "Demandes et commandes créées à leur date d’enregistrement."
-                : "Montants réellement enregistrés dans cet espace.")}
-          </p>
+          <ActivityChart
+            points={daily}
+            field={metric}
+            cumulative
+            compact
+            companionField={metric === "sales" ? "collected" : undefined}
+          />
         </section>
-        <section className="operating-attention">
-          <h2>Les décisions du jour</h2>
-          <p>Ouvrir, vérifier, transmettre.</p>
-          {[
-            [
-              summary.requests,
-              "Commandes à vérifier",
-              "Contrôler les lignes et les conditions",
-              "orders",
-              "REQUESTED",
-            ],
-            [
-              summary.pendingMerchants,
-              "Magasins à approuver",
-              "Vérifier leurs informations",
-              "merchants",
-              "PENDING",
-            ],
-            [
-              summary.lowStock,
-              "Stocks sous le seuil",
-              "Revoir la disponibilité publiée",
-              "stock",
-              "",
-            ],
-          ].map(([count, label, detail, route, status]) => (
-            <button
-              key={String(label)}
-              onClick={() => navigate(String(route), String(status))}
-            >
-              <strong>{number(Number(count || 0))}</strong>
-              <span>
-                <b>{label}</b>
-                <small>{detail}</small>
-              </span>
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                aria-hidden="true"
+        <section className="panel overview-priorities">
+          <h2>À traiter maintenant</h2>
+          <p>Une décision, un responsable, une suite.</p>
+          <div className="overview-priority-list">
+            {priorities.map((priority) => (
+              <button
+                key={priority.label}
+                onClick={() => navigate(priority.route, priority.status)}
               >
-                <path d="m9 6 6 6-6 6" />
-              </svg>
-            </button>
-          ))}
-          <button className="attention-link" onClick={() => navigate("crm")}>
-            Ouvrir le suivi des magasins
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.6"
-              aria-hidden="true"
-            >
-              <path d="M5 12h14m-5-5 5 5-5 5" />
-            </svg>
-          </button>
+                <strong className={"overview-count tone-" + priority.tone}>
+                  {number(priority.count)}
+                </strong>
+                <span>
+                  <b>{priority.label}</b>
+                  <small>{priority.detail}</small>
+                </span>
+              </button>
+            ))}
+          </div>
         </section>
       </div>
-      <section className="panel operational-pipeline">
-        <div className="panel-heading">
-          <div>
-            <h2>De la commande à la livraison</h2>
-            <p>{pending} dossiers attendent une action ou une exécution.</p>
+      <div className="overview-bottom-grid">
+        <section className="panel overview-distribution">
+          <h2>{number(total)} dossiers, 6 groupes</h2>
+          <p>État actuel · décision commerciale ≠ paiement</p>
+          <div
+            className="overview-distribution-bar"
+            role="img"
+            aria-label={distribution
+              .map((item) => `${item.label} : ${item.count}`)
+              .join(", ")}
+          >
+            {distribution
+              .filter((item) => item.count > 0)
+              .map((item) => (
+                <span
+                  key={item.label}
+                  className={"tone-" + item.tone}
+                  style={{ flexGrow: item.count }}
+                />
+              ))}
           </div>
-          <button className="text-action" onClick={() => navigate("orders")}>
-            Toutes les commandes <span aria-hidden="true">↗</span>
+          <div className="overview-state-list">
+            {distribution.map((item) => (
+              <div key={item.label}>
+                <i className={"tone-" + item.tone} />
+                <span>{item.label}</span>
+                <b>{number(item.count)}</b>
+              </div>
+            ))}
+          </div>
+          <button
+            className="overview-card-link"
+            onClick={() => navigate("orders")}
+          >
+            Voir les commandes
           </button>
-        </div>
-        <div className="pipeline-stages">
-          {steps.map((step, i) => {
-            const count =
-              counts.find((c: any) => c.status === step.status)?.count || 0;
-            return (
-              <button
-                key={step.status}
-              onClick={() => navigate("orders", step.status)}
-              >
-                <span className="pipeline-track">
-                  <i className={count ? "occupied" : ""} />
-                  {i < steps.length - 1 && <b />}
-                </span>
-                <strong>{count}</strong>
-                <span>{step.name}</span>
-                <small>{step.team}</small>
-              </button>
-            );
-          })}
-        </div>
-      </section>
-      <WorkflowQueue orders={orders} open={open} />
-      <div className="operating-bottom-grid">
-        <section className="panel">
-          <div className="panel-heading">
-            <div>
-              <h2>Ce qui arrive de l’app</h2>
-              <p>Même dossier. Même historique.</p>
-            </div>
-            <button className="text-action" onClick={() => navigate("orders")}>
-              Consulter
-            </button>
-          </div>
-          <div className="recent-order-list">
+        </section>
+        <section className="panel overview-events">
+          <h2>Ce qui arrive de l’app</h2>
+          <p>Même dossier. Même historique.</p>
+          <div className="overview-event-list">
             {dashboard.recentOrders?.length ? (
-              dashboard.recentOrders.slice(0, 5).map((order: any) => (
+              dashboard.recentOrders.slice(0, 3).map((order: any) => (
                 <button key={order.id} onClick={() => open(order.id)}>
+                  <time dateTime={order.createdAt}>
+                    {date(order.createdAt)}
+                  </time>
                   <span>
-                    <strong>{order.shopName}</strong>
+                    <b>
+                      {order.number} · {labels[order.status] || order.status}
+                    </b>
                     <small>
-                      {order.number} · {date(order.createdAt, true)}
+                      {order.shopName} ·{" "}
+                      {order.total == null
+                        ? "Prix à confirmer"
+                        : money(order.total)}
                     </small>
-                  </span>
-                  <span>
-                    <b>{money(order.total)}</b>
-                    <small>{labels[order.status] || order.status}</small>
                   </span>
                 </button>
               ))
             ) : (
               <div className="insight-empty">
-                La prochaine commande de l’application apparaîtra ici.
+                La prochaine commande apparaîtra ici.
               </div>
             )}
           </div>
         </section>
-        <section className="panel operating-delivery">
-          <div>
-            <svg
-              viewBox="0 0 48 48"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.7"
-              aria-hidden="true"
-            >
-              <path d="M4 12h25v24H4V12Zm25 10h9l7 9v5H29V22ZM10 36a5 5 0 1 0 10 0m14 0a5 5 0 1 0 10 0M4 20h14m-14 6h9" />
-            </svg>
-            <h2>Du dépôt au commerce</h2>
-            <p>
-              {counts.find((c: any) => c.status === "OUT_FOR_DELIVERY")
-                ?.count || 0}{" "}
-              commandes en cours de livraison. Préparation, garde, position et
-              réception restent traçables.
-            </p>
+        <section className="panel overview-delivery">
+          <h2>Livraisons en cours</h2>
+          <p>
+            {number(transit)} commande{transit === 1 ? "" : "s"} sur la route
+          </p>
+          <div
+            className="overview-dispatch"
+            aria-label="Commandes par étape d’expédition"
+          >
+            {[
+              {
+                label: "À préparer",
+                value: count("CONFIRMED", "PREPARING"),
+                tone: "preparation",
+              },
+              { label: "Au départ", value: count("READY"), tone: "pending" },
+              { label: "En route", value: transit, tone: "info" },
+            ].map((item) => (
+              <div key={item.label}>
+                <i className={"tone-" + item.tone} />
+                <strong>{number(item.value)}</strong>
+                <span>{item.label}</span>
+              </div>
+            ))}
           </div>
-          <button className="button" onClick={() => navigate("delivery")}>
+          <small>Consulter les affectations et le suivi de remise.</small>
+          <button
+            className="button secondary"
+            onClick={() => navigate("delivery")}
+          >
             Ouvrir le centre de livraison
           </button>
         </section>
       </div>
+      <p className="overview-footnote">
+        Demandes, réceptions et encaissements nets restent distincts.{" "}
+        {dashboard.basis?.[metric] ||
+          "Les demandes sont comptées à leur date de création."}
+      </p>
     </div>
   );
 }

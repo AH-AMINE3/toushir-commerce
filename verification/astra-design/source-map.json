@@ -1,0 +1,48 @@
+{
+  "scope": "Design-first revision; no application code changed before revised Figma frame validation.",
+  "reference": {
+    "file": "4IffhmSg2gHg82narIGfMF",
+    "index": "158:271",
+    "merchantHome": "93:48",
+    "merchantOffers": "93:260",
+    "merchantAccount": "93:688",
+    "merchantActivity": "97:3472",
+    "merchantOrders": "93:406",
+    "wholesalerOverview": "179:56"
+  },
+  "sourceFindings": [
+    {
+      "source": "apps/mobile/src/theme.ts",
+      "finding": "Information/transport blue aliases equal success green and mint; semantic roles collapsed.",
+      "resolution": "Await Figma vNext exact semantic token values."
+    },
+    {
+      "source": "apps/mobile/src/components.tsx",
+      "finding": "Generic Icon uses Ionicons while reference components are Lucide/Feather; scoped exact asset mappings required.",
+      "resolution": "Use original assets where reference slots exist; retain unrelated functional icons until mapped."
+    },
+    {
+      "source": "apps/web/src/OperationsDashboard.tsx",
+      "finding": "Overview composition diverged: joined dark-first metric ledger, extra headline, large decision surface, long workflow sections displaced compact reference rows.",
+      "resolution": "Restore four independent white cards and compact main/lower grids using current observed data."
+    },
+    {
+      "source": "apps/web/src/OperationsDashboard.tsx",
+      "finding": "Original sample on-time/cash-custody metrics cannot be honestly populated by current dashboard endpoint.",
+      "resolution": "Retain geometry but use available, correctly named server metrics in revised Figma."
+    }
+  ],
+  "preserve": [
+    "DM Sans and exact source brand geometry",
+    "Server prices and quote/campaign preview authority",
+    "Receipt, payment, credit and custody distinctions",
+    "Current production source/data until design verified",
+    "Reduced motion and readable nonanimated states"
+  ],
+  "pending": [
+    "Validated revised Figma frame IDs",
+    "Editable native-layer and prototype-link review",
+    "Frontend translation from high-fidelity contexts",
+    "Scoped browser comparisons and interaction tests"
+  ]
+}
