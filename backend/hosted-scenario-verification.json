@@ -1,0 +1,30 @@
+{
+  "base": "https://toushir-commerce-staging.onrender.com",
+  "at": "2026-10-17T07:15:40.557Z",
+  "scope": "Hosted PostgreSQL HTTP workflows in new fictional demo workspaces only",
+  "passed": 5,
+  "failed": 0,
+  "requests": 120,
+  "checks": [
+    {
+      "name": "Hosted PostgreSQL and the complete source catalog are connected",
+      "pass": true
+    },
+    {
+      "name": "Scenario generation is explicit, idempotent, isolated and preserves current merchant work",
+      "pass": true
+    },
+    {
+      "name": "PostgreSQL stock, reservations and return quarantine reconcile with the full physical ledger",
+      "pass": true
+    },
+    {
+      "name": "Historical charts and comparative KPIs reconcile to actual scoped orders and independent cash entries",
+      "pass": true
+    },
+    {
+      "name": "All operating statuses and financial ledgers remain consistent without publishing fictitious catalog prices",
+      "pass": true
+    }
+  ]
+}

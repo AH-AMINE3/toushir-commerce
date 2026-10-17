@@ -1,21 +1,312 @@
-# TOUSHIR commerce design system
+---
+name: TOUSHIR Commerce
+description: The existing Toushir Figma system for connected wholesale operations.
+colors:
+  ink: "#151917"
+  brand: "#0f2c2c"
+  green: "#087f4f"
+  action: "#06dd81"
+  action-ink: "#10281c"
+  action-hover: "#00cb76"
+  mint: "#d9eddf"
+  aqua: "#ccffff"
+  aqua-ink: "#145b5b"
+  surface: "#ffffff"
+  canvas-web: "#f5f7f6"
+  canvas-mobile: "#f4f6f4"
+  sidebar: "#fafbfa"
+  line: "#e7ebe7"
+  border-web: "#e4e9e6"
+  muted-web: "#66736b"
+  muted-mobile: "#6b736f"
+  danger-web: "#a92d2d"
+  danger-mobile: "#b42332"
+  danger-surface-web: "#fff0ef"
+  danger-surface-mobile: "#fff0f1"
+  warning-web: "#855413"
+  warning-mobile: "#805413"
+  warning-surface-web: "#fff5db"
+  warning-surface-mobile: "#fff5dc"
+  dark-canvas: "#0e1713"
+  dark-surface: "#17231c"
+  dark-sidebar: "#111d17"
+  dark-soft: "#1d2d23"
+  dark-line: "#2c3d32"
+  dark-border: "#304338"
+  dark-muted: "#a5b8ab"
+  dark-ink: "#edf3ee"
+  dark-brand: "#e4f2e8"
+  dark-green: "#75e7a8"
+  dark-mint: "#224c34"
+  dark-aqua: "#17464b"
+  dark-aqua-ink: "#adf5ef"
+  dark-danger: "#ffb1b1"
+  dark-danger-surface: "#452627"
+  dark-warning: "#efd09b"
+  dark-warning-surface: "#3a301d"
+typography:
+  headline-web:
+    fontFamily: '"DM Sans", sans-serif'
+    fontSize: "30px"
+    fontWeight: 700
+    lineHeight: 1.3
+    letterSpacing: "-0.03em"
+  title-web:
+    fontFamily: '"DM Sans", sans-serif'
+    fontSize: "18px"
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: "-0.015em"
+  body-web:
+    fontFamily: '"DM Sans", sans-serif'
+    fontSize: "14px"
+    fontWeight: 400
+  label-web:
+    fontFamily: '"DM Sans", sans-serif'
+    fontSize: "13px"
+    fontWeight: 700
+  heading-mobile:
+    fontFamily: "DM Sans"
+    fontSize: "27px"
+    fontWeight: 600
+    lineHeight: "34px"
+    letterSpacing: "-0.65px"
+  title-mobile:
+    fontFamily: "DM Sans"
+    fontSize: "18px"
+    fontWeight: 600
+    lineHeight: "25px"
+    letterSpacing: "-0.3px"
+  body-mobile:
+    fontFamily: "DM Sans"
+    fontSize: "14px"
+    fontWeight: 400
+    lineHeight: "21px"
+  label-mobile:
+    fontFamily: "DM Sans"
+    fontSize: "13px"
+    fontWeight: 600
+    lineHeight: "19px"
+  merchant-title:
+    fontFamily: "DM Sans"
+    fontSize: "23px"
+    fontWeight: 700
+    lineHeight: "30px"
+    letterSpacing: "-0.45px"
+  courier-title:
+    fontFamily: "DM Sans"
+    fontSize: "28px"
+    fontWeight: 700
+    lineHeight: "40px"
+    letterSpacing: "-0.5px"
+rounded:
+  badge: "7px"
+  compact: "8px"
+  field: "9px"
+  button-web: "10px"
+  panel-mobile: "12px"
+  panel-narrow: "13px"
+  panel-web: "16px"
+  category-pill: "22px"
+spacing:
+  xs: "8px"
+  sm: "12px"
+  md: "16px"
+  field-group: "18px"
+  lg: "20px"
+  panel-web: "23px"
+  xl: "24px"
+  drawer: "28px"
+  page: "32px"
+components:
+  button-primary:
+    backgroundColor: "{colors.action}"
+    textColor: "{colors.action-ink}"
+    typography: "{typography.label-web}"
+    rounded: "{rounded.button-web}"
+    padding: "10px 17px"
+  button-primary-hover:
+    backgroundColor: "{colors.action-hover}"
+  button-secondary:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.ink}"
+    typography: "{typography.label-web}"
+    rounded: "{rounded.button-web}"
+    padding: "10px 17px"
+  button-primary-mobile:
+    backgroundColor: "{colors.action}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.panel-mobile}"
+    padding: "12px 18px"
+  field-web:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.field}"
+    padding: "10px 12px"
+  status-green:
+    backgroundColor: "{colors.mint}"
+    textColor: "{colors.green}"
+    rounded: "{rounded.badge}"
+    padding: "5px 10px"
+  navigation-active:
+    backgroundColor: "{colors.mint}"
+    textColor: "{colors.green}"
+    rounded: "{rounded.compact}"
+    padding: "9px 12px"
+  panel-web:
+    backgroundColor: "{colors.surface}"
+    rounded: "{rounded.panel-web}"
+    padding: "23px"
+  category-beverage:
+    backgroundColor: "{colors.mint}"
+    rounded: "{rounded.panel-web}"
+    height: "60px"
+    width: "76px"
+  category-fresh:
+    backgroundColor: "{colors.aqua}"
+    rounded: "{rounded.panel-web}"
+    height: "60px"
+    width: "76px"
+---
 
-## Authority
+# Design System: TOUSHIR Commerce
 
-The supplied Figma file `4IffhmSg2gHg82narIGfMF` controls the current merchant, courier and wholesaler implementation. The audit retains frame IDs, source evidence, text styles and variables. Static brand/navigation assets are downloaded from Figma and retain their proportions. Real product packaging images preserve identity and source attribution.
+## Overview
 
-## Tokens
+**Creative North Star: "Toushir's connected wholesale workspace"**
 
-DM Sans is self-hosted. Main ink #151917, brand #0F2C2C, white surface, canvas #F4F6F4, line #E7EBE7, muted #6B736F, green #087F4F, action #06DD81 with dark text, mint #D9EDDF and aqua #CCFFFF follow the inspected Figma system. Warnings and errors use semantic restrained yellow/red surfaces, never decoration. Dark mode has its own readable foreground/background tokens and preserves the original mark on a white brand tile.
+The supplied Figma file `4IffhmSg2gHg82narIGfMF` remains the visual authority. This document records how that existing world is implemented in the wholesaler workspace and merchant/courier applications: original Toushir assets, DM Sans, white surfaces, mint selection, bright green actions and dense operational content. It extends that world; it does not establish a replacement identity. Preserve the proportions of the original mark and navigation assets, and the identity of sourced product packaging.
 
-Desktop sidebar224px, header64px, page gutter32px, principal panels16px radius and controls40px follow the source composition. Phone layouts use safe areas, scrolling and native touch conventions. Numeric financial data is tabular. Layout collapses at tablet/phone widths; wide operational tables scroll within their panel.
+The atmosphere is quiet and practical. Headings orient the user, tonal panels group work, and restrained status colours make current state visible. A commercial action has an explicit label and outcome. Unknown prices remain unconfirmed, demo content stays labelled, and illustrations never masquerade as observations. The source evidence is `apps/web/src/style.css`, `apps/web/src/main.tsx`, `apps/mobile/src/theme.ts`, `apps/mobile/src/components.tsx`, `apps/mobile/src/Merchant.tsx`, `apps/mobile/src/Driver.tsx` and the DM Sans font registration in `apps/mobile/App.tsx`.
 
-## Interaction
+This is a source-grounded system record. Exact acceptance of all 265 Figma states, native runtime acceptance and domain/security acceptance have separate evidence; they are not certified by this document.
 
-One obvious next action per commercial state; secondary actions remain explicit. Forms preserve unknown versus zero values. Stale versions, conflicts, failed requests, loading and empty states are visible. Keyboard focus, selection, caret and scrollbars use the same palette. Drawers support Escape, focus containment and screen-reader dialog labels.
+**Key Characteristics:**
+- Original Figma identity and assets across three operational workspaces.
+- White and soft neutral surfaces with mint selection and green actions.
+- Compact DM Sans hierarchy with tabular financial data on the web.
+- Flat content, gently curved containers and transient overlays.
+- Explicit commercial states, demo labels and observed-data boundaries.
 
-Preparation, custody, receipt, payment and reconciliation use separate controls. Scans validate actual server product/batch expectations. Every success follows a persisted server mutation. Animated depot geometry is labelled illustrative; actual GPS includes timestamp/accuracy/staleness and a visible empty state without invented drivers.
+## Colors
 
-## Verification
+Green provides continuity across navigation, actions and successful states; neutrals carry most of the interface. The frontmatter owns exact values, including the small platform-specific differences already present in source. Sidecar tonal ramps are derived swatch previews, not additional production colour tokens.
 
-Inspect real populated screens, narrow layouts and both themes in a browser. Native execution has independent evidence. A shared component or route is not proof that all 265 exact Figma states were individually accepted. The screen matrix preserves those distinctions.
+### Primary
+- **Toushir forest** (`brand`): desktop heading and brand anchor; the courier tour summary also uses this dark foundation.
+- **Operational green** (`green`): links, selection text, current steps and affirmative states.
+- **Action green** (`action`): primary action backgrounds. Web buttons pair it with `action-ink`; mobile buttons use `ink`. The action fill remains stable in web dark mode.
+
+### Secondary
+- **Mint** (`mint`): active navigation, positive status surfaces, notices and the beverage category shortcut.
+- **Fresh aqua** (`aqua`): the fresh/milk category shortcut and the web informational status treatment. Other unselected merchant categories retain the soft neutral background. Selected category tiles use operational green.
+
+### Tertiary
+- **Warning amber** (`warning-*` and `warning-surface-*`): pending and warning states.
+- **Error red** (`danger-*` and `danger-surface-*`): rejected, failed, destructive and error states. Status labels accompany colour.
+
+### Neutral
+- **Ink** (`ink`): primary light-theme text.
+- **White surface** (`surface`): content panels, fields, product-image backplates and navigation bars.
+- **Canvas** (`canvas-web`, `canvas-mobile`) and **sidebar** (`sidebar`): broad page context and subtle surface separation. The web soft fill uses the mobile canvas colour.
+- **Divider and field border** (`line`, `border-web`): quiet one-pixel separation. Mobile shared dividers use `line`.
+- **Muted** (`muted-web`, `muted-mobile`): secondary descriptions, metadata and timestamps.
+- **Web dark palette** (`dark-*`): source-defined replacements for canvas, surfaces, text, dividers and semantic pairs. It belongs to the wholesaler web theme; the mobile source currently uses the light palette. The original desktop mark retains a white brand tile.
+
+### Named Rules
+
+**The State Has a Label Rule.** Colour supports a named state; it never supplies the only explanation of a commercial outcome.
+
+**The Category Meaning Rule.** Keep beverage mint and fresh/milk aqua in the merchant rail; extend other categories from the existing neutral treatment rather than inventing a rainbow.
+
+## Typography
+
+**Display Font:** DM Sans, with a sans-serif fallback on the web.
+**Body Font:** DM Sans throughout. The mobile source's historical `Inter` family key loads `assets/DMSans.ttf`; it is an implementation alias, not a second typeface.
+
+**Character:** Compact, direct and readable. Hierarchy comes from size and weight within one family, with modest negative tracking on headings. Financial figures in web tables, metric values and designated numeric fields use tabular numerals.
+
+### Hierarchy
+- **Web headline:** `headline-web` for page titles; it reduces at tablet/phone widths. The metric number uses the same large scale with a tighter line height and tabular figures.
+- **Web title:** `title-web` for panel headings; smaller subsection headings use the observed 16px tier.
+- **Web body and labels:** `body-web` and `label-web`; operational tables and many descriptions use the compact 12px tier. Paragraph line height is 1.6.
+- **Mobile heading:** `heading-mobile` for shared entry views; `merchant-title` and `courier-title` preserve the shipped surface-specific heading hierarchy.
+- **Mobile title, body and label:** `title-mobile`, `body-mobile` and `label-mobile`; muted copy is 13px/20px and small supporting copy is 12px/18px.
+
+### Named Rules
+
+**The One Family Rule.** Extend the DM Sans hierarchy and the confirmed Figma text styles before introducing another typeface.
+
+## Layout
+
+The desktop shell has a fixed sidebar (224px), sticky header (64px), page gutter (32px) and content maximum (1920px). The standard metric row has four equal columns with a 16px gap. Overview content uses three columns with a two-column sales panel and a 20px gap. Content panels use the frontmatter panel padding; compact metric panels and phone layouts reduce density deliberately.
+
+The web layout adapts at 1250px, 1000px and 760px, with a wider-layout adjustment at 1800px. At the tablet tier, the sidebar reduces to 190px, overview becomes two columns and standard metrics become two columns. At the phone tier the sidebar slides in, its menu remains accessible in the header, the content gutter becomes 16px, overview stacks and the header is 58px high. Wide operational tables scroll inside their panel instead of shrinking columns into illegibility. The general data table has a 760px minimum width; permissions use a 600px minimum.
+
+Merchant and courier layouts center a full-width phone surface within a 520px maximum. Their headers and content use 20px horizontal spacing, with 16px checkout/basket padding where implemented. Safe-area insets, scrolling and keyboard accommodation belong to the native composition. The merchant catalogue has two product columns, a horizontal category rail and persistent bottom navigation. Category tiles are 76px by 60px within 81px shortcuts. Courier route content uses stacked task sections with a persistent four-item bottom bar.
+
+### Named Rules
+
+**The Contained Overflow Rule.** Preserve readable operational data and contain horizontal table scrolling within its panel.
+
+## Elevation & Depth
+
+Content is flat at rest: one-pixel borders, soft tonal fills and whitespace establish hierarchy. Shadows belong to transient overlays and geographic markers, not every panel. The depot's 3D scene is explicitly illustrative; the actual GPS map is a separate mode with capture time, accuracy, stale-signal treatment and an empty state when no position exists.
+
+### Shadow Vocabulary
+- **Toast:** `0 12px 36px #0f2c2c25`; temporary confirmation above content.
+- **Order drawer:** `-15px 0 50px #0c271b1a`; a focused dossier over a translucent backdrop (`#0b211b45`).
+- **Open phone navigation:** `20px 0 60px #0f2c2c30`; separates the revealed sidebar from the page.
+- **GPS marker:** `0 4px 15px #14362930`; local map-marker separation.
+
+Web buttons transition background and transform over 0.15s; their pressed state moves down 1px. The drawer enters over 0.22s with `cubic-bezier(0.16, 1, 0.3, 1)`. Phone navigation slides over 0.18s. The web reduced-motion preference collapses animation and transition duration to 0.01ms.
+
+### Named Rules
+
+**The Observed Position Rule.** Keep illustrative depot geometry distinct from authorized GPS; never turn an animation, missing signal or stale observation into a live-location claim.
+
+## Shapes
+
+Gently curved rectangles organize the interface. Principal web panels use `panel-web`, shared native panels use `panel-mobile`, narrow web panels use `panel-narrow`, and fields, buttons and badges use their more compact radii. Category filters use fully rounded pills; avatars and progress nodes are circular. Product packaging sits on a white backplate with contain sizing to preserve its silhouette. Original Figma icon assets retain their proportions; new control icons use SVG paths or the existing native icon component, not decorative text glyphs.
+
+## Components
+
+### Buttons
+
+Confident actions with a clear label. Web primary and secondary variants share the recorded minimum height and padding; the secondary adds a one-pixel border and soft-fill hover. Mobile primary buttons use the larger native minimum height, while small buttons use a 38px minimum. Native secondary buttons use mint; ghost buttons are transparent. Loading and disabled state are explicit. Web controls use a three-pixel green focus outline with a three-pixel offset; native buttons show a green focus border. Keep the web dark-theme focus colour on action green.
+
+### Chips
+
+Compact status chips pair a semantic surface with legible text, a modest radius and a written status. Mobile statuses also include a small dot. Web badges use the 10px text tier; mobile chips use the shared small text style. Merchant category pills expose selected state and switch between green/white and white/ink treatments.
+
+### Cards / Containers
+
+White operational panels use a quiet border, rounded corners and internal spacing from the frontmatter. They remain flat. Metrics pair a muted label with a large value. Merchant product cards preserve white space around sourced packshots, then group brand, product name, pack, price and the quantity action. Unknown price/availability is stated instead of displayed as a zero-price offer.
+
+### Inputs / Fields
+
+White fields have a one-pixel border and the recorded field radius. Web fields are at least 40px high; native fields are at least 48px high with 12px vertical and 14px horizontal padding. Labels remain visible, placeholders are secondary, and caret colour is green on the web. Native focus changes the border to green; errors use the paired red treatment and text. Multiline fields grow vertically.
+
+### Navigation
+
+Desktop navigation combines the original Figma icons with compact labels, a mint active row and operational-green active text. At phone width, the menu button reveals the same navigation. Merchant and courier bottom bars keep icons and labels together, mark the selected item in green and expose their selected state. Existing section labels are navigation structure, not a pattern for decorative eyebrows elsewhere.
+
+### Order dossier and tracking
+
+The web order drawer anchors to the right, spans up to 740px, scrolls internally and has a sticky header and horizontally scrollable tabs. Escape, focus containment and a labelled dialog preserve access to the dossier. Preparation, custody, receipt, actual payment and reconciliation retain separate controls and states. Successful feedback follows the server operation; visible unknown, loading, empty, error and conflict states remain part of the component behavior.
+
+## Do's and Don'ts
+
+### Do:
+- **Do** extend the supplied Figma world and preserve the original Toushir assets and sourced packaging identity.
+- **Do** use green actions, mint selection and labelled semantic statuses on quiet neutral surfaces.
+- **Do** retain beverage mint, fresh/milk aqua and neutral unselected categories in the merchant rail.
+- **Do** preserve keyboard focus, native touch targets, safe areas and contained table scrolling.
+- **Do** label demo content, unknown commercial values, stale GPS and illustrative depot geometry explicitly.
+- **Do** keep preparation, custody, receipt, payment and reconciliation visibly distinct.
+
+### Don't:
+- **Don't** replace unknown prices with zero or present catalogue provenance as an approved commercial offer.
+- **Don't** imply that illustrative 3D or a missing/stale GPS signal is a live observed position.
+- **Don't** spread overlay shadows across flat operational panels or replace original icons with decorative text glyphs.
+- **Don't** infer exact Figma-screen acceptance, native execution or domain/security acceptance from this design record.

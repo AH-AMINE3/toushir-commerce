@@ -14,6 +14,8 @@ One .NET 10 / ABP backend connects the wholesaler workspace, merchant app and co
 
 Native apps have separate package IDs, icons and callback schemes. Browser previews use the same React Native source and backend. See [native distribution](docs/NATIVE-DISTRIBUTION.md).
 
+Public test service: [Wholesaler](https://toushir-commerce-staging.onrender.com/), [Merchant](https://toushir-commerce-staging.onrender.com/mobile/merchant), [Courier](https://toushir-commerce-staging.onrender.com/mobile/driver). The free service may need time to wake. Test records use persistent PostgreSQL; the free database expires on **15 November 2026 at 17:52 UTC**. See [release boundaries](docs/RELEASE.md).
+
 ## Start locally
 
 Install .NET SDK 10 and Node.js 24. From this repository:

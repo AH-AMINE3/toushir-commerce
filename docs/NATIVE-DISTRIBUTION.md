@@ -20,4 +20,4 @@ Run `scripts/build-android-release.zsh`. The APK is produced at `apps/mobile/and
 
 The iOS simulator compilation is a separate verification. An iOS simulator app cannot be installed on an iPhone. Device distribution through TestFlight or the App Store requires the owner's Apple developer signing and distribution setup. The browser version is available independently on iPhone.
 
-The currently hosted free demo can sleep and its SQLite storage is ephemeral. Native installation does not change this hosting limit. Use the durable installation described in the main deployment documentation before processing real customer transactions.
+The approved staging service at https://toushir-commerce-staging.onrender.com uses persistent PostgreSQL in an isolated application schema. Free web compute can sleep and take time to wake; native installation does not change that limit. The free test database expires on 15 November 2026 at 17:52 UTC. Export and migrate, or explicitly upgrade, before expiry. This remains a labelled test deployment; configure actual business terms and a durable commercial hosting plan before real operations.

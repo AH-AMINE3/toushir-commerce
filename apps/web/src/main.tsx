@@ -534,7 +534,7 @@ function App() {
             </small>
           </div>
         </div>
-        <nav aria-label="Navigation principale">
+        <nav id="workspace-navigation" aria-label="Navigation principale">
           {groups
             .filter(
               (g) =>
@@ -599,7 +599,9 @@ function App() {
               }, "Déconnecté")
             }
           >
-            ↗
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M9 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4M14 8l4 4-4 4M9 12h9" />
+            </svg>
           </button>
         </footer>
       </aside>
@@ -607,10 +609,14 @@ function App() {
         <header className="topbar">
           <button
             className="mobile-menu icon-button"
-            aria-label="Ouvrir le menu"
+            aria-label={menu ? "Fermer le menu" : "Ouvrir le menu"}
+            aria-expanded={menu}
+            aria-controls="workspace-navigation"
             onClick={() => setMenu(!menu)}
           >
-            ☰
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" aria-hidden="true">
+              <path d={menu ? "m6 6 12 12M6 18 18 6" : "M4 6h16M4 12h16M4 18h16"} />
+            </svg>
           </button>
           <div className="breadcrumb">
             Opérations <span>/</span> TOUSHIR
@@ -837,7 +843,7 @@ function App() {
                             <strong>{title}</strong>
                             <small>{sub}</small>
                           </span>
-                          <span>›</span>
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6" /></svg>
                         </button>
                       ))}
                     </section>

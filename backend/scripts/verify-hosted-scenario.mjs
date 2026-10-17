@@ -17,6 +17,9 @@ async function all(path,token=admin.token){const rows=[];for(let page=1;;page++)
 const cents=value=>Math.round(value*100);
 const day=value=>new Intl.DateTimeFormat('en-CA',{timeZone:'Africa/Algiers',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(value));
 const inPeriod=(value,from,to)=>day(value)>=from&&day(value)<=to;
+// PostgreSQL stores microseconds while freshly created .NET values can have seven
+// fractional digits. Compare instants at JavaScript's millisecond precision.
+const snapshot=value=>Array.isArray(value)?value.map(snapshot):value&&typeof value==='object'?Object.fromEntries(Object.entries(value).map(([key,entry])=>[key,snapshot(entry)])):typeof value==='string'&&/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?(?:Z|[+-]\d\d:\d\d)$/.test(value)?new Date(value).toISOString():value;
 try{
  await test('Hosted PostgreSQL and the complete source catalog are connected',async()=>{
   const health=await call('/health',{token:null});assert.equal(health.status,'ok');assert.equal(health.database,'connected');assert.equal(health.catalogCount,2500);assert.match(health.storage,/PostgreSQL/);assert.equal(health.demoEnabled,true);
@@ -38,7 +41,7 @@ try{
   const seeded=orders.filter(o=>o.id!==initialOrder.id);assert.equal(seeded.length,40);assert.equal(new Set(seeded.map(o=>o.merchant.id)).size,4);
   assert(seeded.every(o=>o.number.startsWith('EXEMPLE-')&&o.note.includes('scénario fictif')&&o.isDemo));
   assert.equal((await call('/orders',{token:foreign.token})).total,0);
-  assert.deepEqual(await call('/orders/'+initialOrder.id),initialOrder);assert.deepEqual(await call('/cart',{token:merchant.token}),basket);
+  assert.deepEqual(snapshot(await call('/orders/'+initialOrder.id)),snapshot(initialOrder));assert.deepEqual(await call('/cart',{token:merchant.token}),basket);
   assert.deepEqual(await call('/admin/demo/scenario',{method:'POST'}),{seeded:false,orders:0});
  });
  await test('PostgreSQL stock, reservations and return quarantine reconcile with the full physical ledger',async()=>{

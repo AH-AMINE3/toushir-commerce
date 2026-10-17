@@ -1721,7 +1721,7 @@ progress::-webkit-progress-value {
     font-size: 10px;
   }
   .topbar > .avatar,
-  .topbar > .icon-button {
+  .topbar > .icon-button:not(.mobile-menu) {
     display: none;
   }
   .connection {

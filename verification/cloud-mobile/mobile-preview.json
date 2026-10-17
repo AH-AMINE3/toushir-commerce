@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-17T07:10:50.872Z",
+  "base": "https://toushir-commerce-staging.onrender.com",
+  "checks": [
+    "Packaged React Native web catalogue rendered at402x874",
+    "Mobile basket mutation persisted through the shared API",
+    "Per-tab merchant identity restored after reload",
+    "Courier browser route loads independently"
+  ],
+  "errors": []
+}

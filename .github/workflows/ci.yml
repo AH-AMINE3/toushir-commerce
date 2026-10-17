@@ -33,9 +33,10 @@ jobs:
           ASPNETCORE_ENVIRONMENT: Development
           API_URL: http://127.0.0.1:5860
           TOUSHIR_TEST_RESULTS: engagement-verification.json
+          TOUSHIR_WAREHOUSE_RESULTS: warehouse-verification.json
         run: |
           # A fresh process per suite preserves public demo rate limits.
-          for suite in api operations routes oidc engagement; do
+          for suite in api operations routes oidc engagement warehouse; do
             export DataPath="$RUNNER_TEMP/toushir-$suite"
             dotnet run --project backend/Toushir.Wholesale.csproj --no-build --urls "$API_URL" > "$RUNNER_TEMP/api-$suite.log" 2>&1 &
             API_PID=$!
@@ -47,6 +48,8 @@ jobs:
             curl --fail --silent "$API_URL/api/health"
             if [ "$suite" = engagement ]; then
               python3 scripts/test-engagement.py "$API_URL"
+            elif [ "$suite" = warehouse ]; then
+              python3 scripts/test-warehouse.py "$API_URL"
             else
               node "backend/scripts/verify-$suite.mjs"
             fi
@@ -84,4 +87,5 @@ jobs:
           path: |
             backend/*verification.json
             engagement-verification.json
+            warehouse-verification.json
             tests/browser/reports/

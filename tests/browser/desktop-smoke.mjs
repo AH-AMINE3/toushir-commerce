@@ -16,7 +16,7 @@ const errors = [];
 page.on("pageerror", (e) => errors.push(e.message));
 try {
 await page.goto(process.env.WEB_URL || "http://127.0.0.1:5860/", {
-  waitUntil: "networkidle",
+  waitUntil: "domcontentloaded", timeout: 60000,
 });
 await page
   .getByRole("heading", { name: "Votre activité, en clair." })
@@ -74,6 +74,13 @@ await page.getByRole("button", { name: /thème sombre/i }).click();
 await page.waitForTimeout(400);
 await page.screenshot({ path: out + "/desktop-dark.png", fullPage: false });
 await page.setViewportSize({ width: 390, height: 844 });
+await page.waitForTimeout(450);
+await page.evaluate(() => window.scrollTo(0, 0));
+const menuTrigger = page.getByRole("button", { name: "Ouvrir le menu", exact: true });
+await menuTrigger.click();
+await page.getByRole("navigation").getByRole("button", { name: "Commandes", exact: true }).click();
+await page.getByRole("heading", { name: "Commandes", exact: true }).waitFor();
+await menuTrigger.waitFor({ state: "visible" });
 await page.screenshot({
   path: out + "/desktop-responsive.png",
   fullPage: true,

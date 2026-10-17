@@ -8,7 +8,7 @@ adaptive
 
 ## Stack
 
-User-requested .NET 10 and ABP backend, React Native merchant/courier apps, and a React wholesaler workspace. Expo supports native builds and browser previews from one mobile source. PostgreSQL hosts staging records; SQLite runs locally. Free hosting is proposed; paid resources have not been authorized.
+User-requested .NET 10 and ABP backend, React Native merchant/courier apps, and a React wholesaler workspace. Expo supports native builds and browser previews from one mobile source. PostgreSQL hosts staging records; SQLite runs locally. The user approved the free Render staging service and private staging credentials. No paid resources are enabled.
 
 ## Users and purpose
 
@@ -28,4 +28,4 @@ Sourced catalogue identities and photos have provenance; public catalogue data n
 
 ## Evidence
 
-Source Figma audit, screen matrix, derived 122 checks, browser/native reports and executable API/domain tests record what was actually checked. The original referenced 79-page specification was not supplied. Store publication and external integrations are not inferred from compilation. Hosting secret transmission currently awaits explicit approval after automatic review rejected it; see the external deployment plan.
+Source Figma audit, screen matrix, derived 122 checks, browser/native reports and executable API/domain tests record what was actually checked. The original referenced 79-page specification was not supplied. Store publication and external integrations are not inferred from compilation. The staging service is live at https://toushir-commerce-staging.onrender.com; its HTTPS health check confirms PostgreSQL connectivity. The free database expires on 15 November 2026 at 17:52 UTC. See the release boundaries and hosted verification reports.
