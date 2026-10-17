@@ -12,9 +12,10 @@ public sealed class ClaimConcurrencyTests
         var connection = new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder { DataSource = Path.Combine(directory, "claims.db") }.ConnectionString;
         try
         {
-            await using var first = new WholesaleDesignTimeFactory().CreateDbContext([]);
-            await using var second = new WholesaleDesignTimeFactory().CreateDbContext([]);
-            first.Database.SetConnectionString(connection); second.Database.SetConnectionString(connection);
+            await using var first = new WholesaleDesignTimeFactory().CreateDbContext(["--DATABASE_URL=", "--Database:Schema="]);
+            await using var second = new WholesaleDesignTimeFactory().CreateDbContext(["--DATABASE_URL=", "--Database:Schema="]);
+            first.Database.SetConnectionString(connection);
+            second.Database.SetConnectionString(connection);
             await first.Database.EnsureCreatedAsync();
             first.Claims.Add(new OrderClaim { Id = "claim", WorkspaceId = "isolated", Status = "ACCEPTED", Quantity = 1, ReceivedQuantity = 1 });
             await first.SaveChangesAsync();

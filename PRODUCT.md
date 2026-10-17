@@ -1,4 +1,4 @@
-# Toushir Gros
+# TOUSHIR Commerce
 
 <!-- impeccable:product-schema 1 -->
 
@@ -8,46 +8,24 @@ adaptive
 
 ## Stack
 
-Confirmed by the user: .NET 10 backend, React Native merchant application. Expo supports native iOS/Android and an accessible browser edition. A separate React wholesaler console shares the API and visual tokens. Deployment choices are delegated; paid services have not been authorized.
+User-requested .NET 10 and ABP backend, React Native merchant/courier apps, and a React wholesaler workspace. Expo supports native builds and browser previews from one mobile source. PostgreSQL hosts staging records; SQLite runs locally. Free hosting is proposed; paid resources have not been authorized.
 
-## Users
+## Users and purpose
 
-The user operates a wholesale business or recruits a wholesale partner in Oran. Independent grocery merchants request supplies from their phones. The wholesaler receives requests, sends commercial offers, prepares orders, assigns delivery and follows collections. In the implemented first version, one ADMIN account manages preparation, delivery and finances. Separate staff permissions and assignment are a future extension.
+Algerian wholesale teams and independent merchants manage replenishment from request to agreed quote, preparation, custody, physical receipt and separate actual payment. Six roles divide responsibilities: ADMIN, MERCHANT, DRIVER, WAREHOUSE, DISPATCHER and FINANCE. Each workspace and merchant is isolated server-side.
 
-## Product Purpose
+## Operating context
 
-Give an Oran grocery merchant a fast way to find products, build a repeatable replenishment basket, obtain confirmed wholesale prices, order and follow delivery. Give the wholesaler one accountable queue from the original request through preparation, delivery and payment reconciliation.
+French-first Figma interface, DZD and Africa/Algiers display dates. Actual service area, stock, fees, trade terms and legal identity belong to the business configuration. Oran example addresses are labelled fictional demo data, not an assertion of the owner's service area. Unknown prices and stock remain unconfirmed.
 
-## Operating Context
+## Visual authority
 
-French-first interface, Algerian dinars, Africa/Algiers dates, Oran service area. Cash on delivery is the initial assumption, not a confirmed commercial policy. Each store has an address and contact. Requests may contain multiple brands, sizes and ordering units. Product identity and packaging must remain accurate.
+The supplied Figma file `4IffhmSg2gHg82narIGfMF` is the current authority: design system, merchant, courier, wholesaler and dark screens, workflows and contracts. DM Sans, the original Toushir assets, white surfaces, mint/action green and restrained semantic statuses follow that file. Earlier copied-project visual notes are superseded by this current implementation brief.
 
-## Capabilities and Constraints
+## Capabilities and constraints
 
-- 2,500 real, distinct Algeria-tagged product references, sourced with provenance and matching product images.
-- The user has no price list or stock feed. Public references cannot establish this wholesaler's selling price or inventory. Unapproved offers have no published price or stock claim.
-- A complete request-for-quotation path must work: request, wholesaler offer with prices and availability, merchant approval, reservation, preparation, dispatch, delivery and collection.
-- Approved price-book products may support direct ordering. Server-calculated totals, immutable line snapshots, idempotency and transactional stock reservation protect the workflow.
-- Merchant accounts see their own data. An explicitly identified demo uses isolated fictional businesses; production accounts require real authentication and approval.
-- Include catalog search, categories, favorites, cart, order guides/reorder, status history, commercial documents, admin analytics, catalog/stock management, audit and export.
-- Do not claim native App Store publication, real supplier stock, carrier integration or verified wholesale prices without corresponding evidence.
+Sourced catalogue identities and photos have provenance; public catalogue data never becomes an invented commercial offer. Persistent quotation versions, atomic reservations, real scans/counts, customer proof, actual funds, returns, inspection, promotions and point corrections remain distinct. The depot is illustrative 3D; authorized GPS is a separate observed data source. No external delivery/payment/message provider is falsely reported successful.
 
-## Brand Commitments
+## Evidence
 
-Retain the real Toushir logo. The user explicitly replaced the initial charter-heavy UI: green, black and white only for the core interface; no yellow, pistachio, acid lime or large dark forest surfaces. Use familiar Inter typography instead of charter display fonts. Merchant is a real React Native mobile ordering app, not an admin platform. Wholesaler is a separate restrained operating workspace. Aim for the clarity and polish of BEES, Sary, Uber and Lime; familiar category conventions are expressly preferred. Avoid visual overload. Cut+Dry, BEES and Sary are reference products for ordering and operating workflows, not assets or trademarks to copy.
-
-## Evidence on Hand
-
-The retained Toushir logo and the user's Charte Toushir PDF; public official competitor documentation; Open Food Facts reference data and individually associated packaging images. No private wholesaler price book, supplier agreement, live inventory, payment credentials, native signing identity or confirmed delivery fleet has been supplied.
-
-## Product Principles
-
-- A merchant should understand the next step without knowing wholesale software.
-- One real product reference per barcode; an unknown price stays unknown until confirmed.
-- An order is a commercial agreement, not merely a saved cart.
-- Delivery, payment collection and accounting reconciliation are distinct events.
-- Every operational change has an actor, timestamp and reversible or traceable consequence.
-
-## Open Commercial Decisions
-
-Owner-approved prices and stock, final service communes, delivery fees/cutoffs, return eligibility, tax and legal document configuration, production hosting with durable backups, and native store signing must be confirmed before live commercial launch. The software should support configuring these without rewriting the application.
+Source Figma audit, screen matrix, derived 122 checks, browser/native reports and executable API/domain tests record what was actually checked. The original referenced 79-page specification was not supplied. Store publication and external integrations are not inferred from compilation. Hosting secret transmission currently awaits explicit approval after automatic review rejected it; see the external deployment plan.

@@ -9,6 +9,6 @@ module.exports = { ...base,
   android: { ...base.android, package: driver ? 'com.toushir.livreur' : 'com.toushir.commerce', adaptiveIcon: { foregroundImage: driver ? './assets/driver-icon.png' : './assets/icon.png', backgroundColor: '#FFFFFF' } },
   web: { ...base.web, name: 'Toushir Commerce', shortName: 'Toushir', themeColor: '#FFFFFF', backgroundColor: '#FFFFFF' },
   experiments: { baseUrl: '/mobile' },
-  plugins: ['./scripts/with-local-http','expo-font','expo-secure-store','expo-image','expo-web-browser', ['expo-location', {locationWhenInUsePermission: 'Partagez votre position pendant votre tournée pour que le commerçant puisse suivre sa livraison.'}], ['expo-camera',{cameraPermission:'Scannez le QR de réception présenté par le commerçant.',recordAudioAndroid:false}]],
+  plugins: ['./scripts/with-local-http','./scripts/with-private-signing','expo-font','expo-secure-store','expo-image','expo-web-browser', ['expo-location', {locationWhenInUsePermission: 'Partagez votre position pendant votre tournée pour que le commerçant puisse suivre sa livraison.'}], ['expo-camera',{cameraPermission:'Scannez le QR de réception présenté par le commerçant.',recordAudioAndroid:false}]],
   extra: { appRole: driver ? 'DRIVER' : 'MERCHANT' }
 };

@@ -50,3 +50,8 @@ Use actual Android/iOS simulators for camera permission denied, scan fallback, G
 ## Completion evidence
 
 Record each screen's result in Figma-SCREEN-MATRIX.csv only after visual and functional testing. Keep original requirement wording unresolved until the separately cited79-page PDF is available. Source review, compiled code, passing unit tests, native simulation and publicly reachable staging are separate evidence categories.
+
+
+## Executed evidence available
+
+The plan above remains a scenario checklist. Concrete execution records are `Figma-ENGAGEMENT-TEST-RESULTS.json` (51 real API checks) and `Figma-WAREHOUSE-TEST-RESULTS.json` (29 real API checks), together with the backend verification artifacts listed in `Figma-IMPLEMENTATION-REVIEW.md`. These records cover defined local scenarios; they do not turn unexecuted device, provider, performance or exact-screen checks into passes.

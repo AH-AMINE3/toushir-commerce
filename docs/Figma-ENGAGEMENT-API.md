@@ -24,7 +24,7 @@ All routes are authenticated under `/api` and inherit the application transactio
 ## Points and gifts
 
 - `GET /loyalty?merchantId=` → `{available,reserved,spent,correctionDue,entries}`. Merchants see their own wallet; staff may request an authorized shop.
-- `POST /loyalty/sync {merchantId?}` reconciles completed paid orders with the immutable ledger. One point per full100 DA of accepted paid goods, excluding shipping/credits. Repeat is a no-op. A correction beyond available points is recorded as `correctionDue`; available never becomes negative. Future accrual/cancellation settles this review balance first. Fulfillment is blocked while such correction remains.
+- `POST /loyalty/sync {merchantId?}` reconciles completed paid orders with the immutable ledger. One point per full 100 DA of accepted paid goods, excluding shipping. Physically received returns stop earning immediately. Eligibility is bounded by both retained goods and the net commercial subtotal, so a later credit does not reverse the same return twice. Repeat is a no-op. A correction beyond available points is recorded as `correctionDue`; available never becomes negative. Future accrual/cancellation settles this review balance first. Fulfillment is blocked while such correction remains.
 - `GET /rewards` → `{items}`; ADMIN `POST /admin/rewards {name,description,imageUrl?,pointsCost,availableStock,isActive}` and `PATCH /admin/rewards/{id}` with the same body plus `version`.
 - Merchant `POST /rewards/{id}/reserve {idempotencyKey,grantId?}` atomically checks points and stock. Returns `GiftRequest` in RESERVED state. A grant must belong to this merchant/reward and remain eligible.
 - `GET /gift-requests`; staff may use `merchantId` filter.
@@ -58,4 +58,4 @@ The module appends `EngagementNotices` in the same transaction as a business ope
 
 A post-delivery return that invalidates an already handed-over gift opens `eligibilityReviewRequired`; it does not invent a physical return, reclaim money or silently modify the original proof. Inventory movements and promotion events retain their actor and operation key.
 
-Run `python3 scripts/test-engagement.py http://127.0.0.1:5882` against an explicitly enabled demo server. It creates its own isolated workspace and checks real persistence, state guards, object isolation, replay, money units, reward balances, supplier receiving and campaign rules. A plan or this file is not a claim the tests have passed.
+Run `python3 scripts/test-engagement.py http://127.0.0.1:5882` against an explicitly enabled demo server. It creates its own isolated workspace and checks real persistence, state guards, object isolation, replay, money units, reward balances, supplier receiving and campaign rules. The final local SQLite run passed 51/51 checks; see `Figma-ENGAGEMENT-TEST-RESULTS.json`. This result does not establish production PostgreSQL, device hardware, or every Figma screen state.

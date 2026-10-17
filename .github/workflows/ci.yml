@@ -53,6 +53,30 @@ jobs:
             kill "$API_PID"
             wait "$API_PID" || true
           done
+      - name: Install browser verifier
+        run: |
+          npm --prefix tests/browser ci
+          cd tests/browser
+          npx playwright install --with-deps chromium
+      - name: Verify the packaged desktop and mobile browser apps
+        env:
+          Demo__Enabled: 'true'
+          ASPNETCORE_ENVIRONMENT: Development
+          WEB_URL: http://127.0.0.1:5860
+        run: |
+          for suite in smoke identity business warehouse mobile; do
+            export DataPath="$RUNNER_TEMP/browser-$suite"
+            dotnet run --project backend/Toushir.Wholesale.csproj --no-build --urls "$WEB_URL" > "$RUNNER_TEMP/browser-$suite.log" 2>&1 &
+            API_PID=$!
+            trap 'kill "$API_PID" 2>/dev/null || true' EXIT
+            for attempt in $(seq 1 90); do
+              if curl --fail --silent "$WEB_URL/api/health" > /dev/null; then break; fi
+              sleep 1
+            done
+            npm --prefix tests/browser run "$suite"
+            kill "$API_PID"
+            wait "$API_PID" || true
+          done
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -60,3 +84,4 @@ jobs:
           path: |
             backend/*verification.json
             engagement-verification.json
+            tests/browser/reports/

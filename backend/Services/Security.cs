@@ -6,63 +6,348 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using OpenIddict.Abstractions;
 
 namespace Toushir.Wholesale;
 
-public record Actor(string Id,string WorkspaceId,string Name,string Role,string ApprovalStatus,bool CanSwitchRole=false) {
- public bool IsAdmin=>Role=="ADMIN";
- public bool IsStaff=>Role is "ADMIN" or "WAREHOUSE" or "DISPATCHER" or "FINANCE";
- public void RequireRoles(params string[] roles)=>Check.That(roles.Contains(Role),"Vous ne disposez pas du rôle requis.","FORBIDDEN",403);
- public void Admin()=>Check.That(IsAdmin,"Cette action est réservée au grossiste.","FORBIDDEN",403);
- public void Approved()=>Check.That(IsAdmin||ApprovalStatus=="APPROVED","Votre boutique doit être approuvée par le grossiste.","MERCHANT_NOT_APPROVED",403);
- public static Actor From(HttpContext c)=>new(c.User.FindFirstValue(ClaimTypes.NameIdentifier)!,c.User.FindFirstValue("workspace")!,c.User.FindFirstValue(ClaimTypes.Name)!,c.User.FindFirstValue(ClaimTypes.Role)!,c.User.FindFirstValue("approval")!,c.User.FindFirstValue("owner_capability")=="true");
+public record Actor(string Id, string WorkspaceId, string Name, string Role, string ApprovalStatus, bool CanSwitchRole = false)
+{
+    public bool IsAdmin => Role == "ADMIN";
+    public bool IsStaff => Role is "ADMIN" or "WAREHOUSE" or "DISPATCHER" or "FINANCE";
+    public void RequireRoles(params string[] roles) => Check.That(roles.Contains(Role), "Vous ne disposez pas du rôle requis.", "FORBIDDEN", 403);
+    public void Admin() => Check.That(IsAdmin, "Cette action est réservée au grossiste.", "FORBIDDEN", 403);
+    public void Approved() => Check.That(IsAdmin || ApprovalStatus == "APPROVED", "Votre boutique doit être approuvée par le grossiste.", "MERCHANT_NOT_APPROVED", 403);
+    public static Actor From(HttpContext c) => new(c.User.FindFirstValue(ClaimTypes.NameIdentifier)!, c.User.FindFirstValue("workspace")!, c.User.FindFirstValue(ClaimTypes.Name)!, c.User.FindFirstValue(ClaimTypes.Role)!, c.User.FindFirstValue("approval")!, c.User.FindFirstValue("owner_capability") == "true");
 }
-public static class Tokens { public static string New()=>Convert.ToHexString(RandomNumberGenerator.GetBytes(32)).ToLowerInvariant(); public static string Hash(string value)=>Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(value))); }
-public class SessionHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,ILoggerFactory logger,UrlEncoder encoder,WholesaleDb db):AuthenticationHandler<AuthenticationSchemeOptions>(options,logger,encoder) {
- protected override async Task<AuthenticateResult> HandleAuthenticateAsync(){
-  var header=Request.Headers.Authorization.ToString();var token=header.StartsWith("Bearer ",StringComparison.OrdinalIgnoreCase)?header[7..].Trim():Request.Cookies["toushir_wholesale"];
-  if(string.IsNullOrWhiteSpace(token)&&Request.Path.StartsWithSegments("/hubs/commerce"))token=Request.Query["access_token"].ToString();
-  if(string.IsNullOrWhiteSpace(token)||token.Length>16384)return AuthenticateResult.NoResult();
-  AuthSession? session;
-  if(token.Contains('.')){Request.Headers.Authorization="Bearer "+token;var oidc=await Context.AuthenticateAsync(OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);if(!oidc.Succeeded)return AuthenticateResult.Fail("Jeton OIDC invalide.");var sid=oidc.Principal!.FindFirstValue("sid");var subject=oidc.Principal.FindFirstValue("sub");session=await db.Sessions.AsNoTracking().FirstOrDefaultAsync(x=>x.Id==sid&&x.AccountId==subject);}
-  else{var hash=Tokens.Hash(token);session=await db.Sessions.AsNoTracking().FirstOrDefaultAsync(x=>x.TokenHash==hash);}
-  if(session is null||session.ExpiresAt<=DateTimeOffset.UtcNow)return AuthenticateResult.Fail("Session expirée.");
-  var a=await db.Accounts.AsNoTracking().FirstOrDefaultAsync(x=>x.Id==session.AccountId);if(a is null||a.ApprovalStatus=="SUSPENDED")return AuthenticateResult.Fail("Compte indisponible.");
-  var space=await db.Workspaces.AsNoTracking().FirstOrDefaultAsync(w=>w.Id==a.WorkspaceId);if(space==null||(space.IsDemo&&space.CreatedAt.AddDays(7)<=DateTimeOffset.UtcNow))return AuthenticateResult.Fail("Espace expiré.");
-  var guest=await db.DemoGuests.AsNoTracking().FirstOrDefaultAsync(g=>g.AccountId==a.Id);if(guest!=null){var invite=await db.DemoInvitations.AsNoTracking().FirstOrDefaultAsync(i=>i.Id==guest.InvitationId);if(invite==null||invite.RevokedAt!=null||invite.ExpiresAt<=DateTimeOffset.UtcNow)return AuthenticateResult.Fail("Invitation expirée.");}
-  var claims=new[]{new Claim(ClaimTypes.NameIdentifier,a.Id),new Claim("workspace",a.WorkspaceId),new Claim(ClaimTypes.Name,a.Name),new Claim(ClaimTypes.Role,a.Role),new Claim("approval",a.ApprovalStatus),new Claim("sid",session.Id),new Claim("owner_capability",session.OwnerCapability?"true":"false")};
-  return AuthenticateResult.Success(new AuthenticationTicket(new ClaimsPrincipal(new ClaimsIdentity(claims,Scheme.Name)),new AuthenticationProperties{ExpiresUtc=session.ExpiresAt},Scheme.Name));
- }
- protected override Task HandleChallengeAsync(AuthenticationProperties p){Response.StatusCode=401;return Response.WriteAsJsonAsync(new{error=new{code="UNAUTHENTICATED",message="Connectez-vous pour continuer."}});}
- protected override Task HandleForbiddenAsync(AuthenticationProperties p){Response.StatusCode=403;return Response.WriteAsJsonAsync(new{error=new{code="FORBIDDEN",message="Accès refusé."}});}
+public static class Tokens
+{
+    public static string New() => Convert.ToHexString(RandomNumberGenerator.GetBytes(32)).ToLowerInvariant(); public static string Hash(string value) => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(value)));
 }
-public class AuthService(WholesaleDb db,PasswordHasher<Account> hasher,IConfiguration config,IHostEnvironment environment) {
- public static object User(Account a)=>new{a.Id,a.Name,a.ShopName,a.Email,a.Phone,a.Role,a.ApprovalStatus,a.CreatedAt};
- public static object Space(Workspace w,bool canSwitchRole=false)=>new{w.Id,w.Name,w.IsDemo,canSwitchRole,pricingMode="ON_REQUEST",wilaya="Oran",currency="DZD"};
- public async Task<object> Issue(Account a,HttpContext c,string? workspaceToken=null){var expired=await db.Sessions.AsNoTracking().ToListAsync();db.Sessions.RemoveRange(expired.Where(x=>x.ExpiresAt<DateTimeOffset.UtcNow));var accountSessions=await db.Sessions.Where(x=>x.AccountId==a.Id).ToListAsync();if(accountSessions.Count>=32)db.Sessions.RemoveRange(accountSessions.OrderBy(x=>x.CreatedAt).Take(accountSessions.Count-31));var token=Tokens.New();db.Sessions.Add(new(){AccountId=a.Id,OwnerCapability=workspaceToken!=null,TokenHash=Tokens.Hash(token),ExpiresAt=DateTimeOffset.UtcNow.AddHours(16)});await db.SaveChangesAsync();c.Response.Cookies.Append("toushir_wholesale",token,new(){HttpOnly=true,Secure=c.Request.IsHttps||!environment.IsDevelopment(),SameSite=SameSiteMode.Strict,MaxAge=TimeSpan.FromHours(16),Path="/"});var w=await db.Workspaces.FindAsync(a.WorkspaceId);return new{token,workspaceToken,user=User(a),workspace=Space(w!,w!.IsDemo&&workspaceToken!=null)};}
- public async Task<object> Login(LoginInput input,HttpContext c){var email=Check.Text(input.Email,254,"E-mail").ToLowerInvariant();var a=await db.Accounts.FirstOrDefaultAsync(x=>x.Email==email);var valid=a is not null&&hasher.VerifyHashedPassword(a,a.PasswordHash,input.Password??"")!=PasswordVerificationResult.Failed;Check.That(valid&&a!.ApprovalStatus!="SUSPENDED","E-mail ou mot de passe incorrect.","INVALID_CREDENTIALS",401);return await Issue(a!,c);}
- public async Task<object> Register(RegisterInput input,HttpContext c){Check.That(input.Password is {Length:>=12 and <=128},"Utilisez un mot de passe de 12 à 128 caractères.");var email=Check.Text(input.Email,254,"E-mail").ToLowerInvariant();Check.That(System.Net.Mail.MailAddress.TryCreate(email,out _),"E-mail invalide.");Check.That(!await db.Accounts.AnyAsync(x=>x.Email==email),"Cette adresse e-mail est déjà utilisée.","EMAIL_EXISTS",409);var w=await db.Workspaces.FirstOrDefaultAsync(x=>!x.IsDemo);Check.That(w!=null,"Le grossiste doit d'abord configurer son compte administrateur.","NOT_CONFIGURED",503);var a=new Account{WorkspaceId=w!.Id,Email=email,Name=Check.Text(input.Name,100,"Nom"),ShopName=Check.Text(input.ShopName,150,"Boutique"),Phone=Check.Text(input.Phone,30,"Téléphone")};a.PasswordHash=hasher.HashPassword(a,input.Password);db.Accounts.Add(a);db.Addresses.Add(MakeAddress(a,input.Address));await db.SaveChangesAsync();return await Issue(a,c);}
- public static Address MakeAddress(Account a,AddressInput x)=>new(){WorkspaceId=a.WorkspaceId,AccountId=a.Id,Label=Check.Text(x.Label,80,"Libellé"),Wilaya=Check.Text(x.Wilaya,80,"Wilaya"),Commune=Check.Text(x.Commune,100,"Commune"),Street=Check.Text(x.Street,300,"Adresse"),IsDefault=x.IsDefault};
- public async Task<object> Demo(DemoInput input,HttpContext c){Check.That(config.GetValue<bool>("Demo:Enabled"),"La démonstration n'est pas disponible.","DEMO_DISABLED",404);var role=(input.Role??"MERCHANT").ToUpperInvariant();Check.That(role is "ADMIN" or "MERCHANT" or "DRIVER" or "WAREHOUSE" or "DISPATCHER" or "FINANCE","Persona inconnue.");Workspace? w;string key;
-  if(!string.IsNullOrWhiteSpace(input.WorkspaceToken)){key=input.WorkspaceToken;var hash=Tokens.Hash(key);w=await db.Workspaces.FirstOrDefaultAsync(x=>x.IsDemo&&x.AccessHash==hash);Check.That(w!=null&&w.CreatedAt>DateTimeOffset.UtcNow.AddDays(-7),"Cet espace de démonstration a expiré.","DEMO_EXPIRED",401);}else{key=Tokens.New();w=new Workspace{IsDemo=true,Name="Toushir · Espace de découverte",AccessHash=Tokens.Hash(key)};db.Workspaces.Add(w);var suffix=w.Id[..12];var admin=new Account{WorkspaceId=w.Id,Email=$"grossiste-{suffix}@demo.invalid",Name="Amine · Démonstration",ShopName="Toushir Distribution",Role="ADMIN",ApprovalStatus="APPROVED",Phone="Exemple"};var merchant=new Account{WorkspaceId=w.Id,Email=$"epicerie-{suffix}@demo.invalid",Name="Yacine · Démonstration",ShopName="Épicerie El Bahia · Exemple",Phone="Exemple",ApprovalStatus="APPROVED"};admin.PasswordHash=hasher.HashPassword(admin,Tokens.New());merchant.PasswordHash=hasher.HashPassword(merchant,Tokens.New());db.Accounts.AddRange(admin,merchant);db.Addresses.Add(new(){WorkspaceId=w.Id,AccountId=merchant.Id,Label="Boutique · Exemple",Wilaya="Oran",Commune="Oran",Street="Adresse fictive de démonstration",IsDefault=true});await db.SaveChangesAsync();}
-  await EnsureTeamPersonas(w!);
-  var a=await db.Accounts.FirstAsync(x=>x.WorkspaceId==w!.Id&&x.Role==role&&!db.DemoGuests.Any(g=>g.AccountId==x.Id));return await Issue(a,c,key);
- }
- public async Task EnsureTeamPersonas(Workspace w){
-  var definitions=new[]{("DRIVER","Sofiane · Livreur"),("WAREHOUSE","Karim · Préparateur"),("DISPATCHER","Lina · Exploitation"),("FINANCE","Nadia · Finance")};
-  foreach(var (role,name) in definitions){if(await db.Accounts.AnyAsync(x=>x.WorkspaceId==w.Id&&x.Role==role))continue;var a=new Account{WorkspaceId=w.Id,Email=$"{role.ToLowerInvariant()}-{w.Id[..12]}@demo.invalid",Name=name,ShopName=w.Name,Phone="Exemple",Role=role,ApprovalStatus="APPROVED"};a.PasswordHash=hasher.HashPassword(a,Tokens.New());db.Accounts.Add(a);}await db.SaveChangesAsync();
- }
- public async Task<object> Me(Actor actor){var a=await db.Accounts.FindAsync(actor.Id);var w=await db.Workspaces.FindAsync(actor.WorkspaceId);return new{user=User(a!),workspace=Space(w!,w!.IsDemo&&actor.CanSwitchRole)};}
- public async Task ChangePassword(Actor actor,PasswordInput input,HttpContext c){var user=await db.Accounts.FindAsync(actor.Id);Check.That(hasher.VerifyHashedPassword(user!,user!.PasswordHash,input.CurrentPassword??"")!=PasswordVerificationResult.Failed,"Mot de passe actuel incorrect.","INVALID_CREDENTIALS",401);Check.That(input.NewPassword is {Length:>=12 and <=128},"Utilisez un mot de passe de 12 à 128 caractères.");user.PasswordHash=hasher.HashPassword(user,input.NewPassword);await db.Sessions.Where(x=>x.AccountId==actor.Id).ExecuteDeleteAsync();await db.SaveChangesAsync();c.Response.Cookies.Delete("toushir_wholesale",new(){Path="/"});}
- public async Task Logout(HttpContext c){var token=c.Request.Headers.Authorization.ToString();token=token.StartsWith("Bearer ",StringComparison.OrdinalIgnoreCase)?token[7..]:c.Request.Cookies["toushir_wholesale"]??"";var hash=Tokens.Hash(token);var sid=c.User.FindFirstValue("sid");await db.Sessions.Where(x=>x.TokenHash==hash||(sid!=null&&x.Id==sid)).ExecuteDeleteAsync();c.Response.Cookies.Delete("toushir_wholesale",new(){Path="/"});}
+public class SessionHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, WholesaleDb db) : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder)
+{
+    protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
+    {
+        var header = Request.Headers.Authorization.ToString();
+        var token = header.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase) ? header[7..].Trim() : Request.Cookies["toushir_wholesale"];
+        if (string.IsNullOrWhiteSpace(token) && Request.Path.StartsWithSegments("/hubs/commerce"))
+            token = Request.Query["access_token"].ToString();
+        if (string.IsNullOrWhiteSpace(token) || token.Length > 16384)
+            return AuthenticateResult.NoResult();
+        AuthSession? session;
+        DateTimeOffset? tokenExpiry = null;
+        if (token.Contains('.'))
+        {
+            Request.Headers.Authorization = "Bearer " + token;
+            var oidc = await Context.AuthenticateAsync(OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+            if (!oidc.Succeeded)
+                return AuthenticateResult.Fail("Jeton OIDC invalide.");
+            tokenExpiry = oidc.Principal!.GetExpirationDate();
+            var sid = oidc.Principal.FindFirstValue("sid");
+            var subject = oidc.Principal.FindFirstValue("sub");
+            session = await db.Sessions.AsNoTracking().FirstOrDefaultAsync(x => x.Id == sid && x.AccountId == subject);
+        }
+        else
+        {
+            var hash = Tokens.Hash(token);
+            session = await db.Sessions.AsNoTracking().FirstOrDefaultAsync(x => x.TokenHash == hash);
+        }
+        if (session is null || session.ExpiresAt <= DateTimeOffset.UtcNow)
+            return AuthenticateResult.Fail("Session expirée.");
+        var a = await db.Accounts.AsNoTracking().FirstOrDefaultAsync(x => x.Id == session.AccountId);
+        if (a is null || a.ApprovalStatus == "SUSPENDED")
+            return AuthenticateResult.Fail("Compte indisponible.");
+        var space = await db.Workspaces.AsNoTracking().FirstOrDefaultAsync(w => w.Id == a.WorkspaceId);
+        if (space == null || (space.IsDemo && space.CreatedAt.AddDays(7) <= DateTimeOffset.UtcNow))
+            return AuthenticateResult.Fail("Espace expiré.");
+        var guest = await db.DemoGuests.AsNoTracking().FirstOrDefaultAsync(g => g.AccountId == a.Id);
+        if (guest != null)
+        {
+            var invite = await db.DemoInvitations.AsNoTracking().FirstOrDefaultAsync(i => i.Id == guest.InvitationId);
+            if (invite == null || invite.RevokedAt != null || invite.ExpiresAt <= DateTimeOffset.UtcNow)
+                return AuthenticateResult.Fail("Invitation expirée.");
+        }
+        var claims = new[] { new Claim(ClaimTypes.NameIdentifier, a.Id), new Claim("workspace", a.WorkspaceId), new Claim(ClaimTypes.Name, a.Name), new Claim(ClaimTypes.Role, a.Role), new Claim("approval", a.ApprovalStatus), new Claim("sid", session.Id), new Claim("owner_capability", session.OwnerCapability ? "true" : "false") };
+        return AuthenticateResult.Success(new AuthenticationTicket(new ClaimsPrincipal(new ClaimsIdentity(claims, Scheme.Name)), new AuthenticationProperties { ExpiresUtc = tokenExpiry is { } expires && expires < session.ExpiresAt ? expires : session.ExpiresAt }, Scheme.Name));
+    }
+    protected override Task HandleChallengeAsync(AuthenticationProperties p)
+    {
+        Response.StatusCode = 401;
+        return Response.WriteAsJsonAsync(new
+        {
+            error = new
+            {
+                code = "UNAUTHENTICATED",
+                message = "Connectez-vous pour continuer."
+            }
+        });
+    }
+    protected override Task HandleForbiddenAsync(AuthenticationProperties p)
+    {
+        Response.StatusCode = 403;
+        return Response.WriteAsJsonAsync(new
+        {
+            error = new
+            {
+                code = "FORBIDDEN",
+                message = "Accès refusé."
+            }
+        });
+    }
 }
-public static class Seed {
- // Explicit pre-release schema upgrade: retain retired identities for order history while hiding them from new catalog requests.
- private static async Task EnsureCatalogActiveColumn(WholesaleDb db){await db.Database.OpenConnectionAsync();try{using var cmd=db.Database.GetDbConnection().CreateCommand();cmd.CommandText="PRAGMA table_info(Products)";bool found=false;using(var reader=await cmd.ExecuteReaderAsync()){while(await reader.ReadAsync())if(reader.GetString(1)=="IsCatalogActive")found=true;}if(!found)await db.Database.ExecuteSqlRawAsync("ALTER TABLE Products ADD COLUMN IsCatalogActive INTEGER NOT NULL DEFAULT 1");}finally{await db.Database.CloseConnectionAsync();}}
- public static async Task Initialize(WholesaleDb db,IConfiguration cfg,ILogger logger){
-  await DatabaseConfiguration.InitializeDatabase(db,cfg);if(db.Database.IsSqlite()){await EnsureCatalogActiveColumn(db);await db.Database.ExecuteSqlRawAsync("PRAGMA journal_mode=WAL;");await db.Database.ExecuteSqlRawAsync("PRAGMA busy_timeout=15000;");}else{await db.Database.ExecuteSqlRawAsync("ALTER TABLE \"Products\" ADD COLUMN IF NOT EXISTS \"IsCatalogActive\" boolean NOT NULL DEFAULT TRUE");}await ClaimsService.EnsureSchema(db);await DemoInvitationService.EnsureSchema(db);await OperationsSchema.Upgrade(db);await RouteSchema.Upgrade(db);await EngagementSchema.Upgrade(db);await OidcSchema.Upgrade(db);await MigrationBaseline.AdoptExisting(db);
-  var catalogPath=cfg["Catalog:Path"]??Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../catalog/products.json"));if(!File.Exists(catalogPath))catalogPath=Path.GetFullPath("../catalog/products.json");
-  if(File.Exists(catalogPath)){using var file=File.OpenRead(catalogPath);using var doc=await System.Text.Json.JsonDocument.ParseAsync(file);var list=doc.RootElement.ValueKind==System.Text.Json.JsonValueKind.Array?doc.RootElement:doc.RootElement.GetProperty("products");var existing=await db.Products.ToDictionaryAsync(x=>x.Id);foreach(var old in existing.Values)old.IsCatalogActive=false;foreach(var x in list.EnumerateArray()){string S(string key)=>x.TryGetProperty(key,out var v)&&v.ValueKind==System.Text.Json.JsonValueKind.String?v.GetString()??"":"";var id=S("id");var barcode=S("barcode");if(id.Length==0||barcode.Length==0)continue;var name=S("name");if(name.Length==0)continue;var tags=x.TryGetProperty("countryTags",out var tag)?tag.ToString():"";if(!existing.TryGetValue(id,out var product)){product=new(){Id=id};db.Products.Add(product);existing.Add(id,product);}product.IsCatalogActive=true;product.Barcode=barcode;product.Name=name;product.Brand=S("brand");product.Category=S("category");product.ImageUrl=S("imageUrl");product.Unit=S("unit");product.Source=S("source");product.SourceUrl=S("sourceUrl");product.SourceLicense=S("sourceLicense");product.ImageLicense=S("imageLicense");product.CountryTags=tags;}await db.SaveChangesAsync();logger.LogInformation("Catalog loaded: {Count} real-source product identities",existing.Values.Count(x=>x.IsCatalogActive));}else logger.LogWarning("Catalog file not present yet at {Path}",catalogPath);
-  var email=cfg["Bootstrap:Email"];var pass=cfg["Bootstrap:Password"];if(!string.IsNullOrWhiteSpace(email)&&!string.IsNullOrWhiteSpace(pass)&&!await db.Accounts.AnyAsync(x=>x.Role=="ADMIN"&&!x.Email.EndsWith("@demo.invalid"))){Check.That(pass.Length>=14,"Le mot de passe administrateur doit comporter au moins 14 caractères.");var w=new Workspace{Name=cfg["Wholesale:Name"]??"Toushir Distribution"};db.Workspaces.Add(w);var a=new Account{WorkspaceId=w.Id,Email=email.Trim().ToLowerInvariant(),Name="Administrateur",ShopName=w.Name,Role="ADMIN",ApprovalStatus="APPROVED"};a.PasswordHash=new PasswordHasher<Account>().HashPassword(a,pass);db.Accounts.Add(a);await db.SaveChangesAsync();}
- }
+public class AuthService(WholesaleDb db, PasswordHasher<Account> hasher, IConfiguration config, IHostEnvironment environment)
+{
+    public static object User(Account a) => new { a.Id, a.Name, a.ShopName, a.Email, a.Phone, a.Role, a.ApprovalStatus, a.CreatedAt };
+    public static object Space(Workspace w, bool canSwitchRole = false) => new { w.Id, w.Name, w.IsDemo, canSwitchRole, pricingMode = "ON_REQUEST", wilaya = "Oran", currency = "DZD" };
+    public async Task<object> Issue(Account a, HttpContext c, string? workspaceToken = null)
+    {
+        var expired = await db.Sessions.AsNoTracking().ToListAsync();
+        db.Sessions.RemoveRange(expired.Where(x => x.ExpiresAt < DateTimeOffset.UtcNow));
+        var accountSessions = await db.Sessions.Where(x => x.AccountId == a.Id).ToListAsync();
+        if (accountSessions.Count >= 32)
+            db.Sessions.RemoveRange(accountSessions.OrderBy(x => x.CreatedAt).Take(accountSessions.Count - 31));
+        var token = Tokens.New();
+        db.Sessions.Add(new()
+        {
+            AccountId = a.Id,
+            OwnerCapability = workspaceToken != null,
+            TokenHash = Tokens.Hash(token),
+            ExpiresAt = DateTimeOffset.UtcNow.AddHours(16)
+        });
+        await db.SaveChangesAsync();
+        c.Response.Cookies.Append("toushir_wholesale", token, new()
+        {
+            HttpOnly = true,
+            Secure = c.Request.IsHttps || !environment.IsDevelopment(),
+            SameSite = SameSiteMode.Strict,
+            MaxAge = TimeSpan.FromHours(16),
+            Path = "/"
+        });
+        var w = await db.Workspaces.FindAsync(a.WorkspaceId);
+        return new
+        {
+            token,
+            workspaceToken,
+            user = User(a),
+            workspace = Space(w!, w!.IsDemo && workspaceToken != null)
+        };
+    }
+    public async Task<object> Login(LoginInput input, HttpContext c)
+    {
+        var email = Check.Text(input.Email, 254, "E-mail").ToLowerInvariant();
+        var a = await db.Accounts.FirstOrDefaultAsync(x => x.Email == email);
+        var valid = a is not null && hasher.VerifyHashedPassword(a, a.PasswordHash, input.Password ?? "") != PasswordVerificationResult.Failed;
+        Check.That(valid && a!.ApprovalStatus != "SUSPENDED", "E-mail ou mot de passe incorrect.", "INVALID_CREDENTIALS", 401);
+        return await Issue(a!, c);
+    }
+    public async Task<object> Register(RegisterInput input, HttpContext c)
+    {
+        Check.That(input.Password is { Length: >= 12 and <= 128 }, "Utilisez un mot de passe de 12 à 128 caractères.");
+        var email = Check.Text(input.Email, 254, "E-mail").ToLowerInvariant();
+        Check.That(System.Net.Mail.MailAddress.TryCreate(email, out _), "E-mail invalide.");
+        Check.That(!await db.Accounts.AnyAsync(x => x.Email == email), "Cette adresse e-mail est déjà utilisée.", "EMAIL_EXISTS", 409);
+        var w = await db.Workspaces.FirstOrDefaultAsync(x => !x.IsDemo);
+        Check.That(w != null, "Le grossiste doit d'abord configurer son compte administrateur.", "NOT_CONFIGURED", 503);
+        var a = new Account { WorkspaceId = w!.Id, Email = email, Name = Check.Text(input.Name, 100, "Nom"), ShopName = Check.Text(input.ShopName, 150, "Boutique"), Phone = Check.Text(input.Phone, 30, "Téléphone") };
+        a.PasswordHash = hasher.HashPassword(a, input.Password);
+        db.Accounts.Add(a);
+        db.Addresses.Add(MakeAddress(a, input.Address));
+        await db.SaveChangesAsync();
+        return await Issue(a, c);
+    }
+    public static Address MakeAddress(Account a, AddressInput x) => new() { WorkspaceId = a.WorkspaceId, AccountId = a.Id, Label = Check.Text(x.Label, 80, "Libellé"), Wilaya = Check.Text(x.Wilaya, 80, "Wilaya"), Commune = Check.Text(x.Commune, 100, "Commune"), Street = Check.Text(x.Street, 300, "Adresse"), IsDefault = x.IsDefault };
+    public async Task<object> Demo(DemoInput input, HttpContext c)
+    {
+        Check.That(config.GetValue<bool>("Demo:Enabled"), "La démonstration n'est pas disponible.", "DEMO_DISABLED", 404);
+        var role = (input.Role ?? "MERCHANT").ToUpperInvariant();
+        Check.That(role is "ADMIN" or "MERCHANT" or "DRIVER" or "WAREHOUSE" or "DISPATCHER" or "FINANCE", "Persona inconnue.");
+        Workspace? w;
+        string key;
+        if (!string.IsNullOrWhiteSpace(input.WorkspaceToken))
+        {
+            key = input.WorkspaceToken;
+            var hash = Tokens.Hash(key);
+            w = await db.Workspaces.FirstOrDefaultAsync(x => x.IsDemo && x.AccessHash == hash);
+            Check.That(w != null && w.CreatedAt > DateTimeOffset.UtcNow.AddDays(-7), "Cet espace de démonstration a expiré.", "DEMO_EXPIRED", 401);
+        }
+        else
+        {
+            key = Tokens.New();
+            w = new Workspace { IsDemo = true, Name = "Toushir · Espace de découverte", AccessHash = Tokens.Hash(key) };
+            db.Workspaces.Add(w);
+            var suffix = w.Id[..12];
+            var admin = new Account { WorkspaceId = w.Id, Email = $"grossiste-{suffix}@demo.invalid", Name = "Amine · Démonstration", ShopName = "Toushir Distribution", Role = "ADMIN", ApprovalStatus = "APPROVED", Phone = "Exemple" };
+            var merchant = new Account { WorkspaceId = w.Id, Email = $"epicerie-{suffix}@demo.invalid", Name = "Yacine · Démonstration", ShopName = "Épicerie El Bahia · Exemple", Phone = "Exemple", ApprovalStatus = "APPROVED" };
+            admin.PasswordHash = hasher.HashPassword(admin, Tokens.New());
+            merchant.PasswordHash = hasher.HashPassword(merchant, Tokens.New());
+            db.Accounts.AddRange(admin, merchant);
+            db.Addresses.Add(new()
+            {
+                WorkspaceId = w.Id,
+                AccountId = merchant.Id,
+                Label = "Boutique · Exemple",
+                Wilaya = "Oran",
+                Commune = "Oran",
+                Street = "Adresse fictive de démonstration",
+                IsDefault = true
+            });
+            await db.SaveChangesAsync();
+        }
+        await EnsureTeamPersonas(w!);
+        var a = await db.Accounts.FirstAsync(x => x.WorkspaceId == w!.Id && x.Role == role && !db.DemoGuests.Any(g => g.AccountId == x.Id));
+        return await Issue(a, c, key);
+    }
+    public async Task EnsureTeamPersonas(Workspace w)
+    {
+        var definitions = new[] { ("DRIVER", "Sofiane · Livreur"), ("WAREHOUSE", "Karim · Préparateur"), ("DISPATCHER", "Lina · Exploitation"), ("FINANCE", "Nadia · Finance") };
+        foreach (var (role, name) in definitions)
+        {
+            if (await db.Accounts.AnyAsync(x => x.WorkspaceId == w.Id && x.Role == role))
+                continue;
+            var a = new Account { WorkspaceId = w.Id, Email = $"{role.ToLowerInvariant()}-{w.Id[..12]}@demo.invalid", Name = name, ShopName = w.Name, Phone = "Exemple", Role = role, ApprovalStatus = "APPROVED" };
+            a.PasswordHash = hasher.HashPassword(a, Tokens.New());
+            db.Accounts.Add(a);
+        }
+        await db.SaveChangesAsync();
+    }
+    public async Task<object> Me(Actor actor)
+    {
+        var a = await db.Accounts.FindAsync(actor.Id);
+        var w = await db.Workspaces.FindAsync(actor.WorkspaceId);
+        return new
+        {
+            user = User(a!),
+            workspace = Space(w!, w!.IsDemo && actor.CanSwitchRole)
+        };
+    }
+    public async Task ChangePassword(Actor actor, PasswordInput input, HttpContext c)
+    {
+        var user = await db.Accounts.FindAsync(actor.Id);
+        Check.That(hasher.VerifyHashedPassword(user!, user!.PasswordHash, input.CurrentPassword ?? "") != PasswordVerificationResult.Failed, "Mot de passe actuel incorrect.", "INVALID_CREDENTIALS", 401);
+        Check.That(input.NewPassword is { Length: >= 12 and <= 128 }, "Utilisez un mot de passe de 12 à 128 caractères.");
+        user.PasswordHash = hasher.HashPassword(user, input.NewPassword);
+        await db.Sessions.Where(x => x.AccountId == actor.Id).ExecuteDeleteAsync();
+        await db.SaveChangesAsync();
+        c.Response.Cookies.Delete("toushir_wholesale", new()
+        {
+            Path = "/"
+        });
+    }
+    public async Task Logout(HttpContext c)
+    {
+        var token = c.Request.Headers.Authorization.ToString();
+        token = token.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase) ? token[7..] : c.Request.Cookies["toushir_wholesale"] ?? "";
+        var hash = Tokens.Hash(token);
+        var sid = c.User.FindFirstValue("sid");
+        await db.Sessions.Where(x => x.TokenHash == hash || (sid != null && x.Id == sid)).ExecuteDeleteAsync();
+        c.Response.Cookies.Delete("toushir_wholesale", new()
+        {
+            Path = "/"
+        });
+    }
+}
+public static class Seed
+{
+    // Explicit pre-release schema upgrade: retain retired identities for order history while hiding them from new catalog requests.
+    private static async Task EnsureCatalogActiveColumn(WholesaleDb db)
+    {
+        await db.Database.OpenConnectionAsync();
+        try
+        {
+            using var cmd = db.Database.GetDbConnection().CreateCommand();
+            cmd.CommandText = "PRAGMA table_info(Products)";
+            bool found = false;
+            using (var reader = await cmd.ExecuteReaderAsync())
+            {
+                while (await reader.ReadAsync())
+                if (reader.GetString(1) == "IsCatalogActive")
+                    found = true;
+            }
+            if (!found)
+                await db.Database.ExecuteSqlRawAsync("ALTER TABLE Products ADD COLUMN IsCatalogActive INTEGER NOT NULL DEFAULT 1");
+        }
+        finally { await db.Database.CloseConnectionAsync(); }
+    }
+    public static async Task Initialize(WholesaleDb db, IConfiguration cfg, ILogger logger)
+    {
+        await DatabaseConfiguration.InitializeDatabase(db, cfg);
+        if (db.Database.IsSqlite())
+        {
+            await EnsureCatalogActiveColumn(db);
+            await db.Database.ExecuteSqlRawAsync("PRAGMA journal_mode=WAL;");
+            await db.Database.ExecuteSqlRawAsync("PRAGMA busy_timeout=15000;");
+        }
+        else
+        {
+            await db.Database.ExecuteSqlRawAsync("ALTER TABLE \"Products\" ADD COLUMN IF NOT EXISTS \"IsCatalogActive\" boolean NOT NULL DEFAULT TRUE");
+        }
+        await ClaimsService.EnsureSchema(db);
+        await DemoInvitationService.EnsureSchema(db);
+        await OperationsSchema.Upgrade(db);
+        await RouteSchema.Upgrade(db);
+        await EngagementSchema.Upgrade(db);
+        await WarehouseSchema.Upgrade(db);
+        await OidcSchema.Upgrade(db);
+        await MigrationBaseline.AdoptExisting(db);
+        var catalogPath = cfg["Catalog:Path"] ?? Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../catalog/products.json"));
+        if (!File.Exists(catalogPath))
+            catalogPath = Path.GetFullPath("../catalog/products.json");
+        if (File.Exists(catalogPath))
+        {
+            using var file = File.OpenRead(catalogPath);
+            using var doc = await System.Text.Json.JsonDocument.ParseAsync(file);
+            var list = doc.RootElement.ValueKind == System.Text.Json.JsonValueKind.Array ? doc.RootElement : doc.RootElement.GetProperty("products");
+            var existing = await db.Products.ToDictionaryAsync(x => x.Id);
+            foreach (var old in existing.Values)
+                old.IsCatalogActive = false;
+            foreach (var x in list.EnumerateArray())
+            {
+                string S(string key) => x.TryGetProperty(key, out var v) && v.ValueKind == System.Text.Json.JsonValueKind.String ? v.GetString() ?? "" : "";
+                var id = S("id");
+                var barcode = S("barcode");
+                if (id.Length == 0 || barcode.Length == 0)
+                    continue;
+                var name = S("name");
+                if (name.Length == 0)
+                    continue;
+                var tags = x.TryGetProperty("countryTags", out var tag) ? tag.ToString() : "";
+                if (!existing.TryGetValue(id, out var product))
+                {
+                    product = new()
+                    {
+                        Id = id
+                    };
+                    db.Products.Add(product);
+                    existing.Add(id, product);
+                }
+                product.IsCatalogActive = true;
+                product.Barcode = barcode;
+                product.Name = name;
+                product.Brand = S("brand");
+                product.Category = S("category");
+                product.ImageUrl = S("imageUrl");
+                product.Unit = S("unit");
+                product.Source = S("source");
+                product.SourceUrl = S("sourceUrl");
+                product.SourceLicense = S("sourceLicense");
+                product.ImageLicense = S("imageLicense");
+                product.CountryTags = tags;
+            }
+            await db.SaveChangesAsync();
+            logger.LogInformation("Catalog loaded: {Count} real-source product identities", existing.Values.Count(x => x.IsCatalogActive));
+        }
+        else
+            logger.LogWarning("Catalog file not present yet at {Path}", catalogPath);
+        var email = cfg["Bootstrap:Email"];
+        var pass = cfg["Bootstrap:Password"];
+        if (!string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(pass) && !await db.Accounts.AnyAsync(x => x.Role == "ADMIN" && !x.Email.EndsWith("@demo.invalid")))
+        {
+            Check.That(pass.Length >= 14, "Le mot de passe administrateur doit comporter au moins 14 caractères.");
+            var w = new Workspace { Name = cfg["Wholesale:Name"] ?? "Toushir Distribution" };
+            db.Workspaces.Add(w);
+            var a = new Account { WorkspaceId = w.Id, Email = email.Trim().ToLowerInvariant(), Name = "Administrateur", ShopName = w.Name, Role = "ADMIN", ApprovalStatus = "APPROVED" };
+            a.PasswordHash = new PasswordHasher<Account>().HashPassword(a, pass);
+            db.Accounts.Add(a);
+            await db.SaveChangesAsync();
+        }
+    }
 }

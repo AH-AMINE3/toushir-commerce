@@ -31,7 +31,9 @@ EXPO_PUBLIC_API_URL=http://10.0.2.2:5860 npm run build:merchant:android
 EXPO_PUBLIC_API_URL=http://10.0.2.2:5860 npm run build:driver:android
 ```
 
-The script regenerates native configuration for the selected app, compiles with two workers for arm64, and puts the APK in `build/downloads`. The generated local release configuration uses a development signing key for testing. Production store builds require the owner's signing configuration.
+For local iOS Simulator builds, use `EXPO_PUBLIC_API_URL=http://localhost:5860 bash scripts/build-native.sh merchant ios` (or `driver ios`). The iOS build uses two workers and a temporary build directory to avoid iCloud Finder metadata interfering with framework signing; the app bundle is copied into `build/ios-merchant` or `build/ios-driver`, with a portable Simulator zip in `build/downloads`.
+
+The script regenerates native configuration for the selected app, compiles with two workers for arm64, and puts the APK in `build/downloads`. The generated local release configuration uses a development signing key for testing. Private signed builds use the repository’s `scripts/build-android-release.zsh merchant` or `driver` command with a verified HTTPS API and the four `TOUSHIR_SIGNING_*` variables. Expo’s signing plugin reads those values only during Gradle execution and preserves the existing keystore; it never writes passwords to generated source. Both commands regenerate the selected variant before building. Production store distribution still requires the owner’s store configuration.
 
 EAS profiles: `merchant-preview`, `driver-preview`, `merchant-production`, `driver-production`. Preview iOS builds target Simulator. Supply a reachable `EXPO_PUBLIC_API_URL` through the build environment. `.easignore` excludes generated native directories so the selected role generates the correct native identifiers during EAS prebuild.
 
@@ -51,9 +53,9 @@ Browser bearer tokens are scoped to each tab's session storage; the demo workspa
 
 `npm run typecheck` checks the entire mobile app. `npm run build:web` exports the browser edition. Actual simulator/device evidence is reported separately; browser captures are not native test evidence.
 
-## Native sign-in
+## Secure sign-in
 
-Real native accounts sign in through the system browser using OpenID Connect authorization code with S256 PKCE, the public `toushir-mobile` client and the app variant’s exact callback scheme. Access and rotating refresh credentials are stored in SecureStore; no client secret or resource-owner password grant is used. The API client refreshes once on an expired JWT and logout revokes the server session. Demo personas keep the isolated demo session adapter. A lost real-account session returns to secure sign-in instead of silently opening a demo.
+Real accounts sign in through the system browser or browser authorization popup using OpenID Connect authorization code with S256 PKCE, the public `toushir-mobile` client and the app variant’s exact callback scheme. The browser callback is `/mobile/auth/callback`. Access and rotating refresh credentials are stored in SecureStore on native and tab-scoped session storage in the browser; no client secret or resource-owner password grant is used. The API client refreshes once on an expired JWT and logout revokes the server session. Demo personas keep the isolated demo session adapter. A lost real-account session returns to secure sign-in instead of silently opening a demo.
 
 Implementation follows the [Expo AuthSession reference](https://docs.expo.dev/versions/latest/sdk/auth-session/) and [authentication guide](https://docs.expo.dev/guides/authentication/).
 

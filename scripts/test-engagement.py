@@ -190,6 +190,11 @@ correction_reward=call('POST','/admin/rewards',{'name':'QA solde avant correctio
 claim=call('POST','/orders/'+oid+'/claims',{'productId':pid,'quantity':1,'reason':'QA correction de points'},M)
 call('POST','/admin/claims/'+claim['id']+'/resolve',{'status':'ACCEPTED','note':'QA'},A)
 call('POST','/admin/claims/'+claim['id']+'/receive',{'quantity':1,'note':'QA retour'},A)
+call('POST','/rewards/'+correction_reward['id']+'/reserve',{'idempotencyKey':key(),'grantId':None},M,409)
+ok('physical return cannot fund a reward through a stale wallet before commercial credit')
+physical_wallet=call('POST','/loyalty/sync',{},M)
+physical_entries=[x for x in physical_wallet['entries'] if x['sourceRef']==oid]
+ok('physically received return reverses earned points before credit',sum(x['orderPointDelta'] for x in physical_entries)==1270)
 call('POST','/admin/claims/'+claim['id']+'/credit',{'amount':1000,'reason':'QA avoir','idempotencyKey':key()},A)
 call('POST','/rewards/'+correction_reward['id']+'/reserve',{'idempotencyKey':key(),'grantId':None},M,409)
 ok('recent credit cannot be spent through a stale wallet before manual sync')

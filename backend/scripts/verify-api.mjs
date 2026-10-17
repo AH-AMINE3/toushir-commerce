@@ -4,7 +4,7 @@ import { writeFile } from 'node:fs/promises';
 const base=(process.env.API_URL||'http://127.0.0.1:5860').replace(/\/$/,'');
 const checks=[];let requests=0;
 const textContent=html=>html.replace(/&#(\d+);/g,(_,n)=>String.fromCodePoint(Number(n)));
-async function call(path,{method='GET',body,token,status=200}={}){requests++;const r=await fetch(base+'/api'+path,{method,headers:{...(body!==undefined?{'Content-Type':'application/json'}:{}),...(token?{Authorization:'Bearer '+token}:{})},...(body!==undefined?{body:JSON.stringify(body)}:{})});const text=await r.text();let data;try{data=JSON.parse(text);}catch{data=text;}assert.equal(r.status,status,`${method} ${path}: ${text}`);return data;}
+async function call(path,{method='GET',body,token,status=200}={}){requests++;const r=await fetch(base+'/api'+path,{method,headers:{...(body!==undefined?{'Content-Type':'application/json'}:{}),...(token?{Authorization:'Bearer '+token}:{})},...(body!==undefined?{body:JSON.stringify(body)}:{})});const text=await r.text();let data;try{data=JSON.parse(text);}catch{data=text;}assert.equal(r.status,status,`${method} ${path}: ${data?.error?.code || r.status} ${data?.error?.message || "Unexpected API response"}`);return data;}
 async function test(name,fn){try{await fn();checks.push({name,pass:true});console.log('PASS '+name);}catch(e){checks.push({name,pass:false,error:e.message});console.error('FAIL '+name+': '+e.message);throw e;}}
 let merchant,admin,outsider,p1,p2,address,created,winner;
 try{

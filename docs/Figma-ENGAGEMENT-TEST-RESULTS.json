@@ -1,5 +1,5 @@
 {
-  "passed": 49,
+  "passed": 51,
   "checks": [
     "anonymous cannot read conversations",
     "supply order creation is idempotent",
@@ -48,9 +48,11 @@
     "returned free gift restocks only after quality decision",
     "unpaid trigger goods cannot release promotional gift",
     "accepted paid trigger goods allow one proven gift handover",
+    "physical return cannot fund a reward through a stale wallet before commercial credit",
+    "physically received return reverses earned points before credit",
     "recent credit cannot be spent through a stale wallet before manual sync",
     "commercial credit corrects earned points once without double subtraction"
   ],
   "base": "http://127.0.0.1:5883/api",
-  "executedAt": "2026-10-17T06:27:02.878828+00:00"
+  "executedAt": "2026-10-17T06:47:58.331387+00:00"
 }

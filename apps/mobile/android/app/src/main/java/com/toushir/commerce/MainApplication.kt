@@ -1,4 +1,4 @@
-package com.toushir.livreur
+package com.toushir.commerce
 
 import android.app.Application
 import android.content.res.Configuration

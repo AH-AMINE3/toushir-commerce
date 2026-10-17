@@ -38,15 +38,15 @@ Messages carry store and exact object context. Internal notes stay internal; rea
 
 DepotSimulation (`217:2026`) is an illustrative native isometric model with loading/departure/dispatched states. Geometry is not a survey of a real warehouse. A production map must distinguish authenticated observations from simulation/replay, show observedAt/receivedAt/accuracy/freshness, stop invented movement after staleness and expose a readable 2D/list alternative. Merchants see only their shipment; drivers only their assigned stops. 3D animation never authorizes departure, delivery or payment.
 
-## Implementation priorities found during source review
+## Initial implementation priorities (historical review)
 
 1. Preserve server authorization, stock concurrency, version checks, single-use QR and payment idempotence through every UI action.
 2. Route-level manifest custody, bounded capacity, return accountability and independent expected/proposed/counted cash settlement are needed beyond a per-payment reconciliation flag.
-3. Purchasing/receiving, contextual messaging, campaigns and point/reward ledgers were absent at initial review; an engagement backend module is being added. These modules require matching UI and acceptance evidence before being called complete.
+3. Purchasing/receiving, contextual messaging, campaigns and point/reward ledgers were absent at initial review. They now have persistent backend implementation and executed API evidence; exact screen/state parity remains a separate acceptance task.
 4. Immutable amendment history, lots/expiry/recall, durable outbox/offline replay, real device camera/GPS, notification connectors and legal document sequences require specific evidence; neither a Figma animation nor source presence proves them.
 5. The separate 79-page source specification, commercial configuration, payment/stock authority, asset permissions and operational deployment checks must be reconciled before a real merchant pilot.
 
 See `Figma-QA-PLAN.md` for independent acceptance scenarios. The old Figma handoff's “41 tests passed” refers to prior in-memory reference tests, not this application's current backend or deployment.
 
 
-Current implementation evidence: see `Figma-IMPLEMENTATION-REVIEW.md`, the conservative122-check statuses and49-check API record. Initial gap descriptions above are historical review findings, not a claim those modules remain absent.
+Current evidence is recorded in `Figma-IMPLEMENTATION-REVIEW.md`: 51 engagement API checks and 29 warehouse API checks passed. The 122 derived rows retain conservative statuses and all 265 exact screen states remain individually unaccepted. Initial gap descriptions above are historical findings; the review identifies which gaps are now closed and which remain.

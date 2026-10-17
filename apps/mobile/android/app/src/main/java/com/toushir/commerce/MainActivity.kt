@@ -1,4 +1,4 @@
-package com.toushir.livreur
+package com.toushir.commerce
 
 import android.os.Build
 import android.os.Bundle
