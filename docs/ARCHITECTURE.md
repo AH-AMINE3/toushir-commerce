@@ -21,6 +21,7 @@ SQLite serializes writes in its single application process. PostgreSQL mutations
 | DRIVER | Assigned manifest, custody, active-route GPS, receipt proof and actual collection |
 | WAREHOUSE | Preparation, physical custody/returns, supplier receipt, quality and fulfilment |
 | DISPATCHER | Assignment, route plan/order and operational exceptions |
+| SALES | Currently assigned CRM portfolios, declared contacts/visits and exact merchant-authorized RFQs |
 | FINANCE | Collection/refunds, independent approvals, cash count and reconciliation |
 
 GPS permission is separate from login. Freshness, coordinate bounds and assigned-driver ownership are validated. Finance views do not expose GPS.
@@ -58,3 +59,7 @@ Docker compiles desktop, mobile web and .NET, then runs as a non-root user. Data
 ## Supplier document lifecycle
 
 The [supplier dossier](SUPPLIER-DOSSIER.md) stores bounded private PDF bytes and SHA256 metadata with immutable revisions and independent confirmation review. Before receiving, accepted terms may amend a purchase once; after receiving, evidence may be completed only with identical frozen terms. Actual receiving, commercial evidence completeness and actual funds remain distinct. Three new provider-specific tables are additive and follow the same dedicated-schema/workspace isolation and transaction/version contracts.
+
+## Commercial portfolios
+
+The [CRM contract](CRM.md) limits SALES to current assigned primary shops. An assisted RFQ consumes a named, expiring one-use merchant grant after live issuer, address, shop and assignment validation. It uses the existing RFQ/pricing engine, preserves actual actor attribution and personal baskets, and grants no quote acceptance, delivery, finance or GPS powers. Task/contact and portfolio history are persisted separately from orders. Five additive tables follow the existing provider/workspace transaction contract.

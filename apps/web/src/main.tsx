@@ -31,6 +31,7 @@ import { CampaignSelection, OrderPromotions } from "./Promotions";
 import { Messages, Supply } from "./Business";
 import { Campaigns, Rewards } from "./Marketing";
 import { Pricing, QuotePricingControls, FrozenPricing } from "./Pricing";
+import { Crm } from "./Crm";
 import {
   startIdentityLogin,
   finishIdentityLogin,
@@ -50,6 +51,7 @@ const icons: Record<string, string> = {
   stock: "9e889.svg",
   purchases: "c9f30.svg",
   merchants: "f1064.svg",
+  crm: "f1064.svg",
   messages: "64c5d.svg",
   campaigns: "aa2a3.svg",
   rewards: "69b9b.svg",
@@ -84,6 +86,7 @@ const groups = [
     label: "Relation client",
     items: [
       ["merchants", "Magasins"],
+      ["crm", "Portefeuilles & visites"],
       ["messages", "Messages"],
       ["campaigns", "Campagnes"],
       ["rewards", "Points & cadeaux"],
@@ -110,6 +113,7 @@ const staffRoutes: Record<string, string[]> = {
   ],
   DISPATCHER: ["orders", "delivery", "messages"],
   FINANCE: ["finance", "purchases", "pricing", "campaigns", "rewards"],
+  SALES: ["crm"],
 };
 function ControlIcon({ kind }: { kind: "close" | "check" }) {
   return (
@@ -344,15 +348,24 @@ function App() {
     [product, setProduct] = useState<any>(null),
     [login, setLogin] = useState({ email: "", password: "" });
   const navigate = (next: string, status = "") => {
-    setRoute(next);
+    const target = session?.user.role === "SALES" ? "crm" : next;
+    setRoute(target);
     setFilter(status);
     setQuery("");
-    location.hash = next;
+    location.hash = target;
     setMenu(false);
   };
   const refresh = useCallback(async () => {
     if (!session) return;
     try {
+      if (session.user.role === "SALES") {
+        await api("/crm");
+        setDashboard({ summary: {}, daily: [], recentOrders: [] });
+        setOrders([]);
+        setTeam([]);
+        setRevision((x) => x + 1);
+        return;
+      }
       const admin = session.user.role === "ADMIN";
       const [d, o, t] = await Promise.all([
         api(admin ? "/admin/dashboard?days=30" : "/operations/dashboard"),
@@ -388,6 +401,10 @@ function App() {
       setRevision((x) => x + 1);
     } catch (e) {
       setError((e as Error).message);
+      if ((e as any).status === 401 && session.user.role === "SALES") {
+        setToken("");
+        setSession(null);
+      }
     }
   }, [session?.user.id]);
   const accept = (s: Session) => {
@@ -395,6 +412,8 @@ function App() {
     if (s.workspaceToken)
       localStorage.setItem("toushir-demo-workspace", s.workspaceToken);
     setSession(s);
+    if (!s.workspace.canSwitchRole)
+      sessionStorage.setItem("toushir-web-personal-account", "true");
     const permitted = staffRoutes[s.user.role];
     if (permitted && !permitted.includes(route)) navigate(permitted[0]);
   };
@@ -419,9 +438,10 @@ function App() {
   useEffect(() => {
     (async () => {
       try {
-        if (location.pathname === "/auth/callback")
+        if (location.pathname === "/auth/callback") {
+          sessionStorage.setItem("toushir-web-personal-account", "true");
           setToken(await finishIdentityLogin());
-        else {
+        } else {
           const access = await restoreIdentityToken();
           if (access) setToken(access);
         }
@@ -433,6 +453,13 @@ function App() {
           return;
         } else accept(s);
       } catch {
+        if (sessionStorage.getItem("toushir-web-personal-account") === "true") {
+          setToken("");
+          setError(
+            "Votre session doit être renouvelée. Reconnectez-vous à votre compte professionnel.",
+          );
+          return;
+        }
         try {
           const h = await api("/health");
           if (h.demoEnabled) await demo();
@@ -522,7 +549,12 @@ function App() {
         </h1>
         <p>Connectez-vous à votre espace grossiste.</p>
         <div className="action-form">
-          <Button onClick={() => void startIdentityLogin()}>
+          <Button
+            onClick={() => {
+              sessionStorage.setItem("toushir-web-personal-account", "true");
+              void startIdentityLogin();
+            }}
+          >
             Se connecter avec mon compte professionnel
           </Button>
         </div>
@@ -542,7 +574,7 @@ function App() {
       <aside className={"sidebar " + (menu ? "open" : "")}>
         <a
           className="brand"
-          href="#overview"
+          href={session.user.role === "SALES" ? "#crm" : "#overview"}
           onClick={() => navigate("overview")}
         >
           <img src="/figma/0/54083.svg" alt="TOUSHIR" />
@@ -606,6 +638,7 @@ function App() {
                     WAREHOUSE: "Préparation",
                     DISPATCHER: "Dispatch",
                     FINANCE: "Finance",
+                    SALES: "Conseil commercial",
                   } as any
                 )[session.user.role]
               }
@@ -676,7 +709,12 @@ function App() {
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
-                if (!["orders", "products", "merchants"].includes(route)) {
+                if (session.user.role === "SALES") {
+                  setRoute("crm");
+                  location.hash = "crm";
+                } else if (
+                  !["orders", "products", "merchants", "crm"].includes(route)
+                ) {
                   setRoute("orders");
                   setFilter("");
                   location.hash = "orders";
@@ -739,6 +777,7 @@ function App() {
                     products: "Un catalogue clair, jusqu’au carton.",
                     stock: "Le bon stock. Au bon endroit.",
                     merchants: "Vos magasins partenaires.",
+                    crm: "Le suivi commercial qui fait avancer.",
                     finance: "Les règlements, sans ambiguïté.",
                     returns: "Retours & litiges",
                     analytics: "Comprendre pour mieux décider.",
@@ -754,13 +793,15 @@ function App() {
               <p>
                 {route === "overview"
                   ? "Demandes, préparation, livraison et encaissement · Les mêmes données sur les trois interfaces."
-                  : route === "delivery"
-                    ? "Planifier, suivre et traiter les exceptions · Vue 3D illustrative · GPS autorisé séparé."
-                    : route === "orders"
-                      ? "Ouvrez un dossier pour voir son historique et effectuer la prochaine action."
-                      : route === "products"
-                        ? "Identités produits sourcées · Prix, conditionnement et stock confirmés par le grossiste."
-                        : "Les changements sont validés et enregistrés sur le serveur."}
+                  : route === "crm"
+                    ? "Portefeuille autorisé · rappels, visites et demandes assistées restent des objets distincts."
+                    : route === "delivery"
+                      ? "Planifier, suivre et traiter les exceptions · Vue 3D illustrative · GPS autorisé séparé."
+                      : route === "orders"
+                        ? "Ouvrez un dossier pour voir son historique et effectuer la prochaine action."
+                        : route === "products"
+                          ? "Identités produits sourcées · Prix, conditionnement et stock confirmés par le grossiste."
+                          : "Les changements sont validés et enregistrés sur le serveur."}
               </p>
             </div>
             <div className="heading-actions">
@@ -1157,6 +1198,17 @@ function App() {
                     revision={revision}
                     run={run}
                     busy={busy}
+                  />
+                )}
+                {route === "crm" && (
+                  <Crm
+                    revision={revision}
+                    session={session}
+                    query={query}
+                    onOrder={(id) => {
+                      navigate("orders");
+                      setSelected(id);
+                    }}
                   />
                 )}
                 {route === "analytics" && <Analytics revision={revision} />}
@@ -3292,6 +3344,7 @@ function Settings({
                       WAREHOUSE: "Préparation",
                       DISPATCHER: "Dispatch",
                       FINANCE: "Finance",
+                      SALES: "Conseil commercial",
                       DRIVER: "Livreur",
                     } as any
                   )[t.role] || t.role}
@@ -3338,6 +3391,7 @@ function Settings({
                   <option value="WAREHOUSE">Préparation</option>
                   <option value="DISPATCHER">Dispatch</option>
                   <option value="FINANCE">Finance</option>
+                  <option value="SALES">Conseil commercial</option>
                 </select>
               </label>
             </div>

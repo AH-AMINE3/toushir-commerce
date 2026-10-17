@@ -37,6 +37,7 @@ builder.Services.AddScoped<PasswordHasher<Account>>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ShopMemberService>();
 builder.Services.AddScoped<ShopProfileService>();
+builder.Services.AddScoped<CrmService>();
 builder.Services.AddScoped<CatalogService>();
 builder.Services.AddScoped<PricingService>();
 builder.Services.AddScoped<OrderService>();
@@ -90,7 +91,7 @@ app.MapGet("/catalog/README.md", () => { var path = Path.Combine(catalogDir, "RE
 using (var scope = app.Services.CreateScope()) { var db = scope.ServiceProvider.GetRequiredService<WholesaleDb>(); await Seed.Initialize(db, builder.Configuration, app.Logger); }
 var api = app.MapGroup("/api").AddEndpointFilter<MutationFilter>();
 app.MapCommerceDistribution(api);
-api.MapGet("/health", async (WholesaleDb db) => Results.Ok(new { status = "ok", version = "2.0.0", framework = "ABP 10.6.1 / .NET 10", abpVersion = "10.6.1", runtime = ".NET 10", realtime = "SignalR", oidc = new { discovery = "/.well-known/openid-configuration", pkce = "S256", clients = new[] { "toushir-web", "toushir-mobile" } }, roles = new[] { "ADMIN", "MERCHANT", "DRIVER", "WAREHOUSE", "DISPATCHER", "FINANCE" }, database = await db.Database.CanConnectAsync() ? "connected" : "unavailable", products = await db.Products.CountAsync(x => x.IsCatalogActive), catalogCount = await db.Products.CountAsync(x => x.IsCatalogActive), demoEnabled = demo, demoScenarioOrders = Math.Clamp(builder.Configuration.GetValue<int?>("Demo:ScenarioOrders") ?? 40, 20, 80), pricingMode = "ON_REQUEST", catalogDisclaimer = "Identités réelles issues de sources ouvertes. Prix, stocks et disponibilité à confirmer par le grossiste.", storage = hasPostgres ? "PostgreSQL: hosted persistent database." : demo ? "Demo SQLite: persistence depends on the hosting volume." : "SQLite: explicit durable DataPath required." }));
+api.MapGet("/health", async (WholesaleDb db) => Results.Ok(new { status = "ok", version = "2.0.0", framework = "ABP 10.6.1 / .NET 10", abpVersion = "10.6.1", runtime = ".NET 10", realtime = "SignalR", oidc = new { discovery = "/.well-known/openid-configuration", pkce = "S256", clients = new[] { "toushir-web", "toushir-mobile" } }, roles = new[] { "ADMIN", "MERCHANT", "DRIVER", "WAREHOUSE", "DISPATCHER", "FINANCE", "SALES" }, database = await db.Database.CanConnectAsync() ? "connected" : "unavailable", products = await db.Products.CountAsync(x => x.IsCatalogActive), catalogCount = await db.Products.CountAsync(x => x.IsCatalogActive), demoEnabled = demo, demoScenarioOrders = Math.Clamp(builder.Configuration.GetValue<int?>("Demo:ScenarioOrders") ?? 40, 20, 80), pricingMode = "ON_REQUEST", catalogDisclaimer = "Identités réelles issues de sources ouvertes. Prix, stocks et disponibilité à confirmer par le grossiste.", storage = hasPostgres ? "PostgreSQL: hosted persistent database." : demo ? "Demo SQLite: persistence depends on the hosting volume." : "SQLite: explicit durable DataPath required." }));
 api.MapPost("/demo/session", async (DemoInput x, AuthService s, HttpContext c) => Results.Ok(await s.Demo(x, c))).RequireRateLimiting("demo");
 api.MapGet("/demo/invitations/{token}", async (string token, DemoInvitationService s) => Results.Ok(await s.Describe(token))).RequireRateLimiting("auth");
 api.MapPost("/demo/join", async (JoinDemoInput x, DemoInvitationService s, HttpContext c) => Results.Ok(await s.Join(x, c))).RequireRateLimiting("auth");
@@ -164,6 +165,7 @@ app.MapRouteOperations(secure);
 app.MapEngagementEndpoints(secure);
 secure.MapPricingEndpoints();
 api.MapShopMembers(secure);
+secure.MapCrm();
 app.MapWarehouseEndpoints(secure);
 app.MapHub<CommerceHub>("/hubs/commerce", o => o.CloseOnAuthenticationExpiration = true);
 app.MapFallback("/mobile/{*path:nonfile}", async c => { var mobileIndex = Path.Combine(app.Environment.WebRootPath, "mobile", "index.html"); if (File.Exists(mobileIndex)) { c.Response.ContentType = "text/html"; await c.Response.SendFileAsync(mobileIndex); } else { c.Response.StatusCode = 404; await c.Response.WriteAsync("Mobile export not installed."); } });

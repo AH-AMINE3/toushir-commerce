@@ -22,6 +22,8 @@ Open the wholesaler first, then its merchant/courier links in the same browser t
 
 Within an existing shop, use **Mon Toushir → Équipe du magasin** to invite a Manager, Buyer or Viewer with their own password account. Shop orders are shared; personal baskets and favorites stay separate. Role changes and revocation take effect on existing sessions. See [shop membership](docs/SHOP-MEMBERS.md).
 
+Use **Portefeuilles & visites** to assign an individual commercial adviser, plan contacts/visits and retain their outcomes. A merchant may explicitly authorize one exact quote request through **Demandes assistées**; the adviser cannot accept or pay for the shop. See [CRM authority](docs/CRM.md).
+
 For an actual courier account, use **Équipe & paramètres** to create a Livreur, assign an order from **Livraisons**, then sign in through the courier app's secure professional login. An independent courier demo starts with an empty assigned manifest. The 3D depot supports drag to rotate, wheel to zoom and vehicle selection; actual GPS is a separate view and requires the assigned courier's location consent.
 
 ## Start locally
@@ -47,6 +49,7 @@ Business mode disables anonymous demos and creates the configured owner. Sign in
 
 - Approval, sourced catalogue, search, favourites, saved basket and addresses.
 - Individual shop members, bounded private invitations, role-aware shared orders and immediate access revocation.
+- Named commercial portfolios, versioned contact/visit tasks and merchant-authorized one-use assisted RFQs.
 - Independently approved shop/segment/standard tariffs, quantity/date bands, real customer simulation, explicit basket price consent and frozen quote provenance.
 - Quote requests, explicit promotion selection, versioned prices/expiry, merchant acceptance, atomic reservation, per-line preparation and assignment.
 - Ordered manifests, commercial-unit vehicle capacity, custody QR, permitted GPS, customer quantity proof, partial refusal and depot returns.
@@ -56,7 +59,7 @@ Business mode disables anonymous demos and creates the configured owner. Sign in
 - Contextual in-app conversations, private notes, consent-filtered in-app broadcasts, approved campaigns/challenges, immutable loyalty entries and stock-backed gifts.
 - Interactive Three.js depot and a separate MapLibre view of actual GPS observations. The depot is illustrative, not a camera feed.
 
-The API enforces ADMIN, MERCHANT, DRIVER, WAREHOUSE, DISPATCHER and FINANCE permissions. SignalR invalidations and polling refresh persisted state across interfaces.
+The API enforces ADMIN, MERCHANT, DRIVER, WAREHOUSE, DISPATCHER, FINANCE and restricted SALES permissions. SignalR invalidations and polling refresh persisted state across interfaces.
 
 ## Evidence and source
 

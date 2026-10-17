@@ -143,6 +143,26 @@ public class OrderService(WholesaleDb db, CatalogService catalog, RealtimeChange
         a.Approved();
         Check.That(a.Role == "MERCHANT", "Utilisez la persona commerçant pour passer une commande.", "MERCHANT_REQUIRED", 403);
         a.ShopWrite();
+        return await CreateCore(a, input, true);
+    }
+    internal async Task<PurchaseOrder> CreateAuthorizedShopRfq(Actor assistant, Account shop, CrmAssistance grant)
+    {
+        assistant.RequireRoles("ADMIN", "SALES");
+        Check.That(grant.WorkspaceId == assistant.WorkspaceId && grant.ShopId == shop.Id && shop.WorkspaceId == assistant.WorkspaceId
+            && shop.Role == "MERCHANT" && grant.AdvisorId == assistant.Id && grant.UsedAt == null && grant.RevokedAt == null
+            && grant.ExpiresAt > DateTimeOffset.UtcNow, "Autorisation de demande indisponible.", "ASSISTANCE_UNAVAILABLE", 409);
+        // Bounded internal delegation: actual person attribution, validated shop
+        // ownership, RFQ only, and no access to the merchant's personal basket.
+        var scoped = new Actor(assistant.Id, assistant.WorkspaceId, assistant.Name, "MERCHANT", shop.ApprovalStatus,
+            false, shop.Id, "BUYER");
+        var key = "crm:" + grant.Id;
+        await CreateCore(scoped, new(key, grant.AddressId,
+            JsonSerializer.Deserialize<List<LineInput>>(grant.LinesJson)!, grant.Note, "REQUEST_QUOTE"), false,
+            "Demande de devis transmise par le conseiller autorisé. Autorisation " + grant.Id + ". Le magasin doit encore accepter le devis chiffré.");
+        return await db.Orders.FirstAsync(x => x.WorkspaceId == shop.WorkspaceId && x.AccountId == shop.Id && x.IdempotencyKey == key);
+    }
+    private async Task<object> CreateCore(Actor a, CreateOrderInput input, bool clearPersonalCart, string? creationNote = null)
+    {
         var key = Check.Text(input.IdempotencyKey, 100, "Clé d'idempotence");
         var lines = CatalogService.ValidateLines(input.Items);
         var mode = (input.Mode ?? "REQUEST_QUOTE").ToUpperInvariant();
@@ -217,8 +237,8 @@ public class OrderService(WholesaleDb db, CatalogService catalog, RealtimeChange
             await Reserve(a, order);
         }
         db.Orders.Add(order);
-        Event(a, order, mode == "REQUEST_QUOTE" ? "REQUESTED" : "SUBMITTED", "Demande envoyée par le commerçant.");
-        await db.CartItems.Where(x => x.AccountId == a.Id).ExecuteDeleteAsync();
+        Event(a, order, mode == "REQUEST_QUOTE" ? "REQUESTED" : "SUBMITTED", creationNote ?? "Demande envoyée par le commerçant.");
+        if (clearPersonalCart) await db.CartItems.Where(x => x.AccountId == a.Id).ExecuteDeleteAsync();
         await db.SaveChangesAsync();
         return await View(a, order);
     }

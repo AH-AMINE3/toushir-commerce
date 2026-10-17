@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-17T12:50:39.584Z",
+  "base": "http://127.0.0.1:5863",
+  "scope": "Actual PKCE, HTTP sessions, live WebSockets, outbox metadata, issued receipt revocation and immutable consumed delivery evidence.",
+  "passed": 8,
+  "failed": 0,
+  "requests": 29,
+  "checks": [
+    "PKCE signed tokens keep the actual member subject and validated shared-shop access",
+    "The invited person signs in with their own hashed-password account",
+    "A real member socket receives its shop notices while foreign order subscription is denied",
+    "Revocation rejects existing opaque sessions, signed access tokens, refresh grants and new password login",
+    "A receipt code issued before revocation cannot complete the physical delivery",
+    "An already connected revoked socket receives no new order, tracking or outbox metadata; the owner still receives updates",
+    "Revoking another member preserves accepted order history and the consumed receipt",
+    "Viewer revocation applies to existing HTTP and connected hub access without a standalone-shop fallback"
+  ]
+}

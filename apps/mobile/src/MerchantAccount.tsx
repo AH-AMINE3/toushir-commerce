@@ -7,6 +7,7 @@ import { Loyalty } from "./Engagement";
 import { useEngagementLive } from "./realtime";
 import { C, S } from "./theme";
 import ShopTeam, { shopRoleNames } from "./ShopTeam";
+import AssistedRequests from "./AssistedRequests";
 
 export type AccountPanel =
   | "rewards"
@@ -14,6 +15,7 @@ export type AccountPanel =
   | "payments"
   | "shop"
   | "team"
+  | "assistance"
   | "settings"
   | null;
 export const accountTitles = {
@@ -22,6 +24,7 @@ export const accountTitles = {
   payments: "Documents et règlements",
   shop: "Mon magasin",
   team: "Équipe du magasin",
+  assistance: "Demandes assistées",
   settings: "Paramètres",
 };
 type Summary = {
@@ -137,6 +140,16 @@ export default function MerchantAccount({
   ) : null;
   if (panel === "team")
     return <ShopTeam session={session} onNotice={onNotice} />;
+  if (panel === "assistance")
+    return (
+      <AssistedRequests
+        session={session}
+        addresses={addresses}
+        onNotice={onNotice}
+        onShop={() => onPanel("shop")}
+        onOrders={onOrders}
+      />
+    );
   if (panel === "rewards")
     return <Loyalty session={session} onNotice={onNotice} />;
   if (panel === "shop")
@@ -394,6 +407,12 @@ export default function MerchantAccount({
           title="Équipe du magasin"
           subtitle="Comptes personnels et droits d’accès"
           onPress={() => onPanel("team")}
+        />
+        <Row
+          icon={assets.settings}
+          title="Demandes assistées"
+          subtitle="Votre conseiller, avec votre accord"
+          onPress={() => onPanel("assistance")}
         />
         <Row
           icon={assets.settings}

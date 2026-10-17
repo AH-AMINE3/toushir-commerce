@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-17T12:54:00.565Z",
+  "checks": [
+    "Supplier created through actual form",
+    "Purchase submitted in DZD, independently approved and ready for receipt",
+    "Partial receipt persisted with actual lot and quarantine",
+    "Real conversation and customer message persisted",
+    "Campaign independently approved and eligibility computed"
+  ],
+  "errors": []
+}

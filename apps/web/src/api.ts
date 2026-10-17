@@ -33,8 +33,11 @@ export async function downloadPrivatePdf(path: string, fileName: string) {
   }
   if (!response.ok) {
     const error = await response.json().catch(() => null);
-    throw new Error(
-      error?.error?.message || "Le téléchargement a échoué. Réessayez.",
+    throw Object.assign(
+      new Error(
+        error?.error?.message || "Le téléchargement a échoué. Réessayez.",
+      ),
+      { status: response.status, code: error?.error?.code },
     );
   }
   if (!response.headers.get("Content-Type")?.startsWith("application/pdf"))
@@ -76,9 +79,12 @@ export async function api<T = any>(
     ? await response.json()
     : null;
   if (!response.ok)
-    throw new Error(
-      body?.error?.message ||
-        "Cette opération n’a pas abouti. Vérifiez votre connexion ou reconnectez-vous.",
+    throw Object.assign(
+      new Error(
+        body?.error?.message ||
+          "Cette opération n’a pas abouti. Vérifiez votre connexion ou reconnectez-vous.",
+      ),
+      { status: response.status, code: body?.error?.code },
     );
   return body;
 }

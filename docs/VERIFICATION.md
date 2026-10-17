@@ -15,6 +15,7 @@ python3 scripts/test-supplier-documents.py http://127.0.0.1:5860
 # Pricing suite requires a separately started test API with Wholesale__DeliveryFee=0.
 python3 scripts/test-pricing.py http://127.0.0.1:5860
 python3 scripts/test-shop-members.py http://127.0.0.1:5860
+python3 scripts/test-crm.py http://127.0.0.1:5860
 ```
 
 `VERIFICATION_REPORT` redirects each Node report; `TOUSHIR_TEST_RESULTS` redirects the Python report. Reports omit credentials/capabilities and record actual assertions, URL and time.
@@ -29,6 +30,7 @@ python3 scripts/test-shop-members.py http://127.0.0.1:5860
 | Warehouse | Explicit counted lots, FEFO, scan waves, concurrent last-unit reservation, quarantine and identified physical returns |
 | Pricing | Independent customer tariffs, protected reviewed-basket consent, actual direct checkout, frozen quote history, campaign compatibility and centime rounding |
 | Shop membership | Actual-person/shop separation, personal carts/favorites, bounded single-use invitations, role hierarchy, shared commerce, primary invitation inheritance and session/receipt/live revocation |
+| CRM | Named portfolio scope, versioned declared tasks/visits, exact one-use merchant authority, shared RFQ/price engine and authority-loss recovery |
 | Production | Explicit owner, real restart and backup restoration, isolated PostgreSQL migration SQL, static routing, distribution and rate limits |
 
 Browser evidence checks navigation, real forms, secure sign-in, errors, responsive and dark layouts. Native evidence records variant, API origin, build, device/simulator and executed interactions. Hosted tests must run on the final HTTPS origin and persistent database. Compilation is not native execution; local passes are not hosted passes.
@@ -42,3 +44,5 @@ The added merchant summary is tested for unauthenticated/role denial, owner/work
 Supplier document/confirmation evidence and browser captures are under `verification/supplier/`. The suite checks retained private PDFs, independently reviewed terms, late evidence, exact receipt documents, invoice reference/amount comparison and explicit cancellation/short close. The upgrade report distinguishes actual SQLite migration on a backup from PostgreSQL generated SQL; each report retains its own execution scope. Native simulators are deliberately stopped on the 8 GB development machine; current UI acceptance uses browser previews.
 
 Shop team evidence is under `verification/shop-members/`. The separate actual WebSocket/OIDC verifier requires the private fixture produced by the API suite and checks revoked opaque/signed/refresh sessions, password sign-in, live recipients and receipt issuer validity. See [the test contract](SHOP-MEMBERS.md). Browser failures use real backend rejections and assert the message and retry action remain in the submitted viewport. Domain, upgrade, production restore and regression reports retain their individual scopes. Android 1.1.0 packages predate this UI addition.
+
+CRM evidence is under `verification/crm/`; [CRM.md](CRM.md) records the authority and test limits. Browser reassignment is exercised without reloading and with a delayed former authorized response. Reports distinguish local execution, generated PostgreSQL SQL, executed backup upgrade and later hosted execution. The broader requested frontend/workflow redesign is subsequent work and is not implied by this CRM record.

@@ -121,7 +121,7 @@ public sealed class OperationsService(WholesaleDb db, OrderService orders, Realt
     {
         actor.Admin();
         var role = input.Role.ToUpperInvariant();
-        Check.That(role is "WAREHOUSE" or "DISPATCHER" or "FINANCE" or "DRIVER", "Rôle inconnu.");
+        Check.That(role is "WAREHOUSE" or "DISPATCHER" or "FINANCE" or "DRIVER" or "SALES", "Rôle inconnu.");
         Check.That(input.Password is { Length: >= 14 and <= 128 }, "Un mot de passe de 14 à 128 caractères est requis.");
         var email = Check.Text(input.Email, 254, "E-mail").ToLowerInvariant();
         Check.That(System.Net.Mail.MailAddress.TryCreate(email, out _), "E-mail invalide.");

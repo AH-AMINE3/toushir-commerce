@@ -1,0 +1,71 @@
+{
+  "at": "2026-10-17T12:53:24.809Z",
+  "errors": [],
+  "routes": [
+    {
+      "name": "Commandes",
+      "errorBanners": [],
+      "tableRows": 20
+    },
+    {
+      "name": "Préparation",
+      "errorBanners": [],
+      "tableRows": 3
+    },
+    {
+      "name": "Livraisons",
+      "errorBanners": [],
+      "tableRows": 13
+    },
+    {
+      "name": "Catalogue",
+      "errorBanners": [],
+      "tableRows": 25
+    },
+    {
+      "name": "Stock & qualité",
+      "errorBanners": [],
+      "tableRows": 25
+    },
+    {
+      "name": "Magasins",
+      "errorBanners": [],
+      "tableRows": 4
+    },
+    {
+      "name": "Achats fournisseurs",
+      "errorBanners": [],
+      "tableRows": 0
+    },
+    {
+      "name": "Messages",
+      "errorBanners": [],
+      "tableRows": 0
+    },
+    {
+      "name": "Campagnes",
+      "errorBanners": [],
+      "tableRows": 0
+    },
+    {
+      "name": "Points & cadeaux",
+      "errorBanners": [],
+      "tableRows": 0
+    },
+    {
+      "name": "Finance",
+      "errorBanners": [],
+      "tableRows": 20
+    },
+    {
+      "name": "Analyses",
+      "errorBanners": [],
+      "tableRows": 0
+    },
+    {
+      "name": "Équipe & paramètres",
+      "errorBanners": [],
+      "tableRows": 25
+    }
+  ]
+}

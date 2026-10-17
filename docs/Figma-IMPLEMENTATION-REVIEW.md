@@ -12,10 +12,10 @@ The warehouse provider migrations create five new tables and indexes without alt
 
 ## Derived checklist counts
 
-- API and browser scenarios tested; not original requirement acceptance: 6
+- API and browser scenarios tested; not original requirement acceptance: 11
 - API scenario tested; not original requirement acceptance: 49
-- Missing full workflow: 4
-- Partial scope: 24
+- Missing full workflow: 1
+- Partial scope: 22
 - Requires environment/business evidence: 3
 - Source reviewed; not full acceptance: 36
 
@@ -23,7 +23,7 @@ No row is marked as acceptance of all original requirements. Each row keeps an e
 
 ## Remaining scope and release gates
 
-1. The current scope supports a reviewable commerce demo. A full manufacturer recall lifecycle and CRM visits/tasks/mandated assisted ordering remain incomplete. Shop membership now has separately recorded API, live/OIDC and browser evidence. Supplier document/confirmation and customer tariff scenarios are implemented at their recorded test scopes. The missing original specification prevents a truthful claim that all 122 original requirements are accepted.
+1. The current scope supports a reviewable commerce demo. A full manufacturer recall lifecycle remains incomplete. CRM portfolios, declared contacts/visits and exact merchant-authorized RFQs now have separately recorded local API/browser evidence. Shop membership now has separately recorded API, live/OIDC and browser evidence. Supplier document/confirmation and customer tariff scenarios are implemented at their recorded test scopes. The missing original specification prevents a truthful claim that all 122 original requirements are accepted.
 2. Lot control is opt-in after a physical count; aggregate legacy stock is explicitly untracked. The implemented warehouse path includes real scans and FEFO. Bins/aisles, automated expired-lot reallocation, camera-scanner hardware acceptance, unit serialization and recall communication are not claimed. Route capacity uses quantity units, including gifts, rather than physical weight/volume optimization.
 3. In-app messaging and durable invalidation notices are real. SMS, WhatsApp, email and native push providers, delivered/read acknowledgements, attachment lifecycle and delivery cost/rate policies require their actual integrations. An outbox notice is not proof of external delivery.
 4. Seller/tax identities and document numbering, bank-settlement authority, funded program terms, data retention, FR/AR/RTL and target load/performance need concrete business or environment evidence before real trading. Actual SQLite backup restoration into a separate installation is tested with the original account, order, payment and signing-key identity; hosted PostgreSQL backup/restore, RPO/RTO and disaster recovery remain separate operational acceptance. Native simulator/device and public hosting results belong to their own acceptance records.
@@ -42,3 +42,7 @@ The private PDF/confirmation lifecycle now has 32 API checks, ten browser-form c
 ## Shop membership extension
 
 Personal Buyer/Manager/Viewer accounts now share one validated shop without sharing baskets or credentials. The API, actual WebSocket/OIDC revocation, browser forms, provider upgrade, domain and commerce regression evidence live under `verification/shop-members/`; [the membership contract](SHOP-MEMBERS.md) states permissions and limits. Independent browser/source review resolved the two recorded usability findings. This does not accept every original Figma state or native device behavior.
+
+## CRM extension
+
+The [CRM contract](CRM.md) and `verification/crm/` record named adviser scope, versioned task/visit history, bounded one-use merchant consent, RFQ attribution and the normal later quote acceptance. Independent review resolved the open-dossier reassignment finding with an executed no-reload/delayed-response browser regression. This local extension is distinct from the subsequently requested broad merchant/frontend/workflow redesign and does not accept every original Figma state.

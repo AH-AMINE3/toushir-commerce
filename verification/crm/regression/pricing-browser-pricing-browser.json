@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-17T12:53:37.954Z",
+  "base": "http://127.0.0.1:5863",
+  "checks": [
+    "Figma pricing hierarchy and useful empty state render at 1440 pixels",
+    "A real segment and versioned shop assignment are saved through their forms",
+    "A proposed customer contract is independently published by the distinct Finance persona",
+    "Published conditions simulate the actual 390 DA basket and remain usable at 390 pixels",
+    "Merchant web checkout rejects an unseen price change, updates the visible basket and requires another explicit confirmation",
+    "Slow checkout disables basket edits, commits the reviewed 450 DA total and preserves its idempotency key across re-confirmation",
+    "The actual order exposes its frozen customer-price provenance in the wholesaler dossier",
+    "The actual wholesaler quote form simulates and applies published customer prices without submitting disabled manual values",
+    "Editing the depot offer preserves its stored 100 DA base and physical stock while clearly explaining the published standard tariff"
+  ],
+  "javascriptErrors": []
+}

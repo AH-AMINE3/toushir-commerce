@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-17T12:52:31.554Z",
+  "base": "http://127.0.0.1:5864",
+  "passed": 11,
+  "failed": 0,
+  "checks": [
+    "The actual CRM route shows a useful empty state in the established wholesale shell",
+    "The owner assigns an actual named adviser through the reasoned portfolio form",
+    "An actual task records its contact outcome and next action without creating an order",
+    "A real future-visit rejection stays beside the submission action with the entered report retained",
+    "The CRM task and dossier layout fits 390 pixels and inherits the wholesale dark theme",
+    "The real merchant reviews exact basket products and address and explicitly authorizes the named adviser once",
+    "The restricted adviser submits the actual one-use RFQ, preserving the customer basket and requiring later quote acceptance",
+    "The adviser navigation and search stay inside the permitted CRM surface",
+    "Reassignment clears the open adviser dossier and form through ordinary refresh without reloading, and a delayed earlier authorized response cannot restore them",
+    "A revoked professional adviser session returns to sign-in without silently creating an administrator demo",
+    "A real viewer sees the authorization history and a clear restriction without a grant action"
+  ],
+  "javascriptErrors": []
+}
