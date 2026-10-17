@@ -92,6 +92,6 @@ try {
  });
 }catch{}finally{
  const report={base,at:new Date().toISOString(),passed:checks.filter(x=>x.pass).length,failed:checks.filter(x=>!x.pass).length,requests,checks};
- await writeFile(new URL('../invitation-verification.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
+ await writeFile(process.env.VERIFICATION_REPORT||new URL('../invitation-verification.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
  console.log(JSON.stringify({passed:report.passed,failed:report.failed,requests}));if(report.failed||checks.length!==7)process.exitCode=1;
 }

@@ -1,0 +1,23 @@
+namespace Toushir.Wholesale;
+
+public record CreateConversationInput(string ContextType, string? ContextId, string Subject, string? MerchantId);
+public record SendMessageInput(string Text, bool Internal, string IdempotencyKey);
+public record UpdateConversationInput(int Version, string Status, string? AssignedTo);
+public record MarketingPreferenceInput(bool OptIn);
+public record CreateBroadcastInput(string Purpose, string Title, string Body, List<string> MerchantIds, string IdempotencyKey);
+public record CreateCampaignInput(string Title, string Description, string Kind, string ProductId, int MinimumQuantity, decimal DiscountPercent, string? GiftProductId, int GiftQuantity, int GoalQuantity, int UnitFactor, string? RewardId, int AwardLimit, DateTimeOffset StartsAt, DateTimeOffset EndsAt, DateTimeOffset? ClaimUntil);
+public record CampaignPreviewInput(int Quantity);
+public record AwardCampaignInput(string MerchantId);
+public record SyncLoyaltyInput(string? MerchantId);
+public record RewardItemInput(string Name, string Description, string? ImageUrl, int PointsCost, int AvailableStock, bool IsActive = true, int? Version = null);
+public record ReserveGiftInput(string IdempotencyKey, string? GrantId);
+public record GiftTransitionInput(int Version, string Status, string? ProofReference, string? Reason);
+public record SupplierInput(string Name, string Contact, string Phone, string? Note);
+public record CreateSupplyLineInput(string ProductId, int Quantity, long UnitCostMinor);
+public record CreateSupplyInput(string SupplierId, DateTimeOffset ExpectedAt, List<CreateSupplyLineInput> Items, string? Note, string IdempotencyKey);
+public record ReceiveSupplyLineInput(string ProductId, int ReceivedQuantity, int QuarantineQuantity, string LotNumber, DateTimeOffset? ExpiresAt);
+public record ReceiveSupplyInput(int Version, string IdempotencyKey, List<ReceiveSupplyLineInput> Lines, string? Note);
+public record InspectSupplyInput(string ReceiptLineId, int Version, int Quantity, string Disposition, string Reason, string IdempotencyKey);
+public record InvoiceReviewInput(int Version, string InvoiceReference, long InvoiceMinor);
+public record PromotionGiftReceiptInput(int Version, int AcceptedQuantity, int RefusedQuantity, string ProofReference, string IdempotencyKey);
+public record PromotionGiftDispositionInput(int Version, string Disposition, string Reason, string IdempotencyKey);

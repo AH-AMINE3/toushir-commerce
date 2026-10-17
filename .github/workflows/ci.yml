@@ -1,0 +1,62 @@
+name: Verify commerce
+on:
+  push:
+    branches: [commerce-ecosystem]
+  pull_request:
+    branches: [commerce-ecosystem]
+permissions:
+  contents: read
+jobs:
+  applications:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: |
+            apps/web/package-lock.json
+            apps/mobile/package-lock.json
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Build both browser applications and API
+        run: bash scripts/build-all.sh
+      - name: Verify native TypeScript
+        run: npm --prefix apps/mobile run typecheck
+      - name: Domain invariants
+        run: dotnet test backend/tests/Toushir.Domain.Tests.csproj --configuration Release --logger trx
+      - name: Run persistent API scenarios
+        env:
+          Demo__Enabled: 'true'
+          ASPNETCORE_ENVIRONMENT: Development
+          API_URL: http://127.0.0.1:5860
+          TOUSHIR_TEST_RESULTS: engagement-verification.json
+        run: |
+          # A fresh process per suite preserves public demo rate limits.
+          for suite in api operations routes oidc engagement; do
+            export DataPath="$RUNNER_TEMP/toushir-$suite"
+            dotnet run --project backend/Toushir.Wholesale.csproj --no-build --urls "$API_URL" > "$RUNNER_TEMP/api-$suite.log" 2>&1 &
+            API_PID=$!
+            trap 'kill "$API_PID" 2>/dev/null || true' EXIT
+            for attempt in $(seq 1 90); do
+              if curl --fail --silent "$API_URL/api/health" > /dev/null; then break; fi
+              sleep 1
+            done
+            curl --fail --silent "$API_URL/api/health"
+            if [ "$suite" = engagement ]; then
+              python3 scripts/test-engagement.py "$API_URL"
+            else
+              node "backend/scripts/verify-$suite.mjs"
+            fi
+            kill "$API_PID"
+            wait "$API_PID" || true
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: verification
+          path: |
+            backend/*verification.json
+            engagement-verification.json

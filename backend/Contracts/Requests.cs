@@ -13,7 +13,7 @@ public record CreateOrderInput(string IdempotencyKey,string AddressId,List<LineI
 public record AcceptQuoteInput(int Version);
 public record ReasonInput(string? Reason);
 public record QuoteLineInput(string ProductId,int Quantity,decimal UnitPrice,int? CaseSize,int? AvailableStock);
-public record QuoteInput(List<QuoteLineInput> Items,decimal DeliveryFee,DateTimeOffset ValidUntil,string? Note);
+public record QuoteInput(List<QuoteLineInput> Items,decimal DeliveryFee,DateTimeOffset ValidUntil,string? Note,int? Version=null,List<string>? CampaignIds=null);
 public record TransitionInput(string Status,string? Reason);
 public record DeliveryLineInput(string ProductId,int AcceptedQuantity,int RefusedQuantity);
 public record DeliveryInput(List<DeliveryLineInput> Items,string? Note);

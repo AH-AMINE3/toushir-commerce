@@ -3,18 +3,25 @@ using Npgsql;
 
 namespace Toushir.Wholesale;
 
-public static class DatabaseConfiguration {
- public static void Configure(DbContextOptionsBuilder options,string? databaseUrl,string sqlitePath) {
+public static partial class DatabaseConfiguration {
+ public static void Configure(DbContextOptionsBuilder options,string? databaseUrl,string sqlitePath,string? schema=null) {
+  options.ReplaceService<Microsoft.EntityFrameworkCore.Migrations.IMigrationsAssembly,ProviderMigrationsAssembly>();
   if(string.IsNullOrWhiteSpace(databaseUrl)) {
    options.UseSqlite(new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder {
     DataSource=sqlitePath,DefaultTimeout=15,ForeignKeys=true
    }.ConnectionString);
    return;
   }
-  options.UseNpgsql(PostgresConnectionString(databaseUrl));
+  var databaseSchema=ValidateSchema(schema)??throw new InvalidOperationException("PostgreSQL commerce hosting requires an explicit dedicated Database:Schema; public schema fallback is disabled.");
+  options.UseNpgsql(PostgresConnectionString(databaseUrl,databaseSchema),postgres=>{if(databaseSchema!=null)postgres.MigrationsHistoryTable("__EFMigrationsHistory",databaseSchema);});
  }
 
- public static string PostgresConnectionString(string databaseUrl) {
+ public static string? ValidateSchema(string? schema) {
+  if(string.IsNullOrWhiteSpace(schema))return null;
+  if(!System.Text.RegularExpressions.Regex.IsMatch(schema,"^[a-z][a-z0-9_]{0,62}$")||schema=="public"||schema.StartsWith("pg_",StringComparison.Ordinal))throw new InvalidOperationException("Database:Schema must be a dedicated lowercase schema identifier, not public or a system schema.");
+  return schema;
+ }
+ public static string PostgresConnectionString(string databaseUrl,string? schema=null) {
   // Use the provider's builder: URI-decoded credentials may contain semicolons,
   // equals signs or colons and must never be concatenated into a connection string.
   if(!Uri.TryCreate(databaseUrl,UriKind.Absolute,out var uri)||
@@ -44,7 +51,7 @@ public static class DatabaseConfiguration {
    Host=uri.Host,Port=uri.Port>0?uri.Port:5432,Database=database,
    Username=username,Password=password,SslMode=sslMode,
    Timeout=15,CommandTimeout=30,MaxPoolSize=20,
-   ApplicationName="Toushir.Wholesale",IncludeErrorDetail=false
+   ApplicationName="Toushir.Wholesale",IncludeErrorDetail=false,SearchPath=ValidateSchema(schema)
   }.ConnectionString;
  }
 }

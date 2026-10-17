@@ -1,41 +1,55 @@
-# Toushir Gros
+# TOUSHIR Commerce
 
-Two connected products for wholesale ordering in Oran: a React Native merchant mobile application and a separate wholesaler workspace, backed by ASP.NET Core .NET 10 and an EF Core SQLite database.
+One .NET 10 / ABP backend connects the wholesaler workspace, merchant app and courier app. The implementation follows the supplied TOUSHIR Figma identity. Preparation, custody, customer receipt and actual payment are independent, audited operations.
 
-## Workflows
+## Applications
 
-- Merchant approval, product search, categories, favorites, saved basket and delivery addresses.
-- Request for quotation → priced offer → merchant approval → transactional stock reservation → preparation → dispatch → physical receipt.
-- Partial/refused deliveries, quarantined returns and explicit inspection before stock re-entry.
-- Actual cash/transfer collection, reconciliation, commercial claims, explicit credits and separately recorded refunds.
-- Date-filtered analytics with comparison periods, daily trends, customer/product/category performance, receivable aging and documented calculation bases.
-- Exact open-data product identities and associated photos, with source links and licenses. Catalog presence is not a claim of local stock or an approved wholesale price.
+| Application | Local URL | Source |
+| --- | --- | --- |
+| Wholesaler, warehouse, dispatch and finance | http://localhost:5860/ | `apps/web` — React, TypeScript |
+| Merchant browser preview | http://localhost:5860/mobile/merchant | `apps/mobile` — React Native, Expo |
+| Courier browser preview | http://localhost:5860/mobile/driver | `apps/mobile` — separate native identity |
+| API health | http://localhost:5860/api/health | `backend` — .NET 10, ABP 10.6.1 |
+| Identity discovery | http://localhost:5860/.well-known/openid-configuration | OpenIddict, code + S256 PKCE |
 
-## Run a real business installation
+Native apps have separate package IDs, icons and callback schemes. Browser previews use the same React Native source and backend. See [native distribution](docs/NATIVE-DISTRIBUTION.md).
 
-Requirements: Docker, a durable volume, and owner-supplied real prices, inventory and delivery terms.
+## Start locally
 
-1. Copy `.env.example` to `.env` and set the owner email and a strong unique password locally. Never commit credentials.
-2. Run `docker compose up --build -d`.
-3. Open `http://localhost:5860/admin` and sign in with that owner account. Merchant registration requires approval.
-4. Confirm actual product offers and stock, or quote merchants’ requests individually. Configure a delivery fee before enabling direct checkout.
-5. Put an HTTPS reverse proxy in front of the application, configure allowed origins/hosts and trusted forwarding for that known hosting environment, and test backup restoration before commercial use.
+Install .NET SDK 10 and Node.js 24. From this repository:
 
-The Compose volume preserves SQLite and session keys. Follow `backend/OPERATIONS.md` for backup and security operations. The free public demo uses explicit isolated demo workspaces and temporary storage; it is not a durable production database.
+```sh
+bash scripts/build-all.sh
+bash scripts/run-local.sh
+```
 
-## Develop
+The launcher explicitly enables a demo and preserves SQLite records under `work/local-data`. Each browser creates an isolated fictional workspace. The wholesaler demo creates an example history through the business services; prices, stock and operations are labelled fictitious. Open the merchant/courier links in the same browser to explore that workspace, or create a merchant invitation from **Magasins** for another tester. Keep the workspace owner capability private.
 
-- Backend: `dotnet run --project backend/Toushir.Wholesale.csproj --urls http://localhost:5860`
-- Set `Demo__Enabled=true` only when intentionally running an isolated demonstration. Production defaults to demo disabled and requires an explicit durable `DataPath`.
-- Frontend: `cd apps/mobile && npm ci && npm run web`.
-- Native: set `EXPO_PUBLIC_API_URL` to the reachable HTTPS API URL, then use Expo’s Android/iOS build commands. The Android emulator uses `10.0.2.2` for a local Mac API; an iOS simulator can use `localhost`. Physical devices require a reachable host.
-- Web distribution: run `npm run build:web` in `apps/mobile`, then `node scripts/finalize-web.mjs --install` from the repository root. The API serves the resulting browser application.
+For development, run the API and `npm run dev` in `apps/web`. Its proxy targets port 5860. Use `npm run web` in `apps/mobile` for the mobile development preview. A physical device needs a reachable HTTPS API; emulator configuration is documented separately.
 
-## Checks and scope
+## Durable installation
 
-`apps/mobile`: `npm run typecheck`, `npm run check:expo`.
-`backend/scripts`: API, production persistence/security, storage guards and analytics verification scripts with machine-readable results.
+`compose.yaml` starts PostgreSQL 17 and the application, with separate persistent volumes for records and identity keys. Copy `.env.example` to `.env`, replace every placeholder, configure an HTTPS public origin/reverse proxy, then run `docker compose up --build -d`.
 
-The first version implements two roles: MERCHANT and ADMIN. The owner handles operations, stock, delivery and finance. Separate warehouse/driver/finance permissions, live carrier/payment integrations and store publication are additional integrations, not claimed as implemented. Commercial documents are order/quotation records; local legal invoice/tax configuration must be supplied by the owner.
+Business mode disables anonymous demos and creates the configured owner. Sign in through the professional authorization page, create the team, approve merchants, and enter actual prices, stock and delivery terms. Remove bootstrap secrets after setup. See [operations](backend/OPERATIONS.md).
 
-Package audit findings and release limitations are recorded in `docs/RELEASE.md`. No claim of a completed external penetration test or an App Store release is made.
+## Connected workflows
+
+- Approval, sourced catalogue, search, favourites, saved basket and addresses.
+- Quote requests, explicit promotion selection, versioned prices/expiry, merchant acceptance, atomic reservation, per-line preparation and assignment.
+- Ordered manifests, commercial-unit vehicle capacity, custody QR, permitted GPS, customer quantity proof, partial refusal and depot returns.
+- Actual cash, tendered amount/change, route float, driver declaration, independent finance count/reconciliation. Shortages never recreate customer debt.
+- Claims, quarantine, inspection, commercial credits and separately recorded refunds.
+- Supplier approval by another account, partial receipts, lot/expiry capture, quality control and invoice comparison.
+- Contextual in-app conversations, private notes, consent-filtered in-app broadcasts, approved campaigns/challenges, immutable loyalty entries and stock-backed gifts.
+- Interactive Three.js depot and a separate MapLibre view of actual GPS observations. The depot is illustrative, not a camera feed.
+
+The API enforces ADMIN, MERCHANT, DRIVER, WAREHOUSE, DISPATCHER and FINANCE permissions. SignalR invalidations and polling refresh persisted state across interfaces.
+
+## Evidence and source
+
+See [verification](docs/VERIFICATION.md), [architecture](docs/ARCHITECTURE.md), [engagement contracts](docs/Figma-ENGAGEMENT-API.md), [release boundaries](docs/RELEASE.md) and [catalogue provenance](catalog/README.md).
+
+The [Figma audit](docs/Figma-AUDIT.md), [screen matrix](docs/Figma-SCREEN-MATRIX.csv) and [implementation review](docs/Figma-IMPLEMENTATION-REVIEW.md) retain source evidence and acceptance gaps. The referenced original 79-page specification was not supplied; the 122 checks are derived, not a claim of original requirement acceptance. Local, browser, native and hosted results are recorded separately.
+
+Open product identity is not real wholesale availability. Commercial documents are quote/order records. Fiscal invoicing and external messaging, bank or carrier services require actual business/provider configuration.

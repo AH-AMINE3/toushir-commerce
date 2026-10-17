@@ -1,0 +1,15 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="968" height="492" viewBox="0 0 968 492" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Vehicle / TRN-10">
+<path id="TRN-10 cargo / East" d="M336.8 192.2L262.4 229.4V255.4L336.8 218.2V192.2Z" fill="#C5D4CB"/>
+<path id="TRN-10 cargo / Front" d="M224 210.2L262.4 229.4V255.4L224 236.2V210.2Z" fill="#DCE5DF"/>
+<path id="TRN-10 cargo / Roof" d="M298.4 173L336.8 192.2L262.4 229.4L224 210.2L298.4 173Z" fill="white"/>
+<path id="TRN-10 / Accent" d="M223.52 213.44L261.92 232.64V239.64L223.52 220.44V213.44Z" fill="#06DD81"/>
+<path id="TRN-10 cab / East" d="M262.4 236.4L237.2 249V268L262.4 255.4V236.4Z" fill="#C5D4CB"/>
+<path id="TRN-10 cab / Front" d="M198.8 229.8L237.2 249V268L198.8 248.8V229.8Z" fill="#087F4F"/>
+<path id="TRN-10 cab / Roof" d="M224 217.2L262.4 236.4L237.2 249L198.8 229.8L224 217.2Z" fill="#06DD81"/>
+<path id="TRN-10 / Windshield" d="M201.44 234.36L234.08 250.68V257.68L201.44 241.36V234.36Z" fill="#0F2C2C"/>
+<ellipse id="TRN-10 / Wheel 0.5" cx="325.28" cy="221.94" rx="3" ry="4.5" fill="#151917"/>
+<ellipse id="TRN-10 / Wheel 2.6" cx="274.88" cy="247.14" rx="3" ry="4.5" fill="#151917"/>
+<ellipse id="TRN-10 / Wheel 3.75" cx="247.28" cy="260.94" rx="3" ry="4.5" fill="#151917"/>
+</g>
+</svg>

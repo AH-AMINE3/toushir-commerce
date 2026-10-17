@@ -1,5 +1,5 @@
 {
-  "status": "IMPORT_IN_PROGRESS",
+  "status": "REFERENCE_CATALOG_READY",
   "catalog": "Toushir Wholesale — Oran",
   "catalogKind": "SOURCE_IDENTITY_REFERENCE_NOT_WHOLESALE_OFFERS",
   "source": "Open Food Facts contributors",
@@ -44,9 +44,33 @@
     "confirmedWholesaleOffers": 0,
     "scope": "Third-party public retail references only. Not imported into offers, pricing or stock."
   },
-  "identityQuality": "Automatic format/image checks and representative visual review; no claim of manufacturer certification or exhaustive human verification.",
-  "updatedAt": "2026-10-16T17:14:22.912363+00:00",
+  "identityQuality": "Checksum-valid source identifiers, local photo decoding/hashes, exact source-revision links, targeted visual review and 49 explicit brand-label transcriptions. Country tags are community supplied. No claim of manufacturer certification, exhaustive label review or current Oran inventory.",
+  "updatedAt": "2026-10-16T18:02:21.030343+00:00",
   "bulkFileSha256": "c74c716ae028a2dcc1520101cc5dddefa79652261052499b1c396427544f463c",
   "bulkAlgeriaSourceCount": 7411,
-  "bulkSubsetExtractedAt": "2026-10-16T17:07:57Z"
+  "bulkSubsetExtractedAt": "2026-10-16T17:07:57Z",
+  "requestedProductCount": 2500,
+  "selectedProductCount": 2500,
+  "qualifiedCandidateCount": 2525,
+  "manualSourceHoldCount": 93,
+  "reviewedBrandTranscriptions": 49,
+  "brandReview": {
+    "file": "reviewed-brand-overrides.json",
+    "method": "Transcribe visible brand text only when original OFF brand is empty; preserve sourceBrand:null, exact image revision and image hash.",
+    "sourceBrandConflicts": "Held rather than silently overwritten."
+  },
+  "visualReview": {
+    "genericCategoryStagePhotos": 605,
+    "lowSharpnessStagePhotos": 128,
+    "missingBrandCandidateFronts": 64,
+    "currentSamplePhotos": 48,
+    "overlap": "These stage samples overlap; counts are not an exhaustive review of all2500labels.",
+    "canonicalPhotoAlteration": "NONE",
+    "aiGeneratedCanonicalPhotos": 0
+  },
+  "normalization": {
+    "categories": "Exact taxonomy tags plus word-boundary name matching; no beverage parent-tag substring matching.",
+    "quantities": "Suppress missing, price-like, implausible mg and unrecognizable display quantities; retain raw sourceQuantity.",
+    "titleRetailPrices": "Removed from display names only; sourceName preserved."
+  }
 }

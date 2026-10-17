@@ -1,0 +1,16 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const target=path.join(root,'backend/wwwroot');
+await fs.rm(target,{recursive:true,force:true});
+await fs.mkdir(target,{recursive:true});
+await fs.cp(path.join(root,'apps/web/dist'),target,{recursive:true});
+const mobile=path.join(target,'mobile');await fs.mkdir(mobile,{recursive:true});
+await fs.cp(path.join(root,'apps/mobile/dist'),mobile,{recursive:true});
+let html=await fs.readFile(path.join(mobile,'index.html'),'utf8');
+if(!html.includes('toushir-mobile-manifest'))html=html.replace('</head>','<link id="toushir-mobile-manifest" rel="manifest" href="/mobile/manifest.webmanifest"><meta name="theme-color" content="#ffffff"></head>');
+await fs.writeFile(path.join(mobile,'index.html'),html);
+await fs.copyFile(path.join(root,'apps/mobile/assets/icon.png'),path.join(mobile,'app-icon.png'));
+await fs.writeFile(path.join(mobile,'manifest.webmanifest'),JSON.stringify({name:'TOUSHIR Commerce',short_name:'TOUSHIR',lang:'fr-DZ',start_url:'/mobile/merchant',scope:'/mobile/',display:'standalone',background_color:'#ffffff',theme_color:'#ffffff',icons:[{src:'/mobile/app-icon.png',sizes:'1024x1024',type:'image/png'}]},null,2));
+console.log('Desktop and mobile browser applications installed under one API origin.');

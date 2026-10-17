@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.toushir.gros'
+    namespace 'com.toushir.livreur'
     defaultConfig {
-        applicationId 'com.toushir.gros'
+        applicationId 'com.toushir.livreur'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

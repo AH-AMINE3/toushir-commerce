@@ -1,16 +1,37 @@
 services:
-  wholesale:
+  database:
+    image: postgres:17-bookworm
+    environment:
+      POSTGRES_DB: toushir
+      POSTGRES_USER: toushir
+      POSTGRES_PASSWORD: ${TOUSHIR_DB_PASSWORD:?Set TOUSHIR_DB_PASSWORD}
+    volumes:
+      - commerce-database:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U toushir -d toushir"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+    restart: unless-stopped
+  commerce:
     build: .
     ports:
       - "5860:8080"
+    depends_on:
+      database:
+        condition: service_healthy
     environment:
       Demo__Enabled: "false"
       DataPath: /data
+      DATABASE_URL: postgresql://toushir:${TOUSHIR_DB_PASSWORD:?Set TOUSHIR_DB_PASSWORD}@database:5432/toushir?sslmode=disable
+      Database__Schema: commerce
+      Oidc__Issuer: ${TOUSHIR_PUBLIC_ORIGIN:?Set an HTTPS TOUSHIR_PUBLIC_ORIGIN}
       Bootstrap__Email: ${TOUSHIR_ADMIN_EMAIL:?Set TOUSHIR_ADMIN_EMAIL}
       Bootstrap__Password: ${TOUSHIR_ADMIN_PASSWORD:?Set TOUSHIR_ADMIN_PASSWORD}
       Wholesale__Name: ${TOUSHIR_COMPANY_NAME:-Toushir Distribution}
     volumes:
-      - wholesale-data:/data
+      - commerce-keys:/data
     restart: unless-stopped
 volumes:
-  wholesale-data:
+  commerce-database:
+  commerce-keys:

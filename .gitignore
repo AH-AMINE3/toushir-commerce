@@ -43,3 +43,5 @@ catalog/*signed*
 backend/wwwroot/
 
 .local/
+
+**/TestResults/

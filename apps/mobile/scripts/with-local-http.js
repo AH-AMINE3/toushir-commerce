@@ -1,0 +1,2 @@
+const {withAndroidManifest}=require('expo/config-plugins');
+module.exports=function withLocalHttp(config){let local=false;try{const url=new URL(process.env.EXPO_PUBLIC_API_URL||'');local=url.protocol==='http:'&&/^(localhost|127\.0\.0\.1|10\.0\.2\.2|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(url.hostname);}catch{}return withAndroidManifest(config,c=>{const app=c.modResults.manifest.application?.[0];if(app){if(local)app.$['android:usesCleartextTraffic']='true';else delete app.$['android:usesCleartextTraffic'];}return c;});};

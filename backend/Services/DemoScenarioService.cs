@@ -18,7 +18,8 @@ public class DemoScenarioService(WholesaleDb db,OrderService orders,AdminService
   if(await db.Audit.AnyAsync(x=>x.WorkspaceId==actor.WorkspaceId&&x.Action==Marker))return new{seeded=false,orders=0};
 
   var products=await FeaturedProducts(actor);
-  var current=await db.Accounts.AsNoTracking().FirstOrDefaultAsync(x=>x.WorkspaceId==actor.WorkspaceId&&x.Role=="MERCHANT"&&x.ApprovalStatus=="APPROVED");
+  var baseMerchantEmail=$"epicerie-{actor.WorkspaceId[..12]}@demo.invalid";
+  var current=await db.Accounts.AsNoTracking().FirstOrDefaultAsync(x=>x.WorkspaceId==actor.WorkspaceId&&x.Role=="MERCHANT"&&x.Email==baseMerchantEmail&&x.ApprovalStatus=="APPROVED");
   Check.That(current!=null,"Une persona commerçant approuvée est nécessaire pour explorer le scénario.","MERCHANT_REQUIRED",409);
   var merchants=new List<Account>{current!};
   var now=DateTimeOffset.UtcNow;

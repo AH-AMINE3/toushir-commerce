@@ -2,6 +2,9 @@ import { Platform } from 'react-native';
 
 export const API_ORIGIN = (process.env.EXPO_PUBLIC_API_URL || (Platform.OS === 'web' ? '' : 'http://localhost:5860')).replace(/\/$/, '');
 let bearer = '';
+let tokenRefresher: null | (() => Promise<string | null>) = null;
+export const setTokenRefresher = (refresh: () => Promise<string | null>) => { tokenRefresher = refresh; };
+export const getBearer = () => bearer;
 export const setBearer = (token: string) => { bearer = token; };
 export class ApiError extends Error {
   constructor(public status: number, public code: string, message: string, public details?: unknown) { super(message); }
@@ -10,10 +13,12 @@ export async function api<T = any>(path: string, options: RequestInit = {}): Pro
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 25000);
   try {
-    const response = await fetch(`${API_ORIGIN}/api${path}`, {
+    const request = () => fetch(`${API_ORIGIN}/api${path}`, {
       ...options, signal: controller.signal, credentials: 'include',
       headers: { 'Content-Type': 'application/json', ...(bearer ? { Authorization: `Bearer ${bearer}` } : {}), ...options.headers },
     });
+    let response = await request();
+    if(response.status===401 && bearer.split('.').length===3 && tokenRefresher){const renewed=await tokenRefresher();if(renewed){bearer=renewed;response=await request();}}
     const contentType = response.headers.get('content-type') || '';
     const body = contentType.includes('json') ? await response.json() : await response.text();
     if (!response.ok) throw new ApiError(response.status, body?.error?.code || 'REQUEST_FAILED', body?.error?.message || body?.message || 'Cette action n’a pas abouti. Réessayez.', body?.error?.details);
@@ -34,7 +39,7 @@ export const quantityLabel = (p: Product) => p.caseSize && p.caseSize > 1 ? `Col
 export const operationKey = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
 export type Product = { id: string; barcode: string; name: string; brand: string; category: string; imageUrl?: string; unit?: string; caseSize: number | null; minimumQuantity: number; price: number | null; stock: number | null; pricingMode: string; offerApproved: boolean; sourceUrl?: string; source?: string; sourceLicense?: string; imageLicense?: string; countryTags?: string[]; isActive?: boolean; };
 export type Address = { id: string; label: string; wilaya: string; commune: string; street: string };
-export type User = { id: string; name: string; email: string; role: 'MERCHANT' | 'ADMIN'; shopName?: string; phone?: string; approvalStatus?: string };
+export type User = { id: string; name: string; email: string; role: 'MERCHANT' | 'ADMIN' | 'DRIVER'; shopName?: string; phone?: string; approvalStatus?: string };
 export type Session = { token: string; workspaceToken?: string; user: User; workspace: { id: string; name: string; isDemo: boolean; canSwitchRole?: boolean } };
 export type CartLine = { productId: string; quantity: number };
 export type CartQuote = { items: { product: Product; quantity: number; unitPrice: number | null; lineTotal: number | null; available: boolean; issues: string[] }[]; subtotal: number | null; deliveryFee: number | null; total: number | null; needsQuote: boolean; canOrder: boolean; currency: string };

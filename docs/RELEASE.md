@@ -6,7 +6,7 @@ Product identities and selected front photographs are sourced from Open Food Fac
 
 ## Architecture
 
-.NET 10, EF Core SQLite, Expo 58, React Native 0.88 and React 19.3. Real authenticated accounts and isolated anonymous demo workspaces use the same business workflow. Source code and deployment branch remain private. The original CRM main branch is independent.
+.NET 10, EF Core with PostgreSQL for hosted testing and SQLite for local/durable-volume installations, Expo 58, React Native 0.88 and React 19.3. Real authenticated accounts and isolated anonymous demo workspaces use the same business workflow. Source code and deployment branch remain private. The original CRM main branch is independent.
 
 ## Verification
 
@@ -18,8 +18,12 @@ The initial supported Expo dependency installation reported 22 npm advisories (7
 
 ## Hosting and deployment
 
-The free hosted demonstration may sleep and uses ephemeral SQLite. It must not hold live customer transactions or be represented as durable business hosting. Docker Compose supports a durable volume for a business installation, with owner-controlled backups and restore testing. Real business stock, prices, fees, legal document/tax basis and merchant acceptance policies require owner approval.
+The hosted test deployment uses an internal-only Render PostgreSQL 17 database, separate from the web container. Test orders survive web-service redeploys. The free database expires on **15 November 2026 at 17:52 UTC**; export and migrate or explicitly upgrade before expiry. Free web compute may sleep and need time to wake. No paid plan has been enabled. This is a test deployment with a time-limited free database, not indefinite free commercial hosting. Docker Compose also supports durable SQLite storage. Real business stock, prices, fees, legal document/tax basis and merchant acceptance policies require owner approval.
+
+Each visitor may explore an isolated demo. A wholesaler can create a merchant invitation for its own demo: up to 50 shops by default, no passwords required, up to 7 days (bounded by the workspace lifetime). Invited merchants can only access their own orders. Their requests reach the inviting wholesaler, whose private access link must never be shared with merchants. Revocation closes the corresponding guest sessions. Owner capability and invitation tokens are separate random secrets, stored as hashes on the server. Browser owner recovery is stored locally; the personal owner link can reopen the same test workspace on another device. All demo workspaces expire after 7 days.
 
 Native iOS simulator and Android builds are separate deliverables. Store signing, publication, device distribution and the actual API origin must be verified against the final build; source configuration alone is not a successful store release.
 
 Advisory sources: https://github.com/advisories/GHSA-vfj7-8cjw-p6xm ; https://github.com/advisories/GHSA-86w9-cpqp-85rv ; https://github.com/advisories/GHSA-w5hq-g745-h8pq . Build tooling is not exposed publicly.
+
+The SQLite native dependency was upgraded to SQLitePCLRaw 2.1.14; the loaded engine is 3.54.0. The verified NuGet dependency tree reports no known vulnerable packages at this release check. The provider probe and invitation verification reports record their actual checks.
