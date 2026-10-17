@@ -19,6 +19,7 @@ public sealed class MutationLocksTests
         var anonymous = MutationLocks.Keys("commerce", null, "/api/demo/session");
         Assert.Equal(anonymous, MutationLocks.Keys("commerce", "previous", "/api/demo/session"));
         Assert.Equal(anonymous, MutationLocks.Keys("commerce", "previous", "/api/auth/login"));
+        Assert.Equal(anonymous, MutationLocks.Keys("commerce", "previous", "/api/demo/join"));
         Assert.NotEqual(anonymous[0], MutationLocks.Keys("commerce", "previous", "/api/admin/demo/scenario")[0]);
     }
 

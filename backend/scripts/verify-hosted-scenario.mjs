@@ -6,7 +6,7 @@ import {readFile,writeFile} from 'node:fs/promises';
 // No database credentials, direct SQL, timestamp fixtures or real owner account.
 const base=process.env.API_URL?.replace(/\/$/,'');
 assert(base,'Set API_URL to the testable hosted API origin.');
-const checks=[];let requests=0,merchant,admin,foreign,products,initialOrder,basket,orders;
+const checks=[];let expectedOrders=40;let requests=0,merchant,admin,foreign,products,initialOrder,basket,orders;
 async function call(path,{method='GET',body,token=admin?.token,status=200}={}){
  requests++;const r=await fetch(base+'/api'+path,{method,headers:{...(body!==undefined?{'Content-Type':'application/json'}:{}),...(token?{Authorization:'Bearer '+token}:{})},...(body!==undefined?{body:JSON.stringify(body)}:{})});
  const text=await r.text();let data;try{data=JSON.parse(text);}catch{data=text;}
@@ -22,7 +22,7 @@ const inPeriod=(value,from,to)=>day(value)>=from&&day(value)<=to;
 const snapshot=value=>Array.isArray(value)?value.map(snapshot):value&&typeof value==='object'?Object.fromEntries(Object.entries(value).map(([key,entry])=>[key,snapshot(entry)])):typeof value==='string'&&/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?(?:Z|[+-]\d\d:\d\d)$/.test(value)?new Date(value).toISOString():value;
 try{
  await test('Hosted PostgreSQL and the complete source catalog are connected',async()=>{
-  const health=await call('/health',{token:null});assert.equal(health.status,'ok');assert.equal(health.database,'connected');assert.equal(health.catalogCount,2500);assert.match(health.storage,/PostgreSQL/);assert.equal(health.demoEnabled,true);
+  const health=await call('/health',{token:null});assert.equal(health.status,'ok');assert.equal(health.database,'connected');assert.equal(health.catalogCount,2500);assert.match(health.storage,/PostgreSQL/);assert.equal(health.demoEnabled,true);expectedOrders=health.demoScenarioOrders||40;
   merchant=await call('/demo/session',{method:'POST',token:null,body:{role:'MERCHANT'}});
   admin=await call('/demo/session',{method:'POST',token:null,body:{role:'ADMIN',workspaceToken:merchant.workspaceToken}});
   foreign=await call('/demo/session',{method:'POST',token:null,body:{role:'ADMIN'}});
@@ -35,10 +35,10 @@ try{
   initialOrder=await call('/orders',{method:'POST',token:merchant.token,body:{idempotencyKey:randomUUID(),addressId:address.id,items:[{productId:p.id,quantity:3}],note:'EXEMPLE · demande préexistante de vérification'}});
   await call('/cart',{method:'PUT',token:merchant.token,body:{items:[{productId:p.id,quantity:7}]}});basket=await call('/cart',{token:merchant.token});
   const results=await Promise.all([call('/admin/demo/scenario',{method:'POST'}),call('/admin/demo/scenario',{method:'POST'})]);
-  assert.equal(results.filter(r=>r.seeded).length,1);assert.equal(results.reduce((n,r)=>n+r.orders,0),40);
-  const summaries=await all('/orders');assert.equal(summaries.length,41);
+  assert.equal(results.filter(r=>r.seeded).length,1);assert.equal(results.reduce((n,r)=>n+r.orders,0),expectedOrders);
+  const summaries=await all('/orders');assert.equal(summaries.length,expectedOrders+1);
   orders=[];for(const row of summaries)orders.push(await call('/orders/'+row.id));
-  const seeded=orders.filter(o=>o.id!==initialOrder.id);assert.equal(seeded.length,40);assert.equal(new Set(seeded.map(o=>o.merchant.id)).size,4);
+  const seeded=orders.filter(o=>o.id!==initialOrder.id);assert.equal(seeded.length,expectedOrders);assert.equal(new Set(seeded.map(o=>o.merchant.id)).size,4);
   assert(seeded.every(o=>o.number.startsWith('EXEMPLE-')&&o.note.includes('scénario fictif')&&o.isDemo));
   assert.equal((await call('/orders',{token:foreign.token})).total,0);
   assert.deepEqual(snapshot(await call('/orders/'+initialOrder.id)),snapshot(initialOrder));assert.deepEqual(await call('/cart',{token:merchant.token}),basket);

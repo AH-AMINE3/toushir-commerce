@@ -135,7 +135,7 @@ public class AuthService(WholesaleDb db, PasswordHasher<Account> hasher, IConfig
     {
         var email = Check.Text(input.Email, 254, "E-mail").ToLowerInvariant();
         var a = await db.Accounts.FirstOrDefaultAsync(x => x.Email == email);
-        var valid = a is not null && hasher.VerifyHashedPassword(a, a.PasswordHash, input.Password ?? "") != PasswordVerificationResult.Failed;
+        var valid = a is not null && a.PasswordHash.Length > 0 && hasher.VerifyHashedPassword(a, a.PasswordHash, input.Password ?? "") != PasswordVerificationResult.Failed;
         Check.That(valid && a!.ApprovalStatus != "SUSPENDED", "E-mail ou mot de passe incorrect.", "INVALID_CREDENTIALS", 401);
         return await Issue(a!, c);
     }
@@ -177,8 +177,8 @@ public class AuthService(WholesaleDb db, PasswordHasher<Account> hasher, IConfig
             var suffix = w.Id[..12];
             var admin = new Account { WorkspaceId = w.Id, Email = $"grossiste-{suffix}@demo.invalid", Name = "Amine · Démonstration", ShopName = "Toushir Distribution", Role = "ADMIN", ApprovalStatus = "APPROVED", Phone = "Exemple" };
             var merchant = new Account { WorkspaceId = w.Id, Email = $"epicerie-{suffix}@demo.invalid", Name = "Yacine · Démonstration", ShopName = "Épicerie El Bahia · Exemple", Phone = "Exemple", ApprovalStatus = "APPROVED" };
-            admin.PasswordHash = hasher.HashPassword(admin, Tokens.New());
-            merchant.PasswordHash = hasher.HashPassword(merchant, Tokens.New());
+            // Synthetic personas have no password credential. Their expiring
+            // owner capability/session is the only permitted demo entry point.
             db.Accounts.AddRange(admin, merchant);
             db.Addresses.Add(new()
             {
@@ -204,7 +204,6 @@ public class AuthService(WholesaleDb db, PasswordHasher<Account> hasher, IConfig
             if (await db.Accounts.AnyAsync(x => x.WorkspaceId == w.Id && x.Role == role))
                 continue;
             var a = new Account { WorkspaceId = w.Id, Email = $"{role.ToLowerInvariant()}-{w.Id[..12]}@demo.invalid", Name = name, ShopName = w.Name, Phone = "Exemple", Role = role, ApprovalStatus = "APPROVED" };
-            a.PasswordHash = hasher.HashPassword(a, Tokens.New());
             db.Accounts.Add(a);
         }
         await db.SaveChangesAsync();
@@ -222,7 +221,7 @@ public class AuthService(WholesaleDb db, PasswordHasher<Account> hasher, IConfig
     public async Task ChangePassword(Actor actor, PasswordInput input, HttpContext c)
     {
         var user = await db.Accounts.FindAsync(actor.Id);
-        Check.That(hasher.VerifyHashedPassword(user!, user!.PasswordHash, input.CurrentPassword ?? "") != PasswordVerificationResult.Failed, "Mot de passe actuel incorrect.", "INVALID_CREDENTIALS", 401);
+        Check.That(user!.PasswordHash.Length > 0 && hasher.VerifyHashedPassword(user, user.PasswordHash, input.CurrentPassword ?? "") != PasswordVerificationResult.Failed, "Mot de passe actuel incorrect.", "INVALID_CREDENTIALS", 401);
         Check.That(input.NewPassword is { Length: >= 12 and <= 128 }, "Utilisez un mot de passe de 12 à 128 caractères.");
         user.PasswordHash = hasher.HashPassword(user, input.NewPassword);
         await db.Sessions.Where(x => x.AccountId == actor.Id).ExecuteDeleteAsync();

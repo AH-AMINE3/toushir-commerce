@@ -22,9 +22,9 @@ try{
  const driver=await api('/demo/session',second.token,'POST',{role:'DRIVER',workspaceToken:second.workspaceToken});
  assert.equal(driver.user.role,'DRIVER');assert.equal(driver.workspace.id,second.workspace.id);assert.equal(finished,false,'Role bootstrap must not queue behind unrelated history');
  checks.push({name:'Courier role bootstrap remains independent of another workspace history',pass:true,elapsedMs:Math.round(performance.now()-roleStarted)});
- const outcome=await history;if(outcome.error)throw outcome.error;assert.equal(outcome.value.orders,40);
+ const outcome=await history;if(outcome.error)throw outcome.error;assert.equal(outcome.value.orders,health.demoScenarioOrders||40);
  assert.equal((await api('/orders',second.token)).total,0);assert.equal((await api('/cart',second.token)).items[0].quantity,2);
- checks.push({name:'History commits forty labelled orders without changing the other workspace cart or orders',pass:true});
+ checks.push({name:'History commits the configured labelled orders without changing the other workspace cart or orders',pass:true});
 }catch(error){checks.push({name:error.message,pass:false});process.exitCode=1;}finally{
  const report={base,at:new Date().toISOString(),passed:checks.filter(c=>c.pass).length,failed:checks.filter(c=>!c.pass).length,checks};
  await writeFile(process.env.VERIFICATION_REPORT||new URL('../concurrent-workspaces-verification.json',import.meta.url),JSON.stringify(report,null,2));console.log(JSON.stringify(report));

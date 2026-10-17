@@ -1,11 +1,10 @@
 using System.Text.Json;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Toushir.Wholesale;
 
 /// <summary>Explicit, isolated demonstration fixtures built through the normal business services.</summary>
-public class DemoScenarioService(WholesaleDb db,OrderService orders,AdminService admin,CatalogService catalog,IConfiguration config,PasswordHasher<Account> hasher) {
+public class DemoScenarioService(WholesaleDb db,OrderService orders,AdminService admin,CatalogService catalog,IConfiguration config) {
  const string Marker="DEMO_SCENARIO_CREATED";
  const string Example="EXEMPLE — scénario fictif : prix, stocks, règlements et boutiques de démonstration. Aucune opération commerciale réelle.";
 
@@ -23,10 +22,10 @@ public class DemoScenarioService(WholesaleDb db,OrderService orders,AdminService
   Check.That(current!=null,"Une persona commerçant approuvée est nécessaire pour explorer le scénario.","MERCHANT_REQUIRED",409);
   var merchants=new List<Account>{current!};
   var now=DateTimeOffset.UtcNow;
+  var count=Math.Clamp(config.GetValue<int?>("Demo:ScenarioOrders")??40,20,80);
   var shops=new[]{("Supérette Es Sénia · EXEMPLE","Es Sénia"),("Épicerie Bir El Djir · EXEMPLE","Bir El Djir"),("Alimentation Akid Lotfi · EXEMPLE","Oran")};
   for(var i=0;i<shops.Length;i++) {
    var user=new Account{WorkspaceId=actor.WorkspaceId,Email=$"scenario-{i}-{actor.WorkspaceId}@demo.invalid",Name=$"Commerçant {i+2} · EXEMPLE",ShopName=shops[i].Item1,Phone="Exemple",ApprovalStatus="APPROVED",CreatedAt=now.AddDays(-60)};
-   user.PasswordHash=hasher.HashPassword(user,Tokens.New());
    db.Accounts.Add(user);
    db.Addresses.Add(new(){WorkspaceId=actor.WorkspaceId,AccountId=user.Id,Label="Boutique · EXEMPLE",Wilaya="Oran",Commune=shops[i].Item2,Street="Adresse fictive de démonstration",IsDefault=true});
    merchants.Add(user);
@@ -46,7 +45,7 @@ public class DemoScenarioService(WholesaleDb db,OrderService orders,AdminService
   }
 
   var fixturePrices=new[]{145m,275m,95m}; // Deliberately fictional; never published as catalog offers.
-  for(var i=0;i<40;i++) {
+  for(var i=0;i<count;i++) {
    var merchant=merchants[i%merchants.Count];
    var buyer=new Actor(merchant.Id,actor.WorkspaceId,merchant.Name,"MERCHANT","APPROVED");
    var key=$"demo-scenario-v1-{i:00}";
@@ -54,7 +53,7 @@ public class DemoScenarioService(WholesaleDb db,OrderService orders,AdminService
    var address=addresses.First(x=>x.AccountId==merchant.Id);
    await orders.Create(buyer,new(key,address.Id,lines,Example,"REQUEST_QUOTE"));
    var order=await db.Orders.Include(x=>x.Items).SingleAsync(x=>x.WorkspaceId==actor.WorkspaceId&&x.AccountId==merchant.Id&&x.IdempotencyKey==key);
-   var status=i>=32?new[]{"REQUESTED","QUOTED","CONFIRMED","PREPARING","READY","OUT_FOR_DELIVERY","REQUESTED","QUOTED"}[i-32]:i%13==5?"CANCELLED":i%11==4?"PARTIALLY_DELIVERED":"DELIVERED";
+   var status=i>=count-8?new[]{"REQUESTED","QUOTED","CONFIRMED","PREPARING","READY","OUT_FOR_DELIVERY","REQUESTED","QUOTED"}[i-(count-8)]:i%13==5?"CANCELLED":i%11==4?"PARTIALLY_DELIVERED":"DELIVERED";
    if(status!="REQUESTED") {
     var quoted=lines.Select(l=>new QuoteLineInput(l.ProductId,l.Quantity,fixturePrices[products.FindIndex(p=>p.Id==l.ProductId)],1,null)).ToList();
     await orders.Quote(actor,order.Id,new(quoted,150m,now.AddDays(14),Example));
@@ -87,14 +86,14 @@ public class DemoScenarioService(WholesaleDb db,OrderService orders,AdminService
      }
     }
    }
-   await ShiftHistory(actor,order.Id,now.AddDays(-((39-i)*55/39)).AddHours(-2));
+   await ShiftHistory(actor,order.Id,now.AddDays(-((count-1-i)*55/(count-1))).AddHours(-2));
    db.ChangeTracker.Clear(); // Conditional stock SQL must be re-read before the next order.
   }
   db.CartItems.AddRange(originalCart);
-  orders.Audit(actor,Marker,actor.WorkspaceId,$"40 commandes, 4 boutiques et 3 références. {Example}");
+  orders.Audit(actor,Marker,actor.WorkspaceId,$"{count} commandes, 4 boutiques et 3 références. {Example}");
   await db.SaveChangesAsync();
   if(ownedTransaction!=null)await ownedTransaction.CommitAsync();
-  return new{seeded=true,orders=40};
+  return new{seeded=true,orders=count};
  }
 
  async Task<List<Product>> FeaturedProducts(Actor actor) {
