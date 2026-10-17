@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-17T09:37:33.807Z",
+  "base": "http://127.0.0.1:5861",
+  "checks": [
+    "Created purchase and independently approved ten units through real browser forms",
+    "Attached real fixture PDFs with dates and immutable SHA256 evidence",
+    "Supplier proposal changed ten units at 100 DA to eight at 120 DA only after separate Finance review",
+    "Recorded five physically received units and completed the receipt/invoice chain for exactly 600 DA",
+    "Independently closed three undelivered units while preserving the actual receipt",
+    "Private browser download uses the active Admin bearer even when another role owns the HttpOnly cookie",
+    "Reload restored purchase history and complete supplier evidence",
+    "Supplier evidence remains usable at 390 pixels without page overflow",
+    "Narrow PDF form remains inside the viewport and can be cancelled without a write",
+    "A delayed response for an old purchase cannot replace the newly selected dossier"
+  ],
+  "javascriptErrors": []
+}

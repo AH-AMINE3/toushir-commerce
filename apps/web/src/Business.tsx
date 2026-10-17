@@ -1,24 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { api, post, patch, key, date, money } from "./api";
 import type { Session } from "./api";
+import { SupplierDossier } from "./SupplierDossier";
+import { approve } from "./approvals";
+export { approve } from "./approvals";
 export type Run = (f: () => Promise<unknown>, m?: string) => Promise<void>;
-export async function approve(session: Session, path: string, body: unknown) {
-  if (!session.workspace.isDemo) return post(path, body);
-  const workspaceToken = localStorage.getItem("toushir-demo-workspace");
-  if (!workspaceToken)
-    throw new Error(
-      "Rouvrez votre espace de démonstration pour utiliser son approbateur.",
-    );
-  const reviewer = await post<Session>("/demo/session", {
-    role: "FINANCE",
-    workspaceToken,
-  });
-  return api(path, {
-    method: "POST",
-    body: JSON.stringify(body),
-    headers: { Authorization: "Bearer " + reviewer.token },
-  });
-}
 export function ProductPicker({
   name = "productId",
   label = "Produit",
@@ -475,11 +461,30 @@ export function Supply({
       })
       .catch((e) => setError(e.message));
   }, [revision]);
+  const activePurchase = useRef(active);
+  activePurchase.current = active;
+  const updateDetail = (next: any) => {
+    if (next.order.id !== activePurchase.current) return;
+    setDetail((current: any) =>
+      current?.order.id === next.order.id &&
+      current.order.version > next.order.version
+        ? current
+        : next,
+    );
+  };
   useEffect(() => {
+    let current = true;
     if (active)
       api("/admin/purchases/" + active)
-        .then(setDetail)
-        .catch((e) => setError(e.message));
+        .then((value) => {
+          if (current) updateDetail(value);
+        })
+        .catch((e) => {
+          if (current) setError(e.message);
+        });
+    return () => {
+      current = false;
+    };
   }, [active, revision]);
   const submit = (
     e: React.FormEvent<HTMLFormElement>,
@@ -498,7 +503,11 @@ export function Supply({
         <div className="stat">
           <span>Achats ouverts</span>
           <strong>
-            {purchases.filter((p) => p.status !== "RECEIVED").length}
+            {
+              purchases.filter((p) =>
+                ["DRAFT", "APPROVED", "PARTIAL"].includes(p.status),
+              ).length
+            }
           </strong>
           <small>Brouillons, approuvés et partiels</small>
         </div>
@@ -506,7 +515,11 @@ export function Supply({
           <span>Quantité à réceptionner</span>
           <strong>
             {purchases.reduce(
-              (a, p) => a + p.orderedQuantity - p.receivedQuantity,
+              (a, p) =>
+                a +
+                (["DRAFT", "APPROVED", "PARTIAL"].includes(p.status)
+                  ? p.orderedQuantity - p.receivedQuantity
+                  : 0),
               0,
             )}
           </strong>
@@ -522,8 +535,15 @@ export function Supply({
           <strong>
             {money(
               purchases
-                .filter((p) => p.status !== "DRAFT")
-                .reduce((a, p) => a + p.totalMinor, 0) / 100,
+                .filter((p) => !["DRAFT", "CANCELLED"].includes(p.status))
+                .reduce(
+                  (a, p) =>
+                    a +
+                    (p.status === "SHORT_CLOSED"
+                      ? p.receivedMinor
+                      : p.totalMinor),
+                  0,
+                ) / 100,
             )}
           </strong>
           <small>Achats approuvés · ce montant n’est pas un paiement</small>
@@ -718,6 +738,8 @@ export function Supply({
                               APPROVED: "Approuvé",
                               PARTIAL: "Partiel",
                               RECEIVED: "Réceptionné",
+                              CANCELLED: "Annulé",
+                              SHORT_CLOSED: "Reliquat clôturé",
                             } as any
                           )[p.status]
                         }
@@ -747,7 +769,7 @@ export function Supply({
           </div>
         )}
       </section>
-      {detail && active && (
+      {detail && active && detail.order.id === active && (
         <section className="panel module-section">
           <div className="panel-heading">
             <div>
@@ -760,6 +782,13 @@ export function Supply({
               Fermer le détail
             </button>
           </div>
+          <SupplierDossier
+            purchase={detail}
+            session={session}
+            revision={revision}
+            run={run}
+            onUpdated={updateDetail}
+          />
           <div className="table-wrap">
             <table>
               <thead>
@@ -962,7 +991,9 @@ export function Supply({
                 </form>
               ))}
           {["ADMIN", "FINANCE"].includes(session.user.role) &&
-            ["PARTIAL", "RECEIVED"].includes(detail.order.status) && (
+            ["PARTIAL", "RECEIVED", "SHORT_CLOSED"].includes(
+              detail.order.status,
+            ) && (
               <form
                 className="action-form"
                 onSubmit={(e) =>

@@ -39,7 +39,7 @@ public sealed partial class EngagementService
         {
             order,
             supplier,
-            items = lines.Select(x => new { x.Id, x.ProductId, x.ProductName, x.OrderedQuantity, x.ReceivedQuantity, x.QuarantineQuantity, outstandingQuantity = x.OrderedQuantity - x.ReceivedQuantity, x.UnitCostMinor, totalMinor = checked(x.OrderedQuantity * x.UnitCostMinor) }),
+            items = lines.Select(x => new { x.Id, x.ProductId, x.ProductName, x.OrderedQuantity, x.ReceivedQuantity, x.QuarantineQuantity, outstandingQuantity = order.Status is "CANCELLED" or "SHORT_CLOSED" ? 0 : x.OrderedQuantity - x.ReceivedQuantity, cancelledQuantity = order.Status is "CANCELLED" or "SHORT_CLOSED" ? x.OrderedQuantity - x.ReceivedQuantity : 0, x.UnitCostMinor, totalMinor = checked(x.OrderedQuantity * x.UnitCostMinor) }),
             receipts,
             receiptLines,
             totalMinor = lines.Sum(x => checked(x.OrderedQuantity * x.UnitCostMinor)),
@@ -57,7 +57,7 @@ public sealed partial class EngagementService
         var suppliers = await db.Suppliers.AsNoTracking().Where(x => x.WorkspaceId == actor.WorkspaceId).ToDictionaryAsync(x => x.Id, x => x.Name);
         return new
         {
-            items = list.Select(x => new { x.Id, x.Number, x.SupplierId, supplierName = suppliers.GetValueOrDefault(x.SupplierId), x.Status, x.Version, x.CreatedAt, x.ExpectedAt, orderedQuantity = lines.Where(l => l.SupplyOrderId == x.Id).Sum(l => l.OrderedQuantity), receivedQuantity = lines.Where(l => l.SupplyOrderId == x.Id).Sum(l => l.ReceivedQuantity), totalMinor = lines.Where(l => l.SupplyOrderId == x.Id).Sum(l => checked(l.UnitCostMinor * l.OrderedQuantity)), x.InvoiceMatchStatus }),
+            items = list.Select(x => new { x.Id, x.Number, x.SupplierId, supplierName = suppliers.GetValueOrDefault(x.SupplierId), x.Status, x.Version, x.CreatedAt, x.ExpectedAt, orderedQuantity = lines.Where(l => l.SupplyOrderId == x.Id).Sum(l => l.OrderedQuantity), receivedQuantity = lines.Where(l => l.SupplyOrderId == x.Id).Sum(l => l.ReceivedQuantity), totalMinor = lines.Where(l => l.SupplyOrderId == x.Id).Sum(l => checked(l.UnitCostMinor * l.OrderedQuantity)), x.InvoiceMatchStatus, receivedMinor = lines.Where(l => l.SupplyOrderId == x.Id).Sum(l => checked(l.UnitCostMinor * l.ReceivedQuantity)) }),
             monetaryUnit = "CENTIME",
             currency = "DZD"
         };
@@ -211,6 +211,7 @@ public sealed partial class EngagementService
         db.SupplyInspections.Add(inspection);
         orders.Ledger(actor, line.ProductId, "SUPPLY_" + disposition, delta: delta, quarantine: -input.Quantity, reason: reason);
         orders.Audit(actor, "SUPPLY_INSPECTED", order.Id, inspection.Id);
+        order.Version++;
         await db.SaveChangesAsync();
         return inspection;
     }
@@ -219,7 +220,7 @@ public sealed partial class EngagementService
         actor.RequireRoles("ADMIN", "FINANCE");
         var order = await Supply(actor, id);
         Version(order.Version, input.Version);
-        Check.That(order.Status is "PARTIAL" or "RECEIVED", "Une réception est requise pour le rapprochement.", "INVALID_TRANSITION", 409);
+        Check.That(order.Status is "PARTIAL" or "RECEIVED" or "SHORT_CLOSED", "Une réception est requise pour le rapprochement.", "INVALID_TRANSITION", 409);
         Check.That(input.InvoiceMinor is >= 0 and <= 10000000000000000, "Montant invalide.");
         var lines = await db.SupplyOrderLines.AsNoTracking().Where(x => x.SupplyOrderId == id).ToListAsync();
         var received = lines.Sum(x => checked(x.UnitCostMinor * x.ReceivedQuantity));

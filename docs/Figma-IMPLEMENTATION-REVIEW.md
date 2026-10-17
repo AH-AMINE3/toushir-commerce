@@ -12,9 +12,9 @@ The warehouse provider migrations create five new tables and indexes without alt
 
 ## Derived checklist counts
 
-- API scenario tested; not original requirement acceptance: 48
+- API scenario tested; not original requirement acceptance: 49
 - Missing full workflow: 5
-- Partial scope: 27
+- Partial scope: 26
 - Requires environment/business evidence: 3
 - Source reviewed; not full acceptance: 39
 
@@ -22,7 +22,7 @@ No row is marked as acceptance of all original requirements. Each row keeps an e
 
 ## Remaining scope and release gates
 
-1. The current scope supports a reviewable commerce demo. A full manufacturer recall lifecycle, supplier confirmation document lifecycle, CRM visits/tasks/mandated assisted ordering, multiple members per shop, and a complete customer tariff matrix remain incomplete. The missing original specification prevents a truthful claim that all 122 original requirements are accepted.
+1. The current scope supports a reviewable commerce demo. A full manufacturer recall lifecycle, CRM visits/tasks/mandated assisted ordering, multiple members per shop, and a complete customer tariff matrix remain incomplete. Supplier document/confirmation scenarios are now implemented and tested at the scope recorded below. The missing original specification prevents a truthful claim that all 122 original requirements are accepted.
 2. Lot control is opt-in after a physical count; aggregate legacy stock is explicitly untracked. The implemented warehouse path includes real scans and FEFO. Bins/aisles, automated expired-lot reallocation, camera-scanner hardware acceptance, unit serialization and recall communication are not claimed. Route capacity uses quantity units, including gifts, rather than physical weight/volume optimization.
 3. In-app messaging and durable invalidation notices are real. SMS, WhatsApp, email and native push providers, delivered/read acknowledgements, attachment lifecycle and delivery cost/rate policies require their actual integrations. An outbox notice is not proof of external delivery.
 4. Seller/tax identities and document numbering, bank-settlement authority, funded program terms, data retention, FR/AR/RTL and target load/performance need concrete business or environment evidence before real trading. Actual SQLite backup restoration into a separate installation is tested with the original account, order, payment and signing-key identity; hosted PostgreSQL backup/restore, RPO/RTO and disaster recovery remain separate operational acceptance. Native simulator/device and public hosting results belong to their own acceptance records.
@@ -33,3 +33,7 @@ No row is marked as acceptance of all original requirements. Each row keeps an e
 The reviewed fixes include atomic campaign-grant claim; reconciliation before points spending/fulfillment; immediate physical-return point correction without a later double subtraction; prospective challenge publication; bounded supplier movements; current-quote gift filtering; route capacity and preserved stop order; depot custody before managed returned stock is sellable; and per-batch return quantity limits. Claim status/received/inspected/credited fields now participate in optimistic concurrency so a stale source row cannot consume another return's quarantine.
 
 The authentication/schema review covered OIDC configuration/endpoints, session adapters, database configuration, schema initialization and module upgrades. Dedicated PostgreSQL identifiers are validated and shared-public search paths excluded. Missing dedicated PostgreSQL schema fails closed. Signed tokens still require a live session/account/invitation; authorization code flow requires S256 PKCE and exact client redirects. This is a focused code review and executed scenario record, not a security certification.
+
+## Supplier workflow extension
+
+The private PDF/confirmation lifecycle now has 32 API checks, ten browser-form checks, retained evidence revisions, independent changed-term approval, late evidence with frozen terms, explicit cancellation/short close and complete receipt/invoice-reference evidence. Reports live under `verification/supplier/`; [the contract](SUPPLIER-DOSSIER.md) states limits and the actual execution scopes. Existing original-spec acceptance remains unverified; this extension does not accept all exact Figma states.

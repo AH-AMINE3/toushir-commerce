@@ -16,6 +16,37 @@ export const setToken = (value: string) => {
   token = value;
   sessionStorage.setItem("toushir-web-token", value);
 };
+export async function downloadPrivatePdf(path: string, fileName: string) {
+  const request = () =>
+    fetch("/api" + path, {
+      credentials: "include",
+      headers: token ? { Authorization: "Bearer " + token } : {},
+      signal: AbortSignal.timeout(30000),
+    });
+  let response = await request();
+  if (response.status === 401 && token.includes(".")) {
+    const renewed = await renewIdentityToken();
+    if (renewed) {
+      setToken(renewed);
+      response = await request();
+    }
+  }
+  if (!response.ok) {
+    const error = await response.json().catch(() => null);
+    throw new Error(
+      error?.error?.message || "Le téléchargement a échoué. Réessayez.",
+    );
+  }
+  if (!response.headers.get("Content-Type")?.startsWith("application/pdf"))
+    throw new Error("Le serveur n’a pas renvoyé le PDF attendu.");
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
 export async function api<T = any>(
   path: string,
   options: RequestInit = {},
@@ -29,7 +60,9 @@ export async function api<T = any>(
         ...(token ? { Authorization: "Bearer " + token } : {}),
         ...options.headers,
       },
-      signal: options.signal || AbortSignal.timeout(path === "/admin/demo/scenario" ? 120000 : 30000),
+      signal:
+        options.signal ||
+        AbortSignal.timeout(path === "/admin/demo/scenario" ? 120000 : 30000),
     });
   let response = await request();
   if (response.status === 401 && token.includes(".") && !options.headers) {
@@ -114,7 +147,9 @@ export function connect(
   const invalidate = () => {
     if (stopped) return;
     clearTimeout(updateTimer);
-    updateTimer = setTimeout(() => { if (!stopped) onUpdate(); }, 250);
+    updateTimer = setTimeout(() => {
+      if (!stopped) onUpdate();
+    }, 250);
   };
   for (const event of [
     "order.updated",

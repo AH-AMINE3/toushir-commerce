@@ -11,6 +11,7 @@ API_URL=http://127.0.0.1:5860 node backend/scripts/verify-routes.mjs
 API_URL=http://127.0.0.1:5860 node backend/scripts/verify-oidc.mjs
 python3 scripts/test-engagement.py http://127.0.0.1:5860
 python3 scripts/test-warehouse.py http://127.0.0.1:5860
+python3 scripts/test-supplier-documents.py http://127.0.0.1:5860
 ```
 
 `VERIFICATION_REPORT` redirects each Node report; `TOUSHIR_TEST_RESULTS` redirects the Python report. Reports omit credentials/capabilities and record actual assertions, URL and time.
@@ -32,3 +33,5 @@ Figma acceptance is separate: the screen matrix and derived 122 checks retain un
 ## Merchant account finish
 
 The added merchant summary is tested for unauthenticated/role denial, owner/workspace isolation, actual collections minus refunds, and separate partial delivery counts. Browser checks exercise the points card, activity-to-orders navigation, account address form and communication consent after the Figma finish. The catalogue audit decodes all2,500 local photographs and verifies source hashes and provenance; it does not certify community label correctness or local wholesale availability.
+
+Supplier document/confirmation evidence and browser captures are under `verification/supplier/`. The suite checks retained private PDFs, independently reviewed terms, late evidence, exact receipt documents, invoice reference/amount comparison and explicit cancellation/short close. The upgrade report distinguishes actual SQLite migration on a backup from PostgreSQL generated SQL; each report retains its own execution scope. Native simulators are deliberately stopped on the 8 GB development machine; current UI acceptance uses browser previews.

@@ -48,7 +48,7 @@ Business mode disables anonymous demos and creates the configured owner. Sign in
 - Ordered manifests, commercial-unit vehicle capacity, custody QR, permitted GPS, customer quantity proof, partial refusal and depot returns.
 - Actual cash, tendered amount/change, route float, driver declaration, independent finance count/reconciliation. Shortages never recreate customer debt.
 - Claims, quarantine, inspection, commercial credits and separately recorded refunds.
-- Supplier approval by another account, partial receipts, lot/expiry capture, quality control and invoice comparison.
+- Supplier approval by another account, privately stored PDF revisions, independently reviewed supplier terms, partial receipts, lot/expiry capture, quality control, invoice evidence and explicit remainder closure.
 - Contextual in-app conversations, private notes, consent-filtered in-app broadcasts, approved campaigns/challenges, immutable loyalty entries and stock-backed gifts.
 - Interactive Three.js depot and a separate MapLibre view of actual GPS observations. The depot is illustrative, not a camera feed.
 
@@ -56,7 +56,7 @@ The API enforces ADMIN, MERCHANT, DRIVER, WAREHOUSE, DISPATCHER and FINANCE perm
 
 ## Evidence and source
 
-See [verification](docs/VERIFICATION.md), [architecture](docs/ARCHITECTURE.md), [engagement contracts](docs/Figma-ENGAGEMENT-API.md), [release boundaries](docs/RELEASE.md) and [catalogue provenance](catalog/README.md).
+See [verification](docs/VERIFICATION.md), [architecture](docs/ARCHITECTURE.md), [engagement contracts](docs/Figma-ENGAGEMENT-API.md), [supplier dossiers](docs/SUPPLIER-DOSSIER.md), [release boundaries](docs/RELEASE.md) and [catalogue provenance](catalog/README.md).
 
 The [Figma audit](docs/Figma-AUDIT.md), [screen matrix](docs/Figma-SCREEN-MATRIX.csv) and [implementation review](docs/Figma-IMPLEMENTATION-REVIEW.md) retain source evidence and acceptance gaps. The referenced original 79-page specification was not supplied; the 122 checks are derived, not a claim of original requirement acceptance. Local, browser, native and hosted results are recorded separately.
 

@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-17T09:28:07.263078+00:00",
+  "passed": 3,
+  "checks": [
+    "Existing SQLite backup upgrades with all 56 pre-existing business-table row counts preserved",
+    "SQLite integrity check passed and new additive migration recorded",
+    "PostgreSQL idempotent upgrade SQL scopes all three new tables to an alternate configured schema with no destructive table operations"
+  ],
+  "scope": "Actual SQLite startup upgrade; PostgreSQL generated SQL only, actual hosted execution pending deployment."
+}

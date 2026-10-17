@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.SignalR;
 Environment.SetEnvironmentVariable("DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE", "false");
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.AddFilter("OpenIddict", LogLevel.Warning);
-var webRoot = Path.Combine(builder.Environment.ContentRootPath, "wwwroot");
+var webRoot = Path.GetFullPath(builder.Environment.WebRootPath ?? Path.Combine(builder.Environment.ContentRootPath, "wwwroot"));
 Directory.CreateDirectory(webRoot);
 builder.Environment.WebRootPath = webRoot;
 builder.Environment.WebRootFileProvider = new PhysicalFileProvider(webRoot);
@@ -25,6 +25,7 @@ var dataPath = builder.Configuration["DataPath"] ?? Path.Combine(builder.Environ
 if (builder.Environment.IsProduction() && string.IsNullOrWhiteSpace(builder.Configuration["DataPath"])) throw new InvalidOperationException("Production hosting requires an explicit DataPath. Real business data must use a persistent volume; public demo mode must be explicitly enabled.");
 var resolvedDataPath = Path.GetFullPath(dataPath);
 bool Within(string directory) { var path = Path.GetFullPath(directory).TrimEnd(Path.DirectorySeparatorChar); return resolvedDataPath == path || resolvedDataPath.StartsWith(path + Path.DirectorySeparatorChar, StringComparison.Ordinal); }
+if (Within(webRoot)) throw new InvalidOperationException("DataPath must remain outside the public web root.");
 if (builder.Environment.IsProduction() && !demo && !hasPostgres && (Within("/tmp") || Within("/private/tmp") || Within(Path.GetTempPath()))) throw new InvalidOperationException("Temporary SQLite storage is allowed only for an explicitly enabled demonstration. Production business data requires durable DataPath storage.");
 Directory.CreateDirectory(dataPath);
 if (!OperatingSystem.IsWindows()) File.SetUnixFileMode(dataPath, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);

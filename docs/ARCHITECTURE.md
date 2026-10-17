@@ -50,3 +50,7 @@ In-app messaging is persisted. SMS, email, WhatsApp, remote push, bank settlemen
 ## Deployment
 
 Docker compiles desktop, mobile web and .NET, then runs as a non-root user. Database credentials and stable identity certificates are host secrets. A validated dedicated PostgreSQL schema isolates staging from other applications. The free database expires on 15 November 2026. Commercial installations need owner-supplied offers, legal settings and rehearsed backup/restore.
+
+## Supplier document lifecycle
+
+The [supplier dossier](SUPPLIER-DOSSIER.md) stores bounded private PDF bytes and SHA256 metadata with immutable revisions and independent confirmation review. Before receiving, accepted terms may amend a purchase once; after receiving, evidence may be completed only with identical frozen terms. Actual receiving, commercial evidence completeness and actual funds remain distinct. Three new provider-specific tables are additive and follow the same dedicated-schema/workspace isolation and transaction/version contracts.

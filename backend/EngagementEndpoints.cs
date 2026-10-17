@@ -7,11 +7,12 @@ public static class EngagementEndpoints
 {
     public static IServiceCollection AddEngagementModule(this IServiceCollection services)
     {
-        services.AddScoped<EngagementService>(); services.AddScoped<PromotionsService>(); services.AddHostedService<EngagementOutboxPublisher>(); return services;
+        services.AddScoped<EngagementService>(); services.AddScoped<PromotionsService>(); services.AddScoped<SupplyDocumentService>(); services.AddHostedService<EngagementOutboxPublisher>(); return services;
     }
     public static WebApplication MapEngagementEndpoints(this WebApplication app, RouteGroupBuilder secure)
     {
         // secure inherits /api, authentication and MutationFilter, including transaction/rollback and live notices after commit.
+        secure.MapSupplierDocumentEndpoints();
         secure.MapGet("/conversations", async (EngagementService s, HttpContext c) => Results.Ok(await s.Conversations(Actor.From(c))));
         secure.MapPost("/conversations", async (CreateConversationInput x, EngagementService s, HttpContext c) => Results.Ok(await s.CreateConversation(Actor.From(c), x)));
         secure.MapPatch("/conversations/{id}", async (string id, UpdateConversationInput x, EngagementService s, HttpContext c) => Results.Ok(await s.UpdateThread(Actor.From(c), id, x)));
