@@ -1,6 +1,6 @@
 # TOUSHIR — full source handoff
 
-The current commerce implementation is on **`commerce-ecosystem`** in the private repository [AH-AMINE3/toushir-abp-demo](https://github.com/AH-AMINE3/toushir-abp-demo/tree/commerce-ecosystem). Clone this branch explicitly; the older `main` branch contains a separate CRM demonstration. A developer needs repository access through their own GitHub account.
+The wholesale commerce back office and merchant ordering app built together are in the dedicated private repository **[AH-AMINE3/toushir-commerce](https://github.com/AH-AMINE3/toushir-commerce)** on **`main`**. A developer needs repository access through their own GitHub account.
 
 ## Two application projects and one shared backend
 
@@ -30,8 +30,8 @@ compose.yaml          Application and persistent PostgreSQL for local hosting
 Install Node.js 24, .NET SDK 10 and Git. Python 3 is used by additional verification scripts and the optional mobile preview server. Docker is optional for the PostgreSQL installation.
 
 ```sh
-git clone --branch commerce-ecosystem --single-branch https://github.com/AH-AMINE3/toushir-abp-demo.git
-cd toushir-abp-demo
+git clone https://github.com/AH-AMINE3/toushir-commerce.git
+cd toushir-commerce
 bash scripts/build-all.sh
 bash scripts/run-local.sh
 ```

@@ -1,9 +1,9 @@
 name: Verify commerce
 on:
   push:
-    branches: [commerce-ecosystem]
+    branches: [main]
   pull_request:
-    branches: [commerce-ecosystem]
+    branches: [main]
 permissions:
   contents: read
 concurrency:
