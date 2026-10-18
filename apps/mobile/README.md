@@ -2,6 +2,8 @@
 
 React Native 0.88 with Expo 58. Both native apps share a codebase and use the .NET/ABP commerce API. The browser edition uses the same components and mutations.
 
+For the complete source handoff and local setup, start with [DEVELOPER-HANDOFF.md](../../docs/DEVELOPER-HANDOFF.md). This project contains the mobile ordering app; `../web` is the independent wholesaler back office, and `../../backend` is their shared .NET 10 / ABP API. The default app role is `MERCHANT`; the `DRIVER` build is the separate courier variant.
+
 ## Browser previews
 
 Build with `npm ci && npm run build:web`. Serve `dist` at `/mobile`, including `/mobile/_expo` and `/mobile/assets`, and send `/mobile/merchant` and `/mobile/driver` to its `index.html`. Requests to `/api` and product media are same origin.
