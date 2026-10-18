@@ -4,7 +4,7 @@ One .NET 10 / ABP backend connects the wholesaler workspace, merchant app and co
 
 ## Developer handoff
 
-The complete commerce source is in **[AH-AMINE3/toushir-commerce](https://github.com/AH-AMINE3/toushir-commerce)** on **`main`**. Start with the [developer handoff](docs/DEVELOPER-HANDOFF.md) for cloning, project boundaries, local setup and verification. The ordering app is in [`apps/mobile`](apps/mobile), the back office is in [`apps/web`](apps/web), and their shared .NET 10 / ABP API is in [`backend`](backend). Each frontend has its own package manifest and build.
+The complete commerce source is in **[AH-AMINE3/toushir-commerce](https://github.com/AH-AMINE3/toushir-commerce)** on **`main`**. Start with the [developer handoff](docs/DEVELOPER-HANDOFF.md) for cloning, project boundaries, local setup and verification. The ordering app is in [`apps/mobile`](apps/mobile), the back office is in [`apps/web`](apps/web), and their shared .NET 10 / ABP API is in [`backend`](backend). Each frontend has its own package manifest and build. The mobile ordering project is also available independently at **[AH-AMINE3/toushir-orders-mobile](https://github.com/AH-AMINE3/toushir-orders-mobile)**, with its package, native projects and setup instructions at the repository root.
 
 ## Applications
 

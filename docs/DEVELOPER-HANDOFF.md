@@ -1,6 +1,6 @@
 # TOUSHIR — full source handoff
 
-The wholesale commerce back office and merchant ordering app built together are in the dedicated private repository **[AH-AMINE3/toushir-commerce](https://github.com/AH-AMINE3/toushir-commerce)** on **`main`**. A developer needs repository access through their own GitHub account.
+The wholesale commerce back office and merchant ordering app built together are in the dedicated public repository **[AH-AMINE3/toushir-commerce](https://github.com/AH-AMINE3/toushir-commerce)** on **`main`**. Public reading and cloning require no invitation. The mobile ordering app also has its own independent repository: [AH-AMINE3/toushir-orders-mobile](https://github.com/AH-AMINE3/toushir-orders-mobile).
 
 ## Two application projects and one shared backend
 
@@ -96,4 +96,4 @@ The [Astra revision](ASTRA-DESIGN.md) documents the revised six core surfaces an
 - [Back office](https://toushir-commerce-staging.onrender.com/)
 - [Figma Astra reference](https://www.figma.com/design/4IffhmSg2gHg82narIGfMF/TOUSHIR?node-id=267-2376)
 
-These links open the demo; they do not grant GitHub repository access. The repository owner can invite the developer through GitHub repository settings. Render configuration and private signing/database material stay in their existing private stores. See [release boundaries](RELEASE.md) before production use.
+The platform and standalone mobile source repositories are public and can be cloned independently. Write access still requires an explicit collaborator invitation. Render configuration and private signing/database material stay in their existing private stores. See [release boundaries](RELEASE.md) before production use.
